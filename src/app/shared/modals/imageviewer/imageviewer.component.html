@@ -1,0 +1,121 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content">
+
+
+      <div class="content" style="padding: 2px;">
+        <div class="modal-body no-padder">
+          <section>
+            <div class="row" style="height: 50px; margin-top: -25px;">
+              <div class="col-lg-12 pull-right">
+                <div class="modal-close" (click)="close()"><span class="mdi mdi-close pull-left"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="loader">
+              <div class="col-lg-12 text-center" >
+                <span>
+                  <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                    &nbsp; Please wait...</i>
+                  <span class="sr-only">Please wait...</span>
+                </span>
+
+
+              </div>
+            </div>
+            <div class="row" *ngIf="!loader">
+
+             
+
+              <div class="col-lg-6" style="margin-bottom: 15
+              px">
+
+                <span> Punch In Remarks :</span>
+
+                <p style="font-weight: 600;"> {{PunchInOutDetails.PunchInRemarks}} </p>
+
+
+              </div>
+
+              <div class="col-lg-6"  style="margin-bottom: 15
+              px">
+
+                <span> Punch Out Remarks : </span>
+
+                <p style="font-weight: 600;"> {{PunchInOutDetails.PunchOutRemarks}} </p>
+
+
+              </div>
+              <br />
+            
+
+              <div class="col-lg-6">
+                <span>Punch In Image :: </span>
+
+                <div class="text-center"
+                  *ngIf="this.PunchInOutDetails.PunchInPhotoId == 0 || this.PunchInOutDetails.PunchInPhotoId == null">
+                  There is no image for Punch In </div>
+
+                <div
+                  *ngIf="this.PunchInOutDetails.PunchInPhotoId != 0 && this.PunchInOutDetails.PunchInPhotoId != null">
+
+                  <div class="iframe-container iframe-holder" *ngIf="contentmodalurl != null"
+                    style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+                    <img [src]="contentmodalurl" frameborder="0" scrolling="yes" style="width: 100%;">
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <span>Punch Out Image :: </span>
+                <div class="text-center"
+                  *ngIf="this.PunchInOutDetails.PunchOutPhotoId == 0 || this.PunchInOutDetails.PunchOutPhotoId == null">
+                  There is no image for Punch Out </div>
+
+
+                <div
+                  *ngIf="this.PunchInOutDetails.PunchOutPhotoId != 0 && this.PunchInOutDetails.PunchOutPhotoId != null">
+
+
+                  <div class="iframe-container iframe-holder" *ngIf="contentmodalurl1 != null "
+                    style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+                    <img [src]="contentmodalurl1" frameborder="0" scrolling="yes" style="width: 100%;">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <br>
+            <!-- <div class="row" *ngIf="!loader">
+              <agm-map [latitude]="lat" [longitude]="lng">
+                <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+              </agm-map>
+            </div> -->
+            <br />
+            <div class="row">
+              <div class="col-xs-12  col-sm-12  p-r-50">
+                <div class="text-right">
+                  <ul class="list-inline">
+                    <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="close()">
+                        <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                        Close</button>
+                    </li>
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

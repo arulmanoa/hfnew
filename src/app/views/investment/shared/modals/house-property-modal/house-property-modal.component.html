@@ -1,0 +1,681 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside" role="document" style="max-width: 900px ;">
+
+        <div class="modal-content">
+
+
+            <!-- <div class="modal-header">
+                <h5 class="modal-title">Left fixed sample</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div> -->
+
+            <div class="modal-body" style="max-height: calc(110vh - 143px) !important;overflow-x: hidden !important;">
+
+                <div class="d-flex align-items-center" *ngIf="isrendering_spinner" style=" margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);">
+                    <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+                    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                </div>
+
+                <div class="row" style="padding-bottom: 1rem;">
+                    <div class="col-md-6">
+                        <h3
+                            style="font-size: 16px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                            House Property Details</h3>
+                        <p class="small" style="line-height: 20px;
+              font-size: 12px;
+              font-weight: 600;
+              color: #b9b7b7;">Sec 24 | Deductions</p>
+                    </div>
+                    <div class="col-md-6" style="padding: 3px;">
+
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="!isrendering_spinner">
+                    <div class="col-md-12 text-center norecord" *ngIf="LstHousePropertyDetails.length == 0 && !IsEditMode">
+                        No Records found
+                    </div>
+                    <div class="col-md-12 text-right" style="padding-top: 20px;" *ngIf="!IsEditMode">
+                        <button class="btn btn-white" (click)="addNewHPD()" style="background: #F4F4F4;
+                        color: #146BA2;"> Add New</button>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="!IsEditMode && !isrendering_spinner">
+                    <div class="row" style="margin-top: 1rem;padding-left: 5px;padding-right: 15px;">
+                        <div class="col-md-3">
+                            <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Start - End Date
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                            <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;"> Invested/Approved Amt.
+                            </p>
+                        </div>
+                        <div class="col-md-2">
+                            <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Name/PAN of Lender
+                            </p>
+                        </div>                       
+                        <div class="col-md-2">
+                            <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Occupancy Type
+                            </p>
+                        </div>
+                        <div class="col-md-2">
+                            <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Action </p>
+                        </div>
+                    </div>
+
+                    <ng-container *ngFor="let item of LstHousePropertyDetails;let i = index">
+                        <div class="card tab-item"
+                            style="margin: 3px;background: #FFFFFF;box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);border-radius: 4px;cursor: pointer;">
+                            <div class="card-body" style="padding: 10px;">
+                                <div class="row">
+                                    <div class="text-left col-md-3">
+                                        <h6 class="h6-content tab-item__subheading" style="color: #000"> {{item.LoanDate
+                                            |
+                                            date}} - {{item.PossessionDate | date}}</h6>
+                                        <small class="small-content tab-item__subheading"></small>
+
+                                        <h6 style="margin-top: 1rem;" *ngIf="!item.IsProposed && item.LstEmployeeInvestmentDocuments.length > 0 && getStatusName(item.LstEmployeeInvestmentDocuments, 0) > 0">
+                                            <span class="badge badge-warning1"> Saved </span>
+                                        </h6>
+                                        <h6  style="margin-top: 1rem;" *ngIf="!item.IsProposed && item.LstEmployeeInvestmentDocuments.length > 0 && getStatusName(item.LstEmployeeInvestmentDocuments, 2) > 0">
+                                            <span class="badge badge-danger1"> Rejected </span>
+                                            <span class="badge badge-remarks" title="{{approverRemarks}}"
+                                                matTooltip="{{approverRemarks}}"> <i
+                                                    class="mdi mdi-message-alert-outline"></i>
+                                            </span>
+                                        </h6>
+                                        <h6 style="margin-top: 1rem;" *ngIf="!item.IsProposed && item.LstEmployeeInvestmentDocuments.length > 0 && getStatusName(item.LstEmployeeInvestmentDocuments, 1) > 0">
+                                            <span class="badge badge-success1" matBadge="10"> Approved </span>
+                                            <h6 class="badge badge-remarks" data-toggle="tooltip"
+                                                title="{{approverRemarks}}" [matTooltip]="approverRemarks"> <i
+                                                    class="mdi mdi-message-alert-outline"
+                                                    [matTooltip]="approverRemarks"></i>
+                                            </h6>
+                                        </h6>
+                                        <span  style="margin-top: 1rem;" *ngIf="item.IsProposed">
+                                            <span class="badge badge-declaration"> Declaration </span>
+
+                                        </span>
+                                    </div>
+                                    <div class="col-md-3 text-left" style="margin-top: 15px;">
+                                        <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                                            class="tab-item__subheading">
+                                            {{getCalculatedInvestedAmount(item)}} / {{getCalculatedApprovedAmount(item)}}
+                                            <!-- {{item.GrossAnnualValue | currency:'INR':'symbol-narrow':'1.2-2'}}/ {{item.GrossAnnualValueApprovedAmount | currency:'INR':'symbol-narrow':'1.2-2'}} -->
+                                        </p>
+                                        <!-- <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                                            class="tab-item__subheading" *ngIf="!item.LetOut">
+                                            {{item.InterestAmount | currency:'INR':'symbol-narrow':'1.2-2'}}/ {{item.InterestAmountApprovedAmount | currency:'INR':'symbol-narrow':'1.2-2'}}
+                                        </p> -->
+                                    </div>
+                                    <div class="col-md-2" style="margin-top: 15px;">
+                                        <h6 class="h6-content tab-item__subheading" style="color: #000">  {{item.NameOfLender}} </h6>
+                                       
+                                            <span style="font-size: 10px">
+                                                {{item.LenderPANNO}}
+    
+                                            </span>
+                                    </div>                                  
+                                    <div class="col-md-2" style="margin-top: 15px;">
+                                        <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                                            class="tab-item__subheading" *ngIf="!item.LetOut">
+                                            Self Occupied
+                                        </p>
+                                        <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                                            class="tab-item__subheading" *ngIf="item.LetOut">
+                                            Rented Out
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2" style="margin-top: 15px;">
+
+                                        <div class="" style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                                            matTooltip="Edit" id="plus" (click)="doEditHPD(item)">
+                                            <i class="mdi mdi-pencil-outline" style="display: block;
+                                 margin: 0 auto;
+                                 top: -3px;
+                                 position: relative;
+                                 color: #0d395f;
+                                 font-size: 18px;"></i>
+                                        </div>
+                                        <div class="" style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                                        matTooltip="Edit" id="plus" (click)="doDeleteHPD(item)" *ngIf="item.IsProposed || (item.LstEmployeeInvestmentDocuments.length > 0 && getStatusName(item.LstEmployeeInvestmentDocuments, 1) == 0)">
+                                        <i class="mdi mdi-delete-outline" style="display: block;
+                             margin: 0 auto;
+                             top: -3px;
+                             position: relative;
+                             color: #eb1c1c;
+                             font-size: 18px;"></i>
+                                    </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                </ng-container>
+
+
+
+
+                <ng-container *ngIf="IsEditMode">
+
+                  <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <b>Notes: Any loan taken for self-occupied property prior to 1st April 1999, the maximum limit for rebate will be considered as 30,000/-.</b>
+                    </div>
+                  </div>
+
+                  
+                    <!-- <nz-divider></nz-divider> -->
+                    <form [formGroup]="lhpForm" *ngIf="!isrendering_spinner">
+
+                        
+
+                        <div class="row" style="padding-top: 10px; padding-bottom: 10px;">
+                            <div class="col-lg-12" style="padding-bottom: 5px">
+                                <h6 *ngIf="!lhpForm.controls.IsProposed.value && StatusNumber == 3">
+                                    <span class="badge badge-success1"> Partially Approved </span>
+                                    <span class="badge badge-remarks" title="{{approverRemarks}}"
+                                        matTooltip="{{approverRemarks}}"> <i class="mdi mdi-message-alert-outline"></i>
+                                    </span>
+                                </h6>
+                                <h6 *ngIf="!lhpForm.controls.IsProposed.value && StatusNumber == 0">
+                                    <span class="badge badge-warning1"> Saved </span>
+                                </h6>
+                                <h6 *ngIf="!lhpForm.controls.IsProposed.value && StatusNumber == 2">
+                                    <span class="badge badge-danger1"> Rejected </span>
+                                    <span class="badge badge-remarks" title="{{approverRemarks}}"
+                                        matTooltip="{{approverRemarks}}"> <i class="mdi mdi-message-alert-outline"></i>
+                                    </span>
+                                </h6>
+                                <h6 *ngIf="!lhpForm.controls.IsProposed.value && StatusNumber == 1">
+                                    <span class="badge badge-success1" matBadge="10"> Approved </span>
+                                    <h6 class="badge badge-remarks" data-toggle="tooltip" title="{{approverRemarks}}"
+                                        [matTooltip]="approverRemarks"> <i class="mdi mdi-message-alert-outline"
+                                            [matTooltip]="approverRemarks"></i>
+                                    </h6>
+                                </h6>
+                                <span *ngIf="lhpForm.controls.IsProposed.value">
+                                    <span class="badge badge-declaration"> Declaration </span>
+
+                                </span>
+                            </div>
+                        </div>
+
+                       
+
+                        <div class="col-12 col-md-12 col-sm-12" style="padding: 0px;">
+
+                        
+                          
+                            <div class="">
+
+                                <div class="row">
+
+
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Occupancy Type <span style="font-size: 11px !important;font-style: italic;color: #337ab7 !important;" *ngIf="HousePropertyDisclaimer">({{HousePropertyDisclaimer}})
+                                            </span></label>
+                                            
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <div class="pretty p-icon p-round">
+                                                    <input type="radio" name="LetOut" (change)="OnChangeLetOut('1')"
+                                                        value="rentedOut" formControlName="LetOut" />
+                                                    <div class="state p-primary">
+                                                        <i class="icon mdi mdi-check"></i>
+                                                        <label>Rented Out</label>
+                                                    </div>
+                                                </div>
+                                                <div class="pretty p-icon p-round">
+                                                    <input type="radio" name="LetOut" (change)="OnChangeLetOut('2')"
+                                                        value="selfOccupied" formControlName="LetOut" />
+                                                    <div class="state p-primary">
+                                                        <i class="icon mdi mdi-check"></i>
+                                                        <label>Self-Occupied</label>
+                                                    </div>
+                                                </div>
+
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" style="margin-bottom: 25px;">
+                                        <div class="form-group">
+                                            <!-- <label class="form-label searchbar-label">First-Time Homeowner (Yes/No)</label> -->
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <div class="p-t-10">
+                                                    <label class="el-switch el-switch-green">
+                                                        <input type="checkbox" name="FirstTimeHomeOwner" max="100"
+                                                            formControlName="FirstTimeHomeOwner"
+                                                            [ngClass]="{ 'is-invalid': submitted && g.FirstTimeHomeOwner.errors }" />
+                                                        <span class="el-switch-style"></span>
+                                                    </label> <span style="color: black !important;
+                        margin-top: 0px;
+                        margin-left: 10px;
+                        position: absolute;"> First-Time Homeowner (Yes/No) </span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="col-md-12">
+                    <label class="form-label searchbar-label">Property Info : </label>
+                </div> -->
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Ownership (%) </label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="OwnershipPercentage"
+                                                    placeholder="70"  appMaxValue="100"  appPositiveNumber formControlName="OwnershipPercentage"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.OwnershipPercentage.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-12" style="margin-bottom: 25px;">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Address of Property</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <textarea class="form-control" rows="2" spellcheck="false" id="Remarks"
+                                                    formControlName="AddressDetails"
+                                                    placeholder="Type you address here..."
+                                                    [ngClass]="{ 'is-invalid': submitted && g.AddressDetails.errors }"></textarea>
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+
+                                    <!-- <div class="col-md-12">
+                    <label class="form-label searchbar-label">Payment Info : </label>
+                </div> -->
+
+
+                                    <div class="col-md-6" *ngIf="this.lhpForm.controls.LetOut.value ==='rentedOut'">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Annual Rent</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="GrossAnnualValue"
+                                                    placeholder="12000"  appPositiveNumber formControlName="GrossAnnualValue"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.GrossAnnualValue.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Municipal Taxes Paid</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="MunicipalTax" appPositiveNumber
+                                                    placeholder="5000" formControlName="MunicipalTax"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.MunicipalTax.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Loan Availed Date <span
+                                                    class="help-text m-l-5">(DD-MM-YYYY)</span></label>
+                                            <label class="qcsummarylabel form-text text-muted">
+
+
+                                                <input class="form-control" type="text" name="LoanDate" bsDatepicker
+                                                    [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                                    placeholder="" formControlName="LoanDate" placement="top"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.LoanDate.errors }"
+                                                    (ngModelChange)="doChangeHomeLoanDate($event)">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Property Possession Date <span
+                                                    class="help-text m-l-5">(DD-MM-YYYY)</span></label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <!-- <input class="form-control" type="date" name="PossessionDate" placeholder="31-01-2019"
+                            formControlName="PossessionDate"
+                            [ngClass]="{ 'is-invalid': submitted && g.PossessionDate.errors }" autocomplete="off"> -->
+                                                <input class="form-control" type="text" name="PossessionDate"
+                                                    bsDatepicker
+                                                    [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                                    placeholder="" formControlName="PossessionDate" placement="top"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.PossessionDate.errors }"
+                                                    autocomplete="off"
+                                                    (ngModelChange)="doChangeHomeLoanPossessionDate($event)">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6" *ngIf="IsValidToTakeHomeLoanAmount">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Additional Interest Amount - <b
+                                                    *ngIf="ValidHomeLoanObject_HPD"> {{ValidHomeLoanObject_HPD.Code}}
+                                                </b>
+                                            </label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="Sec24ChildProductAmount"
+                                                    placeholder="6000"  appPositiveNumber formControlName="Sec24ChildProductAmount"
+                                                    (change)="doChangeHomeLoanAvailAmount($event)"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.Sec24ChildProductAmount.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Interest Paid</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="InterestAmount"
+                                                    placeholder="6000" appPositiveNumber formControlName="InterestAmount"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.InterestAmount.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Principal Amount</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="PrincipalAmount" appPositiveNumber
+                                                    placeholder="40000" formControlName="PrincipalAmount"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.PrincipalAmount.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Pre-Construction Interest</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number"
+                                                    name="PreConstructionInterestAmount" placeholder="1500" appPositiveNumber
+                                                    formControlName="PreConstructionInterestAmount"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.PreConstructionInterestAmount.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Installment Number</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="InstallmentNumber" appPositiveNumber
+                                                    placeholder="5" formControlName="InstallmentNumber"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.InstallmentNumber.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6" style="margin-bottom: 25px;" *ngIf="lhpForm.controls.LetOut.value == 'selfOccupied'">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Stamp Duty Fee 
+                                            </label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="StampDutyFee" appPositiveNumberZ
+                                                    placeholder="6000" formControlName="StampDutyFee"
+                                                    (change)="doChangeStampDutyFeeAmount($event)"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.StampDutyFee.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Name of Lender</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="text" name="NameOfLender"
+                                                    placeholder="Name of Lender" formControlName="NameOfLender"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.NameOfLender.errors }"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">PAN of Lender</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="text" name="LenderPANNO" #input
+                                                    (input)="input.value=$event.target.value.toUpperCase()"
+                                                    placeholder="ABCPD1234E"
+                                                    pattern="^([a-zA-Z]){3}([cCHhaAbBgGlLfFTtjJ]){1}([a-zA-Z]){1}([0-9]){4}([a-zA-Z]){1}?$"
+                                                    maxlength="10" formControlName="LenderPANNO"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.LenderPANNO.errors }"
+                                                    autocomplete="off">
+
+
+                                            </label>
+                                            <div class="help-block">
+                                                <span
+                                                    *ngIf="lhpForm.get('LenderPANNO').errors?.pattern || lhpForm.get('LenderPANNO').errors?.invalid">
+                                                    Please match the requested format. (Ex: ABCCD1234E)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-12" style="margin-bottom: 25px;">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Address of Lender</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <textarea class="form-control" rows="2" spellcheck="false"
+                                                    placeholder="Type your lender address here..."
+                                                    formControlName="AddressOfLender"
+                                                    [ngClass]="{ 'is-invalid': submitted && g.AddressOfLender.errors }"
+                                                    id="AddressOfLender"></textarea>
+                                            </label>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Remarks</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <textarea class="form-control" rows="4" spellcheck="false"
+                                                    placeholder="Type your message here..."
+                                                    formControlName="InputsRemarks" id="InputsRemarks"></textarea>
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div [ngClass]="!isLoading ? 'col-md-12' : lhpForm.controls.DeclarationAttachments.value.length > 0 ? 'col-md-6' : 'col-md-12' "
+                                                *ngIf="currentTaxMode == 2">
+                                                <div class="form-group">
+                                                    <label class="form-label searchbar-label">Attachments</label>
+                                                    <div class="upload-files-container" draggable="true">
+                                                        <div class="drag-file-area"
+                                                            style="height: 95px; cursor: pointer;margin: 0px 0 0px;"
+                                                            [ngClass]="{ 'is-invalid-border': submitted && !lhpForm.controls.IsProposed.value && currentTaxMode == 2 && lhpForm.controls.DeclarationAttachments.value.length == 0 }"
+                                                            *ngIf="isLoading">
+
+
+                                                            <label class="label"
+                                                                style="margin-bottom: -5px;width: 100%;cursor: pointer;">
+                                                                <h3 class="dynamic-message"
+                                                                    style="color: #146BA2;top: 5%;position: relative;">
+                                                                    Upload
+                                                                    your files here </h3>
+                                                                <span style="display: block;font-size: 10px;"> (Max
+                                                                    size:
+                                                                    2MB) </span>
+                                                                <span class="browse-files"> <input #myInput type="file"
+                                                                        step="height: 100%;width: 100%;padding: 7px;"
+                                                                        class="default-file-input"
+                                                                        accept="application/msword,  application/pdf, image/*"
+                                                                        (change)="onFileUpload($event)" />
+                                                                </span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="d-flex align-items-center" style="margin-top: 10%;"
+                                                            *ngIf="!isLoading">
+                                                            <strong class="text-right"> {{docSpinnerText}} ...
+                                                                &nbsp;&nbsp;&nbsp;</strong>
+                                                            <div class="spinner-border ml-auto" role="status"
+                                                                aria-hidden="true"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="submitted && !lhpForm.controls.IsProposed.value && currentTaxMode == 2 && lhpForm.controls.DeclarationAttachments.value.length == 0"
+                                                class="help-block" style="padding-left: 16px;">
+                                                Attachment is required
+
+                                            </div>
+
+                                            <div class="col-md-6"
+                                                style="padding: 5px;"
+                                                *ngIf="lhpForm.controls.DeclarationAttachments.value.length > 0 && isLoading">
+                                                <div id="scroll-wrapper scrollbox_delayed">
+                                                    <div id="thumbnails">
+                                                        <div class="thumbnail-container" style="position: relative;
+                              border: 1px solid steelblue;
+                              margin: 16px;
+                              display: inline-block;
+                              height: 95px;                             
+                              border-radius: 3px;
+                              width: 110px;
+                              margin-left: 5px;" *ngFor="let photo of lhpForm.controls.DeclarationAttachments.value">
+                                                            <div class="box" title="Delete" matTooltip="Delete">
+                                                                <button type="button" matTooltip="Delete" class="delete"
+                                                                    style="color: white" title="Delete"
+                                                                    
+                                                                    (click)="doDeleteFile(item,photo, 'HP')">
+                                                                    <span> <i class="fa fa-minus-circle"
+                                                                            style="margin-top: 2px;"
+                                                                            aria-hidden="true"></i>
+                                                                    </span>
+                                                                </button>
+                                                                <button type="button" class="delete"
+                                                                    style="right: 1px;top: 70px;font-size: 20px;"
+                                                                    (click)="doViewFile(medical, photo, 'Medical')">
+                                                                    <span
+                                                                        style="border-radius: 14%;background: #e4e4e4;"><i
+                                                                            class="mdi mdi-progress-download"
+                                                                            style="color: #787c7b;"></i> </span>
+                                                                </button>
+                                                                <div>
+                                                                    <span class="material-icons p-r-10">
+                                                                        file_present
+                                                                    </span>
+                                                                    <span class="file-name"
+                                                                        matTooltip="{{photo.FileName}}">
+                                                                        {{photo.FileName}} </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                                    <ng-container *ngIf="PermissibleRoles() && !isGuidId(lhpForm.controls.Id.value)">
+                                    <div class="col-md-6" *ngIf="this.lhpForm.controls.LetOut.value ==='rentedOut'">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Approved Annual Rent</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="GrossAnnualValueApprovedAmount"
+                                                    placeholder="12000" formControlName="GrossAnnualValueApprovedAmount"
+                                                 
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Approved Municipal Taxes Paid</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="MunicipalTaxApprovedAmount"
+                                                    placeholder="5000" formControlName="MunicipalTaxApprovedAmount"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Approved Interest Paid</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number" name="InterestAmountApprovedAmount"
+                                                    placeholder="6000" formControlName="InterestAmountApprovedAmount"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>                                  
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Approved Pre-Construction Interest</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="number"
+                                                    name="PreConstructionInterestApprovedAmount" placeholder="1500"
+                                                    formControlName="PreConstructionInterestApprovedAmount"
+                                                    autocomplete="off">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </ng-container>
+            </div>
+            <div class="modal-footer" *ngIf="isLoading && IsEditMode">
+                <button class="btn btn-link" type="button" (click)="cancel_slider_hp()"> Cancel</button>
+                <li class="list-inline-item" *ngIf="IsHPataExists && !isrendering_spinner && IsEditMode">
+                    <button class="btn btn-danger" type="button"
+                        style="padding-left: 25px;padding-right: 25px;padding-top: 2px;padding-bottom: 3px;"
+                        (click)="delete_hp('delete')"> Delete</button>
+                </li>
+                <button class="btn  btn-primary" *ngIf="!isrendering_spinner && IsEditMode"
+                    style="padding-left: 25px;padding-right: 25px;padding-top: 2px;padding-bottom: 3px;" type="Submit"
+                    name="btnSubmit" id="btnSubmit" (click)="saveDeclarations('Investment')"> Save
+                </button>
+            </div>
+            <div class="modal-footer" *ngIf="isLoading && !IsEditMode">
+                <button class="btn btn-link" type="button" (click)="close_slider_hp()"> Close</button>
+                
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,117 @@
+ .cursor-pointer {
+  cursor: pointer;
+ }
+.custom-table {
+  border-collapse: collapse;
+  font-style: normal;
+  text-align: center;
+  font-weight: 400;
+  font-size: 13px;
+  font-family: Roboto, sans-serif;
+  line-height: 15px;
+}
+
+.custom-table th {
+  border: none;
+  font-weight: 600 !important;
+}
+
+.custom-table td {
+  border: none;
+  font-weight: 400 !important;
+}
+
+.custom-table tbody tr {
+  text-align: center;
+  border: 1px solid #e7e7e7;
+}
+
+.pending-status {
+  background: #FFE9C7;
+  border-radius: 4px;
+  text-align: center;
+  color: #EE9A15;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.approved-status {
+  text-align: center;
+  background: #E2FEEE;
+  border-radius: 4px;
+  color: #2DA05E;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.rejected-status {
+  text-align: center;
+  background: #FFE4E1;
+  border-radius: 4px;
+  color: #E74C3C;
+  font-style: normal;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.custom-table-pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.custom-table-pagination span {
+  margin-right: 5px;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #ddd;
+  line-height: 15px;
+  font-family: Roboto, sans-serif;
+}
+
+.custom-table-pagination .prev, .custom-table-pagination .next {
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 400 !important;
+  font-size: 13px;
+  line-height: 15px;
+  color: #146BA2;
+}
+
+.custom-table-pagination span.active {
+  background-color: #146BA2;
+  color: #fff;
+}
+
+.custom-table-pagination .btn[disabled] {
+  opacity: 0.5 !important;
+  pointer-events: none;
+}
+
+.custom-table-pagination .prev, .custom-table-pagination .next {
+  font-style: normal;
+  font-weight: 400 !important;
+  font-size: 13px;
+  line-height: 15px;
+  color: #146BA2;
+  font-family: Roboto, sans-serif;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f2f2f2; 
+}

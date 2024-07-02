@@ -1,0 +1,27 @@
+<app-loading-screen></app-loading-screen>
+
+<br />
+<br />
+
+<div class="text-center ma-5" *ngIf="spinner">
+  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+    Please wait...
+  </button>
+</div>
+
+<div class="row" *ngIf="!spinner">
+  <div class="col-xs-12 col-sm-12"
+    *ngIf="isEmptyObject(DynamicFieldDetails) != true && isEmptyObject(this.DynamicFieldDetails) != null">
+    <app-dynamicfieldform #validateChildComponentForm [col_span_size]="4" [RoleCode]="RoleCode"
+      [dynamicFieldDetails]="getDynamicAccordionFields('isOfferInfo')">
+    </app-dynamicfieldform>
+  </div>
+</div>
+
+<!-- <div class="row" *ngIf="!spinner">
+  <div class="col-xs-12 col-sm-12 text-center"
+    *ngIf="isEmptyObject(DynamicFieldDetails) == true || isEmptyObject(this.DynamicFieldDetails) == null">
+    There were no additional details found!
+  </div>
+</div> -->

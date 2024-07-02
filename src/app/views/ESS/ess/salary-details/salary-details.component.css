@@ -1,0 +1,75 @@
+.table-sticky>thead>tr>th,
+.table-sticky>thead>tr>td {
+    top: 0px;
+    position: sticky;
+}
+
+.table-height {
+    display: block;
+    overflow: auto;
+    width: 100%;
+}
+
+.table-sticky>thead th {
+    background-color: rgb(245 245 245)
+    /* rgb(199 199 199) !important; */
+}
+
+.clickedcard {
+    /* background-color: red; */
+    border: 2px solid #1caf9a;
+}
+
+.card-before-clicked {
+    cursor: pointer;
+    border-width: 2px;
+    border-style: solid;
+    /* border-color: #c6f5d7  */
+}
+
+.right-active-arrow::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    /* margin-left: -20px; */
+    border-width: 15px;
+    border-style: solid;
+    border-color: transparent transparent transparent #1caf9a;
+    transform: translate(0%, -50%);
+    /* border-color: transparent transparent transparent #09db72; */
+}
+
+.right-active-arrow::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 99.5%;
+    /* margin-left: -20px; */
+    border-width: 15px;
+    border-style: solid;
+    border-color: transparent transparent transparent #fff;
+    transform: translate(0%, -50%);
+}
+
+.type-text-boarder {
+    border: white;
+}
+
+.table-th-td td {
+    min-height: 30px;
+    font-weight: unset;
+    height: 30px;
+    padding: 0 !important;
+    max-height: 30px;
+}
+
+.table-th-td td input,
+.table-th-td td select {
+    border: none;
+}
+
+.table-th-td td .input-checkbox {
+    text-align: center;
+    margin-top: 15px;
+}

@@ -1,0 +1,253 @@
+
+<!-- This is only a Template, It is not displyed by default -->
+<ng-template #rowDetailTemplateRef let-rowDetails let-formgroup="group">
+  <div *ngIf="rowDetails.ColumnDetailsList.length > 0" [formGroup]="formgroup">
+    <div class="row">
+      <div class="col-12 form-group form-group-vertical"  *ngFor="let columnDetails of rowDetails.ColumnDetailsList">
+        
+        <!-- Control Element -->
+        <div class="col-12" *ngIf = "columnDetails.ElementType === 0" >
+
+          <!-- Text Box -->
+          <div class="col-12" *ngIf = "columnDetails.ControlElement.InputControlType === 0">
+            <label class="form-label"> {{columnDetails.ControlElement.Label}} </label>
+            <input type="text" class="form-control" [formControlName]="columnDetails.ControlElement.FieldName" disabled
+            [placeholder]="columnDetails.ControlElement.PlaceHolder" [(ngModel)]="columnDetails.ControlElement.Value">
+          </div>
+
+          <!-- Drop Down -->
+          <div class="col-12" *ngIf = "columnDetails.ControlElement.InputControlType === 1">
+            <label class="form-label"> {{columnDetails.ControlElement.Label}} </label>
+            <ng-select  [items]="columnDetails.ControlElement.DropDownList" [(ngModel)]="columnDetails.ControlElement.Value"
+            [formControlName]="columnDetails.ControlElement.FieldName" 
+            [loading]="!columnDetails.ControlElement.DropDownList" 
+            (open)="onOpeningDropDown(columnDetails.ControlElement)"  
+            [searchable]="false" [bindValue]="columnDetails.ControlElement.ValueField" 
+            [bindLabel]="columnDetails.ControlElement.DisplayField"  placeholder="{{columnDetails.ControlElement.PlaceHolder}}">
+            </ng-select>
+          </div>
+
+          <!-- Multi Select Drop Down -->
+          <div class="col-12" *ngIf ="columnDetails.ControlElement.InputControlType === 2">
+            <label class="form-label"> {{columnDetails.ControlElement.Label}} </label>
+            <ng-select  [items]="columnDetails.ControlElement.DropDownList" [(ngModel)]="columnDetails.ControlElement.MultipleValues"
+            [formControlName]="columnDetails.ControlElement.FieldName" 
+            [loading]="!columnDetails.ControlElement.DropDownList"  
+            (open)="onOpeningDropDown(columnDetails.ControlElement)" 
+            [searchable]="false" [multiple]="true" [closeOnSelect]="false" 
+            [bindValue]="columnDetails.ControlElement.ValueField" [bindLabel]="columnDetails.ControlElement.DisplayField"  
+            placeholder="{{columnDetails.ControlElement.PlaceHolder}}">
+              <ng-template ng-header-tmp>
+                <input placeholder="Search" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select.filter($event.target.value)" />
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <!-- Auto Fill Text Box -->
+          <div class="col-12" *ngIf ="columnDetails.ControlElement.InputControlType === 3">
+            <label class="form-label"> {{columnDetails.ControlElement.Label}} </label> 
+            <ng-select  #select [items]="columnDetails.ControlElement.DropDownList" 
+            [(ngModel)]="columnDetails.ControlElement.Value" [clearable]="false"
+            [formControlName]="columnDetails.ControlElement.FieldName" 
+            [loading]="!columnDetails.ControlElement.DropDownList"  
+            (open)="onOpeningDropDown(columnDetails.ControlElement)" [searchable]="true" 
+            [bindValue]="columnDetails.ControlElement.ValueField" 
+            [bindLabel]="columnDetails.ControlElement.DisplayField"
+            placeholder="--{{columnDetails.ControlElement.PlaceHolder}}--" >
+              <ng-template ng-header-tmp>
+                <input placeholder="Search" type="text" class="form-control" 
+                style="border: none;border-radius: 0px !important;background: white" 
+                (input)="select.filter($event.target.value)" />
+              </ng-template>
+            </ng-select>               
+          </div>
+          
+          <!-- Text Area -->
+          <div *ngIf="columnDetails.ControlElement.InputControlType === 4">
+            <label class="form-label"> {{columnDetails.ControlElement.Label}} </label>
+            <textarea class="form-control" [rows]="columnDetails.ControlElement.RowCount" spellcheck="false"
+              [formControlName]="columnDetails.ControlElement.FieldName"
+              [(ngModel)]="columnDetails.ControlElement.Value">
+            </textarea> 
+          </div>
+
+          <!-- Radio Buttons -->
+          <div *ngIf="columnDetails.ControlElement.InputControlType === 5">
+            <label class="form-label"> {{columnDetails.ControlElement.Label}} </label>
+            <div class="radio-tile-group">
+              <div class="input-container" *ngFor="let dataItem of columnDetails.ControlElement.DropDownList">
+                 
+                <input class="c-card" type="radio" 
+                [(ngModel)]="columnDetails.ControlElement.Value"
+                [formControlName]="columnDetails.ControlElement.FieldName"  
+                class="radio-button" [value]="dataItem[columnDetails.ControlElement.ValueField]" 
+                [checked]="dataItem.Checked" tabindex="0">
+                                 
+                <div class="radio-tile">
+                                        
+                  <div class="card-state-icon"></div>
+                  
+                  <label>
+                  
+                    <div class="image"> 
+                      <div class="icon walk-icon">
+                        <i class="mdi {{dataItem.Icon}}" style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                      </div>
+                    </div>
+                  
+                    <label class="radio-tile-label">{{dataItem[columnDetails.ControlElement.DisplayField]}}</label>
+                  
+                  </label>
+
+                </div>
+              </div> 
+            </div>
+          </div>
+
+          <!-- CheckBox -->
+          <div *ngIf="columnDetails.ControlElement.InputControlType === 6">
+            <div class="row">
+
+              <div class="col" >
+                <label class="form-label" >{{columnDetails.ControlElement.Label}}</label>
+              </div>
+
+              <div class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox"  
+                  [(ngModel)]="columnDetails.ControlElement.Value"
+                  [formControlName]="columnDetails.ControlElement.FieldName" tabindex="-1"/>
+                  <span class="el-switch-style"></span> 
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <div *ngIf="!formgroup.get(columnDetails.ControlElement.FieldName).valid && formgroup.get(columnDetails.ControlElement.FieldName).touched">
+            <span *ngFor="let validator of columnDetails.ControlElement.Validators">
+              <span style="color: red;" *ngIf="formgroup.get(columnDetails.ControlElement.FieldName).errors[validator.PropertyNameInError]">{{validator.InvalidMessage}}</span>
+            </span>
+          </div>
+
+        </div>
+
+        <!-- Group Element Recursive Template -->
+        <div *ngIf = "columnDetails.ElementType === 1">
+          
+          <!-- Group Type : Simple with label-->
+          <div *ngIf = "columnDetails.GroupElement.Type === 0">
+            <label class="form-label"> {{columnDetails.GroupElement.Label}} </label>  
+              
+              
+              <div *ngFor="let rowDetail of columnDetails.GroupElement.RowDetailsList">
+                  <ng-template [ngTemplateOutlet]="rowDetailTemplateRef" 
+                  [ngTemplateOutletContext]="{ $implicit : rowDetail , group : formgroup}">
+                  </ng-template>
+              </div>
+              
+          </div>
+
+          <!-- Group Type : Simple without Label -->
+          <div *ngIf = "columnDetails.GroupElement.Type === 1">
+            <div *ngFor="let rowDetail of columnDetails.GroupElement.RowDetailsList">
+              <ng-template [ngTemplateOutlet]="rowDetailTemplateRef" 
+              [ngTemplateOutletContext]="{ $implicit : rowDetail , group : formgroup}">
+              </ng-template>
+            </div>
+          </div>
+
+          <!-- Group Type : Accordian -->
+          <div  *ngIf="columnDetails.GroupElement.Type === 2">
+            <ngb-accordion class="panel">
+              <ngb-panel class="panel" title="{{columnDetails.GroupElement.Label}}">
+                <ng-template ngbPanelContent>
+                  <div *ngFor="let rowDetail of columnDetails.GroupElement.RowDetailsList">
+                    <ng-template [ngTemplateOutlet]="rowDetailTemplateRef" 
+                    [ngTemplateOutletContext]="{ $implicit : rowDetail , group : formgroup}">
+                    </ng-template>
+                  </div>
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
+          </div>
+
+          <!-- Group Type : Highlighted Border -->
+          <div  *ngIf="columnDetails.GroupElement.Type === 3">
+            <fieldset class="border">
+              <legend class="border">{{columnDetails.GroupElement.Label}}</legend>
+              <div *ngFor="let rowDetail of columnDetails.GroupElement.RowDetailsList">
+                <ng-template [ngTemplateOutlet]="rowDetailTemplateRef" 
+                [ngTemplateOutletContext]="{ $implicit : rowDetail , group : formgroup}">
+                </ng-template>
+              </div>
+            </fieldset>
+          </div>
+
+        </div>
+      
+      </div>
+    </div>
+  </div>
+  
+</ng-template>
+
+
+<!-- HTML Starts from Here -->
+<div class="row flex-column w-100" style="padding: 0 !important;">
+  <div class="row text-center">
+    <div class="col-lg-12 text-center">
+      <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row w-100 mx-auto">
+    <div *ngIf="formLayout">
+      <form [formGroup]= "genericForm">
+        <div class="row"> 
+            <div class="w-100" *ngFor="let rowDetail of formLayout.DataSourceTree.RowDetailsList">
+              <ng-template [ngTemplateOutlet]="rowDetailTemplateRef"
+              [ngTemplateOutletContext]="{ $implicit : rowDetail , group : genericForm}">
+              </ng-template>
+            </div>
+
+            <div *ngFor = "let child of formLayout.DataSourceTree.Children">
+              <div *ngIf="child.RelationWithParent === 1">
+                <div class="row">
+                  <div class="col-12" style="text-align: right;">
+                    <button type="button" class="btn upgrade-btn btn-sm m-r-sm " (click)="onAddButtonClicked(child)">
+                      <i class="mdi mdi-plus m-r-xs" style="border-radius: 3px;"></i>
+                        Add &nbsp;
+                    </button>
+                  </div>
+                </div>
+                &nbsp;
+                <angular-slickgrid gridId="grid1" [columnDefinitions]="child.Columns" [gridOptions]="child.GridOptions" 
+                [dataset]="child.Dataset" gridWidth="100%" 
+                (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)" 
+                (sgOnClick)="onCellClicked(child,$event.detail.eventData, $event.detail.args)"
+                (onAngularGridCreated)="angularGridReady(child,$event)">
+                </angular-slickgrid>
+
+              </div>
+            </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-6 pull-left"></div>
+        <div class="col-6 pull-right ">
+          <div class="pull-right ">
+            <button class="btn btn-primary m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit" [disabled]="spinner"
+              (click)="onSubmit()">
+              <div class="pos-rlt sm-btn-component"> <span> Save </span></div>
+            </button>
+            <button class="btn btn-default" (click)="close()">Cancel</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

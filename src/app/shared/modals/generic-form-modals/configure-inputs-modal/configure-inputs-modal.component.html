@@ -1,0 +1,201 @@
+<div class="modal fade show" style="display: block;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="dfc100 overflow-y-auto">
+
+        <!-- <div [ngStyle]="{'display': spinner?'flex':'none'}" id="overlay">
+          <div class="w-100 d-flex justify-content-center align-items-center">
+            <div  class="spinner"></div>
+          </div>
+        </div> -->
+
+        
+
+        <div class="modal-header">
+          <h5 class="modal-title pull-left">Input Element Details</h5>
+          <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()" ><i class="mdi mdi-close font-size-md icon-close"></i></a>
+        </div>
+
+        <div class="modal-body no-padder builtin-calling-wrapper">
+          <div class="flex-column">
+            
+            <div class="text-center ma-5" *ngIf="spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+
+            <div *ngIf="!spinner">
+              <div class="clearfix">
+
+                <div class="row">
+                  <span class="col-12">
+                    <div class="row" style="padding-top: 30px;padding-right: 0px;">
+                      <span class="col-10" style="text-align: right;">
+                        <label class="form-label" >Read only: </label>
+                      </span>
+                      <span class="col-2">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="controlElement.Readonly"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+                  </span>
+                </div>
+
+                <div class="row">
+
+                  <div class="col">
+                      <label for="DataSource-Type" class="form-label"> Entity(s)</label>
+                      <ng-select   [clearable]="false" [items]="node.DataSourceList" bindValue="Name" 
+                      [multiple]="true" bindLabel="Name" [(ngModel)]="controlElement.EntityList">
+                      </ng-select>
+                  </div>
+
+                  <div class="col">
+                      <div *ngIf="controlElement.EntityList.length > 0">
+                        <label for="FieldName"  class="form-label"> Field Name: </label>
+                        <input id="FieldName" class="form-control" type="text" [(ngModel)]="controlElement.FieldName"/>
+                        <!-- <ng-select   [clearable]="false" [items]="node.ColumnListObject[controlElement.EntityList[0]]"
+                        [(ngModel)]="controlElement.FieldName">
+                        </ng-select> -->
+                      </div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <label for="Label"  class="form-label"> Label: </label>  
+                    <input id="Label"  type="text" class="form-control" [(ngModel)]="controlElement.Label">
+                  </div>
+                  <div class="col">
+                    <label for="PlaceHolder"  class="form-label"> Place Holder: </label>  
+                    <input id="PlaceHolder"  type="text" class="form-control" [(ngModel)]="controlElement.PlaceHolder">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <label for="InputControlType"  class="form-label"> Input Type: </label>
+                    <ng-select   [clearable]="false" [items]="inputControlTypeNames" bindValue="value"
+                    bindLabel="label" [(ngModel)]="controlElement.InputControlType">
+                    </ng-select>
+                  </div>
+
+                  <div class="col-6">
+                    <label for="defaultValue"  class="form-label"> Default Value: </label>
+                    <input id="defaultValue"  type="text" class="form-control" [(ngModel)]="controlElement.DefaultValue">
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="controlElement.InputControlType === 1 || controlElement.InputControlType === 2 || 
+                  controlElement.InputControlType === 3">
+                  
+
+                    <span class="col-6">
+                      <label for="DataSource-Type" class="form-label">Data Source Type:</label>
+                      <ng-select   [clearable]="false" [items]="dataSourceTypeNames" bindValue="value" 
+                      bindLabel="label" [(ngModel)]="controlElement.DataSource.Type">
+                      </ng-select>
+                    </span>
+
+                    <span class="col-6">
+                      <label for="DataSource" class="form-label"> Data Source Name: </label>  
+                      <input id="DataSource" type="text" class="form-control" [(ngModel)]="controlElement.DataSource.Name">
+                    </span>
+
+                    <span class="col-6">
+                      <div *ngIf="controlElement.EntityList.length > 0">
+                        <label for="FieldName"  class="form-label"> Value Field: </label>
+                        <ng-select [clearable]="true" [items]="controlElementColumns" 
+                        (open)="onOpeningDatasourceBindingFieldsDropDown(controlElement)"
+                        [loading]="!controlElementColumns"
+                        [multiple]="false" [(ngModel)]="controlElement.ValueField">
+                        </ng-select>
+                      </div>
+                    </span>
+
+                    <span class="col-6">
+                      <div *ngIf="controlElement.EntityList.length > 0">
+                        <label for="FieldName"  class="form-label"> Display Field: </label>
+                        <ng-select [clearable]="true" [items]="controlElementColumns"
+                        (open)="onOpeningDatasourceBindingFieldsDropDown(controlElement)"
+                        [loading]="!controlElementColumns"
+                        [multiple]="false" [(ngModel)]="controlElement.DisplayField">
+                        </ng-select>
+                      </div>
+                    </span>
+
+                    <span class="col-6">
+                      <div *ngIf="controlElement.EntityList.length > 0">
+                        <label for="FieldName"  class="form-label"> Parent Field Name(s): </label>
+                        <ng-select [clearable]="true" [items]="node.ColumnListObject[controlElement.EntityList[0]]"
+                        [multiple]="true" [(ngModel)]="controlElement.ParentFields">
+                        </ng-select>
+                      </div>
+                    </span>
+
+                  
+
+                    <span class="col-6">
+                      <div class="row" style="padding-top: 30px;padding-right: 0px;">
+                        <span class="col-11" style="text-align: right;">
+                          <label class="form-label" >Core Entity: </label>
+                        </span>
+                        <span class="col-2">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" [(ngModel)]="controlElement.DataSource.IsCoreEntity"/>
+                            <span class="el-switch-style" ></span>
+                          </label>
+                        </span>
+                      </div>
+                    </span>
+
+                    <span class="col-6">
+                      <div class="row" style="padding-right: 0px;">
+                        <span class="col-10" style="text-align: right;">
+                          <label class="form-label" >Load Data on Page Laod?: </label>
+                        </span>
+                        <span class="col-2">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" [(ngModel)]="controlElement.LoadDataOnPageLoad"/>
+                            <span class="el-switch-style" ></span>
+                          </label>
+                        </span>
+                      </div>
+                    </span>
+
+                    
+
+
+                  
+                  
+                </div>
+                
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-default pull-right" type="button" data-dismiss="modal" (click)="closeModal()">Close</button>
+  
+          <!-- <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+              <div>
+                  <div>
+                      <button class="btn  btn-primary " type="Submit" name="btnSubmit"  id="btnSubmit" (click)="onSave()">
+                          <div class="pos-rlt sm-btn-component" > <span> Save </span></div>
+                      </button>
+                  </div>
+              </div>
+          </div> -->
+        </div>
+    
+      </div>
+    </div>
+  </div>
+</div>

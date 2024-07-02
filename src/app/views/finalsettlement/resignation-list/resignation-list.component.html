@@ -1,0 +1,28 @@
+<div class="page-wrapper" style="margin-top: 0px;">
+  <div class="page-content ">
+    
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div *ngIf="roleCode == 'PayrollAdmin'">
+      <app-searchbar-view [searchConfiguration]="searchConfiguration"   
+       (searchButtonClicked)="onSearch()"></app-searchbar-view>
+    </div>
+
+    <div class="content m-b report-content" *ngIf="!spinner"
+    style="padding-bottom: 35px;margin-top: 20px;">
+
+      <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinition" [gridOptions]="gridOptions"
+      [dataset]="dataset" gridWidth="100%"
+      (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+      (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)">
+      </angular-slickgrid>
+
+    </div>
+  </div>
+</div>
+

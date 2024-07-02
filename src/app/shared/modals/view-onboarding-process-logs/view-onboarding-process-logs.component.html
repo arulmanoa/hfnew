@@ -1,0 +1,130 @@
+<div class="page-wrapper " style="padding: 0px;">
+    <div class="page-content">
+        <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" [fullScreen]="true">
+            <p style="color: #0a609eeb"> Loading... </p>
+        </ngx-spinner>
+    
+
+        <div class="row" *ngIf="empDetails">
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <h6 class="small lable_name" style="font-size: 93%;">Candidate Name </h6>
+            <span style="font-size: 13px;font-weight: 600;"> {{empDetails.Name}} </span>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <h6 class="small lable_name" style="font-size: 93%;">Email </h6>
+            <span style="font-size: 13px;font-weight: 600;"> {{empDetails.EmailId}} </span>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <h6 class="small lable_name" style="font-size: 93%;">Mobile </h6>
+            <span style="font-size: 13px;font-weight: 600;"> {{empDetails.Mobile}} </span>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <h6 class="small lable_name" style="font-size: 93%;">DOJ </h6>
+            <span style="font-size: 13px;font-weight: 600;"> {{empDetails.formatDOJ}} </span>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <h6 class="small lable_name" style="font-size: 93%;"> Client </h6>
+            <span style="font-size: 13px;font-weight: 600;"> {{empDetails.ClientName}} </span>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <h6 class="small lable_name" style="font-size: 93%;">Type </h6>
+            <span style="font-size: 13px;font-weight: 600;"> {{empDetails.ModuleName}} </span>
+          </div>
+
+        </div>
+
+        <div class="row" *ngIf="ProcessLogs && ProcessLogs.length>0">
+
+
+            <div class="" style="max-height:400px; overflow-y:auto;overflow-x: hidden;">
+                <div class="col-md-12 col-sm-12 col-xs-12 mb-2">
+                    <table class="table table-borderless table-sticky">
+                        <thead style="background-color: #f5f5f5 !important;">
+                            <tr>
+                                <th>Action</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="ProcessLogs && ProcessLogs.length>0">
+                            <tr *ngFor="let logObj of ProcessLogs  let i = index">
+                                <td style="width :50%;">
+                                    <div [ngClass]="logObj.InputStatus==400?'card-before-clicked-green right-active-arrow-green':logObj.InputStatus==300?'card-before-clicked-red right-active-arrow-red':'card-before-clicked-yellow right-active-arrow-yellow'">
+                                        <!-- <div class="card-before-clicked right-active-arrow"> -->
+                                        <div class="card-body" style="padding: 8px;">
+                                            <div class="row align-items-center">
+                                                <div class="col-8 ">
+                                                    <label style="font-size: 13px; color: #9d9d9d;">Date Time</label>
+                                                    <p style="margin-bottom: 1px;font-size: 14px;"> {{logObj.inputFormatrdDate}}</p>
+                                                </div>
+                                                <div class="col-4 ">
+                                                    <label style="font-size: 13px;color: #9d9d9d; ">Done By</label>
+                                                    <p style="margin-bottom: 1px;font-size: 14px;">{{logObj.InputUserName}} </p>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label style="font-size: 13px;color: #9d9d9d;">Action Info</label>
+                                                    <p style="margin-bottom: 1px;font-size: 14px;"> {{logObj.Input}}</p>
+                                                </div>
+                                                <!-- <div class="col-12">
+                                                    <label style="font-size: 13px;color: #9d9d9d;">Remarks </label>
+                                                    <p class="p-remarks" [attr.title]="logObj.Remarks"> {{logObj.Remarks}}</p>
+                                                </div> -->
+                                                <div class="col-12" *ngIf="logObj!=null &&logObj.Remarks&&logObj.Remarks.length>0 ">
+                                                    <a href="javascript:;" class="btn" style="padding:2px; color:blue;margin-right: 5px" [ngbPopover]="popContent" placement="right">
+                                                        <a> Remarks...</a>
+                                                        <!-- <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #838383;" [ngbPopover]="popContent" placement="bottom"></i> -->
+                                                    </a>
+                                                    <ng-template #popContent>
+                                                        <div>
+                                                            {{logObj.Remarks}}
+                                                        </div>
+                                                    </ng-template>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding-top: 25px;width: 50%;">
+                                    <!-- <div [ngClass]="logObj.OutputStatus==300?'card-before-clicked-green ':logObj.OutputStatus==200?'card-before-clicked-red ':'card-before-clicked-yellow'"> -->
+                                    <div class="card-before-clicked">
+                                        <!-- <div class="card-before-clicked"> -->
+
+                                        <div class="card-body" style="padding:10px;">
+                                            <div class="row align-items-center">
+                                                <div class="col-8 ">
+                                                    <label style="font-size: 13px; color: #9d9d9d;">DateTime</label>
+                                                    <p style="margin-bottom: 1px;font-size: 14px;"> {{logObj.ouputFormatrdDate}}</p>
+                                                </div>
+                                                <div class="col-4 ">
+                                                    <label style="font-size: 13px; color: #9d9d9d;">Parked At</label>
+                                                    <p style="margin-bottom: 1px;font-size: 14px;">{{logObj.OutputUserName}} </p>
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <label style="font-size: 13px;color: #9d9d9d;">Status Info</label>
+                                                    <p style="margin-bottom: 1px;font-size: 14px;"> {{logObj.Output}}</p>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                <div *ngIf="ProcessLogs && ProcessLogs.length==0">
+                    <label style="text-align: center;padding: 20px;
+                    margin-left: 360px; ">No Records Found...</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

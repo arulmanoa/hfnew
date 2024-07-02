@@ -1,0 +1,1638 @@
+<div class="page-wrapper pt-0" id="fullcontent">
+  <div class="page-content p-0">
+    <app-loading-screen></app-loading-screen>
+    <div class="w-100 ">
+      <div class="row m-0 w-100">
+        <div class=" col-md-12 p-0">
+          <div class="card blue-card">
+            <div class="card-body d-flex">
+              <div class="col-md-8 alignWelcomeText">
+                <h4 class="welcome-text">WELCOME</h4>
+              </div>
+              <div class="col-md-4">
+                <img src="assets/Images/online-joining-kit-cover-image.png" alt="bg-image" class="bg-fill-image">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;">
+        <div class="text-center ma-5" *ngIf="spinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+
+        <!-- content -->
+        <div class="w-100">
+          <!-- TITLE -->
+          <div class="row mb-2 w-100 " *ngIf="!spinner">
+            <div class="col-md-6 content-title"><span>CIEL Joining Kit</span></div>
+            <div class="col-lg-6 text-right" *ngIf="!isEmployeeLoggedIn">
+              <div class="text-right">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <button class="ignoreBtnForPrint btn btn-sm btn-default" tooltip="Close" tooltip-placement="bottom" (click)="redirectToMainOJKPageLayout()">
+                      <i class="mdi mdi-close font-size-md"></i>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- CLICKABLE PROGRESS STEPS -->
+          <div class="row w-100" style="display: inline-block !important;" *ngIf="!spinner">
+            <nz-steps nzType="navigation" nzSize="small" [nzCurrent]="index" id="ignoreForPrint">
+              <!-- step 1 -->
+              <nz-step nzTitle="Personal Information" [nzDisabled]="false" (click)="scrollTo('section1')"></nz-step>
+              <!-- step 2 -->
+              <nz-step nzTitle="Education & Work Experience" [nzDisabled]="false" (click)="scrollTo('section2')"></nz-step>
+              <!-- step 3 -->
+              <nz-step nzTitle="Pan & Aadhaar Details" [nzDisabled]="false" (click)="scrollTo('section3')"></nz-step>
+              <!-- step 4 -->
+              <nz-step nzTitle="Forms" [nzDisabled]="false" (click)="scrollTo('section4')"></nz-step>
+              <!-- step 5 -->
+              <nz-step nzTitle="Documents" [nzDisabled]="false" (click)="scrollTo('section5')"></nz-step>
+            </nz-steps>
+            <div id="printid" class="print w-100" scrollSpy [spiedTags]="['nz-steps']"
+              (sectionChange)="onSectionChange($event)">
+              <div class="row showForPrint" style="display:none;">
+                <div class="col-md-6">
+                  <h2 class="header_title">
+                    <img src="assets/Images/clientlogo/{{clientLogoLink}}" style="height: 30px;">
+                  </h2>
+                </div>
+                <div class="col-md-6">
+                  <h2 class="title">CIEL JOINING KIT</h2>
+                </div>
+              </div>
+              <div class="row showForPrint" style="display:none;"></div>
+              <div class="row showForPrint" style="display:none;"></div>
+              <div class="row showForPrint" style="display:none;"></div>
+              <div class="row showForPrint" style="display:none;"></div>
+              <!-- STEP 1 CONTENT -->
+              <div id="section1" class="section1 steps-content">
+                <div class="col-12 col-md-12 col-sm-12 text-left">
+                  <div class="title">Personal Information</div>
+                  <div class="flex-column"
+                    style="padding-left: 1rem!important;padding-bottom: 0 !important;margin-left: -1%;padding-top: 0.25rem !important;">
+                    <form [formGroup]="personalInformation">
+                      <div class="row">
+                        <div class="col-12 col-md-12 col-sm-12">
+                          <div class="clearfix">
+                            <div class="row" style="margin-top: 15px;">
+                              <!-- PERSONAL INFORMATION -->
+                              <div class="col-12 col-sm-8 ">
+                                <div class="row" id="test5">
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                    <label class="form-label">Full Name </label>
+                                    <input class="form-control" type="text" name="fullName" maxlength="100"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" #fullName
+                                      formControlName="fullName"
+                                      [ngClass]="{ 'is-invalid': submitted && g.fullName.errors }" placeholder=""
+                                      autocomplete="none|false|no" />
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                    <label class="form-label">Father's Name </label>
+                                    <input class="form-control" type="text" name="fatherName" maxlength="100"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" #fatherName
+                                      formControlName="fatherName" 
+                                      [ngClass]="{ 'is-invalid': submitted && g.fatherName.errors }" placeholder=""
+                                      autocomplete="none|false|no" />
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Employee Code </label>
+                                    <input class="form-control" type="text" name="empCode" maxlength="100"
+                                      onkeypress="return /^[0-9]+$/i.test(event.key)" #empCode
+                                      formControlName="employeeCode" 
+                                      [ngClass]="{ 'is-invalid': submitted && g.employeeCode.errors }" placeholder=""
+                                      autocomplete="none|false|no" />
+                                  </div>
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Client Name</label>
+                                    <input class="form-control" type="text" name="clientName" maxlength="100"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" #clientName
+                                      formControlName="clientName" 
+                                      [ngClass]="{ 'is-invalid': submitted && g.clientName.errors }" placeholder=""
+                                      autocomplete="none|false|no" />
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- PROFILE IMAGE -->
+                              <div class="col-lg-4">
+                                <div class="col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+                                  <div class="avatar-upload">
+                                    <!-- <div class="avatar-edit" *ngIf="profileImageUrl == null">
+                                      <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg"
+                                        (change)="readURL($event)" />
+                                      <label for="imageUpload"></label>
+                                    </div> -->
+                                    <div class="avatar-preview img-center-block">
+                                      <div id="imagePreview" *ngIf="profileImageUrl != null">
+                                        <img [src]="profileImageUrl"
+                                          style="width: 100%;height: 100%;background-size: contain; background-repeat: no-repeat;background-position: center;">
+                                      </div>
+                                      <!-- <div id="imagePreview" *ngIf="profileImageUrl == null" style="background-image: url(https://user.gadjian.com/static/images/personnel_boy.png);">
+                                        </div> -->
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- OTHER DETAILS -->
+                            <div class="row">
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                <label class="form-label">Email </label>
+                                <input class="form-control" type="email" name="email" formControlName="email"
+                                  placeholder=""
+                                  pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                                  [ngClass]="{'is-invalid': submitted && g.email.errors}" autocomplete="none|false|no">
+                              </div>
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                <label class="form-label">Contact No. </label>
+                                <input class="form-control" type="text" minlength="10" maxlength="10"
+                                  onkeypress="return /^[0-9]+$/i.test(event.key)" name="contactNo"
+                                  formControlName="mobileNo"
+                                  style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;"
+                                  [ngClass]="{'is-invalid': submitted && g.contactNo.errors }" placeholder=""
+                                  autocomplete="none|false|no">
+                              </div>
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                <label class="form-label">Alternate Contact No. </label>
+                                <input class="form-control" type="text" minlength="10" maxlength="10"
+                                  style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;"
+                                  onkeypress="return /^[0-9]+$/i.test(event.key)" name="alternateContactNo"
+                                  formControlName="alternateContactNo"
+                                  [ngClass]="{'is-invalid': submitted && g.alternateContactNo.errors }" placeholder=""
+                                  autocomplete="none|false|no">
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                <label class="form-label">Date of Birth </label>
+                                <input type="text" class="form-control" bsDatepicker placement="bottom"
+                                  (bsValueChange)="onChangeDOB($event)"
+                                  [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',containerClass:'theme-default' }"
+                                  name="dateOfBirth" formControlName="dateOfBirth"
+                                  [ngClass]="{'is-invalid': submitted && g.dateOfBirth.errors }" placeholder=""
+                                  autocomplete="none|false|no">
+                              </div>
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                <label class="form-label">Date of Joining </label>
+                                <input type="text" class="form-control" bsDatepicker placement="bottom"
+                                  (bsValueChange)="onChangeDOJ($event)"
+                                  [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',containerClass:'theme-default' }"
+                                  name="dateOfJoining" formControlName="dateOfJoining"
+                                  [ngClass]="{'is-invalid': submitted && g.dateOfBirth.errors }" placeholder=""
+                                  autocomplete="none|false|no">
+                              </div>
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                <label class="form-label">Blood Group </label>
+                                <ng-select [items]="bloodGroup" placeholder="-- select an option --"
+                                  formControlName="bloodGroup" [clearable]="false"
+                                  [ngClass]="{'ng-touched': submitted && g.bloodGroup.invalid }" bindLabel="name"
+                                  bindValue="id">
+                                </ng-select>
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                <label class="form-label">Gender </label>
+                                <ng-select [items]="gender" placeholder="-- select Gender --" formControlName="gender"
+                                  [ngClass]="{'ng-touched': submitted && g.gender.invalid }" bindLabel="name"
+                                  bindValue="id" [clearable]="false">
+                                </ng-select>
+                              </div>
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                <label class="form-label">Marital Status</label>
+                                <ng-select [items]="maritalStatus" placeholder="-- select an option --"
+                                  formControlName="maritalStatus"
+                                  [ngClass]="{'ng-touched': submitted && g.maritalStatus.invalid }" bindLabel="name"
+                                  bindValue="id" [clearable]="false">
+                                </ng-select>
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                <label class="form-label">Present Address</label>
+                                <textarea class="form-control" rows="3" spellcheck="false" id="address"
+                                  onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                                  formControlName="presentAddress"
+                                  [ngClass]="{ 'is-invalid': submitted && g.address.errors }">
+                              </textarea>
+                              </div>
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                <div class="pretty p-svg p-curve">
+                                  <input type="checkbox" value="yes" #isSameAddress id="isSameAddress"
+                                    [checked]="isSameAddress"
+                                    (change)="onSameAddressPresentChanged(isSameAddress.checked)" />
+                                  <div class="state p-success">
+
+                                    <svg class="svg svg-icon" viewBox="0 0 20 20">
+                                      <path
+                                        d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                                        style="stroke: white;fill:white;"></path>
+                                    </svg>
+                                    <label class="form-label">Same as Permanent Address</label>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                <label class="form-label">Permanent Address </label>
+                                <textarea class="form-control" rows="3" spellcheck="false" id="address"
+                                  onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                                  formControlName="permanantAddress"
+                                  [ngClass]="{ 'is-invalid': submitted && g.address.errors }">
+                              </textarea>
+                              </div>
+                              <!-- FAMILY DETAILS -->
+                              <div class="col-xs-12 col-sm-12 text-left">
+                                <div class="title">Family Particulars</div>
+                                <div class="row">
+                                  <div class="col-xs-12 col-sm-12">
+                                    <div formArrayName="familyDetails"
+                                      *ngFor="let item of personalInformation.get('familyDetails').controls; let i = index;">
+                                      <div [formGroupName]="i" class="highlightFormArrDiv">
+                                        <div class="row">
+                                          <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                            <label class="form-label">Name </label>
+                                            <input type="text" class="form-control" spellcheck="false"
+                                              formControlName="relationName"
+                                              onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="relationName"
+                                              maxlength="100" #relationName
+                                              [ngClass]="{'is-invalid': submitted && g.relationName.errors }"
+                                              placeholder="" autocomplete="none|false|no" onpaste="return false;">
+                                          </div>
+                                          <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                            <label class="form-label">Relationship </label>
+                                            <ng-select [items]="relationType"  placeholder="-- select an option --" 
+                                              formControlName="relationship" [clearable]="false"
+                                              bindLabel="name" bindValue="id" (change)="onChangeRelationship($event)">
+                                            </ng-select>
+                                            <!-- <input class="form-control" type="text" name="relationship" maxlength="100"
+                                              #relationship spellcheck="false" formControlName="relationship"
+                                              onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                                              [ngClass]="{'is-invalid': submitted && g.relationship.errors }"
+                                              placeholder="" autocomplete="none|false|no" onpaste="return false;"> -->
+                                          </div>
+                                          <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                            <label class="form-label"> Date of Birth </label>
+                                            <input type="text" class="form-control" bsDatepicker placement="bottom"
+                                              (bsValueChange)="onChangeRelationDOB($event)"
+                                              [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',containerClass:'theme-default' }"
+                                              name="relationDOB" formControlName="relationDOB"
+                                              [ngClass]="{'is-invalid': submitted && g.relationDOB.errors }"
+                                              placeholder="" autocomplete="none|false|no">
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                          <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                            <label class="form-label">Age </label>
+                                            <input type="text" name="relationAge" maxlength="3" class="form-control"
+                                              spellcheck="false" formControlName="relationAge"
+                                              onkeypress="return /^[0-9 \s]+$/i.test(event.key)" #relationAge
+                                              [ngClass]="{'is-invalid': submitted && g.relationAge.errors }"
+                                              placeholder="" autocomplete="none|false|no" onpaste="return false;">
+                                          </div>
+                                          <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                            <label class="form-label">Aadhaar Number </label>
+                                            <input class="form-control" type="number" name="relationAadharNo"
+                                              formControlName="relationAadharNo"
+                                              [ngClass]="{'is-invalid': submitted && g.relationAadharNo.errors }"
+                                              placeholder="" autocomplete="none|false|no">
+                                          </div>
+                                          <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                            <label class="form-label">Employed </label>
+                                            <ng-select [items]="isEmployedDropdown" placeholder="-- select an option --"
+                                              formControlName="relationEmployed" [clearable]="false"
+                                              [ngClass]="{'ng-touched': submitted && g.relationEmployed.invalid }"
+                                              bindLabel="name" bindValue="id">
+                                            </ng-select>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <button type="button" *ngIf="i > 0"
+                                        class="btn btn-default w-100 btnAddMore"
+                                        (click)="deleteSelectedFrmArray(i, 'Family Details')">Delete
+                                      </button>
+                                    </div>
+                                    <button type="button" class="btn btn-default w-100 btnAddMore"
+                                      (click)="addFamilyDetails()">Add More
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+             
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <!-- STEP 2 CONTENT -->
+              <div id="section2" class="section2 steps-content">
+                <div class="col-12 col-md-12 col-sm-12 text-left">
+                  <div class="title ml-3">Educational Qualification</div>
+                  <div class="flex-column"
+                    style="padding-left: 1rem!important;padding-bottom: 0 !important;margin-left: -1%;padding-top: 0.25rem !important;">
+                    <form [formGroup]="educationAndWorkFrmGrp">
+                      <div class="col-xs-12 col-sm-12 text-left">
+                        <div class="row">
+                          <!--  Educational Qualification -->
+                          <div class="col-xs-12 col-sm-12">
+                            <div formArrayName="educationDetailsFrmArr"
+                              *ngFor="let item of educationAndWorkFrmGrp.get('educationDetailsFrmArr').controls; let idx = index;">
+                              <div [formGroupName]="idx" class="highlightFormArrDiv">
+                                <div class="row">
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Degree </label>
+                                    <input class="form-control" type="text" name="degree" maxlength="100" #degree
+                                      spellcheck="false" formControlName="degree"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                                      [ngClass]="{'is-invalid': submitted && e.degree.errors }" placeholder=""
+                                      autocomplete="none|false|no" onpaste="return false;">
+                                    <!-- <ng-select [items]="degree" placeholder="-- select Degree --" formControlName="degree"
+                                    [ngClass]="{'ng-touched': submitted && g.degree.invalid }" bindLabel="name"
+                                    bindValue="id" [clearable]="false">
+                                  </ng-select> -->
+                                  </div>
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Name of the Institution/College</label>
+                                    <input class="form-control" type="text" name="institutionName" maxlength="100"
+                                      #institutionName spellcheck="false" formControlName="institutionName"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                                      [ngClass]="{'is-invalid': submitted && e.institutionName.errors }" placeholder=""
+                                      autocomplete="none|false|no" onpaste="return false;">
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                    <label class="form-label">Year of passing </label>
+                                    <input type="text" class="form-control" bsDatepicker placement="bottom"
+                                      (bsValueChange)="onChangeYearOfPassing($event)"
+                                      [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',containerClass:'theme-default' }"
+                                      name="passYear" formControlName="passYear"
+                                      [ngClass]="{'is-invalid': submitted && e.passYear.errors }" placeholder=""
+                                      autocomplete="none|false|no">
+                                  </div>
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                    <label class="form-label">Score in Percentage </label>
+                                    <input type="text" name="score" class="form-control" spellcheck="false"
+                                      formControlName="score" onkeypress="return /^[0-9 \s]+$/i.test(event.key)" #score
+                                      [ngClass]="{'is-invalid': submitted && e.score.errors }" placeholder=""
+                                      autocomplete="none|false|no" onpaste="return false;">
+                                  </div>
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                    <label class="form-label">Major Subjects </label>
+                                    <input class="form-control" type="text" name="majorSubject" maxlength="100"
+                                      #majorSubject spellcheck="false" formControlName="majorSubject"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" placeholder=""
+                                      [ngClass]="{'is-invalid': submitted && g.majorSubject.errors }">
+                                  </div>
+                                </div>
+                              </div>
+                              <button type="button" *ngIf="idx > 0"
+                                class="btn btn-default w-100 btnAddMore"
+                                (click)="deleteSelectedFrmArray(idx, 'Education')">Delete
+                              </button>
+                            </div>
+                            <button type="button" class="btn btn-default w-100 btnAddMore"
+                              (click)="addEducationDetails()">Add More
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Working Experience -->
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="row mt-5 showForPrint" style="display:none;"></div>
+                      <div class="col-xs-12 col-sm-12 text-left">
+                        <div class="title">Working Experience <span class="info">(Starting from Current
+                            Employment)</span>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-12 col-sm-12">
+                            <div formArrayName="workexperienceDetailsFrmArr"
+                              *ngFor="let item of educationAndWorkFrmGrp.get('workexperienceDetailsFrmArr').controls; let indx = index;">
+                              <div [formGroupName]="indx" class="highlightFormArrDiv">
+                                <div class="row">
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                    <label class="form-label">Organization Name</label>
+                                    <input type="text" class="form-control" spellcheck="false" formControlName="orgName"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="orgName"
+                                      maxlength="100" #orgName
+                                      [ngClass]="{'is-invalid': submitted && w.orgName.errors }" placeholder=""
+                                      autocomplete="none|false|no" onpaste="return false;">
+                                  </div>
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                    <label class="form-label">Period From</label>
+                                    <input type="text" class="form-control" bsDatepicker placement="bottom"
+                                      (bsValueChange)="onChangeFromPeriodExperience($event)"
+                                      [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',containerClass:'theme-default' }"
+                                      name="periodfrom" formControlName="periodfrom"
+                                      [ngClass]="{'is-invalid': submitted && w.periodfrom.errors }"
+                                      autocomplete="none|false|no">
+                                  </div>
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                    <label class="form-label">Period To</label>
+                                    <input type="text" class="form-control" bsDatepicker placement="bottom"
+                                      (bsValueChange)="onChangeToPeriodExperience($event)"
+                                      [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',containerClass:'theme-default' }"
+                                      name="periodTo" formControlName="periodTo"
+                                      [ngClass]="{'is-invalid': submitted && w.periodTo.errors }"
+                                      autocomplete="none|false|no">
+                                  </div>
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                    <label class="form-label">Total No.of Years</label>
+                                    <input type="text" name="totalYear" class="form-control" spellcheck="false"
+                                      formControlName="totalYear" onkeypress="return /^[0-9 \s]+$/i.test(event.key)"
+                                      #totalYear [ngClass]="{'is-invalid': submitted && w.totalYear.errors }"
+                                      placeholder="" autocomplete="none|false|no" onpaste="return false;">
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Designation at the time of Joining</label>
+                                    <input type="text" class="form-control" spellcheck="false"
+                                      formControlName="designationDOJ"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="designationDOJ"
+                                      maxlength="100" #designationDOJ
+                                      [ngClass]="{'is-invalid': submitted && w.designationDOJ.errors }" placeholder=""
+                                      autocomplete="none|false|no" onpaste="return false;">
+                                  </div>
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Designation at the time of Leaving</label>
+                                    <input type="text" class="form-control" spellcheck="false"
+                                      formControlName="designationLast"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="designationLast"
+                                      maxlength="100" #designationLast
+                                      [ngClass]="{'is-invalid': submitted && w.designationLast.errors }" placeholder=""
+                                      autocomplete="none|false|no" onpaste="return false;">
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Reporting To</label>
+                                    <input type="text" class="form-control" spellcheck="false"
+                                      formControlName="reportingTo"
+                                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="reportingTo"
+                                      maxlength="100" #reportingTo
+                                      [ngClass]="{'is-invalid': submitted && w.reportingTo.errors }" placeholder=""
+                                      autocomplete="none|false|no" onpaste="return false;">
+                                  </div>
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-control" spellcheck="false"
+                                      formControlName="location" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                                      name="location" maxlength="100" #location
+                                      [ngClass]="{'is-invalid': submitted && w.location .errors }" placeholder=""
+                                      autocomplete="none|false|no" onpaste="return false;">
+                                  </div>
+                                </div>
+                              </div>
+                              <button type="button" *ngIf="indx > 0"
+                                class="btn btn-default w-100 btnAddMore"
+                                (click)="deleteSelectedFrmArray(indx, 'Experience')">Delete
+                              </button>
+                            </div>
+                            <button type="button" class="btn btn-default w-100 btnAddMore"
+                              (click)="addExperienceDetails()">Add More
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+              <!-- STEP 3 CONTENT -->
+              <div id="section3" class="section3 steps-content">
+                <div class="col-12 col-md-12 col-sm-12">
+                  <div class="title ml-3">Pan & Aadhaar Details</div>
+                  <div class="flex-column"
+                    style="padding-left: 1rem!important;padding-bottom: 0 !important;margin-left: -1%;padding-top: 0.25rem !important;">
+                    <form [formGroup]="panAndAadharFrmGrp">
+                      <div class="col-xs-12 col-sm-12 text-left">
+                        <div class="row">
+                          <div class="col-xs-12 col-sm-12">
+                            <div class="clearfix">
+                              <div class="row">
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                  <label class="form-label">Name as per your Aadhaar Card</label>
+                                  <input class="form-control" type="text" name="nameInAadhar" maxlength="100"
+                                    onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" #nameInAadhar
+                                    formControlName="nameInAadhar"
+                                    [ngClass]="{ 'is-invalid': submitted && f.nameInAadhar.errors }" placeholder=""
+                                    autocomplete="none|false|no" />
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                  <label class="form-label">Aadhaar No</label>
+                                  <input class="form-control" type="number" name="aadharNumber"
+                                    formControlName="aadharNumber"
+                                    [ngClass]="{'is-invalid': submitted && f.relationAadharNo.errors }" placeholder=""
+                                    autocomplete="none|false|no">
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                  <label class="form-label">PAN No</label>
+                                  <input class="form-control uppercase" type="text"
+                                    pattern="^([a-zA-Z]){3}([pPcCHhaAbBgGlLfFTtjJ]){1}([a-zA-Z]){1}([0-9]){4}([a-zA-Z]){1}?$"
+                                    maxlength="10" name="panNo" formControlName="panNo"
+                                    [ngClass]="{ 'ng-touched': submitted && f.panNo.invalid }"
+                                    (keyup)="onChangePanNo($event)" placeholder="" autocomplete="none|false|no"
+                                    style="text-transform: uppercase;">
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                  <label class="form-label">Bank Account No</label>
+                                  <input class="form-control" name="accountNumber" formControlName="bankAccountNo"
+                                    placeholder="" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                                    [ngClass]="{ 'is-invalid': submitted && f.bankAccountNo.errors }" type="text"
+                                    autocomplete="off">
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                  <label class="form-label">IFSC Code</label>
+                                  <input class="form-control" type="text" name="bankIfscCode"
+                                    onkeypress="return /^[a-zA-Z0-9 \s]+$/i.test(event.key)" #bankIfscCode
+                                    formControlName="bankIfscCode"
+                                    [ngClass]="{ 'is-invalid': submitted && f.bankIfscCode.errors }" placeholder=""
+                                    autocomplete="none|false|no" />
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                  <label class="form-label">Bank Name</label>
+                                  <input class="form-control" type="text" name="bankName"
+                                    onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" #bankName
+                                    formControlName="bankName"
+                                    [ngClass]="{ 'is-invalid': submitted && f.bankName.errors }" placeholder=""
+                                    autocomplete="none|false|no" />
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                  <label class="form-label">Branch</label>
+                                  <input class="form-control" type="text" name="bankBranch"
+                                    onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" #bankBranch
+                                    formControlName="bankBranch"
+                                    [ngClass]="{ 'is-invalid': submitted && f.bankBranch.errors }" placeholder=""
+                                    autocomplete="none|false|no" />
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                  <label class="form-label">UAN</label>
+                                  <input class="form-control" type="text" name="uan" maxlength="100"
+                                    onkeypress="return /^[a-zA-Z0-9 \s]+$/i.test(event.key)" #uan formControlName="UAN"
+                                    [ngClass]="{ 'is-invalid': submitted && f.UAN.errors }" placeholder=""
+                                    autocomplete="none|false|no" />
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                  <label class="form-label">PF</label>
+                                  <input class="form-control" type="text" name="pf" maxlength="100"
+                                    onkeypress="return /^[a-zA-Z0-9 \s]+$/i.test(event.key)" #pf formControlName="PF"
+                                    [ngClass]="{ 'is-invalid': submitted && f.PF.errors }" placeholder=""
+                                    autocomplete="none|false|no" />
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                                  <label class="form-label">ESI</label>
+                                  <input class="form-control" type="text" name="esi" maxlength="100"
+                                    onkeypress="return /^[a-zA-Z0-9 \s]+$/i.test(event.key)" #esi formControlName="ESI"
+                                    [ngClass]="{ 'is-invalid': submitted && f.ESI.errors }" placeholder=""
+                                    autocomplete="none|false|no" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 4 CONTENT -->
+              <div id="section4" class="section4 steps-content">
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+  
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <!-- FORM F FORM -->
+                <div class="m-5">
+                  <form [formGroup]="formF">
+                    <div class="row" style="page-break-after: always;">
+                      <!-- FORM F -->
+                      <div
+                        style="page-break-after: always;width: 21cm; min-height: 29.7cm; margin: 0 auto; box-sizing: border-box; background:url(https://cielhr.integrumapps.com/hrsuite/assets/JoiningKit/Joining%20Kit%20-%20CIEL%20HR_page-0005.jpg) center 0 no-repeat; position: relative; background-size: contain;">
+                        <!--Top-section-start-->
+                        <input type="text" formControlName="empCode"
+                          style="position: absolute; top: 50px; left: 546px; font-size: 14px; width: 180px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="mobileNo" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          minlength="10" maxlength="10"
+                          style="position: absolute; top: 87px; left: 535px; font-size: 14px; width: 180px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="to"
+                          style="position: absolute; top: 165px; left: 87px; font-size: 14px; width: 600px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="empName"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 268px; left: 320px; font-size: 14px;width: 400px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <!--Top-section-End-->
+
+                        <!--Bottom-section-start-->
+                        <input type="text" formControlName="nominee1Name"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 813px; left: 57px; font-size: 14px;width: 310px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee1Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 813px; left: 385px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee1Age"
+                          style="position: absolute; top: 813px; left: 502px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee1Gratuity"
+                          style="position: absolute; top: 813px; left: 625px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+
+                        <input type="text" formControlName="nominee2Name"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 848px; left: 57px; font-size: 14px; width: 310px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee2Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 848px; left: 385px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee2Age"
+                          style="position: absolute; top: 848px; left: 502px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee2Gratuity"
+                          style="position: absolute; top: 848px; left: 625px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+
+
+                        <input type="text" formControlName="nominee3Name"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 882px; left: 57px; font-size: 14px; width: 310px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee3Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 882px; left: 385px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee3Age"
+                          style="position: absolute; top: 882px; left: 502px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee3Gratuity"
+                          style="position: absolute; top: 882px; left: 625px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box;border:none; outline:none;background-color: transparent;">
+
+                        <input type="text" formControlName="nominee4Name"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 916px; left: 57px; font-size: 14px;width: 310px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee4Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 916px; left: 385px; font-size: 14px;width: 110px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee4Age"
+                          style="position: absolute; top: 916px; left: 502px; font-size: 14px;width: 110px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee4Gratuity"
+                          style="position: absolute; top: 916px; left: 625px; font-size: 14px;width: 110px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+
+                        <input type="text" formControlName="nominee5Name"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 951px; left: 57px; font-size: 14px; width: 310px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent; ">
+                        <input type="text" formControlName="nominee5Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 951px; left: 385px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee5Age"
+                          style="position: absolute; top: 951px; left: 502px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nominee5Gratuity"
+                          style="position: absolute; top: 951px; left: 625px; font-size: 14px; width: 110px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <!--Bottom-section-End-->
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <!-- DECLARATION FORM -->
+                <div class="m-5">
+                  <form [formGroup]="declarationForm">
+                    <div class="row">
+                      <!-- DECLARATION FORM -->
+                      <div
+                        style="width: 21cm; min-height: 29.7cm; margin: 0 auto; box-sizing: border-box; background:url(https://cielhr.integrumapps.com/hrsuite/assets/JoiningKit/Joining%20Kit%20-%20CIEL%20HR_page-0006.jpg) center 0 no-repeat; position: relative; background-size: contain;">
+
+                        <input type="text" formControlName="empCode"
+                          style="position: absolute; top: 49px; left: 546px; font-size: 13px; width: 180px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="mobileNo" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          minlength="10" maxlength="10"
+                          style="position: absolute; top: 85px; left: 535px; font-size: 13px; width: 180px; border:none; outline:none;background-color: transparent;">
+
+                        <!--Statement-section-start-->
+                        <input type="text" formControlName="fullName"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 133px; left: 455px; font-size: 13px; width: 280px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="gender"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 158px; left: 455px; font-size: 13px; width: 280px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="religion"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 182px; left: 455px; font-size: 13px; width: 280px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="status"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 205px; left: 455px; font-size: 13px; width: 280px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="department"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 230px; left: 455px; font-size: 13px; width: 280px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="designation"
+                          onkeypress="return /^[a-zA-Z0-9 \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 255px; left: 455px; font-size: 13px; width: 280px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="dateOfJoining"
+                          style="position: absolute; top: 280px; left: 455px; font-size: 13px; width: 280px; border:none; outline:none;background-color: transparent;">
+                        <textarea type="text" formControlName="address" onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                        style="position: absolute; top: 305px; left: 455px; font-size: 12px; 
+                          width: 280px; border:none; outline:none;background-color: transparent;">
+                        </textarea>
+
+                        <!--Sub-statement-start-->
+                        <input type="text" formControlName="village"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 339px; left: 107px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="thana" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 340px; left: 430px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="subDivision"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 364px; left: 141px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="postOffice"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 364px; left: 460px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="district"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 386px; left: 110px; font-size: 13px; width: 280px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="state" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 386px; left: 427px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+
+                        <input type="text" formControlName="place"
+                          style="position: absolute; top: 430px; left: 105px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="date"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 452px; left: 105px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <div style="position: absolute; top: 410px; left: 480px; width: 250px; height: 40px;">
+                          <img [src]="candidateSignature" *ngIf="candidateSignature != null"
+                            style=" max-width:100%; max-height: 100%; display: block;margin: 0 auto;">
+                        </div>
+                        <!--Statement-section-end-->
+
+
+                        <!--Declaration-witnesses-section-start-->
+                        <input type="text" formControlName="witness1Name"
+                          style="position: absolute; top: 590px; left: 80px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="witness2Name"
+                          style="position: absolute; top: 620px; left: 80px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <div style="position: absolute; top: 580px; left: 473px; width: 250px; height: 30px;">
+                          <img [src]="" style=" max-width:100%; max-height: 100%; display: block;">
+                        </div>
+                        <div style="position: absolute; top: 620px; left: 473px; width: 250px; height: 30px;">
+                          <img [src]="" style=" max-width:100%; max-height: 100%; display: block;">
+                        </div>
+
+                        <input type="text" formControlName="place"
+                          style="position: absolute; top: 661px; left: 101px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="date"
+                          style="position: absolute; top: 681px; left: 100px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <div style="position: absolute; top: 770px; left: 373px; width: 250px; height: 40px;">
+                          <img [src]=""
+                            style=" max-width:100%; max-height: 100%; display: block; margin: 0 auto;">
+                        </div>
+
+                        <!--employer certificate-section-start-->
+                        <input type="text" formControlName="employerReferenceNo"
+                          style="position: absolute; top: 830px; left: 60px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="employerDesignataion"
+                          style="position: absolute; top: 838px; left: 430px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="date"
+                          style="position: absolute; top: 930px; left: 98px; font-size: 13px; width: 250px; border:none; outline:none; background-color: transparent;">
+                        <input type="text" formControlName="date"
+                          style="position: absolute; top: 1039px; left: 100px; font-size: 13px; width: 250px; border:none; outline:none;background-color: transparent;">
+                        <div style="position: absolute; top: 1056px; left: 380px; width: 300px; height: 30px;">
+                          <img [src]="candidateSignature" *ngIf="candidateSignature != null"
+                            style=" max-width:100%;max-height: 100%; display: block; margin: 0 auto;">
+                        </div>
+
+
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <!-- form 11 PF FORM -->
+                <div class="m-5">
+                  <form [formGroup]="form11PF">
+                    <div class="row">
+                      <div
+                        style="width: 21cm; min-height: 29.7cm; margin: 0 auto;  background:url(https://cielhr.integrumapps.com/hrsuite/assets/JoiningKit/Joining%20Kit%20-%20CIEL%20HR_page-0007.jpg) center 0 no-repeat; position: relative; background-size: contain;">
+
+                        <input formControlName="empName"
+                          style="position: absolute; top: 250px;left: 480px; font-size: 11px; width:200px; border:none; outline:none;background-color: transparent;">
+                        <input style="position: absolute; top: 267px; left: 250px; width: 18px; height: 18px;" (change)="onCheckedRelation($event, 'father')"
+                          type="checkbox" formControlName="fatherNameCheckbox">
+                        <input style="position: absolute; top: 289px; left: 250px; width: 18px; height: 18px; border: none; outline: none;"
+                          type="checkbox" (change)="onCheckedRelation($event, 'spouse')" formControlName="spouseNameCheckbox">
+                        <input formControlName="relationName" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 280px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="DOB"
+                          style="position: absolute; top: 316px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="gender" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 332px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="status" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 349px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="emailId"
+                          style="position: absolute; top: 368px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="mobileNo" onkeypress="return /^[0-9]+$/i.test(event.key)" minlength="10"
+                          maxlength="10"
+                          style="position: absolute; top: 383px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="DOJCurrent"
+                          style="position: absolute; top: 408px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="bankAcctNo"
+                          style="position: absolute; top: 450px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="bankIfsc"
+                          style="position: absolute; top: 465px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="aadharNumber"
+                          style="position: absolute; top: 484px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="PANnumber"
+                          style="position: absolute; top: 500px; left: 480px; font-size: 11px; width: 200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="earlierPF"
+                          style="position: absolute; top: 518px; left: 482px; font-size: 11px; padding: 6px 20px;background-color:#fff;width:200px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="earlierPension"
+                          style="position: absolute; top: 550px;left: 482px; font-size: 11px;background-color: #fff;width: 200px; height:13px; border:none; outline:none;background-color: transparent;">
+
+                        <!--Previous Employment Details table-1 start-->
+                        <input formControlName="previousCompanyNameUnExempted"
+                          style="position: absolute; top: 650px; left: 114px; font-size: 11px; width: 84px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyUANUnExempted"
+                          style="position: absolute; top: 650px; left: 207px; font-size: 11px; width: 53px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyPFUnExempted"
+                          style="position: absolute; top: 650px; left: 270px; font-size: 11px; width: 55px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyDOJUnExempted"
+                          style="position: absolute; top: 650px; left: 335px; font-size: 11px; width: 80px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyDOLUnExempted"
+                          style="position: absolute; top: 650px; left: 425px; font-size: 11px; width: 80px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanySchemeUnExempted"
+                          style="position: absolute; top: 650px; left: 515px; font-size: 11px; width: 60px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyPPOUnExempted"
+                          style="position: absolute; top: 650px; left: 583px; font-size: 11px; width: 53px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyNCPUnExempted"
+                          style="position: absolute; top: 650px; left: 646px; font-size: 11px; width: 68px; border:none; outline:none;background-color: transparent;">
+                        <!--Previous Employment Details table-1 end-->
+
+                        <!--Previous Employment Details table-2 start-->
+                        <input formControlName="previousCompanyNameExempted"
+                          style="position: absolute; top: 850px; left: 118px; font-size: 11px; width: 120px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyUANExempted"
+                          style="position: absolute; top: 850px; left: 250px; font-size: 11px; width: 60px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyPFExempted"
+                          style="position: absolute; top: 850px; left: 323px; font-size: 11px; width: 60px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyDOJExempted"
+                          style="position: absolute; top: 850px; left: 393px; font-size: 11px; width: 80px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyDOLExempted"
+                          style="position: absolute; top: 850px; left: 482px; font-size: 11px; width: 80px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanySchemeExempted"
+                          style="position: absolute; top: 850px; left: 573px; font-size: 11px; width: 60px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="previousCompanyNCPExempted"
+                          style="position: absolute; top: 850px; left: 643px; font-size: 11px; width: 66px; border:none; outline:none;background-color: transparent;">
+                        <!--Previous Employment Details table-2 end-->
+
+                        <input formControlName="internationState"
+                          style="position: absolute; top: 1003px; left: 572px; font-size: 11px; width: 66px; text-align: center; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="passportNumber"
+                          style="position: absolute; top: 1021px; left: 572px; font-size: 11px; width: 66px; text-align: center; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="passportValidity"
+                          style="position: absolute; top: 1042px; left: 572px; font-size: 11px; width: 66px; text-align: center; border:none; outline:none;background-color: transparent;">
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <!-- <form>
+                    <div class="row">
+    
+                    </div>
+                  </form> -->
+              
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <!-- NOMINEE AND DECLARATION FORM PART A-->
+                <div class="m-5">
+                  <form [formGroup]="formNominee1">
+
+                    <div class="row">
+                      <div
+                        style="width: 21cm; min-height: 29.7cm; margin: 0 auto; box-sizing: border-box; background:url(https://cielhr.integrumapps.com/hrsuite/assets/JoiningKit/Joining%20Kit%20-%20CIEL%20HR_page-0009.jpg) center 0 no-repeat; position: relative; background-size: contain;">
+
+                        <input type="text" formControlName="empCode"
+                          style="position: absolute; top: 58px; left: 530px; font-size: 13px; width: 150px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;text-transform: uppercase;">
+                        <input type="text" formControlName="mobileNo" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          minlength="10" maxlength="10"
+                          style="position: absolute; top: 95px; left: 520px; font-size: 13px; width: 150px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <!--Form-section-start-->
+                        <input type="text" formControlName="fullName"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 262px; left: 343px; font-size: 13px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="relationName"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 295px; left: 343px; font-size: 13px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="DOB"
+                          style="position: absolute; top: 328px; left: 343px; font-size: 13px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="gender"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 360px; left: 343px; font-size: 13px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="status"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 390px; left: 343px; font-size: 13px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="accountNo"
+                          style="position: absolute; top: 422px; left: 348px; font-size: 12px; height:30px;width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;">
+                        <input type="text" formControlName="permanentAddress"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 458px; left: 343px; font-size: 12px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="temporaryAddress"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 490px; left: 343px; font-size: 13px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="DOJ"
+                          style="position: absolute; top: 523px; left: 343px; font-size: 13px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="EPF"
+                          style="position: absolute; top: 555px; left: 343px; font-size: 13px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="EPS"
+                          style="position: absolute; top: 588px; left: 343px; font-size: 13px; width: 380px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <!--Form-section-End-->
+
+                        <!--Bottom-Table-section-start-->
+                        <input type="text" formControlName="nomineeNameAddress"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 800px; left: 53px;  font-size: 10px; width: 142px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nomineeRelationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 800px; left: 196px; font-size: 10px; width: 120px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nomineeDob"
+                          style="position: absolute; top: 800px; left: 318px; font-size: 10px; width: 50px;  text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nomineeAmt"
+                          style="position: absolute; top: 800px; left: 370px; font-size: 10px; width: 165px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <input type="text" formControlName="nomineeGuardian"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 800px; left: 541px; font-size: 10px; width: 209px; text-align: left;box-sizing: border-box; border:none; outline:none;background-color: transparent;">
+                        <div style="position: absolute; top: 980px; left: 445px; width: 250px; height: 80px;">
+                          <img [src]="candidateSignature" *ngIf="candidateSignature != null"
+                            style=" max-width:100%; max-height: 100%; display: block;margin: 0 auto;">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <!-- NOMINEE PART B -->
+                <div class="m-5">
+                  <form [formGroup]="formNominee2">
+                    <div class="row">
+                      <div
+                        style="width: 21cm; min-height: 29.7cm; margin: 0 auto;  background:url(https://cielhr.integrumapps.com/hrsuite/assets/JoiningKit/Joining%20Kit%20-%20CIEL%20HR_page-0010.jpg) center 0 no-repeat; position: relative; background-size: contain;">
+
+                        <!--Top-section-start-->
+                        <input formControlName="familyMember1Name" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 225px; left: 103px; font-size:10px; width: 205px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember1Address"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 225px; left: 319px; font-size:10px; width: 198px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember1DOB"
+                          style="position: absolute; top: 225px; left: 529px; font-size:10px; width: 70px;  border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember1Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 225px; left: 609px; font-size:10px; width: 110px; border:none; outline:none;background-color: transparent;">
+
+                        <input formControlName="familyMember2Name" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 257px; left: 103px; font-size:10px; width: 205px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember2Address"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 257px; left: 319px; font-size:10px; width: 198px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember2DOB"
+                          style="position: absolute; top: 257px; left: 529px; font-size:10px; width: 70px;  border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember2Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 257px; left: 609px; font-size:10px; width: 110px; border:none; outline:none;background-color: transparent;">
+
+                        <input formControlName="familyMember3Name" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 288px; left: 103px; font-size:10px; width: 205px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember3Address"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 288px; left: 319px; font-size:10px; width: 198px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember3DOB"
+                          style="position: absolute; top: 288px; left: 529px; font-size:10px; width: 70px;  border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember3Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 288px; left: 609px; font-size:10px; width: 110px; border:none; outline:none;background-color: transparent;">
+
+                        <input formControlName="familyMember4Name" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 320px; left: 103px; font-size:10px; width: 205px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember4Address"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 320px; left: 319px; font-size:10px; width: 198px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember4DOB"
+                          style="position: absolute; top: 320px; left: 529px; font-size:10px; width: 70px;  border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember4Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 320px; left: 609px; font-size:10px; width: 110px; border:none; outline:none;background-color: transparent;">
+
+                        <input formControlName="familyMember5Name" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 350px; left: 103px; font-size:10px; width: 205px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember5Address"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 350px; left: 319px; font-size:10px; width: 198px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember5DOB"
+                          style="position: absolute; top: 350px; left: 529px; font-size:10px; width: 70px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="familyMember5Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 350px; left: 609px; font-size:10px; width: 110px; border:none; outline:none;background-color: transparent;">
+                        <!--Top-section-end-->
+
+
+                        <!--middel-section-start-->
+                        <input formControlName="EPSNomineeNameAddress"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 544px; left: 69px;  font-size:10px; width: 285px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="EPSNomineeDob"
+                          style="position: absolute; top: 544px; left: 368px; font-size:10px; width: 150px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="EPSNomineeRelationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 544px; left: 530px; font-size:10px; width: 188px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="date"
+                          style="position: absolute; top: 654px; left: 100px; font-size:14px; width: 100px; border:none; outline:none;background-color: transparent;">
+                        <div style="position: absolute; top: 620px; left: 473px; width: 250px; height: 40px;">
+                          <img [src]="candidateSignature" *ngIf="candidateSignature != null"
+                            style=" max-width:100%; max-height: 100%; display: block;margin: 0 auto;">
+                        </div>
+                        <!--middel-section-End-->
+
+                        <!--Bottom-section-start-->
+                        <input formControlName="declarationName" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 749px; left: 65px; font-size:14px; width: 160px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="declarationPlace" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 815px; left: 105px; font-size:14px; width: 260px; border:none; outline:none;background-color: transparent;">
+                        <input formControlName="date"
+                          style="position: absolute; top: 853px; left: 105px; font-size:14px; width: 160px; border:none; outline:none;background-color: transparent;">
+                        <div style="position: absolute; top: 790px; left: 460px; width: 250px; height: 80px;">
+                          <img [src]=""
+                            style=" max-width:100%; max-height: 100%; display: block;margin: 0 auto;">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <!-- GOVT DECLARATION FORM -->
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="m-5">
+                  <form [formGroup]="govtFormDeclaration">
+                    <div class="row">
+                      <div
+                        style="width: 21cm; min-height: 29.7cm; margin: 0 auto; background:url(https://cielhr.integrumapps.com/hrsuite/assets/JoiningKit/Joining%20Kit%20-%20CIEL%20HR_page-0011.jpg) center 0 no-repeat; position: relative; background-size: contain;">
+
+                        <!--A-Section-start-->
+                        <input formControlName="insuranceNo"
+                          style="position: absolute; top: 198px; left: 227px; font-size: 10px; width: 161px; border:none; outline:none; font-weight: bold;background-color:transparent">
+                        <input formControlName="nameInBlock" onkeypress="return /^[a-zA-Z 0-9\s]+$/i.test(event.key)"
+                          style="position: absolute; top: 225px; left: 227px; font-size: 10px; width: 161px; border:none; outline:none; font-weight: bold;background-color:transparent">
+                        <input formControlName="relationName" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 257px; left: 227px; font-size: 10px; width: 161px; border:none; outline:none; font-weight: bold;background-color:transparent">
+                        <input formControlName="DOB"
+                          style="position: absolute; top: 338px; left: 234px; font-size: 10px; letter-spacing: 2px;width: 68px; height:16px; border:none; outline:none; font-weight: bold;background-color:transparent">
+
+                        <!--Marital-Status-Start-->
+                        <input style="position: absolute; top: 305px; left: 352px; width: 12px; height:12px;"
+                          type="checkbox" (change)="onCheckedMaritalStatus($event, 'M')" formControlName="maritalM" >
+                        <input style="position: absolute; top: 305px; left: 365px; width: 12px; height:12px;"
+                          type="checkbox" (change)="onCheckedMaritalStatus($event, 'U')" formControlName="maritalU" >
+                        <input style="position: absolute; top: 305px; left: 380px; width: 12px; height:12px;"
+                          type="checkbox" (change)="onCheckedMaritalStatus($event, 'W')" formControlName="maritalW" >
+                        <!--Marital-Status-End-->
+
+
+                        <!--Male & Female-section-start-->
+                        <input formControlName="genderForGovtForm" type="text" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 339px; left: 357px; width: 36px; height:16px; font-size: 14px; border:none; outline:none;text-align: center;font-weight: bold;">
+                        <!--Male & Female-section-end-->
+
+                        <!--Address-->
+                        <textarea formControlName="presentAddress" onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 370px; left: 114px; font-size: 10px; width: 135px; height: 68px; background-color: #ffffff; resize: none; border:none; outline:none;font-weight: bold;"></textarea>
+                        <textarea formControlName="permanentAddress"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 370px; left: 257px; font-size: 10px; width: 134px; height: 68px; background-color: #ffffff; resize: none; border:none; outline:none;font-weight: bold;"></textarea>
+                        <input formControlName="branchOffice" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 458px; left: 166px; font-size: 10px; width: 88px; border:none; outline:none;background-color:transparent">
+                        <input formControlName="dispensary" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 458px; left: 315px; font-size: 10px; width: 80px;border:none; outline:none;background-color:transparent">
+                        <!--A-Section-End-->
+
+                        <!--B-Section-start-->
+                        <input formControlName="empCode"
+                          style="position: absolute; top: 208px; left: 508px; font-size: 10px; width: 165px; border:none; outline:none;font-weight: bold;background-color:transparent">
+                        <input formControlName="DOJ"
+                          style="position: absolute; top: 254px; left: 548px; font-size: 10px; letter-spacing: 5px;width: 126px;height: 14px; background: #ffffff; border:none; outline:none;text-align: center;font-weight: bold;background-color:transparent">
+                        <textarea formControlName="employerNameaddress" onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 280px; left: 418px; font-size: 10px; width: 257px; height: 40px; background: #ffffff; resize: none; border:none; outline:none;font-weight: bold;background-color:transparent"></textarea>
+
+                        <input formControlName="previousInsuranceNo"
+                          style="position: absolute; top: 366px; left: 492px; font-size: 10px; width: 186px; border:none; outline:none; font-weight: bold;background-color:transparent">
+                        <input formControlName="previousEmployeeCode"
+                          style="position: absolute; top: 396px; left: 509px; font-size: 10px; width: 170px; border:none; outline:none; font-weight: bold;background-color:transparent">
+
+                        <input formControlName="previousEmployerNameAddr"
+                        onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 438px; left: 406px; font-size: 10px; width: 275px; border:none; outline:none; font-weight: bold;background-color:transparent">
+                        <input formControlName="email"
+                          style="position: absolute; top: 454px; left: 562px; font-size: 10px; width: 125px; border:none; outline:none; font-weight: bold;background-color:transparent">
+                        <!--B-Section-Start-->
+
+                        <!--C-Section-Start-->
+                        <input formControlName="nomineeName" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 529px; left: 113px; font-size: 10px; width: 164px; border:none; outline:none; font-weight: bold;background-color:transparent">
+                        <input formControlName="nomineeRelationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 529px; left: 284px; font-size: 10px; width: 160px; border:none; outline:none; font-weight: bold;background-color:transparent">
+                        <input formControlName="nomineeAddress"  onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                          style="position: absolute; top: 529px; left: 449px; font-size: 10px; width: 224px; border:none; outline:none; font-weight: bold;background-color:transparent">
+                        <div style="position: absolute; top: 637px; left: 110px; width: 200px; height: 38px;">
+                          <img [src]=""
+                            style=" max-width:100%; max-height: 100%; display: block;margin: 0 auto;">
+                        </div>
+                        <div style="position: absolute; top: 660px; left: 230px; width: 200px; height: 50px;">
+                          <img [src]=""
+                            style=" max-width:100%; max-height: 100%; display: block;margin: 0 auto;">
+                        </div>
+                        <div style="position: absolute; top: 640px; left: 480px; width: 200px; height: 70px;">
+                          <img [src]=""
+                            style=" max-width:100%; max-height: 100%; display: block;margin: 0 auto;">
+                        </div>
+                        <!--C-Section-End-->
+
+
+                        <!--D-Section-Table-start-->
+                        <!--Row-1-->
+                        <input formControlName="familyMember1Sno"
+                          style="position: absolute; top: 760px; left: 114px; font-size: 12px; width: 31px;  border:none; outline:none; text-align: center;">
+                        <input formControlName="familyMember1Name" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 760px; left: 151px; font-size: 12px; width: 106px; border:none; outline:none;">
+                        <input formControlName="familyMember1DOB"
+                          style="position: absolute; top: 760px; left: 263px; font-size: 12px; width: 96px;  border:none; outline:none;">
+                        <input formControlName="familyMember1Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 760px; left: 365px; font-size: 12px; width: 100px;  border:none; outline:none;">
+                        <input formControlName="familyMember1ResidingYes"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 770px; left: 471px; font-size: 12px; width: 46px;  border:none; outline:none;">
+                        <input formControlName="familyMember1ResidingNo"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 770px; left: 524px; font-size: 12px; width: 46px;  border:none; outline:none;">
+                        <input formControlName="familyMember1ResidenceTown"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 770px; left: 576px; font-size: 12px; width: 53px;  border:none; outline:none;">
+                        <input formControlName="familyMember1ResidenceState"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 770px; left: 635px; font-size: 12px; width: 41px;  border:none; outline:none; ">
+
+                        <!--Row-2-->
+                        <input formControlName="familyMember2Sno"
+                          style="position: absolute; top: 790px; left: 114px; font-size: 12px; width: 31px;  border:none; outline:none; text-align: center;">
+                        <input formControlName="familyMember2Name" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 790px; left: 151px; font-size: 12px; width: 106px; border:none; outline:none;">
+                        <input formControlName="familyMember2DOB"
+                          style="position: absolute; top: 790px; left: 263px; font-size: 12px; width: 96px;  border:none; outline:none;">
+                        <input formControlName="familyMember2Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 790px; left: 365px; font-size: 12px; width: 100px;  border:none; outline:none;">
+                        <input formControlName="familyMember2ResidingYes"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 790px; left: 471px; font-size: 12px; width: 46px;  border:none; outline:none;">
+                        <input formControlName="familyMember2ResidingNo"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 790px; left: 524px; font-size: 12px; width: 46px;  border:none; outline:none;">
+                        <input formControlName="familyMember2ResidenceTown"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 790px; left: 576px; font-size: 12px; width: 53px;  border:none; outline:none;">
+                        <input formControlName="familyMember2ResidenceState"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 790px; left: 635px; font-size: 12px; width: 41px;  border:none; outline:none; ">
+
+                        <!--Row-3-->
+                        <input formControlName="familyMember3Sno"
+                          style="position: absolute; top: 825px; left: 114px; font-size: 12px; width: 31px;  border:none; outline:none; text-align: center;">
+                        <input formControlName="familyMember3Name" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 825px; left: 151px; font-size: 12px; width: 106px; border:none; outline:none;">
+                        <input formControlName="familyMember3DOB"
+                          style="position: absolute; top: 825px; left: 263px; font-size: 12px; width: 96px;  border:none; outline:none;">
+                        <input formControlName="familyMember3Relationship"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 825px; left: 365px; font-size: 12px; width: 100px;  border:none; outline:none;">
+                        <input formControlName="familyMember3ResidingYes"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 825px; left: 471px; font-size: 12px; width: 46px;  border:none; outline:none;">
+                        <input formControlName="familyMember3ResidingNo"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 825px; left: 524px; font-size: 12px; width: 46px;  border:none; outline:none;">
+                        <input formControlName="familyMember3ResidenceTown"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 825px; left: 576px; font-size: 12px; width: 53px;  border:none; outline:none;">
+                        <input formControlName="familyMember3ResidenceState"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 825px; left: 635px; font-size: 12px; width: 41px;  border:none; outline:none; ">
+
+                        <!--D-Section-Table-end-->
+
+                        <input formControlName="esiName" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 911px; left: 197px; font-size: 14px; width: 79px; border:none; outline:none;">
+                        <input formControlName="esiInsuranceNo"
+                          style="position: absolute; top: 934px; left: 197px; font-size: 10px; width: 79px; border:none; outline:none;">
+                        <input formControlName="esiDOJ"
+                          style="position: absolute; top: 934px; left: 340px; font-size: 10px; width: 120px; border:none; outline:none; ">
+                        <input formControlName="esiBranchOffice" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 970px; left: 286px; font-size: 10px; width: 175px; border:none; outline:none;">
+                        <input formControlName="esiDispensary" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                          style="position: absolute; top: 1008px; left: 145px; font-size: 10px; width: 100px;">
+                        <input formControlName="date"
+                          style="position: absolute; top: 1032px; left: 145px; font-size: 10px; width: 100px;">
+                        <div style="position: absolute; top: 1050px; left: 280px; width: 200px; height: 38px;">
+                          <img [src]=""
+                            style=" max-width:100%; max-height: 100%; display: block;margin: 0 auto;">
+                        </div>
+                        <div style="position: absolute; top: 1050px; left: 510px; width: 200px; height: 38px;">
+                          <img [src]=""
+                            style=" max-width:100%; max-height: 100%; display: block;margin: 0 auto;">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <!-- GOVT INSTRUCTION FORM -->
+                <div class="m-5">
+                  <form [formGroup]="govtFormInstruction">
+                    <div class="row">
+                      <div disabled
+                        style="width: 21cm; min-height: 29.7cm; margin: 0 auto; box-sizing: border-box; background:url(https://cielhr.integrumapps.com/hrsuite/assets/JoiningKit/Joining%20Kit%20-%20CIEL%20HR_page-0012.jpg) center 0 no-repeat; position: relative; background-size: contain;">
+
+                        <input disabled
+                          style="position: absolute; top: 705px; left: 379px; font-size: 12px; width: 230px; border:none; outline:none;background-color:transparent; font-weight: bold;">
+                        <input disabled
+                          style="position: absolute; top: 745px; left: 354px; font-size: 12px; width: 230px; border:none; outline:none;background-color:transparent; font-weight: bold;">
+                        <input disabled
+                          style="position: absolute; top: 782px; left: 368px; font-size: 12px; width: 230px; border:none; outline:none;background-color:transparent; font-weight: bold;">
+                        <input disabled
+                          style="position: absolute; top: 826px; left: 586px; font-size: 12px; width: 30px; border:none; outline:none;background-color:transparent; text-align: center; font-weight: bold;">
+
+                        <!--Table-start-->
+                        <!--Row-1-->
+                        <input disabled
+                          style="position: absolute; top: 982px; left: 115px; font-size: 12px; width: 31px; text-align: center; border:none; background-color: transparent;">
+                        <input disabled
+                          style="position: absolute; top: 982px; left: 152px; font-size: 12px; width: 106px; border:none; background-color: transparent;">
+                        <input disabled
+                          style="position: absolute; top: 982px; left: 264px; font-size: 12px; width: 96px; border:none; background-color: transparent;">
+                        <input disabled
+                          style="position: absolute; top: 982px; left: 366px; font-size: 12px; width: 99px; border:none; background-color: transparent;">
+                        <input disabled
+                          style="position: absolute; top: 982px; left: 471px; font-size: 12px; width: 47px; border:none; background-color: transparent; text-align: center;">
+                        <input disabled
+                          style="position: absolute; top: 982px; left: 524px; font-size: 12px; width: 47px; border:none; background-color: transparent; text-align: center;">
+                        <input disabled
+                          style="position: absolute; top: 982px; left: 577px; font-size: 12px; width: 53px; border:none; background-color: transparent;">
+                        <input disabled
+                          style="position: absolute; top: 982px; left: 636px; font-size: 12px; width: 41px; border:none; background-color: transparent;">
+
+                        <!--Row-1-->
+                        <input disabled
+                          style="position: absolute; top: 1010px; left: 115px; font-size: 12px; width: 31px; text-align: center; border:none; background-color: transparent;">
+                        <input disabled
+                          style="position: absolute; top: 1010px; left: 152px; font-size: 12px; width: 106px; border:none; background-color: transparent;outline:none;">
+                        <input disabled
+                          style="position: absolute; top: 1010px; left: 264px; font-size: 12px; width: 96px; border:none;background-color: transparent; outline:none;">
+                        <input disabled
+                          style="position: absolute; top: 1010px; left: 366px; font-size: 12px; width: 99px; border:none;background-color: transparent; outline:none;">
+                        <input disabled
+                          style="position: absolute; top: 1010px; left: 471px; font-size: 12px; width: 47px; border:none; background-color: transparent;outline:none; text-align: center;">
+                        <input disabled
+                          style="position: absolute; top: 1010px; left: 524px; font-size: 12px; width: 47px; border:none; background-color: transparent;outline:none; text-align: center;">
+                        <input disabled
+                          style="position: absolute; top: 1010px; left: 577px; font-size: 12px; width: 53px; border:none;background-color: transparent; outline:none;">
+                        <input disabled
+                          style="position: absolute; top: 1010px; left: 636px; font-size: 12px; width: 41px; border:none; background-color: transparent;outline:none;">
+                        <!--Table-end-->
+
+                        <!--Row-1-->
+                        <input disabled
+                          style="position: absolute; top: 1040px; left: 115px; font-size: 12px; width: 31px; text-align: center; border:none; outline:none;background-color:transparent">
+                        <input disabled
+                          style="position: absolute; top: 1040px; left: 152px; font-size: 12px; width: 106px; border:none;background-color: transparent; outline:none;">
+                        <input disabled
+                          style="position: absolute; top: 1040px; left: 264px; font-size: 12px; width: 96px; border:none; background-color: transparent;outline:none;">
+                        <input disabled
+                          style="position: absolute; top: 1040px; left: 366px; font-size: 12px; width: 99px; border:none; background-color: transparent;outline:none;">
+                        <input disabled
+                          style="position: absolute; top: 1040px; left: 471px; font-size: 12px; width: 47px; border:none; background-color: transparent;outline:none; text-align: center;">
+                        <input disabled
+                          style="position: absolute; top: 1040px; left: 524px; font-size: 12px; width: 47px; border:none; outline:none; text-align: center;background-color: transparent;">
+                        <input disabled
+                          style="position: absolute; top: 1040px; left: 577px; font-size: 12px; width: 53px; border:none; outline:none;background-color: transparent;">
+                        <input disabled
+                          style="position: absolute; top: 1040px; left: 636px; font-size: 12px; width: 41px; border:none; outline:none;background-color: transparent;">
+                        <!--Table-end-->
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+                <div class="row mt-5 showForPrint" style="display:none;"></div>
+
+              </div>
+
+              <!-- STEP5 CONTENT -->
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <div class="row mt-5 showForPrint" style="display:none;"></div>
+              <!-- TO SHOW DOCUMENTS -->
+              <div id="section5" class="section5 steps-content">
+                <div class="col-12 col-md-12 col-sm-12">
+                  <div class="title mb-4">Documents<span class="info"> (if any)</span>
+                  </div>
+                  <div class="col-12 text-left pl-0" *ngIf="docListImages?.length > 0">
+                    <div class="iframe-container" *ngFor="let item of docListImages" style="margin-bottom: 10px;">
+                      <div class="d-block" *ngIf="item.ContentType.includes('image')">
+                        <span class="doc-title">{{item.DocumentTypeName}}</span>
+                        <!-- <iframe [src]="item.ImageURL" frameborder="0" scrolling="yes" style="width: 100%;height:100%"></iframe> -->
+                        <img [src]="item.ImageURL" style="max-width:400px; max-height:200px; display: block;margin: 0 auto;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="steps-action pull-right">
+              <!-- <button nz-button nzType="default" (click)="pre()" *ngIf="index > 0">
+                <span>Back</span>
+              </button>
+              <span class="ml-3"></span>
+              <button nz-button nzType="primary" (click)="next()" *ngIf="index < 4 && index >= 0">
+                <span>Next</span>
+              </button> -->
+              <button type="button" class="btn btn-success ignoreBtnForPrint" *ngIf="!isEmployeeLoggedIn && !joiningKitApproved"
+                (click)="approvalRejectionFn('APPROVE')">
+                <span>Approve</span>
+              </button>
+              <span class="ml-3"></span>
+              <button type="button" class="btn btn-danger ignoreBtnForPrint" *ngIf="!isEmployeeLoggedIn && !joiningKitApproved"
+                (click)="approvalRejectionFn('REJECT')">
+                <span>Reject</span>
+              </button>
+              <span class="ml-3"></span>
+              <button nz-button nzType="primary" (click)="submitOnlineForm()" *ngIf="isEmployeeLoggedIn && isFormEditAllowed" class="ignoreBtnForPrint">
+                <span>Submit</span>
+              </button>
+              <!-- <button class="btn btn-info" (click)="sampleDownload()">
+                <span>Download</span>
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

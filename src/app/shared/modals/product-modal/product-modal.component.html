@@ -1,0 +1,70 @@
+<div class="modal fade show" style="display: block;">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="dfc100 overflow-y-auto">
+      <div class="modal-header">
+        <h5 class="modal-title pull-left">Selected Products</h5>
+        <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()" ><i class="mdi mdi-close font-size-md icon-close"></i></a>
+      </div>
+
+      <div class="modal-body no-padder builtin-calling-wrapper">
+        <div class="flex-column">
+          <form [formGroup]="PaygroupProductModalFrom">
+            <div class="clearfix">
+              <div class="row">
+
+          <!-- <div class="row tablerow" style="padding-left:15px;"> -->
+            <div class="form-group form-group-vertical col-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12">
+            
+              <div class="row" style="float: right;">
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding-left: 10px !important; float: right;" >
+                  <label class="form-label">Show_Only_Active</label>
+                </div>
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding-left:30px !important; float: right;">
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" formControlName="showonlyactive" (change)="ShowOnlyActiveChange($event)" checked enabled />
+                      <span class="el-switch-style"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          <!-- </div> -->
+          </div>
+          </div>
+        </form>
+          <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+                Please wait...
+            </button>
+          </div>
+          <div class="row tablerow" style="padding: 0px 15px;" *ngIf="!spinner">
+            <div class="col-md-12 col-sm-12">
+              <angular-slickgrid gridId="productgrid1" [columnDefinitions]="productcolumnDefinitions" [gridOptions]="productgridOptions" [dataset]="productdataset" gridWidth="100%" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+              </angular-slickgrid>
+
+           
+            </div>
+          </div>
+  
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+        <button class="btn btn-default pull-right" type="button" data-dismiss="modal" (click)="closeModal()">Cancel</button>
+
+        <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+            <div>
+                <div>
+                    <button class="btn  btn-primary " type="Submit" name="btnSubmit"  id="btnSubmit" (click)="savebutton()">
+                        <div class="pos-rlt sm-btn-component" > <span> Confirm </span></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

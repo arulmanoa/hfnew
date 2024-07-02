@@ -1,0 +1,20 @@
+.sticky {
+    background: #fff;
+    box-shadow: 0 3px 12px 0 rgba(0, 0, 0, .08);
+    position: fixed;
+    top: 0;
+    transition: all 0.3s;
+    height: 70px;
+    width: 82%;
+    z-index: 1000;
+    left: 58.2%;
+    transform: translateX(-50%);
+    padding: 15px;
+}
+
+@media only screen and (max-width: 766px) {
+    .sticky {
+        width: 78%;
+        left: 59.8%;
+    }
+}

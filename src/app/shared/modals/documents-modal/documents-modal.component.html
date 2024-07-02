@@ -1,0 +1,192 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="">
+
+              <div class="modal-header" style="padding: 15px !important;">
+                  <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                      <small class="header-pretitle"><b>Document Details</b></small>
+                      <h6 class="modal-title subheader_h6"> Upload </h6>
+                  </div>
+                  <div class="modal-close" (click)="confirmExit()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                  </div>
+              </div>
+
+
+
+
+              <div class="modal-body no-padder">
+
+                  <div id="overlay">
+                      <div class="w-100 d-flex justify-content-center align-items-center">
+                          <div class="spinner"></div>
+                      </div>
+                  </div>
+
+
+                  <div class="flex-column">
+
+                      <form [formGroup]="documentForm">
+
+                          <div class="col-12 col-md-12 col-sm-12">
+                              <div class="clearfix">
+
+                                  <div class="row">
+
+                                      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                          <label class="form-label ">Document Name<span class="required"> *</span></label>
+
+                                          <input class="form-control" name="DocumentName" formControlName="DocumentName" placeholder="Document Name" [ngClass]="{ 'is-invalid': submitted && g.DocumentName.errors }" type="text" autocomplete="off" disabled>
+                                          <div *ngIf="submitted && g.DocumentName.invalid" class="help-block">
+                                              <div *ngIf="g.DocumentName.errors.required">Document Name is required
+                                              </div>
+                                          </div>
+                                      </div>
+
+
+
+
+                                      <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="IsDocumentNumberRequired">
+                                          <label class="form-label ">Document Number <span class="required" *ngIf="IsDocumentNumberRequired"> *</span> </label>
+                                          <input class="form-control" *ngIf="isAadhaarMask" name="DocumentNumber" formControlName="DocumentNumber" pattern="[\x00-\x7F]+" [textMask]="{mask: mask}" placeholder="1234/1234/1234" onkeypress="return /^[0-9A-Z]+$/i.test(event.key)" [ngClass]="{ 'is-invalid': submitted && g.DocumentNumber.errors }"
+                                              type="text" autocomplete="off">
+                                          <input class="form-control" *ngIf="!isAadhaarMask" name="DocumentNumber" formControlName="DocumentNumber" pattern="[\x00-\x7F]+" placeholder="1234567890" onkeypress="return /^[0-9A-Z]+$/i.test(event.key)" [ngClass]="{ 'is-invalid': submitted && g.DocumentNumber.errors }"
+                                              type="text" autocomplete="off">
+
+                                          <div *ngIf="submitted && g.DocumentNumber.invalid" class="help-block">
+                                              <div *ngIf="g.DocumentNumber.errors.required">Document Number is required
+                                              </div>
+                                          </div>
+                                          <div *ngIf="documentForm.get('DocumentNumber').errors && documentForm.get('DocumentNumber').touched" class="help-block">
+
+                                              <span *ngIf="documentForm.get('DocumentNumber').errors.pattern"> Entered special characters are not allowed
+                                              </span>
+                                          </div>
+                                      </div>
+
+
+                                      <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="jsonObj.IsDateValidationRequired == 'True'">
+                                          <label class="form-label ">Document Valid From <span class="required"> *</span> </label>
+                                          <input type="text" class="form-control" bsDatepicker readonly (bsValueChange)="onChangetblDate($event)" placement="bottom" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }" name="ValidFrom" formControlName="ValidFrom"
+                                              [ngClass]="{'is-invalid': submitted && g.ValidFrom.errors }" placeholder="12-12-2020" autocomplete="off">
+                                          <div *ngIf="submitted && g.ValidFrom.invalid" class="help-block">
+                                              <div *ngIf="g.ValidFrom.errors.required">Valid From is required
+                                              </div>
+                                          </div>
+                                      </div>
+
+                                      <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="jsonObj.IsDateValidationRequired == 'True'">
+                                          <label class="form-label ">Document Valid Till <span class="required"> *</span> </label>
+                                          <input type="text" class="form-control" readonly [minDate]="tblminDate" bsDatepicker placement="bottom" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }" name="ValidTill" formControlName="ValidTill" [ngClass]="{'is-invalid': submitted && g.ValidTill.errors }"
+                                              placeholder="12-12-2020" autocomplete="off">
+                                          <div *ngIf="submitted && g.ValidTill.invalid" class="help-block">
+                                              <div *ngIf="g.ValidTill.errors.required">Valid From is required
+                                              </div>
+                                          </div>
+                                      </div>
+
+                                      <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                          <label class="form-label">Category Type <span class="required"> *</span>
+                                          </label>
+                                          <div class="page-links" *ngFor="let item of jsonObj.CategoryType" style="padding: 10px;">
+                                              <div class="custom-control custom-checkbox chkbox_custom">
+                                                  <input type="checkbox" class="custom-control-input" id="isaddress_{{item.Name}}" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone:
+                                                    true}" (change)="onChangeCategory(item, $event)" [checked]="item.isChecked">
+                                                  <label class="custom-control-label" for="isaddress_{{item.Name}}">{{item.Code}}</label>
+                                              </div>
+
+                                          </div>
+                                          <div *ngIf="submitted && isCategoryType == false" class="help-block">
+                                              Category Type is required
+                                          </div>
+
+
+                                      </div>
+
+                                      <!-- #region After JsZip -->
+                                      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                                          <label class="form-label">Attachment <span class="required"> *</span> <span class="help-text m-l-5">(Max file size <span>{{jsonObj.MaxSize/1024}}</span> MB)</span></label>
+                                          <label class="upload control" style="position:relative;bottom: 5px;">
+                                              <div class="upload-draggable is-primary">
+                                                  <section class="section">
+                                                      <div class="has-text-centered">
+                                                      <span class="icon is-large">
+                                                          <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                                              style="color: #9ba7ca;"></i> Upload </span>
+                                                      </span>
+
+                                                      </div>
+                                                  </section>
+                                              </div>
+                                              <!-- other -->
+                                              <!-- FOR IOS -->
+                                              <input (change)="onAddingFile($event)" type="file" multiple *ngIf="!acceptOnlyImageFile"
+                                              accept=".png, .gif, .jpg, .jpeg, .doc, .docx, .pdf, image/png, image/jpeg,image/gif, image/tiff, application/pdf,
+                                              application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document" (click)="$event.target.value=null" required>
+                                              <!-- FOR IOS -->
+                                              <input (change)="onAddingFile($event)" type="file" multiple *ngIf="acceptOnlyImageFile"
+                                              accept=".png, .gif, .jpg, .jpeg, image/png, image/jpeg, image/gif, image/tiff" (click)="$event.target.value=null" required>
+                                          </label>
+                                          <div *ngIf="submitted && !fileList[0]" class="help-block">
+                                              Attachment is required
+                                          </div>
+                                          <div class="d-flex align-items-center" *ngIf="previous_DocumentId && !fileList[0] && !isFileChange">
+                                              <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                                              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                                          </div>
+                                          <p *ngFor="let file of fileList" class="control">
+                                              <span class="file-name">
+                                                  <button class="btn btn-danger c-btn"  (click)="doDeleteFile(file)" ><a ngbTooltip="Delete Photo"
+                                                  id="sTest-deleteFile-candidateAddResume"
+                                                  style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                   display: block   ;margin-top: -5px;">
+                                                  <i class="fa fa-trash-o"
+                                                  ></i></a> </button>
+                                                  <a target="blank" class="ahref" style="padding: 2px;">
+                                                      {{file.name}}
+                                                  </a>
+                                                  </span>
+
+                                          </p>
+
+
+                                      </div>
+                                      <!-- #endregion -->
+
+                                  </div>
+                              </div>
+
+                          </div>
+
+
+                      </form>
+
+                  </div>
+
+              </div>
+              <div class="modal-footer">
+                  <div *ngIf="isLoading">
+                      <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban"
+              aria-hidden="true"></i> &nbsp; Cancel</button>
+                      <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                          <div>
+                              <div>
+                                  <!-- #region After JsZip -->
+                                  <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" [disabled]="!disableBtn" (click)="onFileUpload()">
+                                      <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                                          Save </span></div>
+                                    </button>
+                                  <!-- #endregion -->
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="d-flex align-items-center" *ngIf="!isLoading">
+                      <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                      <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

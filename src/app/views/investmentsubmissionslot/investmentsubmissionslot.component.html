@@ -1,0 +1,195 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+            Please wait...
+        </button>
+    </div>
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="!spinner">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="headerbar">
+            <div><p class="headerTitle">Investment Submission Slot</p></div>
+          </div>
+        </div>
+        <div class="col-md-4 text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item ng-star-inserted">
+              <button class="btn btn-sm btn-default" tooltip="Close" tooltip-placement="bottom" (click)="redirectToMainInvestmentSlot()">
+                <i class="mdi mdi-close font-size-md"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col-12 col-md-12"><label class="title">Mode</label></div>
+        <div class="col-12 col-md-12">
+          <div class="wrapper">
+            <input type="radio" value="declaration" name="select" id="option-1"
+                (change)="onChangeMode($event.target.value)" [checked]="isDeclarationSelected">
+            <input type="radio" value="proof" name="select" id="option-2"
+                (change)="onChangeMode($event.target.value)" [checked]="!isDeclarationSelected">
+            <label for="option-1" class="option option-1">
+              <p class="radioBtnText" [style.color]="isDeclarationSelected ? '#1C1E24' : '#D0DAF0'">Declaration</p>
+            </label>
+            <label for="option-2" class="option option-2">
+              <p class="radioBtnText" [style.color]="!isDeclarationSelected ? '#1C1E24' : '#D0DAF0'">Proof</p>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex p-0">
+          <div class="col-4 col-md-4">
+            <label class="form-label ">Client</label>
+            <ng-select [items]="clientsList" class="mt-1" (change)="onClientChange($event)" placeholder="Choose..." 
+              bindLabel="Name" bindValue="Id" [(ngModel)]="selectedClient" [multiple]="false">
+            </ng-select>
+          </div>
+          <div class="col-4 col-md-4">
+              <label class="form-label ">Client Contract</label>
+              <ng-select [items]="clientContractList" class="mt-1" (change)="onClientContractChange($event)" placeholder="Choose..." 
+                bindLabel="Name" bindValue="Id" [(ngModel)]="selectedClientContract" [multiple]="false">
+              </ng-select>
+          </div>
+          <div class="col-4 col-md-4">
+              <label class="form-label ">Team</label>
+              <ng-select [items]="teamsList" class="mt-1" (change)="onTeamChange($event)" placeholder="Choose..." 
+                bindLabel="Name" bindValue="Id" [(ngModel)]="selectedTeam" [multiple]="false">
+              </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex p-0">
+          <div class="col-4 col-md-4">
+              <label class="form-label ">Employee</label>
+              <ng-select [items]="employeeDropdown" class="mt-1" (change)="onEmpDropDownChange($event)" placeholder="Choose..." 
+                bindLabel="name" bindValue="id" [(ngModel)]="selectedEmployeeDropdown" [disabled]="disableEmpDrpdwn"  [multiple]="false">
+              </ng-select>
+              
+              <!-- <ng-select [items]="employeeList" class="mt-1" (change)="onEmpChange($event)" placeholder="Choose..." 
+                bindLabel="EmployeeName" bindValue="EmployeeId" [(ngModel)]="selectedEmployee" [multiple]="true">
+              </ng-select> -->
+          </div>
+          <div class="col-4 col-md-4" *ngIf="selectedEmployeeDropdown == 0">
+              <label class="form-label ">Start Date</label>
+              <input class="form-control" type="text" name="startDate" bsDatepicker placement="bottom"
+              (bsValueChange)="onChangeStartDate($event)" placeholder="DD-MM-YYYY" [minDate]="minDate"
+              [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+              [(ngModel)]="selectedStartDate" autocomplete="off" readonly required>
+          </div>
+          <div class="col-4 col-md-4" *ngIf="selectedEmployeeDropdown == 0">
+              <label class="form-label ">End Date</label>
+              <input class="form-control" type="text" name="endDate" [(ngModel)]="selectedEndDate" 
+              bsDatepicker placement="bottom" [minDate]="selectedStartDate" (bsValueChange)="onChangeEndDate($event)"
+              [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+              placeholder="DD-MM-YYYY" autocomplete="off"  readonly required>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-xxs-12 col-12 text-right mb-2" *ngIf="selectedEmployeeDropdown == 1 && employeeList && employeeList.length > 0">
+          <div class="col-lg-6" style="float: right">
+            <label class="form-label" style="text-align: left">
+              Start searching by employee code or employee name
+            </label>
+            <input class="form-control" type="search" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+              placeholder="Start searching by employee code or employee name"
+            />
+          </div>
+        </div>
+        <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+          <div class="table-responsive table-height tableFixHead" *ngIf="selectedEmployeeDropdown == 1 && employeeList && employeeList.length > 0">
+
+             <!-- <tr *ngFor="let obj of employeeList  | filter: searchText; let i = index" infinite-scroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollUpDistance]="scrollUpDistance" (scrolled)="loadMore()"> -->
+
+              <!-- <div *ngFor="let obj of employeeList">
+              {{obj}}</div> -->
+
+              
+
+              <table class="table table-sticky table-bordered tble-row-height mb-0 emp-specific-table">
+                <thead class="tbl-freezhead emp-specific-table-header">
+                  <tr>
+                    <th>Employee Name</th>
+                    <th>Employee Code</th>
+                    <th>Date Of Joining</th>
+                    <th>Designation</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                  </tr>
+                </thead>
+                <tbody class="tbl-scrollbody emp-specific-table-body">
+                  <tr *ngFor="let obj of employeeList | filter: searchText; trackBy: trackByFn; let i = index">
+                    <td style="padding-top: 2%;"><span>{{obj.EmployeeName}}</span></td>
+                    <td style="padding-top: 2%;"><span>{{obj.EmployeeCode}}</span></td>
+                    <td style="padding-top: 2%;"><span>{{obj.DOJ}}</span></td>
+                    <td style="padding-top: 2%;"><span>{{obj.Designation}}</span></td>
+                    <td>
+                      <input class="form-control" type="text" name="startDate" bsDatepicker placement="bottom"
+                             (bsValueChange)="onChangeEmployeeStartDate($event, obj)" placeholder="DD-MM-YYYY" [minDate]="minDate"
+                             [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+                             [(ngModel)]="obj.selectedStartDate" autocomplete="off" readonly required>
+                    </td>
+                    <td>
+                      <input class="form-control" type="text" name="endDate" [(ngModel)]="obj.selectedEndDate"
+                             bsDatepicker placement="bottom" [minDate]="obj.selectedStartDate" (bsValueChange)="onChangeEmployeeEndDate($event, obj)"
+                             [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+                             placeholder="DD-MM-YYYY" autocomplete="off" readonly required>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            <!-- <table class="table table-sticky table-bordered tble-row-height mb-0 emp-specific-table">
+              <thead class="tbl-freezhead emp-specific-table-header">
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Employee Code</th>
+                  <th>Date Of Joining</th>
+                  <th>Designation</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                </tr>
+              </thead>
+              <tbody class="tbl-scrollbody emp-specific-table-body">
+               
+                  <tr *ngFor="let obj of employeeList  | filter: searchText; let i = index">
+
+                  <td style="padding-top: 2%;"> <span> {{obj.EmployeeName}} </span> </td>
+                  <td style="padding-top: 2%;"> <span> {{obj.EmployeeCode}} </span></td>
+                  <td style="padding-top: 2%;"> <span> {{obj.DOJ}} </span></td>
+                  <td style="padding-top: 2%;"> <span> {{obj.Designation}} </span></td>
+                  <td>
+                    <input class="form-control" type="text" name="startDate" bsDatepicker placement="bottom"
+                    (bsValueChange)="onChangeEmployeeStartDate($event, obj)" placeholder="DD-MM-YYYY" [minDate]="minDate"
+                    [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+                    [(ngModel)]="obj.selectedStartDate" autocomplete="off" readonly required>
+                  </td>
+                  <td>
+                    <input class="form-control" type="text" name="endDate" [(ngModel)]="obj.selectedEndDate" 
+                    bsDatepicker placement="bottom" [minDate]="obj.selectedStartDate" (bsValueChange)="onChangeEmployeeEndDate($event, obj)"
+                    [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+                    placeholder="DD-MM-YYYY" autocomplete="off"  readonly required>
+                  </td>
+                </tr>
+              </tbody>
+            </table> -->
+          </div>
+          <div class="text-center" *ngIf="selectedEmployeeDropdown == 1 && employeeList && employeeList.length == 0"><p>No Data Available</p></div>
+        </div>
+      </div>
+      <div class="row ml-1 mt-5">
+        <div class="ml-auto mr-3">
+          <button type="button" class="btn btn-default" style="margin-right: 8px;" (click)="redirectToMainInvestmentSlot()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="submitAddNewSlotFn()" [disabled]="disableSubmitBtn">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

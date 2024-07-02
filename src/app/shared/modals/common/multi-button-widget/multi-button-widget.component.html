@@ -1,0 +1,38 @@
+
+
+  <div style="display: block;" class="modal fade show animated fadeIn">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>{{MultiButtonWidget.modalTitle}}</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> {{MultiButtonWidget.modalSubTitle}}
+            </h6>
+          </div>
+          <div class="modal-close" (click)="modal_dismiss('Modal Closed')" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <ul class="migrate-date-wrapper">
+                <ng-container  *ngFor="let item of MultiButtonWidget.buttonWidgetList">
+                <li class="import-from-csv import-block m-r-lg" (click)="onNavigator(item)"  *ngIf="item.isRequired">
+                
+                  <img class="m-b-md"
+                    height="42" src="assets/Images/{{item.icon}}">
+                  <h4 class="ft m-b-sm"> {{item.buttonTitle}} </h4>
+                  <div class="secondary-text m-b-sm">{{item.buttonDescription}}</div>
+               
+                </li>
+              </ng-container>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="modal-footer">
+        </div> -->
+      </div>
+    </div>
+  </div>

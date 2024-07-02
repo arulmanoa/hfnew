@@ -1,0 +1,1880 @@
+<div class="page-wrapper ff">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+
+        <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+        </div>
+
+        <div class="row" style="margin-bottom: 10px;margin-top: -15px;" *ngIf="!spinner">
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left">
+
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                <div class="text-right">
+                    <ul class="list-inline">
+
+                        <li class="list-inline-item" *ngIf="IsOpenAttendancePeriod">
+                            <button type="button" class="btn btn-primary" (click)="submitRegularizedAttendance()" [disabled]=_IsPayrollSubmitted>
+                <i class="mdi mdi-spellcheck  m-r-xs"></i> <span *ngIf="(HRRoleCode.includes(this.RoleCode) == true)">
+                  Submit for
+                  Payroll </span> <span *ngIf="(HRRoleCode.includes(this.RoleCode) == false)"> Submit Attendance </span>
+              </button>
+                        </li>
+                        <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+                        </li>
+                        <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onClose()">
+                <i class="mdi mdi-close  m-r-xs"></i>Close
+              </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center ma-5" *ngIf="!spinner && !refreshing_table_spinner && _payrollInputSubmission== null">
+            <span>No records found!</span>
+        </div>
+
+
+        <div class="content m-b report-content" style="margin-top: -5px;" *ngIf="!spinner && _payrollInputSubmission">
+            <!-- ATTENDANCE CYCLE SLIDER  -->
+            <div *ngIf="toShown" style="margin-bottom: -15px;">
+                <owl-carousel-o [options]="customOptions">
+                    <ng-container *ngFor="let item of _attendancePeriods">
+                        <ng-template carouselSlide [id]="item.Id">
+                            <div class="card text-center card-w" (click)="do_click_AttendancePeriod(item)" [ngStyle]="item.Id == _payrollInputSubmission.AttendancePeriodId && item.Id == PresentAttendancePeriodId ?{'background-color': '#35b30c6b'} : (item.Id < PresentAttendancePeriodId ? {'background-color': '#ddd35952'} : '')"
+                                [ngClass]="{'stripes_attd' : item.Id != _payrollInputSubmission.AttendancePeriodId, 'down-arrow' : item.Id == _payrollInputSubmission.AttendancePeriodId}">
+                                <div class="card-header card-head">
+                                    {{item.AttendancePeriodName}}
+                                </div>
+                                <div class="card-body card-bdy">
+                                    <h6 class="card-title card-bdy-h6">{{item.StartDate | date :'MMM d'}} - {{item.EndDate | date :'MMM d'}}
+                                    </h6>
+                                    <p class="card-text card-bdy-p" *ngIf="item.Id < PresentAttendancePeriodId"> Completed
+                                    </p>
+                                    <p class="card-text card-bdy-p" *ngIf="item.Id == PresentAttendancePeriodId"> On Going
+                                    </p>
+                                    <p class="card-text card-bdy-p" *ngIf="item.Id > PresentAttendancePeriodId"> Up Coming
+                                    </p>
+
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                </owl-carousel-o>
+                <br>
+
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                        <div class="text-left">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-4">
+                                            <div class="headerbar-right">
+                                                <div class="media" style="width: 100% !important;">
+                                                    <div class="media-body">
+                                                        <label>Team Name</label>
+                                                        <h6 style="font-size: 0.75rem;">{{regularizationData.TeamList.Name}} <span>
+                                <span style="color: black;font-weight: 600;font-size: 22px;">
+                                  {{attendance_actualData.length}} </span>
+                                                            <!-- <span style="font-size: 14px;color: #4bdb4b;"> +0 </span>
+                            <span style="font-size: 14px;  color: red;">
+                              -{{_payrollInputSubmission.MasterData.length}} </span> -->
+                                                            </span>
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-4">
+                                            <div class="headerbar-right divider">
+                                                <div class="media" style="width: 100% !important;">
+                                                    <div class="media-body">
+                                                        <label>{{currentPeriodName}}</label>
+                                                        <h6 style="font-size: 0.75rem;">{{currentPeriodCycle}} </h6>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-4">
+                                            <div class="headerbar-right divider">
+                                                <div class="media" style="width: 100% !important;">
+                                                    <div class="media-body">
+                                                        <label>Working Days</label>
+                                                        <h6 style="font-size: 0.75rem;">{{currentPeriodDays}}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                        <div class="col-lg-6" style="float: right;">
+                            <label class="form-label" style="text-align: left;">Start searching for an emp. by code or name </label>
+                            <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no" placeholder=" Start searching for an employee by code or name">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- <ngb-tabset (tabChange)="onChange_tabset($event)" [(activeId)]="activeTabName">
+        <ngb-tab id="teamAttendance">
+          <ng-template ngbTabTitle>&nbsp;<i class="fa fa-users" aria-hidden="true"></i> <span class="tab_name"> Team
+              Attendance</span>
+          </ng-template>
+          <ng-template ngbTabContent> -->
+
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                        <div class="text-left">
+                            <ul class="list-inline">
+
+                                <!-- <li class="list-inline-item"> -->
+                                <!-- <div class="radio-group a" style="margin-top: -10px;"> -->
+                                <!-- <div class="col-auto mr-sm-2 mx-1 card-block py-0 text-center radio p-0 " style="top: 8px;"
+                          [ngClass]="IsMusterroll ? 'selected' : ''" tooltip="Muster roll"
+                          (click)="onClickMode('MusterRoll')">
+                          <div class="flex-row">
+                            <div class="col p-0">
+                              <div class=""> <img class="irc_mut img-fluid" src="assets/Images/calendar.svg" width="15">
+                              </div>
+                              <p style="font-size:10px; margin-bottom:0px">Muster</p>
+                            </div>
+                          </div>
+                        </div> -->
+                                <!-- <div class="col-auto ml-sm-2 mx-1 card-block py-0 text-center radio p-0" style="top: 8px;"
+                          [ngClass]="IsMusterroll ? '' : 'selected'" tooltip="Non-Muster roll"
+                          (click)="onClickMode('NonMusterRoll')">
+                          <div class="flex-row">
+                            <div class="col p-0">
+                              <div class=""> <img class="irc_mut img-fluid" src="assets/Images/calendar_nm.svg"
+                                  width="15"> </div>
+                              <p style="font-size:9px; margin-bottom:0px">Non-Muster</p>
+                            </div>
+                          </div>
+                        </div> -->
+                                <!-- </div> -->
+                                <!-- </li> -->
+
+                                <!-- <li class="list-inline-item">
+                      <div *ngIf="IsMusterroll">
+                        <select class="form-control" [(ngModel)]="selectedWeekType" (change)="onChangeWeeks($event)"
+                          style="font-size: 12px !important;">
+                          <option disabled="" hidden="" selected="" value=""> --
+                            Select an Option --
+                          </option>
+                          <option *ngFor="let week of weeksList" [value]="week.id" class="ng-star-inserted">
+                            {{week.name}}</option>
+                        </select>
+                      </div>
+                    </li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                        <div class="text-right">
+                            <ul class="list-inline">
+                                <!-- <li class="list-inline-item">
+                      <button type="button" class="btn btn-default" (click)="bulkSubmit()">
+                        <i class="mdi mdi-arrow-up-bold-circle  m-r-xs"></i> Bulk Action
+                      </button>
+                    </li> -->
+                                <!-- <li class="list-inline-item">
+                      <button type="button" class="btn btn-default">
+                        <i class="mdi mdi-file-download-outline  m-r-xs"></i> Import
+                      </button>
+                    </li>
+                    <li class="list-inline-item">
+                      <button type="button" class="btn btn-default">
+                        <i class="mdi mdi-file-upload-outline  m-r-xs"></i> Export
+                      </button>
+                    </li> -->
+                                <!-- <li class="list-inline-item">
+                      <button type="button" class="btn btn-primary">
+                        <i class="mdi mdi-download  m-r-xs"></i> Download
+                      </button>
+                    </li> -->
+                                <!-- <li class="list-inline-item"><button type="button" class="btn btn-primary"
+                        (click)="refreshProcessingStatus()">
+                        <i class="mdi mdi-check-circle  m-r-xs"></i> Save
+                      </button>
+                    </li> -->
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row" style="margin-bottom: 10px;" *ngIf="isweekBased && IsMusterroll">
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <a href="javascript:;" (click)="decrement()" tooltip="Previous Week" tooltip-placement="bottom" class="btn action-edit pull-left" style="margin-right: 5px;margin-left: 5px;">
+                                    <i class="fa fa-angle-left" aria-hidden="true" style="font-size: 20px;
+                            color: #000;
+                            margin-top: 2px;
+                            margin-left: -2px;"></i>
+                                </a>
+                            </div>
+                            <div class="col-lg-3" style="text-align: center;">
+                                {{selectedWeek_period}}
+                            </div>
+                            <div class="col-lg-4">
+                                <a class="btn action-edit pull-left" (click)="increment()" tooltip="Next Week" tooltip-placement="bottom" style="float: right;">
+                                    <i class="fa fa-angle-right" aria-hidden="true" style="font-size: 20px;
+                          color: #000;
+                          margin-top: 2px;
+                          margin-left: -2px;">
+                  </i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center ma-5" *ngIf="render_spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+                </div>
+
+                <div class="row" style="padding-bottom: 10px;margin-top: 5px;" *ngIf="!refreshing_table_spinner">
+
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+                        <ul class="list-inline">
+                            <li class="list-inline-item" *ngIf="!IsEmptyEmployeeList">
+
+                                <button type="button" class="btn btn-primary-custom" (click)="export()" style="margin-bottom: 3px;">
+                  <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                </button>
+
+                            </li>
+                            <li class="list-inline-item" *ngIf="IsOpenAttendancePeriod && !IsEmptyEmployeeList">
+                                <button type="button" class="btn btn-primary-custom" (click)="do_MarkLWD()" style="margin-bottom: 3px;">
+                  <i class="mdi mdi-bookmark-check  m-r-xs"></i>Mark LWD
+                </button>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                        <div class="text-right">
+                            <ul class="list-inline">
+                                <!-- <li class="list-inline-item">
+                <button type="button" class="btn btn-danger" style="float: right;" [disabled]="selectedEmployeeAttendanceObject.length > 1" (click)="Approve_RejectAll(false)">
+                 Reject rejectAll
+                </button>
+              </li>
+              <li class="list-inline-item">
+                <button type="button" class="btn upgrade-btn" style="float: right;" [disabled]="selectedEmployeeAttendanceObject.length > 1" (click)="Approve_RejectAll(true)">
+                  Approve All
+                </button>
+              </li> -->
+                                <li class="list-inline-item" *ngIf="IsRegularizeBtnRequired">
+                                    <button type="button" class="btn btn-primary" style="float: right;" [disabled]="selectedEmployeeAttendanceObject.length != 1" (click)="regularizeAttendance()">
+                    <i class="mdi mdi-briefcase"></i> &nbsp; Regularize Punch In/Out
+                  </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <style>
+                    .table-sticky>thead>tr>th,
+                    .table-sticky>thead>tr>td {
+                        top: 0px;
+                        position: sticky;
+                        z-index: 1;
+                    }
+                    
+                    .table-height {
+                        display: block;
+                        overflow: auto;
+                        width: 100%;
+                    }
+                    
+                    .tbl-table th {
+                        font-size: 11px;
+                        text-align: left;
+                        background: #eef5fa;
+                        white-space: nowrap;
+                    }
+                    
+                    .tbl-table th,
+                    .tbl-table td {
+                        padding: 5px 12px;
+                        border: 1px solid #eae7e7;
+                    }
+                    
+                    .sticky-col {
+                        position: -webkit-sticky !important;
+                        position: sticky !important;
+                    }
+                    
+                    th.sticky-col {
+                        background-color: #eef5fa;
+                        z-index: 9 !important;
+                        /* border-left: 2px solid rgb(235, 13, 13) !important; */
+                    }
+                    
+                    td.sticky-col {
+                        background-color: #fff;
+                        z-index: 5 !important;
+                        /* border-left: 2px solid rgb(235, 13, 13) !important; */
+                    }
+                    
+                    .tbl-firstcol {
+                        width: 40px;
+                        min-width: 40px;
+                        max-width: 40px;
+                        left: 0px;
+                    }
+                    
+                    .tbl-secondcol {
+                        width: 70px;
+                        min-width: 70px;
+                        max-width: 70px;
+                        left: 38px;
+                    }
+                    
+                    .tbl-thirdcol {
+                        width: 200px;
+                        min-width: 200px;
+                        max-width: 200px;
+                        left: 108px;
+                    }
+                    
+                    .tbl-forthcol {
+                        width: 100px;
+                        min-width: 100px;
+                        max-width: 100px;
+                        left: 308px;
+                    }
+                    
+                    .tbl-fifthcol {
+                        width: 150px;
+                        min-width: 150px;
+                        max-width: 150px;
+                        left: 408px;
+                    }
+                    
+                    .tbl-sixthcol {
+                        width: 100px;
+                        min-width: 100px;
+                        max-width: 100px;
+                        left: 558px;
+                    }
+                </style>
+                <div class="table-scroll table-height">
+
+                    <!-- <table class="rtable tableBodyScroll" id="myTableIdElementId1" style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th><span style="font-size: 12px;">Code </span> </th>
+                <th> <span style="font-size: 12px;"> Name </span> </th>
+                <th> <span style="font-size: 12px;"> DOJ </span> </th>
+                <th> <span style="font-size: 12px;"> Location </span> </th>
+                <th> <span style="font-size: 12px;"> Payable Days </span> </th>
+
+                <th *ngFor="let date of attendance_header" class="verticalTableHeader"> <span style="font-size:12px;text-align: center;
+                    display: block;"> {{date.AttendanceDate |date :'dd-MM-yyyy'}}
+                  </span> </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let attendance of attendance_actualData | filter: searchText; let i = index">
+              
+                <td> {{attendance.EmployeeCode}}  </td>
+                <td>{{attendance.EmployeeName}}</td>
+                <td><span style="font-size: 12px;">{{attendance.DOJ}}</span> </td>
+                <td><span style="font-size: 12px;">{{attendance.LocationName}}</span> </td>
+                <td><span style="font-size: 12px;"> {{attendance.PayableDays}} </span> </td>
+
+                <td *ngFor="let item of attendance.Attendance"
+                  style="padding-left: 3px !important; padding-right: 1px !important;">
+                  <div class="row" style="cursor: pointer;text-align: center;">
+                    <div class="col-lg-12">
+
+                      <span style="font-size: 12px;">
+
+                      <div *ngIf="(item.FirstHalfApplied != 'null' && item.SecondHalfApplied != 'null' && item.FirstHalfApplied == item.SecondHalfApplied)">
+                        <span class="badge badge-warning"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.FirstHalfApplied}} 
+                        </span>
+                      </div>
+                      <div *ngIf="(item.FirstHalfApplied != 'null' && item.SecondHalfApplied != 'null' && item.FirstHalfApplied != item.SecondHalfApplied)">
+                        <span class="badge badge-warning"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.FirstHalfApplied}}  </span> | <span class="badge badge-warning"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.SecondHalfApplied}}
+                        </span>
+                       
+                      </div>
+
+                      <div *ngIf="(item.FirstHalfApplied != 'null' && item.SecondHalfApplied == 'null')">
+                        <span class="badge badge-warning"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.FirstHalfApplied}}  </span> |
+                          <span class="badge badge-danger" *ngIf="item.SecondHalf != 'P'"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.SecondHalf}}
+                        </span>
+                        <span class="badge badge-success" *ngIf="item.SecondHalf == 'P'"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.SecondHalf}}
+                        </span>
+                    
+                      </div>
+
+                      <div *ngIf="(item.FirstHalfApplied == 'null' && item.SecondHalfApplied != 'null')">
+                        <span class="badge badge-danger" *ngIf="item.FirstHalf != 'P'"
+                        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                        {{item.FirstHalf}}
+                      </span>
+                      <span class="badge badge-success" *ngIf="item.FirstHalf == 'P'"
+                        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                        {{item.FirstHalf}}
+                     
+                      </span>   | <span class="badge badge-warning"
+                         style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                         {{item.SecondHalfApplied}}  </span>                          
+                      </div>
+                        <div *ngIf="(item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf == item.SecondHalf &&  item.SecondHalf == 'P')">
+                          <span class="badge badge-success"
+                            style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.FirstHalf}} 
+                          </span>
+                        </div>
+                        <div *ngIf="(item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf == item.SecondHalf &&  item.SecondHalf != 'P')">
+                          <span class="badge badge-danger"
+                            style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.FirstHalf}} </span>
+                        </div>
+                        <div
+                          *ngIf="(item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf != item.SecondHalf && item.FirstHalf == 'P' && item.SecondHalf != 'P')">
+                          <span class="badge badge-success"
+                            style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.FirstHalf}} </span> | <span class="badge badge-danger"
+                            style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.SecondHalf}}
+                          </span>
+                        </div>
+                        <div
+                          *ngIf="(item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf != item.SecondHalf && item.FirstHalf != 'P' && item.SecondHalf == 'P')">
+                          <span class="badge badge-danger"
+                            style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.FirstHalf}} </span> | <span class="badge badge-success"
+                            style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.SecondHalf}}
+                          </span>
+                        </div>
+                        <div
+                          *ngIf="(item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf != item.SecondHalf && item.FirstHalf != 'P' && item.SecondHalf != 'P')">
+                          <span class="badge badge-danger"
+                            style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.FirstHalf}} </span> | <span class="badge badge-danger"
+                            style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.SecondHalf}}
+                          </span>
+                        </div>
+                      </span>
+
+
+                    </div>
+                  </div>
+
+                </td>
+              </tr>
+
+            </tbody>
+            </table> -->
+
+                    <div class="text-center ma-5" *ngIf="refreshing_table_spinner">
+                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+                    </div>
+
+                    <div class="text-center ma-5" *ngIf="IsEmptyEmployeeList">
+                        <span>No records found!</span>
+                    </div>
+
+
+
+                    <table class="tableBodyScroll table-sticky tbl-table" id="myTableIdElementId1" style="width:100%;border-collapse:collapse;" *ngIf="!refreshing_table_spinner && !IsEmptyEmployeeList">
+                        <thead>
+                            <tr>
+                                <th class="sticky-col tbl-firstcol"><span style="font-size: 12px;"> </span> </th>
+                                <th class="sticky-col tbl-secondcol"><span style="font-size: 12px;">Code </span> </th>
+                                <th class="sticky-col tbl-thirdcol"> <span style="font-size: 12px;"> Name </span> </th>
+                                <th class="sticky-col tbl-forthcol"> <span style="font-size: 12px;"> DOJ </span> </th>
+                                <th class="sticky-col tbl-fifthcol"> <span style="font-size: 12px;"> Location </span> </th>
+                                <th class="sticky-col tbl-sixthcol"> <span style="font-size: 12px;"> Payable Days </span> </th>
+
+                                <th *ngFor="let date of attendance_header" class="verticalTableHeader"> <span style="font-size:12px;text-align: center;
+                  display: block;"> {{date.date | date :'MMM d'}}
+                  </span> </th>
+
+                                <!-- <th *ngFor="let date of attendance_header" class="verticalTableHeader"> <span style="font-size:12px;text-align: center;
+                    display: block;"> {{date.AttendanceDate | date :'MMM d'}}
+                  </span> </th> start date end date was loaded with first emplyee record based-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let attendance of attendance_actualData | filter: searchText; let i = index">
+                                <td class="sticky-col tbl-firstcol">
+                                    <input *ngIf="IsOpenAttendancePeriod" type="checkbox" [(ngModel)]="attendance.isSelected" (click)="change(attendance, i, $event)" style="cursor: pointer;">
+                                </td>
+                                <td class="sticky-col tbl-secondcol">
+                                    <span id="btnSideToggle" style="font-size: 12px;" (click)="onClickEmployeeCode(attendance,_payrollInputSubmission)">
+                    <a class="txt" href="javascript:;"> {{attendance.EmployeeCode}} </a> 
+                    <i
+                      *ngIf="attendance.IsSubmitted == '0'" class="fa fa-question-circle"
+                      tooltip="An attendance record has not yet been approved for this employee" aria-hidden="true"></i>
+                  </span>
+
+
+                                </td>
+                                <td class="sticky-col tbl-thirdcol"><span style="font-size: 12px;">{{attendance.EmployeeName}} <i
+                      *ngIf="attendance.IsApproved" class="fa fa-check-circle" style="color: limegreen;"
+                      aria-hidden="true"></i>
+                  </span> </td>
+                                <td class="sticky-col tbl-forthcol"><span style="font-size: 12px;">{{attendance.DOJ}}</span> </td>
+                                <td class="sticky-col tbl-fifthcol"><span style="font-size: 12px;">{{attendance.LocationName}}</span>
+                                </td>
+                                <td class="sticky-col tbl-sixthcol"><span style="font-size: 12px;"> {{attendance.PayableDays}} </span>
+                                </td>
+
+                                <td *ngFor="let item of attendance.Attendance" style="padding-left: 3px !important; padding-right: 1px !important;">
+                                    <div class="row" style="cursor: pointer;text-align: center;">
+                                        <div class="col-lg-12">
+
+                                            <span style="font-size: 12px;">
+
+      <!-- <span class="badge badge-success" *ngIf="(item.FirstHalf == item.SecondHalf)"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.FirstHalf}} </span> -->
+
+
+                                            <!-- <div *ngIf="(item.FirstHalf == 'P' && item.SecondHalf != 'P')">
+        <span class="badge badge-success"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.FirstHalf}} </span> | <span class="badge badge-danger"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.SecondHalf}}
+      </span>
+      </div>
+      <div *ngIf="(item.FirstHalf != 'P' && item.SecondHalf == 'P')">
+        <span class="badge badge-danger"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.FirstHalf}} </span> | <span class="badge badge-success"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.SecondHalf}}
+      </span>
+      </div>
+      <div *ngIf="(item.FirstHalf != 'P' && item.SecondHalf != 'P')">
+        <span class="badge badge-danger"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.FirstHalf}} </span> | <span class="badge badge-danger"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.SecondHalf}}
+      </span>
+      </div>
+
+      p | p  - f == s  and p
+      lop : lop - f == s and !p
+      p : lop  - f != s and f == p and s !=p
+      lop : p - f != s and f != p and  s == p
+      sl : lop - f != s and f!= p and s !=p
+      -->
+
+                                            <div *ngIf="(item.IsHoliday)">
+                                                <span class="badge badge-self" style="display: inline;"> H
+
+</span>
+                                            </div>
+                                            
+                                            <div *ngIf="item.IsHoliday && (item.FirstHalf && item.SecondHalf) &&
+                                              (item.FirstHalf == item.SecondHalf)">
+                                              <span class="badge badge-success" *ngIf="item.FirstHalf == 'P'" 
+                                              style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                                                {{ item.FirstHalf }}
+                                              </span>
+                                              <span class="badge badge-danger" *ngIf="item.FirstHalf != 'P'" 
+                                              style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                                                {{item.FirstHalf}} 
+                                              </span>  
+                                            </div>
+
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied == 'EMPTY' && item.SecondHalfApplied == 'EMPTY' && item.FirstHalfApplied =='EMPTY' && item.FirstHalfApplied == item.SecondHalfApplied)">
+                                                <span class="badge" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;background-color: #f2ebd7 !important; color: #f2ebd7 !important;">
+
+        </span>
+                                            </div>
+
+                                            <div *ngIf="(item.IsWeekOff)">
+                                              <span class="badge" 
+                                                style="display: inline;padding: 0px 6px 0px;border-radius: 10px;
+                                                background-color: #c9c3b2 !important; color: #c9c3b2 !important;">
+                                              </span>
+                                            </div>
+
+                                            <div *ngIf="!item.IsHoliday && item.IsWeekOff && 
+                                            (item.FirstHalf  && item.SecondHalf) && (item.FirstHalf == item.SecondHalf)">
+                                              <span  class="badge badge-success" *ngIf="item.FirstHalf == 'P'"
+                                              style=" display: inline; padding: 0px 6px 0px; border-radius: 10px;">
+                                              {{ item.FirstHalf }}
+                                              </span>
+                                              <span class="badge badge-danger" *ngIf="item.FirstHalf != 'P'" 
+                                              style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                                                {{item.FirstHalf}} 
+                                              </span>                                    
+                                            </div>
+
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied != 'null' && item.SecondHalfApplied != 'null' && item.FirstHalfApplied == item.SecondHalfApplied)">
+                                                <span class="badge badge-warning" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+          {{item.FirstHalfApplied}}
+        </span>
+                                            </div>
+                                            <div *ngIf="( !item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied != 'null' && item.SecondHalfApplied != 'null' && item.FirstHalfApplied != item.SecondHalfApplied)">
+                                                <span class="badge badge-warning" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+          {{item.FirstHalfApplied}} </span> | <span class="badge badge-warning" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+          {{item.SecondHalfApplied}}
+        </span>
+
+                                            </div>
+
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied != 'null' && item.SecondHalfApplied == 'null')">
+                                                <span class="badge badge-warning" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+          {{item.FirstHalfApplied}} </span> |
+                                                <span class="badge badge-danger" *ngIf="item.SecondHalf != 'P'" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+          {{item.SecondHalf}} 
+        </span>
+                                                <span class="badge badge-success" *ngIf="item.SecondHalf == 'P'" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+          {{item.SecondHalf}} 
+        </span>
+
+
+                                            </div>
+
+                                            <div *ngIf="( !item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' && item.SecondHalfApplied != 'null')">
+                                                <span class="badge badge-danger" *ngIf="item.FirstHalf != 'P'" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+          {{item.FirstHalf}} 
+        </span>
+                                                <span class="badge badge-success" *ngIf="item.FirstHalf == 'P'" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+          {{item.FirstHalf}}
+
+        </span> | <span class="badge badge-warning" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+          {{item.SecondHalfApplied}} </span>
+                                            </div>
+
+
+
+
+
+
+
+
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff && !item.IsPresentMarkedByEmployee && !item.IsAutoPunchedOut && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf == item.SecondHalf &&  item.SecondHalf == 'P')">
+                                                <span class="badge badge-success" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.FirstHalf}} 
+                        </span>
+                                            </div>
+
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff && !item.IsPresentMarkedByEmployee && item.IsAutoPunchedOut && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf == item.SecondHalf &&  item.SecondHalf == 'P')">
+                                                <span class="badge badge-success" style="display: inline;padding: 0px 6px 0px;border-radius: 10px; background-image: linear-gradient(to top left, #8dd6a6 50%, #28a745 50%);
+                                            ">
+                        {{item.FirstHalf}} 
+                      </span>
+                                            </div>
+
+
+
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff &&  item.IsPresentMarkedByEmployee && !item.IsAutoPunchedOut && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf == item.SecondHalf &&  item.SecondHalf == 'P')">
+                                                <span class="badge badge-success" style="display: inline;padding: 0px 6px 0px;border-radius: 10px; 
+                                            background: repeating-linear-gradient(
+45deg,
+#95daa4,
+#95daa4 2px,
+#28a745 2px,
+#28a745 4px
+);">
+                        {{item.FirstHalf}}
+                      </span>
+                                            </div>
+
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && !HasFirstHalfProp(item))">
+                                                <span class="badge" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;background-color: #f2ebd7 !important; color: #f2ebd7 !important;">
+                       </span>
+                                            </div>
+
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' &&  HasFirstHalfProp(item) && item.FirstHalf == item.SecondHalf &&  item.SecondHalf != 'P')">
+                                                <span class="badge badge-danger" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.FirstHalf}} </span>
+                                            </div>
+
+                                            <div *ngIf="(!item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf != item.SecondHalf && item.FirstHalf == 'P' && item.SecondHalf != 'P')">
+                                                <span class="badge badge-success" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.FirstHalf}} </span> | <span class="badge badge-danger" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.SecondHalf}}
+                        </span>
+                                            </div>
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf != item.SecondHalf && item.FirstHalf != 'P' && item.SecondHalf == 'P')">
+                                                <span class="badge badge-danger" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.FirstHalf}} </span> | <span class="badge badge-success" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.SecondHalf}}
+                        </span>
+                                            </div>
+                                            <div *ngIf="(!item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' && item.SecondHalfApplied == 'null' && item.FirstHalf != item.SecondHalf && item.FirstHalf != 'P' && item.SecondHalf != 'P')">
+                                                <span class="badge badge-danger" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.FirstHalf}} </span> | <span class="badge badge-danger" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{item.SecondHalf}}
+                        </span>
+                                            </div>
+                                            <!-- <span class="badge badge-success" *ngIf="item.FirstHalf == 'P'"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.FirstHalf}} </span>
+
+      <span class="badge badge-danger" *ngIf="item.FirstHalf != 'P'"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.FirstHalf}} </span> | <span class="badge badge-success" *ngIf="item.SecondHalf == 'P'"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.SecondHalf}}
+      </span>
+
+      <span class="badge badge-danger" *ngIf="item.SecondHalf != 'P'"
+        style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+        {{item.SecondHalf}}
+      </span> -->
+
+                                            </span>
+
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
+
+
+
+
+
+
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- ! : 16.2 for panasonic -->
+
+                        <p class="small mb-0" style="font-size: 12px;float:left;margin-right: 10px;">
+                            <span class="badge badge-warning" style="font-size: 12px;line-height: 5px;
+                    width: 10%;color: transparent;">●</span> Applied Leave
+                        </p>
+                        <p class="small mb-0" style="font-size: 12px;float:left;margin-right: 10px;">
+                            <span class="badge badge-danger" style="font-size: 12px;line-height: 5px;
+                    width: 15%;color: transparent;">●</span> Absent
+                        </p>
+                        <p class="small mb-0" style="font-size: 12px;float:left;margin-right: 10px;">
+                            <span class="badge badge-success" style="font-size: 12px;background-color: #c9c3b2 !important;line-height: 5px;
+                    width: 10%;color: transparent;">●</span> Week Off
+                        </p>
+                        <p class="small mb-0" style="font-size: 12px;float:left;margin-right: 10px;">
+                            <span class="badge badge-success" style="font-size: 12px;line-height: 5px;
+                    width: 7%;color: transparent;background-image: linear-gradient(to top left, #8dd6a6 50%, #28a745 50%) !important;">●</span> Present w/ Auto Punched Out
+                        </p>
+                        <p class="small mb-0" style="font-size: 12px;float:left;margin-right: 10px;">
+                            <span class="badge badge-success" style="font-size: 12px;line-height: 5px;
+                    width: 9%;color: transparent;background:  repeating-linear-gradient( 45deg, #95daa4, #95daa4 2px, #28a745 2px, #28a745 4px ) !important;">●</span> Present By Employee
+                        </p>
+                        <p class="small mb-0" style="font-size: 12px;float:left">
+                            <span class="badge badge-success" style="font-size: 12px;line-height: 5px;
+                    width: 15%;color: transparent;">●</span> Present &nbsp;
+                        </p>
+                        <p class="small mb-0" style="font-size: 12px;float:left;margin-right: 10px;">
+                            <span class="badge badge-success" style="font-size: 12px;background-color: #f2ebd7 !important;line-height: 5px;
+                  width: 10%;color: transparent;">●</span> No data
+                        </p>
+                        <p class="small mb-0" style="font-size: 12px;float:left;margin-right: 10px;">
+                            <span class="badge badge-self" style="font-size: 12px;line-height: 5px;
+                  width: 10%;color: transparent;">●</span> Holiday
+                        </p>
+                    </div>
+                    <div class="col-lg-4" style="text-align: right;">
+                        <label> <b class="label_ct" *ngIf="!_IsPayrollSubmitted"> Last saved on :
+      {{_payrollInputSubmission.LastUpdatedOn | date:'dd-MM-yyyy hh:mm:ss'}}
+    </b>
+    <b class="label_ct" *ngIf="_IsPayrollSubmitted"> Last submitted on :
+      {{_payrollInputSubmission.LastUpdatedOn | date:'dd-MM-yyyy hh:mm:ss'}}
+    </b>
+  </label>
+
+                    </div>
+                </div>
+
+                <!-- </ng-template>
+        </ngb-tab> -->
+                <!-- <ngb-tab id="variableInputs">
+          <ng-template ngbTabTitle>&nbsp; <i class="fa fa-cube" aria-hidden="true"></i> <span class="tab_name"> Variable
+              Inputs </span>
+          </ng-template>
+          <ng-template ngbTabContent>
+
+          </ng-template>
+        </ngb-tab> -->
+                <!-- </ngb-tabset> -->
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <div id="popup_edit_attendance" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+        <div style="display: block;" class="modal fade show animated">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- <div class="modal-header" style="padding: 15px !important;">
+            <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+              <small class="header-pretitle"><b>Attendance Log </b></small>
+              <h6 class="modal-title subheader_h6" id="popup_release_AL">Create/Revise</h6>
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss_edit_attendance()" style="margin-top: 5px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+          </div> -->
+
+                    <div class="modal-header" style="padding: 15px !important;">
+                        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                            <small class="header-pretitle"><b style="font-weight: 500 !important;">
+                  Attendance Log</b></small>
+                            <h6 class="modal-title subheader_h6" style="font-size: 10px;
+                      letter-spacing: 1px;
+                      text-transform: uppercase;"> New Request </h6>
+                        </div>
+                        <div class="modal-close" (click)="modal_dismiss_edit_attendance()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                        </div>
+                    </div>
+
+
+
+                    <div class="modal-body">
+                        <div class="row" *ngIf="isOpen" style="margin-bottom: -15px;">
+                            <div class="col-lg-8">
+                                <div class="row">
+                                    <div class="col-xs-12  col-sm-12  p-r-50">
+                                        <form [formGroup]="AttendForm">
+                                            <div class="row">
+                                                <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                          <label class="form-label ">Action<span class="required"> *</span></label>
+                          <div class="form-check-inline">
+                            <label class="form-check-label">
+                              <input type="radio" class="form-check-input" formControlName="Action" name="Action"
+                                value="Absent">Absent
+                            </label>
+                          </div>
+                          <div class="form-check-inline">
+                            <label class="form-check-label">
+                              <input type="radio" class="form-check-input" name="Action" formControlName="Action"
+                                value="Present">Present
+
+                            </label>
+                          </div>
+
+                        </div> *ngIf="AttendForm.controls.Action.value == 'Absent'"-->
+
+                                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                                    <label class="form-label ">Leave Type </label>
+                                                    <ng-select [items]="_requestEntitlementList" placeholder="-- select an option --" formControlName="Entitlement" bindLabel="DisplayName" bindValue="EntitlementId" [clearable]="false" (change)="onChange_Entitlement($event)">
+                                                    </ng-select>
+                                                    <div *ngIf="submitted && g.Entitlement.invalid" class="help-block">
+                                                        <div *ngIf="g.Entitlement.errors.required">Leave Type is required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="margin-bottom: 5rem !important;">
+
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                                    <label class="form-label ">Applied From <span class="required"> *</span></label>
+                                                    <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom" readonly [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="12-12-1970" formControlName="AppliedFrom" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                                                        autocomplete="off" (bsValueChange)="onChange_FromDate($event)">
+                                                    <div *ngIf="submitted && g.AppliedFrom.invalid" class="help-block">
+                                                        <div *ngIf="g.AppliedFrom.errors.required">Applied From is required
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;">
+                                                    <label class="form-label"> First Half </label>
+                                                    <div class="">
+                                                        <label class="el-checkbox el-checkbox-red">
+                              <input type="checkbox" name="IsAppliedForFirstHalf" (change)="onChange_firstHalf($event)"
+                                formControlName="IsAppliedForFirstHalf" />
+                              <span class="el-checkbox-style"></span>
+                            </label>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;">
+                                                    <label class="form-label"> Second Half</label>
+                                                    <div class="">
+                                                        <label class="el-checkbox el-checkbox-red">
+                              <input type="checkbox" name="IsAppliedFromSecondHalf"
+                                (change)="onChange_secondHalf($event)" formControlName="IsAppliedFromSecondHalf"
+                                [disabled]="isDisabledFromSecondHalf" />
+                              <span class="el-checkbox-style"></span>
+                            </label>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                                    <label class="form-label ">Applied Till<span class="required"> *</span></label>
+                                                    <input class="form-control" type="text" name="AppliedTill" [minDate]="_till_minDate" bsDatepicker placement="bottom" readonly [disabled]="isDisabledTillDate" (bsValueChange)="onChange_TillDate($event)" [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                                        placeholder="12-12-1970" formControlName="AppliedTill" [ngClass]="{ 'is-invalid': submitted && g.AppliedTill.errors }" autocomplete="off">
+                                                    <div *ngIf="submitted && g.AppliedTill.invalid" class="help-block">
+                                                        <div *ngIf="g.AppliedTill.errors.required">Applied Till is required
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="isinvalidDate == true" class="help-block">
+                                                        <div>Note: The till date has to be greater than or equal to the from date.
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-4" style="margin-top: 5px;">
+                                                    <label class="form-label"> First Half</label>
+                                                    <div class="">
+                                                        <label class="el-checkbox el-checkbox-red">
+                              <input type="checkbox" name="IsAppliedTillFirstHalf"
+                                (change)="onChange_tillfirstHalf($event)" formControlName="IsAppliedTillFirstHalf"
+                                [disabled]="isDisabledTillFirstHalf" />
+                              <span class="el-checkbox-style"></span>
+                            </label>
+                                                    </div>
+
+                                                </div>
+
+                                                <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-6">
+                      <label class="form-label">Second Half</label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="IsAppliedTillSecondHalf" formControlName="IsAppliedTillSecondHalf"
+                           />
+                          <span class="el-switch-style"></span>
+                        </label>
+                        <label class="el-checkbox el-checkbox-red">
+                          <input type="checkbox" name="IsAppliedTillFirstHalf"
+                            (change)="onChange_tillfirstHalf($event)" formControlName="IsAppliedTillFirstHalf"
+                            [disabled]="isDisabledTillFirstHalf" />
+                          <span class="el-checkbox-style"></span>
+                        </label>
+
+
+                      </div>
+                    </div>
+                     -->
+                                                <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                                    <label class="form-label"> Comments <span class="required"> *</span> </label>
+                                                    <textarea class="form-control" rows="3" spellcheck="false" id="ApplierRemarks" formControlName="ApplierRemarks" placeholder="a few comments" [ngClass]="{ 'is-invalid': submitted && g.ApplierRemarks.errors }"></textarea>
+                                                    <div *ngIf="submitted && g.ApplierRemarks.invalid" class="help-block">
+                                                        <div *ngIf="g.ApplierRemarks.errors.required">Comments is required</div>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                                <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                      [ngClass]="{ 'col-sm-5' : AttendForm.controls.IsFirstHalf.value == true && AttendForm.controls.isHalfDay.value == true && AttendForm.controls.IsSecondHalf.value == true}"
+                      *ngIf="AttendForm.controls.Action.value == 'Absent' && AttendForm.controls.isHalfDay.value == true && AttendForm.controls.IsFirstHalf.value == true && AttendForm.controls.IsSecondHalf.value == true">
+                      <label class="form-label ">Attendance Type <i> (Second Half) </i> </label>
+                      <ng-select [items]="_AttendanceType" placeholder="-- select an option --"
+                        formControlName="AttendanceType_SecondHalf" bindLabel="name" bindValue="id">
+                      </ng-select>
+                      <div *ngIf="submitted && g.AttendanceType_SecondHalf.invalid" class="help-block">
+                        <div *ngIf="g.AttendanceType_SecondHalf.errors.required">AttendanceType Second Half is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3"
+                      [ngClass]="{ 'col-sm-5' : AttendForm.controls.isHalfDay.value == true && (AttendForm.controls.IsFirstHalf.value == false || AttendForm.controls.IsSecondHalf.value == false)}"
+                      *ngIf="AttendForm.controls.Action.value == 'Absent'">
+                      <label class="form-label">Is Half Day</label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="isHalfDay" formControlName="isHalfDay" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3"
+                      *ngIf="AttendForm.controls.isHalfDay.value == true">
+                      <label class="form-label">Is First Half</label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="isHalfDay" formControlName="IsFirstHalf" />
+                          <span class="el-switch-style"></span>
+                        </label>
+
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3"
+                      *ngIf="AttendForm.controls.isHalfDay.value == true">
+                      <label class="form-label">Is Second Half</label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="isHalfDay" (change)="onChangeSecondHalf($event.target.value)"
+                            formControlName="IsSecondHalf" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+
+                    </div> -->
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+
+                                <img src="assets/Images/leaverequest.svg">
+
+                                <div style="position: absolute;bottom: 35px;width: 90%;">
+                                    <div *ngIf="AttendForm.controls.Entitlement.value != null && AttendForm.controls.Entitlement.value != 0 ">
+                                        <div class="form-group" style="margin-bottom: 0.5rem;" *ngIf="!IsLossOfPay">
+                                            <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;">
+                                                Available Balance : <b style="color: black;"> {{availableDays}} </b>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="margin-bottom: 0.5rem;">
+                                            <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;">
+                                                Applying for <b style="color: black;" *ngIf="requestedDays >= 0"> {{requestedDays}} </b> <b style="color: red;" *ngIf="requestedDays < 0"> {{requestedDays}} </b> day of
+                                                <b style="color: black;"> {{leaveTypeName}} </b>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group" style="margin-bottom: 0.5rem;" *ngIf="!IsLossOfPay">
+                                            <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;">
+                                                Remaining Balance : <b style="color: black;" *ngIf="remainingDays >= 0"> {{remainingDays}} </b>
+                                                <b style="color: red;" *ngIf="remainingDays < 0"> {{remainingDays}} </b>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group tw-mb-0" style="margin-top: 15px;">
+                                        <div class="tw-w-full tw-px-3">
+                                            <button type="submit" (click)="saveEntitlementRequest()" class="btn btn-primary" style="width:100%;border-radius: 20px;"> Submit Request
+                      </button>
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- <div class="modal-footer">
+            <div class="pull-right right-margin-btn">
+              <div class="text-right">
+                <ul class="list-inline">
+                  <li class="list-inline-item"> <button class="btn btn-default" type="button"
+                      (click)="modal_dismiss_edit_attendance()">
+                      <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                      Cancel</button>
+                  </li>
+                  <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit"
+                      id="btnSubmit" (click)="confirmattendance()">
+                      <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i>
+                          &nbsp;
+                          Confirm
+                        </span></div>
+                    </button></li>
+
+                </ul>
+              </div>
+            </div>
+          </div> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- // NEW IMPLEMENTATION  -->
+
+
+    <nz-drawer [nzVisible]="regularize_attendance_slider" [nzCloseOnNavigation]="true" [nzWidth]="840" nzTitle="Attendance Review" (nzOnClose)="close_regularize_attendance_slider()">
+        <div class="">
+            <div class="row" *ngIf="EmployeeObject != null">
+                <div class="col-lg-8" style="margin-top: 0.7rem;">
+                    <div class="row">
+                        <div class="col-lg-1 col-sm-1 col-md-1 col-xs-1">
+                            <img src="assets/Images/user.png" style="width: 35px;margin-top: 8px;">
+                        </div>
+                        <div class="col-lg-11 col-sm-11 col-md-11 col-xs-11" style="padding-left: 1.5rem;">
+                            <!-- <div class="row">
+                      <div class="col-lg-4"> -->
+                            <p class="m-b-2" style="font-weight: 600;
+                          font-size: 14px;"> {{EmployeeObject.EmployeeName}} </p>
+                            <span class="f-s-12"> {{EmployeeObject.EmployeeCode}} ,
+              </span>
+
+                            <!-- </div>
+                     
+                  </div> -->
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-lg-4 col-sm-12" style="text-align: right;">
+                    <div class="f-s-12"> {{preferredDate | date :'MMM d, y'}} </div>
+                    <div style="font-size: 2rem;"> {{ time | date: 'HH:mm:ss' }}</div>
+                </div>
+            </div>
+
+
+
+            <div class="row" *ngIf="_attendanceDetailsOfEmployee" style="margin-top:-15px;">
+                <div class="col-lg-1 col-sm-1 col-md-1 col-xs-1">
+                    <img src="assets/Images/user.png" style="width: 25px;margin-top: 10px;">
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11 col-xs-11">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <p class="f-s-12 m-b-2"> Employee Name </p>
+                            <span class="f-s-12"> {{_attendanceDetailsOfEmployee.EmployeeName}}</span>
+                        </div>
+                        <div class="col-lg-4">
+                            <p class="f-s-12 m-b-2"> Employee Code </p>
+                            <span class="f-s-12"> {{_attendanceDetailsOfEmployee.EmployeeCode}} </span>
+                        </div>
+                        <div class="col-lg-4">
+                            <p class="f-s-12 m-b-2"> Date of Joining </p>
+                            <span class="f-s-12"> {{_attendanceDetailsOfEmployee.DOJ}} </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+
+
+            <ngb-tabset (tabChange)="attendance_slider_tabset($event)" [(activeId)]="attendance_slider_activeTabName" style="width: 100%;">
+                <ngb-tab id="attendanceInputs">
+                    <ng-template ngbTabTitle><i class="fa fa-credit-card" aria-hidden="true"></i>&nbsp;&nbsp; Attendance Inputs
+                    </ng-template>
+                    <ng-template ngbTabContent>
+
+
+
+                        <ng-template #customCellTemplate let-day="day" let-locale="locale">
+                            <div class="cal-cell-top">
+                                <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+                                <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+                            </div>
+                            <small style="margin: 5px;">
+                              <span *ngFor="let event of day.events">
+
+                                <span class="badge badge-self" style="display: inline; text-align: center; background-color: #0db9c1;"
+                                  *ngIf="_permissionConfigClientBased && !_permissionConfigClientBased.IsIcon && event.meta && event.meta.permissions && event.meta.permissions.length>0"
+                                  (click)="calenderPermissionList($event,event.meta.permissions)">
+                                  {{_permissionConfigClientBased.Text}}
+                                </span>
+                                <span class="badge badge-self" style="display: inline; text-align: center; background-color: #0db9c1;"
+                                  *ngIf="_permissionConfigClientBased && _permissionConfigClientBased.IsIcon && event.meta && event.meta.permissions && event.meta.permissions.length>0"
+                                  (click)="calenderPermissionList($event,event.meta.permissions)">
+                                  <i class="{{_permissionConfigClientBased.IconCSS}}"></i>
+                                </span>
+              
+                                <span class="badge badge-self" style="display: inline; text-align: center;"
+                                *ngIf="event.meta.isHoliday && !event.meta.isLeaveRequested && !event.meta.IsMultipleEntitlement">
+                                H
+                              </span>
+                                <span class="badge badge-self" style="display: inline; text-align: center;"
+                                *ngIf="event.meta.isHoliday && event.meta.isLeaveRequested && !event.meta.IsMultipleEntitlement && event.meta.LeaveattendanceType =='LOP'">
+                                H
+                              </span>
+              
+                             
+                              <span class="badge badge-self" style="display: inline; text-align: center;"
+                                *ngIf="event.meta.isHoliday && event.meta.isLeaveRequested  && !event.meta.IsMultipleEntitlement && event.meta.LeaveattendanceType !='LOP' && (event.meta.LeaveattendanceType !='Week Off' && event.meta.LeaveattendanceType !='WO')">
+                                {{event.meta.LeaveattendanceType}}
+                              </span>
+              
+                              <span class="badge badge-self" style="display: inline; text-align: center;font-size: 10px;background-color: #c9c3b2 !important;line-height: 5px;
+                              width: 10%;"
+                              *ngIf="event.meta.isHoliday && event.meta.isLeaveRequested  && !event.meta.IsMultipleEntitlement && event.meta.LeaveattendanceType !='LOP' && (event.meta.LeaveattendanceType =='Week Off' || event.meta.LeaveattendanceType =='WO')">
+                              {{event.meta.LeaveattendanceType}}
+                            </span>
+              
+                                <span class="badge badge-warning" style="display: inline; text-align: center;"
+                                  *ngIf="event.color.primary === '#e3bc08' && event.meta.isLeaveRequested && !event.meta.IsMultipleEntitlement && !event.meta.isHoliday && (event.meta.LeaveattendanceType !='Week Off' && event.meta.LeaveattendanceType !='WO')">
+                                  {{event.meta.LeaveattendanceType}}
+                                </span>
+              
+                                <span class="badge badge-warning" style="display: inline; text-align: center;font-size: 10px;background-color: #c9c3b2 !important;line-height: 5px;
+                                width: 10%;"
+                                *ngIf="event.color.primary === '#e3bc08' && event.meta.isLeaveRequested && !event.meta.IsMultipleEntitlement && !event.meta.isHoliday && (event.meta.LeaveattendanceType =='Week Off' || event.meta.LeaveattendanceType =='WO')">
+                                {{event.meta.LeaveattendanceType}}
+                              </span>
+              
+                                <span class="badge badge-success" style="display: inline;background-color: #c9c3b2 !important; color: #000 !important;"
+                                *ngIf="event.meta.IsWeekOff &&  (event.color.primary === '#c9c3b2')">
+                                W </span>
+                                
+              
+                                
+              
+                                  <span class="badge badge-success" style="display: inline;"
+                                  *ngIf="!event.meta.IsFirstHalf && event.meta.IsSecondHalf && (event.color.primary === '#ad2121' || event.color.primary === '#e3bc08')">
+                                  P </span>
+              
+                                     
+                                  <span class="badge badge-danger" style="display: inline;"
+                                  *ngIf="event.color.primary === '#ad2121' && event.meta.isLeaveRequested  && event.meta.IsMultipleEntitlement && !event.meta.isHoliday && (event.meta.LeaveattendanceType !='Week Off' && event.meta.LeaveattendanceType !='WO')">
+                                  {{event.meta.AttendanceType}} 
+                                </span>
+              
+                                <span class="badge badge-danger" style="display: inline;"
+                                *ngIf="event.color.primary === '#ad2121' && event.meta.isLeaveRequested  && event.meta.IsMultipleEntitlement && !event.meta.isHoliday && (event.meta.LeaveattendanceType !='Week Off' && event.meta.LeaveattendanceType !='WO')">
+                                {{event.meta.AttendanceType_SecondHalf}} 
+                              </span>
+              
+                                <span class="badge badge-danger" style="display: inline;"
+                                  *ngIf="event.color.primary === '#ad2121' && event.meta.isLeaveRequested  && !event.meta.IsMultipleEntitlement && !event.meta.isHoliday && (event.meta.LeaveattendanceType !='Week Off' && event.meta.LeaveattendanceType !='WO')">
+                                  {{event.meta.LeaveattendanceType}}
+                                </span>
+              
+                                <span class="badge badge-danger" style="display: inline;font-size: 10px;background-color: #c9c3b2 !important;line-height: 5px;
+                                width: 10%;"
+                                  *ngIf="event.color.primary === '#ad2121' && event.meta.isLeaveRequested && !event.meta.IsMultipleEntitlement && !event.meta.isHoliday && (event.meta.LeaveattendanceType =='Week Off' || event.meta.LeaveattendanceType =='WO')">
+                                  {{event.meta.LeaveattendanceType}}
+                                </span>
+              
+                                <span class="badge badge-success" style="display: inline;"
+                                *ngIf="event.meta.IsFirstHalf && !event.meta.IsSecondHalf && (event.color.primary === '#ad2121' || event.color.primary === '#e3bc08')">
+                                P </span>
+              
+                                <!-- ! : 16.2 for panasonic -->
+
+                              <span class="badge badge-success" style="display: inline;" *ngIf="event.meta.IsWeekOff && event.meta.isEADAvailable
+                                && event.meta.isHoliday && event.color.primary === '#3BBD72'  && event.meta.TotalSubmittedHours != '0.00'">
+                                P
+                              </span>
+                              
+                              <span class="badge badge-success" style="display: inline;" *ngIf="event.meta.IsWeekOff && event.meta.isEADAvailable
+                                && !event.meta.isHoliday && event.color.primary === '#3BBD72' && event.meta.TotalSubmittedHours != '0.00'">
+                                P
+                              </span>
+              
+                              <span class="badge badge-success" style="display: inline;background-image: linear-gradient(to top left, #8dd6a6 50%, #28a745 50%)"
+                                *ngIf="!event.meta.IsWeekOff && !event.meta.IsPresentMarkedByEmployee && event.meta.IsAutoPunchedOut &&   event.color.primary === '#3BBD72' && event.meta.isEADAvailable">
+                                P
+                              </span>
+              
+                              <span class="badge badge-success" style="display: inline;"
+                              *ngIf="!event.meta.IsWeekOff && !event.meta.IsPresentMarkedByEmployee && !event.meta.IsAutoPunchedOut && event.color.primary === '#3BBD72' && event.meta.isEADAvailable">
+                              P
+                            </span>
+                            <span class="badge badge-success" style="display: inline;background: repeating-linear-gradient(
+                              45deg,
+                              #95daa4,
+                              #95daa4 2px,
+                              #28a745 2px,
+                              #28a745 4px
+                              );"
+                                *ngIf="!event.meta.IsWeekOff && event.meta.IsPresentMarkedByEmployee && !event.meta.IsAutoPunchedOut && event.color.primary === '#3BBD72' && event.meta.isEADAvailable">
+                                P
+                              </span>
+                                
+                                <span *ngIf="event.meta.ODStatus == 100 || event.meta.ODStatus == 300"
+                                  [ngClass]="event.meta.ODStatus == 100 ? 'badge badge-success yellow' : 'badge badge-success green'"
+                                  style="display: inline;">
+                                  OD </span>
+                                <span *ngIf="event.meta.WFHStatus == 100 || event.meta.WFHStatus == 300"
+                                  [ngClass]="event.meta.WFHStatus == 100 ? 'badge badge-success yellow' : 'badge badge-success green'"
+                                  style="display: inline;">
+                                  WFH </span>
+              
+                                <!-- <span  style="display: inline;float:right"
+                                *ngIf="event.color.primary === '#3BBD72' && event.meta.isEADAvailable">
+                                {{event.meta.TotalSubmittedHours}} Hrs
+                              </span> -->
+                              </span>
+                <span *ngIf=" day.events == null">
+                </span>
+              </small>
+                        </ng-template>
+                        <div class="row">
+                            <div class="col-lg-6 pull-left">
+                                <div class="pull-left">
+                                    <a href="javascript:;" (click)="prevMonth()" tooltip="Previous Month" tooltip-placement="bottom" class="btn action-edit pull-left" style="margin-right: 5px;margin-left: 5px;">
+                                        <i class="fa fa-angle-left" aria-hidden="true" style="font-size: 20px;
+                      color: #000;
+                      margin-top: -2px;
+                      margin-left: 2px;"></i>
+                                    </a>
+                                    <a class="btn action-edit pull-left" (click)="nextMonth()" tooltip="Next Month" tooltip-placement="bottom">
+                                        <i class="fa fa-angle-right" aria-hidden="true" style="font-size: 20px;
+                    color: #000;
+                    margin-top: -2px;
+                    margin-left: 2px;"></i>
+                                    </a>
+                                </div>
+                                <h3 style="font-size: 16px;margin-top: 5px;">&nbsp;&nbsp; {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+                            </div>
+                            <div class="col-lg-6 pull-right">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div [ngSwitch]="view">
+                                    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event)" [refresh]="refresh" (dayClicked)="dayClicked($event.day)" (beforeViewRender)="beforeMonthViewRender($event)" [cellTemplate]="customCellTemplate"
+                                        [excludeDays]="excludeDays">
+                                    </mwl-calendar-month-view>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+
+                            <div class="col-lg-12 pull-right" style="margin-top: 15px;">
+
+                                <!-- ! : 16.2 for panasonic -->
+                                <p class="small mb-0" style="font-size: 12px;float:right">
+                                    <span class="badge badge-self" style="font-size: 12px;line-height: 5px;
+                              width: 15%;color: transparent;">●</span> Holiday &nbsp;
+                                </p>
+                                <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+                                    <span class="badge badge-warning" style="font-size: 12px;line-height: 5px;
+                                width: 10%;color: transparent;">●</span> Applied Leave
+                                </p>
+                                <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+                                    <span class="badge badge-danger" style="font-size: 12px;line-height: 5px;
+                                width: 15%;color: transparent;">●</span> Absent
+                                </p>
+                                <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+                                    <span class="badge badge-success" style="font-size: 12px;background-color: #c9c3b2 !important;line-height: 5px;
+                                width: 10%;color: transparent;">●</span> Week Off
+                                </p>
+                                <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+                                    <span class="badge badge-success" style="font-size: 12px;line-height: 5px;
+                                width: 7%;color: transparent;background-image: linear-gradient(to top left, #8dd6a6 50%, #28a745 50%) !important;">●</span> Present w/ Auto Punched Out
+                                </p>
+                                <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+                                    <span class="badge badge-success" style="font-size: 12px;line-height: 5px;
+                                width: 9%;color: transparent;background:  repeating-linear-gradient( 45deg, #95daa4, #95daa4 2px, #28a745 2px, #28a745 4px ) !important;">●</span> Present By Employee
+                                </p>
+                                <p class="small mb-0" style="font-size: 12px;float:right">
+                                    <span class="badge badge-success" style="font-size: 12px;line-height: 5px;
+                                width: 15%;color: transparent;">●</span> Present &nbsp;
+                                </p>
+                            </div>
+
+
+
+                            <hr>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+                <!-- <ngb-tab id="variableInputs">
+        <ng-template ngbTabTitle><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;&nbsp;Variable Inputs
+        </ng-template>
+        <ng-template ngbTabContent>
+
+          <table class="table table-bordered table-container">
+            <thead>
+              <tr class="document_table_tr">
+                <th scope="col" style="background: transparent !important;">Product Code</th>
+                <th scope="col">Product Name</th>
+                <th scope="col" style="width: 20%;text-align: center">Existing Amount</th>
+                <th scope="col" style="width: 20%;text-align: center">New Amount</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of LstTimeCardAllowanceProducts; let i = index"
+                [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                <td class="table-td-center" style="font-size: 14px;
+                      font-weight: 500;background: transparent !important;">
+                  {{item.Code}}
+                </td>
+                <td class="table-td-center" style="font-size: 14px;
+                      font-weight: 500;">
+                  {{item.Name}}
+                </td>
+                <td class="txt-align document_table_validFrom table-td-center" style="padding: 0px !important;">
+                  <input type="number" max="33333" style="text-align:right" maxlength="12"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" disabled [(ngModel)]="item.ExistingAmount"
+                    class="form-control">
+                </td>
+                <td class="txt-align document_table_validFrom table-td-center" style="padding: 0px !important;">
+                  <input type="number" max="33333" style="text-align:right" maxlength="12"
+                    onkeypress="return /^-?[0-9.--]\d*(\.\d+)?$/i.test(event.key)"
+                    (onkeypress)="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+                    onpaste="return false;" [(ngModel)]="item.NewAmount" class="form-control">
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-template>
+
+      </ngb-tab> -->
+            </ngb-tabset>
+
+            <!-- <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+      <div class="col-lg-6">
+        <ul class="list-inline">
+        </ul>
+      </div>
+      <div class="col-lg-6 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item"> <button class="btn btn-default" type="button"
+                (click)="close_regularize_attendance_slider()"><i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                Cancel
+              </button>
+            </li>
+            <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="submitEABreakup()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                    Submit
+                  </span>
+                </div>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div> -->
+        </div>
+    </nz-drawer>
+
+
+    <nz-drawer [nzVisible]="regularize_attendance_review_slider" [nzCloseOnNavigation]="true" [nzWidth]="840" nzTitle="Attendance Review" (nzOnClose)="close_regularize_attendance_review_slider()">
+        <div class="">
+            <div class="row employee_header" *ngIf="_attendanceDetailsOfEmployee">
+                <div class="col-lg-1 col-sm-1 col-md-2 col-xs-1">
+                    <img src="assets/Images/user-white.png" style="width: 25px;margin-top: 10px;">
+                </div>
+                <div class="col-lg-11 col-sm-11 col-md-11 col-xs-11" style="color: white;">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <p class="f-s-12 m-b-2" style="text-transform: uppercase;
+          color: #d6d6d6;"> Employee Name </p>
+                            <span class="f-s-12" style="font-weight: 600;
+          font-size: 14px;"> {{_attendanceDetailsOfEmployee.EmployeeName}}</span>
+                        </div>
+                        <div class="col-lg-4">
+                            <p class="f-s-12 m-b-2" style="text-transform: uppercase;
+          color: #d6d6d6;"> Employee Code </p>
+                            <span class="f-s-12" style="font-weight: 600;
+          font-size: 14px;"> {{_attendanceDetailsOfEmployee.EmployeeCode}} </span>
+                        </div>
+                        <div class="col-lg-4">
+                            <p class="f-s-12 m-b-2" style="text-transform: uppercase;
+          color: #d6d6d6;"> Date of Joining </p>
+                            <span class="f-s-12" style="font-weight: 600;
+          font-size: 14px;"> {{_attendanceDetailsOfEmployee.DOJ}} </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+            <!-- ! : 16.2 for panasonic -->
+            <div *ngIf="attendanceObject != null && attendanceObject.AttendanceBreakUpDetailsType !=0 && attendanceObject.AttendanceBreakUpDetailsType != 100">
+                <p *ngIf="!regularizePending">
+                    <ngb-alert [dismissible]="false" *ngIf="dayClicked_event != null && dayClicked_event.meta != null && !dayClicked_event.meta.isHoliday">
+                        <strong>Warning!</strong> The <span *ngIf="attendanceObject.AttendanceBreakUpDetailsType == 400"> day
+          </span> <span *ngIf="attendanceObject.AttendanceBreakUpDetailsType == 200"> first half
+          </span> <span *ngIf="attendanceObject.AttendanceBreakUpDetailsType == 300"> second half </span> has already been marked as a leave. [{{attendanceObject.AttendanceDate | date :'dd-MM-yyyy'}}]
+                        <!--  ! : 16.2 for panasonic  -->
+                        <a style="color: #3d75ee; float: right;" (click)="onClickMarkAsPresent(dayClicked_event, attendanceObject)" *ngIf="(_attendanceConfiguration != null && _attendanceConfiguration.IsManagerAllowToMarkAsPresentOption) || 
+                      (AllowedRolesForRegularizeAttendance.includes(RoleCode) == true)">Mark as Present </a>
+
+                        <!-- <a style="color: #3d75ee; float: right;" (click)="onEditAttendanceRequest()">Edit</a> -->
+                    </ngb-alert>
+                </p>
+
+                <p *ngIf="regularizePending">
+                  <ngb-alert [dismissible]="false" *ngIf="dayClicked_event != null && dayClicked_event.meta != null && !dayClicked_event.meta.isHoliday">
+                      <strong>Warning!</strong> 
+                      The regularization by the employee is pending for your approval for the date. [{{attendanceObject.AttendanceDate | date :'dd-MM-yyyy'}}]
+                  </ngb-alert>
+              </p>
+            </div>
+
+            <div *ngIf="attendanceObject != null && dayClicked_event != null && dayClicked_event.meta != null && dayClicked_event.meta.leaveObject != null && dayClicked_event.meta.leaveObject.Status == 100">
+                <p>
+                    <ngb-alert [dismissible]="false" *ngIf="dayClicked_event != null && dayClicked_event.meta != null && !dayClicked_event.meta.isHoliday">
+                        <strong>Warning!</strong> The <span *ngIf="dayClicked_event.meta.IsFirstHalf"> first half
+          </span> <span *ngIf="dayClicked_event.meta.IsSecondHalf"> second half </span> has already been marked as a leave. [{{attendanceObject.AttendanceDate | date :'dd-MM-yyyy'}}]
+
+                        <a style="color: #3d75ee; float: right;" (click)="onClickRegularize(dayClicked_event.meta.leaveObject)">Approve</a>
+
+                    </ngb-alert>
+                </p>
+            </div>
+
+            <!-- ! : 16.2 for panasonic -->
+            <div *ngIf="dayClicked_event != null && dayClicked_event.meta != null &&  !dayClicked_event.meta.isHoliday && attendanceObject && attendanceObject != null && attendanceObject.AttendanceBreakUpDetailsType !=0 &&  attendanceObject.AttendanceBreakUpDetailsType != 400">
+                <div class="row">
+                    <div class="col-lg-12 text-right">
+                        <span class="present_bg">Present</span>
+                    </div>
+                </div>
+                <br>
+                <div class="row" style="margin-top:-15px;">
+
+                    <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <p class="f-s-12 m-b-2"> Attendance Date </p>
+                                <span class="f-s-12"> {{attendanceObject.AttendanceDate | date :'dd-MM-yyyy'}}</span>
+                            </div>
+                            <div class="col-lg-3">
+                                <p class="f-s-12 m-b-2"> First Check In </p>
+                                <span class="f-s-12"> {{attendanceObject.FirstCheckIn}} </span>
+                            </div>
+                            <div class="col-lg-3">
+                                <p class="f-s-12 m-b-2"> Last Check Out </p>
+                                <span class="f-s-12"> {{attendanceObject.LastCheckedOut}} </span>
+                            </div>
+                            <div class="col-lg-3">
+                                <p class="f-s-12 m-b-2"> Submitted Hours / Payable Day </p>
+                                <span class="f-s-12"> {{attendanceObject.TotalSubmittedHours}} / {{attendanceObject.PayableDay}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <br>
+                <br>
+                <table class="table table-bordered" style="font-size: 12px;">
+                    <thead>
+                        <tr style="background-color: #eef5fa !important;">
+                            <th scope="col" style="width: 20%;">ATTEND. DATE</th>
+                            <th scope="col" style="width: 10%;">PUNCH IN</th>
+                            <th scope="col" style="width: 10%;"> PUNCH OUT</th>
+                            <th scope="col" style="width: 15%;"> SUBMITTED HRS</th>
+
+                            <th scope="col" style="width: 15%;"> APPROVED HRS</th>
+                            <th scope="col" style="width: 10%;"> REMARKS / IMAGES </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let item of LstPunchInDetails; let i = index">
+                            <tr *ngIf="item.ChildTableRow == 2">
+                                <td scope="row" style="width: 30%;"> <span style="padding-top: 5px;text-align: center;
+            display: block;"> {{item.AttendanceDate | date:'dd-MM-yyyy'}}</span></td>
+                                <td style="width: 20%;">
+                                    <!--  ! : 16.2 for panasonic  -->
+                                    <input type=time class="form-control" name="StartTime" [readonly]="!IsAllowedToEditInOutTime" [(ngModel)]="item.StartTime" step="1" style="cursor: pointer;height: 30px;padding: 0px !important;padding-left: 9px !important;" (change)="OnChangePunchInTime($event,item, i)">
+
+                                </td>
+                                <td style="width: 20%;">
+                                    <!--  ! : 16.2 for panasonic  -->
+                                    <input type=time class="form-control" name="EndTime" [readonly]="!IsAllowedToEditInOutTime" [(ngModel)]="item.EndTime" step="1" 
+                                    style="cursor: pointer;height: 30px;padding: 0px !important;padding-left: 9px !important;" 
+                                    (change)="OnChangePunchOutTime($event,item, i)">
+                                  </td>
+                                <td style="width: 15%;"> <span style="padding-top: 5px;text-align: center;
+            display: block;" *ngIf="item.TotalHours == 'NaN'"> 0
+                  hrs
+                </span>
+                                    <span style="padding-top: 5px;text-align: center;
+          display: block;" *ngIf="item.TotalHours != 'NaN'">
+                  {{item.TotalHours}} hrs </span>
+                                </td>
+
+                                <td style="width: 15%;"> <span style="padding-top: 5px;text-align: center;
+              display: block;" *ngIf="item.TotalHours != 'NaN'">
+                  {{item.ApprovedTotalHours}} hrs </span></td>
+
+                                <td style="width: 10%;">
+
+                                    <i *ngIf="item.PunchInPhotoId > 0 || item.PunchOutPhotoId > 0" class="mdi mdi-eye" matTooltip="View Punch In/Out Image and Remarks" (click)="viewPunchInOutImage(item)" style="cursor: pointer;font-size: 18px;
+                  text-align: center;
+                  display: block;
+                  margin: 0 auto;"> </i>
+                                    <span *ngIf="item.PunchInPhotoId == 0 && item.PunchOutPhotoId == 0"> -- </span>
+                                </td>
+
+                            </tr>
+                            <tr *ngIf="item.Iserror">
+                                <td colspan="12">
+                                    <div class="text-center invalid-formcontrolvalue">
+                                        Please check the specified punch in/out time is invalid or the time is out of valid range
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+
+                    </tbody>
+                </table>
+
+
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-12" style="padding: 0px;">
+                    <label class="form-label"> Comments </label>
+                    <textarea class="form-control" rows="3" [(ngModel)]="ApproverRemarks" spellcheck="false" id="Remarks"></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="row" style="position: absolute;bottom: 25px;width: 100%;">
+                <div class="col-lg-6">
+                    <ul class="list-inline">
+                        <!-- <li class="list-inline-item"
+          *ngIf="dayClicked_event != null && dayClicked_event.meta.leaveObject != null && dayClicked_event.meta.leaveObject.Status != 100">
+          <button class="btn upgrade-btn" type="Submit" name="btnSubmit" id="btnSubmit"
+            (click)="onClickMarkAsPresent(dayClicked_event)">
+            <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Mark
+                as Present </span></div>
+          </button>
+        </li> -->
+
+                        <li class="list-inline-item" *ngIf="attendanceObject != null && attendanceObject.AttendanceBreakUpDetailsType !=0 && attendanceObject.AttendanceBreakUpDetailsType != 400">
+                            <button class="btn  btn-danger" type="Submit" name="btnSubmit" id="btnSubmit" (click)="onClickMarkAsAbsent()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Mark
+                  as Absent </span></div>
+            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 text-right">
+                    <div class="text-right" *ngIf="attendanceObject != null && attendanceObject.AttendanceBreakUpDetailsType !=0 && attendanceObject.AttendanceBreakUpDetailsType != 400">
+                        <ul class="list-inline">
+                            <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="close_regularize_attendance_review_slider()"><i class="fa fa-ban" aria-hidden="true"></i>
+                &nbsp; Cancel
+              </button>
+                            </li>
+                            <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="savePunchInOutDetails()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                    Submit
+                  </span>
+                </div>
+              </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nz-drawer>
+
+
+    <div id="calenderPermissionList_popup" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_permission" aria-hidden="true">
+        <div style="display: block;" class="modal fade show">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 15px !important;">
+                        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                            <small class="header-pretitle"><b>Permission Request List</b></small>
+                            <!-- <h3 class="modal-title subheader_h6" id="popup_release_AL"> New
+            </h3> -->
+                        </div>
+                        <div class="modal-close" style="top: 1 !important; right: 10px !important;" (click)="closePermissionRequestListPopup()">
+                            <span class="mdi mdi-close pull-left " style="margin-top: -5px !important;"></span>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row">
+
+                                    <ng-container *ngIf="_calenderPermisssionList.length > 0">
+                                        <!-- <label class="form-label col-md-12"> Recent Requests</label> -->
+
+                                        <div class="col-md-6 col-sm-12 col-xs-6 mb-2" *ngFor="let reqObj of _calenderPermisssionList  let i = index">
+
+                                            <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7 !important">
+                                                <div class="card-header" style="background-color: white;border: none;padding: 5px;">
+
+                                                    <span class="badge badge-soft-danger" style="display: inline;"> {{reqObj.Date}}
+                          </span>
+                                                    <span *ngIf="reqObj.Status==300" class="badge badge-soft-danger " style=" color:green">
+                            Approved
+                          </span>
+                                                    <span *ngIf="reqObj.Status==200" class="badge badge-soft-danger " style=" color:red">
+                            Reject
+                          </span>
+                                                    <span *ngIf="reqObj.Status==100" class="badge badge-soft-danger " style=" color:orange">
+                            Applied
+                          </span>
+
+                                                </div>
+                                                <div class="card-body" style="background-color: #f3f8ff;   padding:10px; padding-right: 6px !important;">
+                                                    <div class="row align-items-center">
+                                                        <div class="col">
+
+                                                            <span style="font-size: 11px;">Time: {{reqObj.totalTime}}</span>
+                                                            <br />
+                                                            <span class="pull-left " style="font-size: 11px;">Start: {{reqObj.StartTime}}</span>
+
+                                                            <span class="pull-right" style="font-size: 11px;">End: {{reqObj.EndTime}} </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </ng-container>
+
+
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="modal-footer p-1 d-none">
+                        <div class=" form-group form-group-vertical col-xs-12 col-sm-12 mb-0 ">
+                            <button type="button" class="btn btn-primary mr-2 pull-right" (click)='onClickSubmitPermission()' style="display: inline;margin: 0 auto;"> Submit
+              </button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div id="popup_contractSeparation" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_contractSeparation" aria-hidden="true">
+        <div style="display: block;" class="modal fade show animated fadeInDownBig">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 15px !important;">
+                        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                            <small class="header-pretitle"><b> Mark LWD</b></small>
+                            <h6 class="modal-title subheader_h6" id="popup_release_AL"> --- </h6>
+                        </div>
+
+                        <div class="modal-close" (click)="modal_dismiss_contractSeparation()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12  col-sm-12  p-r-50">
+
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                    <label class="form-label"> LWD </label>
+                                    <input type="text" placeholder="Last Working Date" class="form-control" [(ngModel)]="markFnf_LastWorkingDate" [minDate]="markfnf_minDate" bsDatepicker placement="bottom" readonly [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                    <label class="form-label"> Reason </label>
+                                    <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="remarks" [(ngModel)]="markfnf_Reason"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="pull-right right-margin-btn">
+                            <div class="text-right">
+                                <ul class="list-inline">
+                                    <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="modal_dismiss_contractSeparation()">
+                      <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                      Cancel</button>
+                                    </li>
+                                    <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="confirmMarkFnF()">
+                      <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i>
+                          &nbsp;
+                          Confirm
+                        </span></div>
+                    </button></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,36 @@
+<div class="row ml-1 mr-1">
+  <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+    <div class="table-responsive table-height">
+      <table class="table table-bordered table-container">
+        <thead class="tbl-freezhead addl-table-header">
+          <tr class="document_table_tr">
+            <th>Product Code</th>
+            <th>Payment Type</th>
+            <th>Pay Rate</th>
+            <th>Billing Type</th>
+            <th>Bill Rate</th>
+          </tr>
+        </thead>
+        <tbody class="tbl-scrollbody addl-table-body">
+          <tr *ngFor="let item of additionalProductData; let i=index;">
+            <td> {{item.ProductCode}} </td>
+            <td> {{ item.PaymentName }} </td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="item.PayableRate" value="{{item.PayableRate}}" maxlength="10"
+              (input)="onChangePayRateAmount($event.target.value, item)" onkeypress="return /^[0-9]+$/i.test(event.key)">
+            </td>
+            <td> {{ item.BillingName }} </td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="item.BillableRate" value="{{item.BillableRate}}" maxlength="10"
+              (input)="onChangeBillRateAmount($event.target.value, item)" onkeypress="return /^[0-9]+$/i.test(event.key)">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-12 mt-4 float-right text-right">
+    <button class="btn btn-default m-r-sm" (click)="cancelDrawer()">Cancel</button>
+    <button class="btn btn-primary m-r-sm" (click)="saveAddlApplicableProduct()">Save</button>
+  </div>
+</div>

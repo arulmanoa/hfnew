@@ -1,0 +1,133 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-md modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;">
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <h3 class="moudle_name">Request for New DOJ</h3>
+          </div>
+        </div>
+
+        <br />
+
+
+        <div class="row">
+          <div class="col-md-6 text-left">
+            <h6 class="small lable_name">Candidate Name</h6>
+            <h3 class="label_value">{{currentRowObject.CandidateName}}</h3>
+          </div>
+
+          <div class="col-md-6 text-left">
+            <h6 class="small lable_name">Client</h6>
+            <h3 class="label_value">{{currentRowObject.ClientName}}</h3>
+          </div>
+
+          <div class="col-md-6 text-left">
+            <h6 class="small lable_name">Actual DOJ</h6>
+            <h3 class="label_value">{{currentRowObject.ActualDateOfJoining | date}}</h3>
+          </div>
+
+          <div class="col-md-6 text-left">
+            <h6 class="small lable_name">Designation</h6>
+            <h3 class="label_value">{{currentRowObject.Designation}}</h3>
+          </div>
+
+        </div>
+        <br />
+        <br />
+
+        <div class="d-flex align-items-center" *ngIf="spinner" style=" margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);">
+          <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+
+        <div class="row" *ngIf="!spinner">
+          <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+            <label class="form-label">Proposed DOJ <span class="required"> *</span> <span class="help-text m-l-5">
+                (DD-MM-YYYY)</span> </label>
+            <input type="text" class="form-control" readonly bsDatepicker placement="bottom" [minDate]="DOJMinDate" [maxDate]="DOJMaxDate"
+              [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',containerClass:'theme-default'}"
+              (ngModelChange)="doChangeExtendedDOJ($event)" [(ngModel)]="extendedDOJ"
+              [ngClass]="{'is-invalid': !extendedDOJ }" placeholder="12-12-1990" autocomplete="off">
+            <div *ngIf="submitted && !extendedDOJ" class="help-block">
+              <div> Extended DOJ is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+            <label class="form-label"> Remarks <span class="required"> *</span> </label>
+            <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="remarks"></textarea>
+            <div *ngIf="submitted && (remarks == null || remarks == '')" class="help-block">
+              <div> Remarks is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+            <label class="form-label"> Supporting Attachment(s) <span class="required"> *</span> </label>
+            <div class="file-drop-area">
+              <span class="choose-file-button">Choose files</span>
+              <span class="file-message">or drag and drop files here</span>
+              <input class="file-input" type="file" accept="application/msword,  application/pdf, image/*"
+                (change)="onAddingFile($event)" id="sTest-uploadFile-candidateAddResume"
+                (click)="$event.target.value=null" multiple required>
+            </div>
+            <div *ngIf="submitted &&  !fileList[0]" class="help-block">
+              <div>Supporting Attachment is required
+              </div>
+            </div>
+
+
+            <div class="card tab-item" *ngFor="let file of fileList"
+              style="border: 1px solid #ece9e9 !important;/* margin: 8px; *//* box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; */margin-top: .3em!important;border-radius: 0px;">
+              <div class="row">
+                <div class="col-2 col-xs-2 col-lg-2 col-md-2 col-sm-2"><i class="mdi mdi-file-document-outline" style="
+              display: block;
+              position: relative;
+              color: #09518f;
+              font-size: 28px;
+              top: 3px;
+              text-align: center;
+              "></i></div>
+                <div class="col-8 col-xs-8 col-lg-8 col-md-8 col-sm-8"
+                  style="text-align: left;vertical-align: center;top: 8px;">
+                  <h6 style="font-size: 12px;"> {{file.name}} </h6>
+                  <h6 style="font-size: 10px;">.</h6>
+                </div>
+                <div class="col-2 col-xs-2 col-lg-2 col-md-2 col-sm-2">
+                  <div title="Delete" matTooltip="Delete" style="cursor: pointer;" (click)="doDeleteFile(file)"><i
+                      class="mdi mdi-trash-can-outline"
+                      style="display: block;top: 10px;position: relative;/* color: #0d395f; */font-size: 18px;"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 text-right footer_">
+            <button class="btn btn-link" type="button"
+              style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="doCancel()">
+              &nbsp; &nbsp; Cancel &nbsp; &nbsp; </button>
+            <button class="btn btn-primary" (click)="doConfirm_ExtendedDOJ()"  *ngIf="!spinner"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Confirm &nbsp; &nbsp;
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

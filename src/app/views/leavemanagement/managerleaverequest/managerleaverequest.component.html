@@ -1,0 +1,65 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="margin-top: 5px;">
+          <h6 class="h6_c"> {{pageTitle}} </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right" *ngIf="!spinner">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onClose()">
+                <i class="mdi mdi-close  m-r-xs"></i>Close
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content" style="margin-top: -5px;">
+      <div class="row pb-0 mt-2" [ngStyle]="{'width': isMobileResolution ?'107%' : '100%'}">
+        <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left"> </div>
+        <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item" *ngIf="!spinner && managerLevelLeaveReportData.length > 0">
+              <button type="button" class="btn btn-default" style="float: right;border-radius: 6px;"
+                (click)="exportToExcel()">
+                Export Excel
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row w-100" >
+        <div class="col-lg-12">
+          <angular-slickgrid gridId="leaveReportGridId" [data]="managerLevelLeaveReportData" [columnDefinitions]="managerLevelLeaveReportColumn"
+            [gridOptions]="managerLevelLeaveReportGridOptions" [dataset]="managerLevelLeaveReportData"
+            (onAngularGridCreated)="initiateManagerLevelReportGridReady($event)" gridWidth="100%">
+          </angular-slickgrid>
+        </div>
+      </div>
+
+      <!-- <div class="row w-100 text-center" *ngIf="managerLevelLeaveReportData.length == 0"
+        style="padding: 10px;font-weight: 600;">
+        <div class="col-12">
+          <p>No records found!</p>
+        </div>
+      </div> -->
+      <br>
+    </div>
+  </div>
+</div>

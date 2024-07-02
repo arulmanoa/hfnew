@@ -1,0 +1,273 @@
+<div class="">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+      Please wait exemption loading...
+    </button>
+    </div>
+    <div class="row m-t-b-10" id="navbar" *ngIf="!spinner">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="text-right">
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="content m-b report-content" *ngIf="!spinner">
+
+        <br />
+        <span class="qcheader">Exemptions</span>
+        <table class="qcTable table table-bordered table-condensed" *ngIf="taxExemptionDetails">
+            <thead>
+                <tr>
+                    <th> Product Name</th>
+                    <th> Amt. Invested </th>
+                    <th> Amt. Approved</th>
+                    <th class="fitToContent">View</th>
+                    <th class="fitToContent" style="width:20%">Status</th>
+                    <th style="width:18%">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="taxExemptionDetails && taxExemptionDetails != null && taxExemptionDetails.length > 0">
+                    <ng-container *ngFor="let item of taxExemptionDetails ; let i = index;">
+                        <tr *ngIf="!item.IsProposed && item.LstEmployeeExemptionBillDetails.length > 0">
+                            <td>
+                                <b> {{getProductName(item.ProductId)}}</b>
+                            </td>
+                            <td style="text-align: right;">
+                                {{item.Amount | number : '1.2-2'}}
+                            </td>
+                            <td style="text-align: right;">
+                                {{item.ApprovedAmount | number : '1.2-2' }}
+                            </td>
+                            <td class="centerAlignLink"><i tooltip="Preview" (click)="openDocumentAttention_modal(item,'exemption',i)" class="fa fa-external-link"></i>
+                            </td>
+                            <td>
+                                <span class="badge badge-warning" *ngIf="getCount(item.LstEmployeeExemptionBillDetails,0) > 0" style="display: inline;color:white !important;">
+                  Saved ({{getCount(item.LstEmployeeExemptionBillDetails,0)}})
+
+                </span>
+                                <span class="badge badge-danger" *ngIf="getCount(item.LstEmployeeExemptionBillDetails,2) > 0" style="display: inline;color:white !important;">
+                  Rejected ({{getCount(item.LstEmployeeExemptionBillDetails,2)}})
+                </span>
+                                <span class="badge badge-success" *ngIf="getCount(item.LstEmployeeExemptionBillDetails,1) > 0" style="display: inline;color:white !important;">
+
+                  Approved ({{getCount(item.LstEmployeeExemptionBillDetails,1)}})
+                </span>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-6 text-center">
+
+                                        <button (click)="ApproveRejectButton(true, item)" type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm" style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;">
+                      <span><i class="fa fa-check" aria-hidden="true"
+                          style="padding-right: 5px;"></i>Approve</span></button>
+
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <button (click)="ApproveRejectButton(false, item)" type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm" style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;">
+                      <span><i class="fa fa-times" aria-hidden="true"
+                          style="padding-right: 5px;"></i>Reject</span></button>
+
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </ng-container>
+                </ng-container>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<div id="exemptionList_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exemptionList_modal" aria-hidden="true" *ngIf="_LstEmployeeExemptionBillDetails">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+
+
+
+            <div class="modal-header" style="padding: 15px !important;">
+                <div class="col-xs-11" style="margin-top: -10px; margin-bottom: -10px;">
+                    <small class="header-pretitle"><b>Exemption Bill</b></small>
+                    <h6>---</h6>
+                </div>
+                <div class="modal-close" (click)="saveExemptionBillchanges()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <table class="table" class="table table-bordered ;" style="font-size: 12px !important;">
+                    <thead>
+                        <tr>
+                            <th class="fitToContent" style="width:15%">Bill No</th>
+                            <th class="fitToContent" style="width:15%">Bill Amount</th>
+                            <th style="width:15%">Approved Amt</th>
+                            <th style="width:10%">Status</th>
+                            <th style="width:5%">View</th>
+                            <th style="width:15%">Remarks</th>
+                            <th class="fitToContent" style="width:15%"> Action </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <ng-container *ngFor="let i of _LstEmployeeExemptionBillDetails.LstEmployeeExemptionBillDetails; let idx = index;">
+
+                            <tr *ngIf="!i.IsProposed">
+                                <td>
+                                    {{i.BillNumber}}
+                                </td>
+                                <td>
+                                    {{i.BillAmount}}
+                                </td>
+                                <td class="mb-2">
+                                    <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" name="amount" autocomplete="off" [(ngModel)]="i.ApprovedAmount" [disabled]="i.Status == '2'">
+                                </td>
+                                <td>
+
+                                    <span class="badge badge-warning" *ngIf="i.Status == '0'" style="display: inline;color:white !important;">
+                  Saved 
+
+                </span>
+                                    <span class="badge badge-danger" *ngIf="i.Status == '2'" style="display: inline;color:white !important;">
+                  Rejected 
+                </span>
+                                    <span class="badge badge-success" *ngIf="i.Status == '1'" style="display: inline;color:white !important;">
+
+                  Approved 
+                </span>
+
+
+                                </td>
+                                <td class="centerAlignLink">
+
+                                    <a href="javascript:;" class="btn action-edit pull-right" *ngIf="i.BillId != null && i.BillId !=0" style="margin-right: 5px">
+                                        <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #838383;" (click)='viewDocs(i, "other")'></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit pull-right" *ngIf="i.BillId == null || i.BillId == 0" style="margin-right: 5px">
+                                        <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #838383;" (click)='emptydoc(i)'></i>
+                                    </a>
+
+                                </td>
+                                <td>
+                                    <input class="form-control" type="text" autocomplete="off" [(ngModel)]="i.Remarks">
+                                </td>
+                                <td>
+                                    <div class="row m-r-2">
+                                        <div class="col-md-6">
+
+                                            <button (click)="popupApproveRejectButton(true, i)" type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm" style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;">
+                    <span><i class="fa fa-check" aria-hidden="true"
+                        style="padding-right: 5px;"></i>Approve</span></button>
+
+                                            <!-- <button class="btn btn-default btn-sm " style="font-size: 12px;"
+                      (click)="popupApproveRejectButton(true, i)">
+                      <i class="mdi   m-r-xs" style="margin-top:3rem;margin-right:6px; font-size:12px !important;"></i>
+                      Approve</button> -->
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button (click)="popupApproveRejectButton(false, i)" type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm" style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;">
+                    <span><i class="fa fa-times" aria-hidden="true"
+                        style="padding-right: 5px;"></i>Reject</span></button>
+
+
+                                            <!-- <button class="btn btn-default btn-sm " style="font-size: 12px;"
+                      (click)="popupApproveRejectButton(false,i)">
+                      <i class="mdi   m-r-xs" style="margin-top:3rem;margin-right:6px; font-size:12px !important;"></i>
+                      Reject&nbsp;</button> -->
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+
+                <button class="btn btn-default btn-sm" style="font-size: 12px;" (click)="saveExemptionBillchanges()">
+          <i class="mdi mdi-checkbox-marked-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+          Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #popContent>
+    <iframe width="100%" height="100%" frameBorder="0" [src]="urlSafe"></iframe>
+</ng-template>
+
+
+
+
+<div id="popup_viewDocs1" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_viewDocs1" aria-hidden="true">
+    <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header" style="padding: 15px !important;">
+
+                    <div class="col-md-8">
+                        <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                                Employee Documents</b></small>
+                        <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+                        </h6>
+                    </div>
+                    <div class="col-md-4" style="top: 13px;">
+                        <div class="modal-close" (click)="modal_dismiss_docs()" style="margin-top: -15px;"><span class="mdi mdi-close pull-left"></span>
+                        </div>
+
+                        <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                            <app-filedownload [documentId]="documentURLId">
+                            </app-filedownload>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="iframe-container" *ngIf="documentURL == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                        <img src="assets/Images/logo_menu.png" style="opacity: .5;">
+                        <span>
+                            <i class="mdi mdi-cached mdi-spin"
+                                style="text-align: center;font-weight: 600;font-size: 16px;">
+                                &nbsp; Please wait...</i>
+                            <span class="sr-only">Please wait...</span>
+                        </span>
+                    </div>
+                    <div class="iframe-container" *ngIf="documentURL != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 350px;">
+
+                        <iframe [src]="documentURL" frameborder="0" scrolling="yes" height="100%" style="width: 100%;height: 100%;"></iframe>
+                        <img style="top: 0 !important; 
+                right: 0px !important;
+                position: absolute !important;
+                z-index: 9;
+                height: 55px !important;
+                vertical-align: top;
+                opacity: inherit;
+                bottom: unset !important;
+                left: unset !important;" src="../../../../assets/Images/logo_menu.png">
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">        
+          <div>
+            <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+              (click)="modal_dismiss()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Close </span></div>
+            </button>
+
+          </div>
+
+        </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>

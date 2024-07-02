@@ -1,0 +1,71 @@
+<nav class="navbar navbar-light navbar-expand-md custom-header" style="border-bottom-style: solid;
+border-bottom-color: lightgray;
+border-bottom-width: thin;">
+  <div class="row col-lg-12 col-sm-12 col-12" style="padding-right: 0px;">
+    <div class="col-lg-6  col-sm-5 col-6" style="padding-left: 0px; padding-right: 0px;padding-top:6px;">
+      
+      <a style="color: steelblue; padding-left: 5px; font-size:20px">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <img src="../../../../assets/Images/logo.png">&nbsp;
+        <span [hidden]="opened" style="font-family: helvetica; font-weight: 600;">MINT</span>
+        <!-- logo for regular state and mobile devices -->
+
+        <label class="toolbar-toggle-width" [hidden]="!opened">
+          <span>MINT</span>
+        </label>
+      </a>
+      <button class="btn" style="color:grey; background-color: transparent; font-size: 14px;" type="button" (click)="toggleleftNav()">
+        <i class="fa fa-bars active-menu"></i>
+      </button>
+
+    </div>
+    <div class="col-lg-6  col-sm-7 col-6" style="text-align: right; padding-right: 0px;">
+      <div class="row col-12  col-sm-12 col-lg-12" style="text-align: right; padding-right: 0px;">
+
+        <div class="col-6 col-sm-12 col-lg-12 collapse navbar-collapse" style="text-align: right; padding-right: 0px;"
+          id="navbar-collapse">
+          <ul class="nav navbar-nav ml-auto">
+            <li class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" style="padding-right:15px">
+              <img src="assets/Images/avatar5.png" class="rounded-circle" width="25" height="25" alt="User Image">
+              <a class="navbar-brand" style=" color: grey; font-size: 15px;    font-family: helvetica;">
+                <!-- {{UserName}} -->
+                &nbsp;{{this._loginSessionDetails.UserName}}
+              </a>
+            </li>
+            <li class="dropdown">
+              <div class="dropdown-menu dropdown-menu-right" role="menu">
+                <div class="user-header">
+                  <img src="assets/Images/avatar5.png" class="rounded-circle" width="75" height="75" alt="User Image">
+                  <br />
+                  <a class="navbar-brand" style=" color: #ffffff;
+                font-size: 15px;">
+                    {{_loginSessionDetails.UserName}}
+                    <br />
+                    {{_loginSessionDetails.RoleName}}
+                  </a>
+                </div>
+                <a class="dropdown-item" role="presentation" style="text-align:right">
+                  <button type="button" class="btn btn-info" (click)="onLogout()">Logout</button>
+                </a>
+              </div>
+
+            </li>
+          </ul>
+        </div>
+       <!-- <div class="col-12 col-sm-5 col-lg-2 " style="text-align: center; padding: 0px;padding-top:10px">
+          <button placement="bottom" ngbTooltip="Profile"   class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse"><span class="sr-only">Toggle
+              navigation</span><img src="assets/Images/avatar5.png" class="rounded-circle" width="25" height="25" alt="User Image">
+          </button>
+           <button placement="bottom" ngbTooltip="Settings"   class="btn" style="color: #ffffff; background-color: transparent; font-size: 14px;" type="button"
+            (click)="toggleRightNav()">
+            <i class="fa fa-cogs active-menu"></i>
+          </button> -->
+          <!-- <button placement="bottom" ngbTooltip="Logout"   class="btn" style="color: #ffffff; background-color: transparent; font-size: 14px;" type="button"
+            (click)="onLogout()">
+            <i class="fa fa-sign-out active-menu"></i>
+          </button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</nav>

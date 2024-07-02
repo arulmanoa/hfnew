@@ -1,0 +1,83 @@
+
+        
+<!--
+      <div style="position:relative;  top:50px;">
+        <nz-steps [nzCurrent]="0" nzDirection="vertical" nzSize="medium">
+          <a href="#/app/Client"><nz-step nzTitle="Provide Client Details">
+           </nz-step></a>
+           <a href="#/app/ClientLocation"><nz-step nzTitle="Provide Address"></nz-step></a>
+          <a href="#/app/ClientContact"> <nz-step nzTitle="Provide Contact Information"></nz-step></a>
+         <a href="#/app/ClientContract"><nz-step nzTitle="Contract Information"></nz-step></a>
+         <a href="#/app/Team"><nz-step nzTitle="Provide Team Informatioin"></nz-step></a>
+         <a href="#/app/Invoice"><nz-step nzTitle="Invoice"></nz-step></a>
+         </nz-steps></div>
+        -->
+
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6 col-12" style = "position:relative; right:0px; bottom:175px;" >
+          <ul class="list-inline">
+            <li class="list-inline-item subheader__main" style="cursor: default !important">
+              <h5 class="mt-0 p-l-5 subheader__title">Provide Client Information</h5>
+          </li>
+          </ul>
+      </div>
+
+
+<div style = "position:relative; left:300px; bottom:150px;">
+  <form >    
+     <div class="form-group" >
+    <label for="status-input">Status</label>
+    <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding:0px !important;"></div>
+      <label class="el-switch el-switch-green">
+        
+        <input type="checkbox" id="status-input" name="Status" checked enabled  />
+        
+
+       
+          <span class="el-switch-style"></span>
+      </label>
+      </div>
+      
+    <div class="form-group form-group-vertical col-12 col-lg-8 col-md-8 col-xs-12 col-sm-12" >
+    <label for="code-input" class="form-label">Client Code</label>
+    <input type="text" id="code-input" [(ngModel)]="clientInfo.Code" (change)="OnCodeChange()" placeholder="Client Code" name="Code" class="form-control" size="10"/>
+    </div>
+
+    <div class="form-group form-group-vertical col-12 col-lg-8 col-md-8 col-xs-12 col-sm-12">
+    <label for="name-input">Client Name</label>
+    <input type="text" id="name-input" [(ngModel)]="clientInfo.Name" 
+    (change)="onClientNameChange()" placeholder="Client Name" name="Name" class="form-control" size="10"/>
+    </div>
+   <!-- <div class="form-group form-group-vertical col-12 col-lg-8 col-md-8 col-xs-12 col-sm-12">
+    <label for="company-input">Company Id</label>
+    <input type="number" id="company-input" [(ngModel)]="clientInfo.CompanyId" [(ngModel)]="clientInfo.clientBase.CompanyId" name="Company" class="form-control"/>  
+    </div>
+  -->
+   <!-- <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+      <label>Company Name </label>
+    <ng-select [items]="listOfCompany" [searchable]="true" 
+    placeholder="----Select----" bindValue="Id" 
+    bindLabel="Name" name="Company" [(ngModel)]="clientInfo.CompanyId" [(ngModel)]="clientInfo.clientBase.CompanyId" >
+        <ng-template ng-header-tmp>
+            <input placeholder="Search Company" autocomplete="off" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select11.filter($event.target.value)" />
+        </ng-template>
+    </ng-select>  
+    </div>-->
+
+   <!-- <div class="form-group form-group-vertical col-12 col-lg-8 col-md-8 col-xs-12 col-sm-12">
+      <label for="logincode-input">Login Code</label>
+      <input type="string" id="logincode-input" placeholder="Login Code" [(ngModel)]="clientInfo.LoginCode" [(ngModel)]="clientInfo.clientBase.LoginCode" name="LoginCode" class="form-control"/>
+    </div>
+    <div class="form-group form-group-vertical col-12 col-lg-8 col-md-8 col-xs-12 col-sm-12">
+      <label for="shortcode-input">Short Code</label>
+      <input type="string" id="shortcode-input" placeholder="Short Code" [(ngModel)]="clientInfo.ShortCode" name="ShortCode" class="form-control"/>
+    </div>-->
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6 col-12 text-right" >
+      <div class="text-right">
+          <ul class="list-inline">
+    <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="createOrUpdateClient($event)">Save</button> 
+      <i class="mdi mdi-content-save  m-r-xs"></i></li>
+    </ul>
+  </div>
+</div>
+  </form>
+</div>

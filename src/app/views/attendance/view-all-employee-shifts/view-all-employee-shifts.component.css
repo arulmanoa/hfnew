@@ -1,0 +1,140 @@
+.display-inline-grid {
+  display: inline-grid !important
+}
+
+.table-bordered-custom {
+  border: 1px solid #E9E9E9 !important;
+}
+
+.text-bold {
+  font-weight: 600 !important;
+}
+
+.tableFixHead {
+  overflow: auto;
+  height: 360px;
+  width: 100%;
+}
+
+.tableFixHead table {
+  border-collapse: collapse;
+  text-align: left;
+  position: relative;
+  width: 100%;
+}
+
+.tableHeader {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: center;
+
+}
+
+.table-col {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.tableFixHead table th,
+.tableFixHead table td {
+  padding: 8px 16px;
+  text-align: center;
+  /* border: 1px solid #E9E9E9; */
+}
+
+.tableFixHead table td:first-child,
+.tableFixHead table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: white;
+  text-align: center;
+}
+
+.tableFixHead table td:nth-child(2),
+.tableFixHead table th:nth-child(2) {
+  position: sticky;
+  left: 40px;
+  z-index: 1;
+  background-color: white;
+  text-align: center;
+}
+
+.tableFixHead th {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+  border: 1px solid #E9E9E9;
+  width: 100px;
+  text-align: center;
+}
+
+.tableFixHead table th:first-child,
+.tableFixHead table th:nth-child(2) {
+  z-index: 3 !important;
+}
+
+.sticky-col {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+}
+
+.shift-text-btn {
+  background: #2480BB !important;
+  border: 1px solid #2480BB !important;
+  color: white;
+  font-weight: 500;
+  font-size: 12px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.isHolidayRect {
+  position: absolute;
+  width: 8px;
+  height: 8px;    
+  left: 45px;
+  top: 15px;
+  background: #BF2CFD;
+  border-radius: 2px;
+}
+
+.isWeekOffRect {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 55px;
+  top: 15px;
+  background: #34495E;
+  border-radius: 2px;
+}
+
+.isHolidayLegend {
+  position: absolute;
+  width: 12px;
+  height: 12px;    
+  /* left: 45px;
+  top: 15px; */
+  background: #BF2CFD;
+  border-radius: 2px;
+  left: 50%;
+  line-height: 15px;
+}
+
+.isWeekOffLegend {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  /* left: 55px;
+  top: 15px; */
+  background: #34495E;
+  border-radius: 2px;
+  left: 60%;
+  line-height: 15px;
+}

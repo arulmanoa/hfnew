@@ -1,0 +1,141 @@
+.file {
+    visibility: hidden;
+    position: absolute;
+  }
+ 
+
+  .custom-file-label::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    display: block;
+    height: calc(1.57em + .79rem);
+    padding: 0.375rem .75rem;
+    line-height: 1.5;
+    color: #fff;
+    content: "Browse";
+    background-color: #0a609eeb;
+    border-left: inherit;
+    border-radius: 0 .25rem .25rem 0;
+    margin: -1px;
+    font-weight: 600;
+}
+
+
+.custom-file-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: calc(1.5em + .75rem + 2px);
+  padding: .375rem .75rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #d9dde1;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+}
+
+
+
+@media (min-width: 992px){
+  .modal-lg, .modal-xl {
+      max-width: 1200px;
+  }
+  }
+/* 
+  .fixed_header tbody{
+    display:block;
+    overflow:auto;
+    height:200px;
+    width:100%;
+  }
+  .fixed_header thead tr{
+    display:block;
+  } */
+
+  .table-scroll{
+    /*width:100%; */
+    display: block;
+    empty-cells: show;
+    
+    /* Decoration */
+    border-spacing: 0;
+    border: 1px solid;
+  }
+  
+  .table-scroll thead{
+    background-color: #f1f1f1;  
+    position:relative;
+    display: block;
+    width:100%;
+    overflow-y: scroll;
+  }
+  
+  .table-scroll tbody{
+    /* Position */
+    display: block; position:relative;
+    width:100%; overflow-y:scroll;
+    /* Decoration */
+    border-top: 1px solid rgba(0,0,0,0.2);
+  }
+  
+  .table-scroll tr{
+    width: 100%;
+    display:flex;
+  }
+  
+  .table-scroll td,.table-scroll th{
+    flex-basis:100%;
+    flex-grow:2;
+    display: block;
+    padding: 1rem;
+    text-align:left;
+  }
+  
+  /* Other options */
+  
+  .table-scroll.small-first-col td:first-child,
+  .table-scroll.small-first-col th:first-child{
+    flex-basis:20%;
+    flex-grow:1;
+  }
+  
+  .table-scroll tbody tr:nth-child(2n){
+    background-color: rgba(130,130,170,0.1);
+  }
+  
+  .body-half-screen{
+    max-height: 50vh;
+  }
+  
+  .small-col{flex-basis:10%;}
+
+  table.tableBodyScroll tbody {
+    display: block;
+    max-height: 350px;
+    overflow-y: scroll;
+  }
+  
+  table.tableBodyScroll thead, table.tableBodyScroll tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+ /* table > * > tr > th:first-child,
+ table > * > tr > td:first-child {
+  position: absolute;
+ 
+  background: #ccc;
+}
+
+ table > * > tr > th,
+ table > * > tr > td {
+  
+  white-space: nowrap;
+} */

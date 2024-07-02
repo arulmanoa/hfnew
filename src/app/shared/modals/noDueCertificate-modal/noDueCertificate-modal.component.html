@@ -1,0 +1,140 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div class="col-xs-8">
+          <h6 class="modal-title subheader_h6"><b>No Due Certificate</b></h6>
+        </div>
+        <div class="col-xs-4 modal-close" (click)="closeNDC()"><span class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+      <div class="modal-body no-padder">
+        <div class="text-center ma-5" *ngIf="isLoading">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+        <div *ngIf="!isLoading">
+          <div class="d-flex justify-content-between m-1 p-2">
+            <div class="col text-muted">Department</div>
+            <div class="col text-muted">Status</div>
+            <div class="col text-muted">Recovery Amount</div>
+            <div class="col text-muted">Remarks</div>
+            <div class="col text-muted">Documents</div>
+            <!-- <div class="notifyHeader"><i class="mdi mdi-bell-ring noti-icon" (click)="notifyAll()" title="Notify All"></i></div> -->
+          </div>
+
+          <form [formGroup]="noDueCertificateForm">
+            <div formArrayName="ndcFields">
+              <div class="card mb-3" *ngFor="let ndc of noDueCertificateForm.get('ndcFields')['controls']; let i=index" style="box-shadow: 0px 2px 8px 0px #0000001A;border: none;">
+                <div [formGroupName]="i" class="d-flex justify-content-between m-1 pt-3 pb-3">
+                  <div class="col ndcCell" style=" display: flex;
+                  justify-content: center;
+                  align-items: center;">
+                    <!-- <input type="checkbox" class="mr-1 mt-2" style="position: inherit;top: 3px" (change)="onChecked($event, i)" formControlName="NDCChecked"> -->
+                    {{ getDepartmentName(i) }}
+                  </div>
+                  <div class="col ndcCell">
+
+                    <div class="form-group form-group-vertical">
+                      <ng-select [items]="ndcStatusLst" (change)="onStatusChange(i)" placeholder="-- NDC Status --"
+                        #ndcStatus [ngClass]="{color: onChangeStatus(i)}" formControlName="NDCStatus" bindLabel="name"
+                        bindValue="id">
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col ndcCell">
+                    <div class="form-group form-group-vertical">
+                      <i class="fa fa-inr rupeeSybl" aria-hidden="true"></i>
+                      <input class="form-control" type="number" placeholder="Recovery Amount"
+                        formControlName="RecoveryAmount" autocomplete="none|false|no"
+                        [disabled]="ndc.controls['NDCStatus'].value == 1">
+                    </div>
+                  </div>
+                  <div class="col ndcCell">
+                    <div class="form-group form-group-verical">
+                      <input type="text" class="form-control" placeholder="Enter Remarks"
+                        formControlName="RecoveryRemarks" autocomplete="none|false|no"
+                        [disabled]="ndc.controls['NDCStatus'].value == 1">
+                    </div>
+                  </div>
+                  <div class="col ndcCell">
+                    <label class="upload control"
+                      *ngIf="(ndc.controls['DocumentId'].value == null || ndc.controls['DocumentId'].value == '' || ndc.controls['DocumentId'].value.DocumentId == 0)">
+                      <div class="upload-draggable is-primary">
+                        <section class="section">
+                          <div class="has-text-centered">
+                            <span class="icon is-large">
+                              <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                  style="color: #9ba7ca;"></i> Upload </span>
+                            </span>
+                          </div>
+                        </section>
+                      </div>
+                      <app-file-uploader (filesUploaded)="onAddAttachment($event, i, ndc)"
+                        [ALLOWED_FILE_TYPES]="'image/*, application/pdf'" [MAX_FILE_SIZE_MB]="2"
+                        [multiple]="false"></app-file-uploader>
+                    </label>
+                    <span *ngIf="showUploadingSpin && index == i" class="spinner-border spinner-border-sm primary-color"
+                      style="margin: 10px 60px" role="status" aria-hidden="true"></span>
+                    <p class="control"
+                      *ngIf="ndc.controls['DocumentId'].value != null && ndc.controls['DocumentId'].value.DocumentName != ''">
+                      <span class="file-name">
+                        <button class="btn btn-danger c-btn" (click)="doDeleteAttachment(i)">
+                          <a ngbTooltip="Delete Attachment"
+                            style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block;margin-top: -5px;">
+                            <i class="fa fa-trash-o"></i>
+                          </a>
+                        </button>
+                        <a target="blank" class="ahref" style="padding: 2px;font-size: 10px;">
+                          {{ndc.controls['DocumentId'].value.DocumentName }}
+                        </a>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="ndcNotify" style="cursor:pointer" placement="left"
+                    ngbTooltip="Click to send an email to the respective departments for recovery notification">
+                    <span (click)="notifiedArrList[i].textClicked == false ? notifyEmployee(i) : ''" [ngClass]="{
+                                            'notify': notifiedArrList[i] != undefined && notifiedArrList[i].status == 'Notify',
+                                            'successNotify': notifiedArrList[i] != undefined && notifiedArrList[i].status == 'Notified', 
+                                            'failedNotify': notifiedArrList[i] != undefined && notifiedArrList[i].status == 'Failed - Retry',
+                                            'disabledTxt': notifiedArrList[i].textClicked == true }">
+                      {{ notifiedArrList[i].status }}</span>
+                    <div>
+                      <span *ngIf="showNotifySpin && index == i"
+                        class="spinner-border spinner-border-sm primary-color ml-2 mt-3" role="status"
+                        aria-hidden="true"></span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </form>
+
+
+        </div>
+      </div>
+
+      <div class="modal-footer" style="width: 100%; ">
+        <div style="width: 100%;">
+          <button class="btn btn-primary" type="button" [disabled]="isDisabled" (click)="notifyAll()"> <i
+              class="mdi mdi-bell-ring-outline"></i> &nbsp; Notify All Departments</button>
+          <div class="float-right">
+            <button class="btn btn-default mr-3" type="button" (click)="closeNDC()"> <i
+              class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel</button>
+            <button class="btn btn-primary mr-3" type="Submit" name="btnSubmit" id="btnSubmit"
+              [disabled]="roleCode != 'RegionalHR'" (click)="onSubmitNDC()">
+              <div class="pos-rlt sm-btn-component"><span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;Save
+                </span></div>
+            </button>
+            <button class="btn btn-primary" type="button" *ngIf="isNDCComplete && isSaved"
+              (click)="onNext()"> <i class="mdi mdi-skip-next"></i> &nbsp; Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

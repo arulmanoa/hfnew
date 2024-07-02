@@ -1,0 +1,95 @@
+/* @media screen and (max-width: 600px) {
+  #title_message {
+    visibility: hidden;
+    clear: both;
+    float: left;
+    margin: 10px auto 5px 20px;
+    width: 28%;
+    display: none;
+  }
+}
+
+@media all and (min-width: 480px) {
+  .deskContent {
+    display: block;
+  }
+  .phoneContent {
+    display: none;
+  }
+} */
+
+@media all and (max-width: 768px) {
+    .deskContent {
+      display: none;
+    }
+    .phoneContent {
+      display: block;
+    }
+  }
+  
+  @media all and (min-width: 768px) {
+      .deskContent {
+        display: block;
+      }
+      .phoneContent {
+        display: none;
+      }
+    }
+  
+  
+  
+  .mobile-text {
+      text-align: left !important;
+    }
+    
+    @media (max-device-width: 600px) {
+      .mobile-text {
+        text-align: center !important;
+      }
+    }
+    
+  
+    .my-drawer {
+      width: 50%;
+  }
+  @media only screen and (max-width: 768px) {
+      .my-drawer {
+          width: 70%;
+      }
+  }
+
+  .badge {
+    -webkit-box-shadow: 0 0 3px rgba(31, 30, 47, .05);
+    box-shadow: 0 0 3px rgba(31, 30, 47, .05);
+    padding: 4px 6px 3px;
+    font-weight: 500;
+    line-height: 10px;
+    width: 100%;
+}
+
+
+  .badge-success1 {
+    background: #E2FEEE;
+    color: #2DA05E;
+    border-radius: 2px;
+    display: inline;
+    font-size: 10px !important;
+
+}
+
+.badge-warning1 {
+    background: #FFE9C7;
+    color: #EE9A15;
+    border-radius: 2px;
+    display: inline;
+    font-size: 12px;
+    font-size: 10px !important;
+}
+
+.badge-danger1 {
+    background: #FFE4E1;
+    color: #E74C3C;
+    border-radius: 2px;
+    display: inline;
+    font-size: 10px !important;
+}

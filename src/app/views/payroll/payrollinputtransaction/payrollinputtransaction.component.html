@@ -1,0 +1,1483 @@
+<div class="page-wrapper">
+  <div class="page-content">
+
+    <app-loading-screen></app-loading-screen>
+
+    <!-- 
+    <div class="row" style="margin-bottom: 20px;margin-top: -10px;">
+
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left">
+          <ul class="list-inline">
+           
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+          
+            <li class="list-inline-item">
+              <button type="button" class="btn btn-default" (click)="do_close()">
+                <i class="mdi mdi-close-circle-outline  m-r-xs"></i> Cancel
+              </button>
+            </li>
+           
+          </ul>
+        </div>
+      </div>
+    </div> -->
+
+   
+
+    <div class="content m-b report-content animated fadeInDown" style="margin-top: -10px;margin-bottom: 10px;" *ngIf="BusinessType == '3'">
+      <!-- <label class="form-label searchbar-label">Search Criteria</label> -->
+      <span class="es-text">
+        <span>
+          <!-- <b *ngIf="header_items.PVRId !== -1 && header_items.PVRId != undefined"> PVR # {{header_items.PVRId}} &nbsp; |
+          </b>  -->
+          <b> {{ClientName}}
+            <!-- <div class="vss-PivotBar--separator"></div>  -->
+          </b> &nbsp; | &nbsp; {{ClientContractName}} &nbsp; | &nbsp; {{TeamName}} &nbsp; | &nbsp; {{PayPeriodName}}
+        </span>
+        <button class="btn btn-default btn-bold" style="margin-top: -5px;float: right; margin-left: 5px;"
+          (click)="do_close()" tooltip="Close" data-original-title="" title="">
+          <i class="mdi mdi-close-outline font-size-md"></i>
+        </button>
+        <button class="btn btn-default btn-bold" style="margin-top: -5px;float: right; margin-left: 20px;"
+          (click)="do_close()" tooltip="Custom filter" data-original-title="" title="">
+          <i class="mdi mdi-filter-outline font-size-md"></i>
+        </button>
+
+        <span style="float: right;" *ngIf="code_payrollInput == 'payrollInputs' && inPayrollInputsList.length > 0">
+          <i><b> {{inPayrollInputsList.length}} result(s) found </b></i>
+        </span>
+        <span style="float: right;" *ngIf="code_payrollInput == 'processedOutputs' && inProcessedOutputsList.length > 0">
+          <i><b> {{inProcessedOutputsList.length}} result(s) found </b></i>
+        </span>
+      </span>
+    </div>
+
+    <div class="content m-b report-content animated fadeInDown int-header-content-panel"  *ngIf="BusinessType != '3'">
+      <span class="es-text">
+        <span *ngIf="!TeamName">
+          Scaffolding...
+        </span>
+        <span *ngIf="TeamName">
+          {{TeamName}} &nbsp; | &nbsp;   {{PayPeriodName}} 
+        </span>
+        <button class="btn btn-default btn-bold" style="margin-top: -5px;float: right; margin-left: 5px;"
+        (click)="do_close()" tooltip="Close" data-original-title="" title="">
+        <i class="mdi mdi-close-outline font-size-md"></i>
+      </button>
+      
+        <span style="float: right;" *ngIf="code_payrollInput == 'payrollInputs' &&  inPayrollInputsList.length > 0">
+          <i><b> {{inPayrollInputsList.length}} result(s) found </b></i>
+        </span>
+        <span style="float: right;" *ngIf="code_payrollInput == 'processedOutputs' && inProcessedOutputsList.length > 0">
+          <i><b> {{inProcessedOutputsList.length}} result(s) found </b></i>
+        </span>
+      </span>
+    </div>
+
+
+
+    <div class="content m-b report-content">
+      <div class="row" style="margin-top: -10px;margin-bottom: -17px;" *ngIf="!spinner">
+        <div class="col-lg-6">
+
+        </div>
+        <div class="col-lg-6" style="text-align: right;">
+          <label *ngIf="code_payrollInput == 'payrollInputs' && inPayrollInputsList.length > 0"> <b> No. Of Employee(s) : <b> {{inPayrollInputsList.length}}</b>
+              &nbsp; &nbsp; &nbsp; Selected Employee(s) : <b> {{selectedItems.length}}</b></b></label>
+          <label *ngIf="code_payrollInput == 'processedOutputs' &&  inProcessedOutputsList.length > 0"> <b> No. Of Employee(s) : <b>
+                {{inProcessedOutputsList.length}}</b> &nbsp; &nbsp; &nbsp; Selected Employee(s) : <b>
+                {{selectedItems1.length}}</b></b></label>
+
+        </div>
+      </div>
+      <ngb-tabset (tabChange)="onChange_tabset($event)" [(activeId)]="activeTabName">
+        <ngb-tab id="payrollInputs" *ngIf="(header_items.PVRId ==0 ||  header_items.PVRId === -1 || header_items.PVRId === undefined)">
+          <ng-template ngbTabTitle>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i> &nbsp;Payroll Inputs
+          </ng-template>
+          <ng-template ngbTabContent>
+            <div class="row" *ngIf="!spinner && isPayrollInputsDuplicateEntry">
+              <div class="col-lg-12 text-center">
+                <ngb-alert [dismissible]="false">
+                  <strong>The list item could not be displayed or updated because duplicate values were found in the list. Please reach out to your Support Administrator. </strong>
+                </ngb-alert>
+              </div>
+            </div>
+            
+            <div class="text-center ma-5" *ngIf="spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div> <div *ngIf="!spinner && !isPayrollInputsDuplicateEntry">
+
+
+            <div class="row" style="margin-top: 10px;margin-bottom: 10px;" *ngIf="pageLayout && !spinner">
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left">
+                  <ul class="list-inline">
+                    <!-- <li class="list-inline-item">
+
+                      <ng-select [items]="TeamList" style="width: 400px;font-weight: 700;" [searchable]="true"
+                        bindValue="Id" bindLabel="Name" placeholder="-- select a Team --" [(ngModel)]="TeamId"
+                        (change)="onChangeTeam($event)">
+                      </ng-select>
+                    </li> -->
+                    <li class="list-inline-item" *ngIf="isEnableForSME_MarkFnF"><button type="button" class="btn btn-primary-custom"
+                        (click)="do_MarkFandF('PayrollInputs')" style="margin-bottom: 3px;">
+                        <i class="mdi mdi-bookmark-check  m-r-xs"></i>Mark F&F
+                      </button></li>
+                  </ul>
+                </div>
+              </div>
+
+
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                <div class="text-right">
+                  <ul class="list-inline">
+                    <li class="list-inline-item"><button type="button" class="btn btn-primary-custom"
+                        (click)="do_generate_PIS()">
+                        <i class="mdi  mdi-comment-plus-outline  m-r-xs"></i>Generate PIS
+                      </button></li>
+                    <li class="list-inline-item"><button type="button" class="btn btn-primary-custom"
+                        (click)="importData_popup()">
+                        <i class="mdi mdi-import  m-r-xs"></i> Import Data
+                      </button></li>
+
+                    <li class="list-inline-item"><button 
+                      type="button" class="btn btn-primary-custom"
+                        (click)="do_process_TimeCard()">
+                        <i class="mdi mdi-play  m-r-xs"></i>Process
+                      </button></li>
+                    <li class="list-inline-item"><button type="button" tooltip="Refresh Processing Status of records"
+                        class="btn btn-primary-custom" (click)="refreshProcessingStatus()">
+                        <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                      </button></li>
+
+                    <!-- <li class="list-inline-item"><button type="button" class="btn btn-primary"
+                        (click)="submitForVerification()">
+                        <i class="mdi mdi-checkbox-multiple-marked-outline  m-r-xs"></i> Submit
+                      </button></li> -->
+
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+
+
+
+
+            <br>
+
+           
+
+
+            <div class="" style="margin-top: -20px;" *ngIf="pageLayout && !spinner">
+              <angular-slickgrid gridId="grdInPayrollInputs" [columnDefinitions]="inPayrollInputsColumnDefinitions"
+                [gridOptions]="inPayrollInputsGridOptions" [dataset]="inPayrollInputsList"
+                (onAngularGridCreated)="inPayrollInputsGridReady($event)" gridWidth="100%"
+                (sgOnClick)="onCellClicked_payrollinput($event.detail.eventData, $event.detail.args)"
+                (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+              </angular-slickgrid>
+            </div>
+
+
+
+            <div class="row" style="margin-bottom: 10px;" *ngIf="pageLayout  && !spinner">
+
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left">
+                  <ul class="list-inline">
+                    <li class="list-inline-item">
+                      <button type="button" class="btn btn-default" (click)="viewHistoryLog()">
+                        <i class="mdi mdi-history  m-r-xs"></i> View Import History
+                      </button>
+                    </li>
+
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                <div class="text-right">
+                  <ul class="list-inline">
+
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            </div>
+
+
+
+            <!-- <angular-slickgrid 
+              (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)" gridWidth="100%">
+          </angular-slickgrid> -->
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab id="processedOutput">
+          <ng-template ngbTabTitle *ngIf="(header_items.PVRId ==0 || header_items.PVRId === -1 || header_items.PVRId === undefined)">&nbsp; <i
+              class="fa fa-cube" aria-hidden="true"></i> &nbsp;Processed Output
+          </ng-template>
+        
+          <ng-template ngbTabTitle *ngIf="(header_items.PVRId !== 0 || header_items.PVRId !== -1 || header_items.PVRId !== undefined)">&nbsp; <i
+              class="fa fa-cube" aria-hidden="true"></i> &nbsp;Employee(s) Submitted for QC
+          </ng-template>
+
+          <ng-template ngbTabContent>
+            <div class="row" *ngIf="!spinner && isProcessedOutputDuplicateEntry">
+              <div class="col-lg-12 text-center">
+                <ngb-alert [dismissible]="false">
+                  <strong>The list item could not be displayed or updated because duplicate values were found in the list. Please reach out to your Support Administrator. </strong>
+                </ngb-alert>
+              </div>
+            </div>
+
+            <div class="text-center ma-5" *ngIf="spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+
+            <div *ngIf="!spinner && !isProcessedOutputDuplicateEntry">
+
+            <div class="row" style="margin-top: 10px;margin-bottom: 10px;"
+              *ngIf="(header_items.PVRId === 0 || header_items.PVRId === -1 || header_items.PVRId == undefined)">
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left">
+                  <ul class="list-inline">
+
+                    <li class="list-inline-item" *ngIf="isEnableForSME_MarkFnF"><button type="button" class="btn btn-primary-custom"
+                        (click)="do_MarkFandF('ProcessedOutputs')">
+                        <i class="mdi mdi-bookmark-check  m-r-xs"></i>Mark F&F
+                      </button></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                <div class="text-right">
+                  <ul class="list-inline">
+
+                    <!-- <li class="list-inline-item animated slideInRight"><button type="button"
+                        class="btn btn-primary-custom" (click)="markfandf()">
+                        <i class="mdi mdi-tag-plus  m-r-xs"></i>Initiate Sale Order
+                      </button></li> -->
+
+                    <li class="list-inline-item animated slideInRight" *ngIf="isEnableForSME_SubmitQC"><button type="button" class="btn btn-primary"
+                        (click)="submitForVerification()">
+                        <i class="mdi mdi-checkbox-multiple-marked-outline  m-r-xs"></i> Submit to QC
+                      </button></li>
+
+                      <li class="list-inline-item animated slideInRight" *ngIf="isEnableForSME_EmpForPayrun"><button type="button" class="btn btn-primary"
+                        (click)="do_Create_PayRun()">
+                        <i class="mdi mdi-checkbox-multiple-marked-outline  m-r-xs"></i> Initiate Pay Run
+                      </button></li>
+<li class="list-inline-item"><button type="button" tooltip="Refresh Processing Status of records"
+                        class="btn btn-primary-custom" (click)="refreshProcessingStatus()">
+                        <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                      </button></li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+            <!-- 
+            <div class="card-inner" style="padding:15px;">
+            
+              <div class="sp-plan-desc sp-plan-desc-mb">
+                <ul class="row gx-1">
+                  <li class="col-sm-4">
+                    <p><span class="text-soft">Client Name</span> {{ClientName}}</p>
+                  </li>
+                  <li class="col-sm-2">
+                    <p><span class="text-soft">Contract Name</span> {{ClientContractName}}</p>
+                  </li>
+                  <li class="col-sm-2">
+                    <p><span class="text-soft">Team Name</span> {{TeamName}}</p>
+                  </li>
+                  <li class="col-sm-2">
+                    <p><span class="text-soft">Pay Period</span> {{PayPeriodName}}</p>
+                  </li>
+                  <li class="col-sm-2">
+                    <p><span class="text-soft">Attendance Cycle</span> {{AttendanceCycle}}</p>
+                  </li>
+                </ul>
+              </div>
+            </div> -->
+
+
+            <!-- <div class="content m-b report-content post" style="margin-top: 10px;">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+
+                                 <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <strong>Client Name </strong>
+                        <label class="qcsummarylabel form-text text-muted">
+                          {{ClientName}}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <small class="form-text text-muted">Contract Name </small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          {{ClientContractName}}
+                        </label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <small>Team Name </small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <ng-select [(ngModel)]="TeamId" disabled #select [items]="TeamList" [searchable]="true" bindValue="Id"
+                            bindLabel="Name" placeholder="-- select a Team --" (change)="onChangeTeam($event)">
+                          </ng-select>
+                        </label>
+
+                      </div>
+                    </div>
+
+
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <small>Pay Period </small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          {{PayPeriodName}}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4" *ngIf="Idx != 4">
+                      <div class="form-group">
+                        <small>Attendance Cycle </small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          {{AttendanceCycle}}
+                        </label>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                </div>
+
+              </div>
+            </div> -->
+
+
+            <br>
+
+          
+
+            <div class="" style="margin-top: -20px;" *ngIf="pageLayout && !spinner">
+              <angular-slickgrid gridId="grid1" [columnDefinitions]="inProcessedOutputsColumnDefinitions"
+                [gridOptions]="inProcessedOutputsGridOptions" [dataset]="inProcessedOutputsList"
+                (onAngularGridCreated)="inProcessedOutputsGridReady($event)" gridWidth="100%"
+                (sgOnSelectedRowsChanged)="onSelectedRowsChanged1($event.detail.eventData, $event.detail.args)"
+                (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)">
+              </angular-slickgrid>
+            </div>
+
+            <div class="row" style="margin-bottom: 10px;" *ngIf="pageLayout  && !spinner">
+
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left">
+                  <ul class="list-inline">
+                    <li class="list-inline-item">
+                      <button type="button" class="btn btn-default" (click)="downloadPaysheet()">
+                        <i class="mdi mdi-download  m-r-xs"></i> Download Paysheet
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                <div class="text-right">
+                  <ul class="list-inline">
+
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+            </div>
+
+
+          </ng-template>
+        </ngb-tab>
+
+      </ngb-tabset>
+
+    </div>
+
+
+    <div id="popup_chooseCategory" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+      data-keyboard="false" aria-labelledby="popup_chooseCategory" aria-hidden="true">
+      <div style="display: block;" class="modal fade show animated fadeInDownBig">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header" style="padding: 15px !important;">
+
+
+              <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                <small class="header-pretitle"><b>Processing Status (Employee) </b></small>
+                <h6 class="modal-title subheader_h6" id="popup_release_AL" *ngIf="BusinessType == 3">{{ClientName}} <span> - </span>
+                  {{ClientContractName}} </h6>
+                  <h6 class="modal-title subheader_h6" id="popup_release_AL" *ngIf="BusinessType != 3">{{PayPeriodName}}  </h6>
+              </div>
+
+              <div class="modal-close" (click)="modal_dismiss2()" style="margin-top: 5px;"><span
+                  class="mdi mdi-close pull-left"></span>
+              </div>
+            </div>
+
+
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="job-box ">
+                    <div class="inbox-message">
+                      <ul>
+                        <li *ngFor="let i of processedEMP" style="width: 100% !important;">
+                          <a href="javascript:;">
+                            <div class="message-avatar">
+                              <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                            </div>
+                            <div class="message-body">
+                              <div class="message-body-heading">
+                                <h5>{{i.EmployeeName}} - <b *ngIf="i.IsPushedToQueue" style="color: green;">Success</b>
+                                  <b style="color: red;" *ngIf="!i.IsPushedToQueue">Failed</b> </h5>
+                              </div>
+                              <p>{{i.Remarks}}</p>
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="pull-left left-margin-btn">
+
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nz-drawer [nzVisible]="visible" [nzWidth]="840" nzTitle="Employee Pay Transaction" (nzOnClose)="close()">
+      <nz-descriptions [nzColumn]="2" *ngIf="rowRecord">
+        <nz-descriptions-item nzTitle="Employee Name" [nzSpan]="0.5"><b>{{rowRecord.EmployeeName}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Employee Code" [nzSpan]="0.5"><b>{{rowRecord.EmployeeCode}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="DOJ" [nzSpan]="1"><b>{{rowRecord.DOJ | date: 'MMMM d, y'}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Pay Period" [nzSpan]="1"><b>{{rowRecord.PayPeriod}}</b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Team Name" [nzSpan]="0.5"><b>{{rowRecord.TeamName}}</b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Payable Days / Workdays" [nzSpan]="0.5"><b> {{rowRecord.Payabledays}} /
+            {{rowRecord.Workdays}} </b></nz-descriptions-item>
+
+      </nz-descriptions>
+      <nz-divider></nz-divider>
+      <div *ngIf="Payitems">
+        <!-- <nz-divider></nz-divider> -->
+        <nz-table nzSize="small" [nzData]="Payitems" [nzTemplateMode]="false" [nzShowPagination]=false>
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Actual Amount</th>
+              <th>Earned Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of Payitems"
+              [ngStyle]="{'background': data.ProductTypeCode =='Total'  ? '#cbe2f7' : '#FFF' }">
+              <td>{{data.ProductDisplayName}}</td>
+              <td style="text-align: right !important;">{{data.ActualAmount  | number : '1.2-2'}}</td>
+              <td style="text-align: right !important;">{{data.PayTotal  | number : '1.2-2'}}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+      <nz-divider></nz-divider>
+
+      <div class="row" style="margin-bottom: 10px;" *ngIf="pageLayout  && !spinner">
+
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+          <div class="text-left">
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <button type="button" class="btn btn-default" (click)="downloadExcel()">
+                  <i class="mdi mdi-download  m-r-xs"></i> Download Excel
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+
+
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+
+    </nz-drawer>
+
+    <nz-drawer [nzVisible]="payrollSlider_visible" [nzWidth]="840" nzTitle="Time Card PIS Transaction"
+      (nzOnClose)="close_payrollinputs_edit()">
+
+      <ngb-tabset (tabChange)="loadData_slider($event)" [(activeId)]="_slider_activeTabName" style="width: 100%;">
+        <ngb-tab id="salaryInput">
+          <ng-template ngbTabTitle><i class="fa fa-credit-card" aria-hidden="true"></i>&nbsp;&nbsp;Salary Inputs
+          </ng-template>
+          <ng-template ngbTabContent>
+            <ngb-tabset (tabChange)="loadData_slider($event)" [(activeId)]="_slider_activeTabName" style="width: 100%;">
+              <ngb-tab id="Allowance">
+                <ng-template ngbTabTitle><i class="fa fa-window-maximize" aria-hidden="true"></i>&nbsp;&nbsp;Allowance
+                </ng-template>
+                <ng-template ngbTabContent>
+                  <table class="table table-bordered table-container">
+                    <thead>
+                      <tr class="document_table_tr">
+                        <th scope="col">Product Code</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col" style="width: 20%;text-align: center">Existing Amount</th>
+                        <th scope="col" style="width: 20%;text-align: center">New Amount</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of LstTimeCardAllowanceProducts; let i = index"
+                        [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                        <td class="table-td-center" style="font-size: 14px;
+                                font-weight: 500;">
+                          {{item.Code}}
+                        </td>
+                        <td class="table-td-center" style="font-size: 14px;
+                                font-weight: 500;">
+                          {{item.Name}}
+                        </td>
+                        <td class="txt-align document_table_validFrom table-td-center">
+                          <input type="number" max="33333" style="text-align:right" maxlength="12"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)" disabled [(ngModel)]="item.ExistingAmount"
+                            class="form-control">
+                        </td>
+                        <td class="txt-align document_table_validFrom table-td-center">
+                          <input type="number" max="33333" style="text-align:right" maxlength="12"
+                            onkeypress="return /^-?[0-9.--]\d*(\.\d+)?$/i.test(event.key)" (onkeypress)="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"  onpaste="return false;" [(ngModel)]="item.NewAmount"
+                            class="form-control" >
+                            
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </ng-template>
+              </ngb-tab>
+              <ngb-tab id="Adjustment">
+                <ng-template ngbTabTitle><i class="fa fa-window-maximize" aria-hidden="true"></i>&nbsp;&nbsp;Adjustment
+                </ng-template>
+                <ng-template ngbTabContent>
+                  <table class="table table-bordered table-container">
+                    <thead>
+                      <tr class="document_table_tr">
+                        <th scope="col">Product Code</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col" style="width: 20%;text-align: center">Existing Amount</th>
+                        <th scope="col" style="width: 20%;text-align: center">New Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of LstTimeCardAdjustmentProducts; let i = index"
+                        [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                        <td class="table-td-center" style="font-size: 14px;
+                                    font-weight: 500;">
+                          {{item.Code}}
+                        </td>
+                        <td class="table-td-center" style="font-size: 14px;
+                                    font-weight: 500;">
+                          {{item.Name}}
+                        </td>
+                        <td class="txt-align document_table_validFrom table-td-center">
+                          <input type="number" max="33333" style="text-align:right" maxlength="12"
+                            onkeypress="return /^-?[0-9]++$/i.test(event.key)" disabled
+                            [(ngModel)]="item.ExistingAmount" class="form-control">
+                        </td>
+                        <td class="txt-align document_table_validFrom table-td-center">
+                          <input type="number" max="33333" style="text-align:right" maxlength="12"
+                          onkeypress="return /^-?[0-9.--]\d*(\.\d+)?$/i.test(event.key)" (onkeypress)="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" onpaste="return false;" [(ngModel)]="item.NewAmount"
+                            class="form-control">
+                        </td>
+
+                      </tr>
+                    </tbody>
+                  </table>
+                </ng-template>
+              </ngb-tab>
+            </ngb-tabset>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab id="attendanceDetails">
+          <ng-template ngbTabTitle><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;&nbsp;Attendance Details
+          </ng-template>
+          <ng-template ngbTabContent>
+
+
+            <div class="row">
+              <div class="form-group form-group-vertical col-md-6">
+                <label class="form-label"> Attendance Period </label>
+
+                <!-- <div class="custom-control custom-checkbox chkbox_custom">
+                  <input type="checkbox" class="custom-control-input" id="fullmonth" value="1"   [checked]="isattendanceFullMonthLOP == 1"  (change)="attendancePeriod(1)">
+                  <label class="custom-control-label" for="fullmonth">Is Full Month LOP</label> 
+                  </div>
+                  <br>
+                  <div class="custom-control custom-checkbox chkbox_custom">
+                    <input type="checkbox" class="custom-control-input" id="fullmonth1"  value="2" [checked]="isattendanceFullMonthLOP == 2"
+                    value="2" (change)="attendancePeriod(2)" >
+                    <label class="custom-control-label" for="fullmonth1">Is LOP Based On Payroll Month</label>
+                    </div> -->
+                <div class="pretty p-icon p-round" style="margin-bottom: 10px;">
+                  <input type="checkbox" name="icon_solid" value="1"     [checked]="isattendanceFullMonthLOP == 1"
+                    value="1" (change)="attendancePeriod(1,$event)" />
+                  <div class="state p-success">
+                    <i class="icon mdi mdi-check"></i>
+                    <label>Is Full Month LOP</label> 
+                  </div> 
+                </div>
+                <br>
+                <div class="pretty p-icon p-round">
+                  <input type="checkbox" name="icon_solid" value="2"  [checked]="isattendanceFullMonthLOP == 2"
+                    value="2" (change)="attendancePeriod(2,$event)" />
+                  <div class="state p-success">
+                    <i class="icon mdi mdi-check"></i>
+                    <label>Is LOP Based On Payroll Month</label>  
+                  </div>
+                </div> 
+              </div>
+
+              
+
+              <div class="form-group form-group-vertical col-md-6">
+                <label class="form-label">stamping period </label>
+                <div class="pretty p-icon p-round" style="margin-bottom: 10px;">
+                  <input type="radio" name="icon_solid_1" value="1"  [checked]="isPeriodBased"  (change)="dostampingPeriod(1)" />
+                  <div class="state p-success">
+                    <i class="icon mdi mdi-check"></i>
+                    <label>Open Period ( {{TimeCardDetails.PeriodStartDate | date :'dd'}}th ~
+                      {{TimeCardDetails.PeriodEndDate | date:'dd'}}th )</label>
+                  </div>
+                </div>
+                <br>
+                <!-- [disabled]="isattendanceFullMonthLOP == false ? true : false" -->
+                <div class="pretty p-icon p-round">
+                  <input type="radio" name="icon_solid_1" [checked]="!isPeriodBased" disabled value="2" (change)="dostampingPeriod(2)" />
+                  <div class="state p-success">
+                    <i class="icon mdi mdi-check"></i>
+                    <label>Attendance Cycle ( {{TimeCardDetails.AttendanceStartDate | date :'dd'}}th ~
+                      {{TimeCardDetails.AttendanceEndDate | date:'dd'}}th )</label>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <div>
+          
+
+            <div class="row" *ngIf="isattendanceFullMonthLOP != null && !TeamDetails.IsMustorRollApplicable">            
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <label class="form-label ">LOP Days  <span class="required"> *</span></label>
+                <input class="form-control" [disabled]="isattendanceFullMonthLOP == 1" [(ngModel)]="attendanceLOPDays"  onkeypress="return /^-?[0-9.--]\d*(\.\d+)?$/i.test(event.key)"  onpaste="return false;"   type="text" name="attendanceLOPDays" (change)="onChangeattendanceLOPDays($event.target.value)"
+                  placeholder="LOP Days"
+                 >     
+                 <div *ngIf="(attendanceLOPDays > attendanceTotalDays)" class="help-block">
+                  <div>LOP day(s) should be less than or equal to allowable  day(s)
+                  </div>
+                               </div>          
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="!isattendancePeriodType != null">
+                <label class="form-label ">Allowable Days <span class="required"> *</span></label>
+                <input class="form-control" disabled [(ngModel)]="attendanceTotalDays" [value]="attendanceTotalDays" onkeypress="return /^[0-9]+$/i.test(event.key)" onpaste="return false;"   type="text" name="attendanceTotalDays"
+                  placeholder="Allowable Days"
+                 >     
+                     
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="!isattendancePeriodType != null">
+                <label class="form-label ">No of Days Present <span class="required"> *</span></label>
+                <input class="form-control" disabled [(ngModel)]="attendancePresentDays" [value]="attendancePresentDays" onkeypress="return /^[0-9]+$/i.test(event.key)" onpaste="return false;"   type="text" name="attendancePresentDays"
+                  placeholder="No. of Days Present"
+                 >     
+                     
+              </div>
+
+                            </div>
+
+                          </div>
+
+
+            <!-- <ng-template #customCellTemplate let-day="day" let-locale="locale">
+                    <div class="cal-cell-top">
+                      <span class="cal-day-badge" *ngIf="day.badgeTotal > 0"
+                        >{{ day.badgeTotal }}</span
+                      >
+                      <span class="cal-day-number"
+                        >{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span
+                      >
+                    </div>
+                    <div class="cell-totals">
+                      <span
+                        *ngFor="let group of day.eventGroups"
+                        class="badge badge-{{ group[0] }}"
+                      >
+                        {{ group[1].length }}
+                      </span>
+                    </div>
+                  </ng-template> -->
+
+
+            <!-- <ng-template #customCellTemplate let-day="day" let-locale="locale">
+              <div class="cal-cell-top">
+                <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+                <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+              </div>
+              <div class="cal-events" *ngIf="day.events.length > 0">
+                <div class="cal-event" *ngFor="let event of day.events" [style.backgroundColor]="event.color"
+                  [mwlCalendarTooltip]="event.title | calendarEventTitle:'monthTooltip':event"
+                  (mwlClick)="handleEvent($event, event)">
+                </div>
+              </div>
+              <div class="cell-totals">
+                <span *ngFor="let group of day.eventGroups" class="badge badge-{{ group[0] }}">
+                  {{ group[1].length }}
+                </span>
+              </div>
+            </ng-template> -->
+            <ng-template #customCellTemplate let-day="day" let-locale="locale">
+              <div class="cal-cell-top">
+                <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+                <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+              </div>
+              <small style="margin: 5px;">
+                <span *ngFor="let event of day.events">
+                  <span class="badge badge-danger" style="display: inline;" *ngIf="event.color.primary === '#ad2121'"> A
+                  </span>
+                  <span class="badge badge-success" style="display: inline;" *ngIf="event.meta.IsFirstDayHalf"> P
+                  </span>
+                  <span class="badge badge-success" style="display: inline;" *ngIf="event.color.primary === '#3BBD72'">
+                    P </span>
+                </span>
+                <span *ngIf=" day.events == null">
+                </span>
+
+              </small>
+            </ng-template>
+            <div class="row" *ngIf="TeamDetails.IsMustorRollApplicable">
+              <div class="col-lg-6 pull-left">
+                <div class="pull-left">
+                  <a href="javascript:;" (click)="decrement()" tooltip="Previous Month" tooltip-placement="bottom"
+                    class="btn action-edit pull-left" style="margin-right: 5px;margin-left: 5px;">
+                    <i class="fa fa-angle-left" aria-hidden="true" style="font-size: 20px;
+                            color: #000;
+                            margin-top: -2px;
+                            margin-left: 2px;"></i>
+                  </a>
+                  <a class="btn action-edit pull-left" (click)="increment()" tooltip="Next Month"
+                    tooltip-placement="bottom">
+                    <i class="fa fa-angle-right" aria-hidden="true" style="font-size: 20px;
+                          color: #000;
+                          margin-top: -2px;
+                          margin-left: 2px;"></i>
+                  </a>
+                </div>
+                <h3>&nbsp;&nbsp; {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+              </div>
+              <div class="col-lg-6 pull-right">
+                <p class="small mb-0" style="font-size: 16px;float:right">
+                  <span class="text-success" style="font-size: 16px;">●</span> <b> Present &nbsp;</b>
+                </p>
+                <p class="small mb-0" style="font-size: 16px;float:right;margin-right: 10px;">
+                  <span class="text-danger" style="font-size: 16px;">●</span> <b> Absent</b>
+                </p>
+              </div>
+            </div>
+            <!-- <div class="btn-group">
+                    <button
+                      class="btn btn-primary"
+                      (click)="decrement()"
+                      [disabled]="prevBtnDisabled"
+                    >
+                      Previous
+                    </button>
+                    <button class="btn btn-outline-secondary" (click)="today()">Today</button>
+                    <button
+                      class="btn btn-primary"
+                      (click)="increment()"
+                      [disabled]="nextBtnDisabled"
+                    >
+                      Next
+                    </button>
+                  </div>  -->
+            <div class="row" *ngIf="TeamDetails.IsMustorRollApplicable">
+              <div class="col-lg-12">
+                <div [ngSwitch]="view">
+                  <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events"
+                    (eventClicked)="eventClicked($event)"  [refresh]="refresh" (dayClicked)="dayClicked($event.day)"
+                    (beforeViewRender)="beforeMonthViewRender($event)" [cellTemplate]="customCellTemplate">
+                  </mwl-calendar-month-view>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row" *ngIf="TeamDetails.IsMustorRollApplicable">
+              <div class="col-md-4">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label">No. of Days Present<span class="required"></span></label>
+                  <p class="date">{{noOfP}}</p>
+                </div>
+              </div>
+              <!-- <div class="col-md-3"> -->
+              <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+           <label class="form-label">No. of Days Absent<span class="required"></span></label>
+           <p class="date">0</p>
+
+         </div> -->
+              <!-- </div> -->
+              <div class="col-md-4">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label">LOP Days<span class="required"></span></label>
+                  <p class="date">{{noOfA}}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label">Attendance Cycle<span class="required"></span></label>
+                  <p class="date">{{TimeCardDetails.AttendanceStartDate | date :'dd'}}th ~
+                    {{TimeCardDetails.AttendanceEndDate | date:'dd'}}th</p>
+                </div>
+              </div>
+              <hr>
+            </div>
+          </ng-template>
+
+        </ngb-tab>
+        <ngb-tab id="revokeLOP">
+          <ng-template ngbTabTitle><i class="fa fa-calendar-times-o" aria-hidden="true"></i>&nbsp;&nbsp;Revoke LOP
+          </ng-template>
+          <ng-template ngbTabContent>
+
+            <div class="row">
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label"> Choose Pay Period</label>
+                <ng-select #select [items]="Lst_PrevPayPeriod" bindValue="Id" (change)="onChangePayPeriod($event)"
+                  bindLabel="PayCyclePeriodName" placeholder="Choose Pay Period" [(ngModel)]="_RevokePayPeriod">
+                </ng-select>
+
+              </div>
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="_RevokePayPeriod">
+                <label class="form-label ">LOP Days</label>
+                <input class="form-control" disabled type="text" [value]="_LOPDays" placeholder="LOP Days">
+              </div>           
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6"  *ngIf="!TeamDetails.IsMustorRollApplicable && _RevokePayPeriod && alreadyRevokedDays > 0">
+                <label class="form-label ">Revoke LOP Days <span class="required"> *</span></label>
+                <input class="form-control" [(ngModel)]="_RevokeLOPDays"  onkeypress="return /^-?[0-9.--]\d*(\.\d+)?$/i.test(event.key)"  onpaste="return false;" type="text" name="revokelopdays"
+                  (change)="onChangeRevokeLOP($event.target.value,Lst_LOPDetails)" placeholder="Revoke LOP Days">
+                <div *ngIf="(_RevokeLOPDays > alreadyRevokedDays)" class="help-block">
+                  <div>Revoke LOP day(s) should be less than or equal to LOP day(s)
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+            <ng-template #customCellTemplate_revoke let-day="day" let-locale="locale">
+              <div class="cal-cell-top">
+                <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+                <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+              </div>
+              <small style="margin: 5px;">
+                <span *ngFor="let event of day.events">
+
+                  <span class="badge badge-danger" style="display: inline;" *ngIf="event.color.primary === '#ad2121'"> A
+                  </span>
+                  <span class="badge badge-success" style="display: inline;" *ngIf="event.meta.IsFirstDayHalf"> P
+                  </span>
+
+                  <span class="badge badge-success" style="display: inline;" *ngIf="event.color.primary === '#3BBD72'">
+                    P </span>
+
+                    <span class="badge badge-warning" style="display: inline;" *ngIf="event.color.primary == '#e3bc08'">
+                      R </span>
+                </span>
+                <span *ngIf=" day.events == null">
+
+                </span>
+
+              </small>
+            </ng-template>
+
+            <div class="row" *ngIf="TeamDetails.IsMustorRollApplicable && viewDate_revoke !=null && _RevokePayPeriod && alreadyRevokedDays > 0">
+              <div class="col-lg-6 pull-left">
+                <div class="pull-left">
+                  <a href="javascript:;" (click)="decrement_revoke()" tooltip="Previous Month" tooltip-placement="bottom"
+                    class="btn action-edit pull-left" style="margin-right: 5px;margin-left: 5px;">
+                    <i class="fa fa-angle-left" aria-hidden="true" style="font-size: 20px;
+                            color: #000;
+                            margin-top: -2px;
+                            margin-left: 2px;"></i>
+                  </a>
+                  <a class="btn action-edit pull-left" (click)="increment_revoke()" tooltip="Next Month"
+                    tooltip-placement="bottom">
+                    <i class="fa fa-angle-right" aria-hidden="true" style="font-size: 20px;
+                          color: #000;
+                          margin-top: -2px;
+                          margin-left: 2px;"></i>
+                  </a>
+                </div>
+                <h3>&nbsp;&nbsp; {{ viewDate_revoke | calendarDate:(view_revoke + 'ViewTitle'):'en' }}</h3>
+              </div>
+              <div class="col-lg-6 pull-right">
+                <p class="small mb-0" style="font-size: 16px;float:right">
+                  <span class="text-pending" style="font-size: 16px;">●</span> <b> Revoke LOP &nbsp;</b>
+                </p>
+                <p class="small mb-0" style="font-size: 16px;float:right;margin-right: 10px;">
+                  <span class="text-danger" style="font-size: 16px;">●</span> <b> Absent</b>
+                </p>
+              </div>
+            </div>
+            <div class="row" *ngIf="TeamDetails.IsMustorRollApplicable && viewDate_revoke !=null && _RevokePayPeriod && alreadyRevokedDays > 0">
+              <div class="col-lg-12" >
+                <div [ngSwitch]="view">
+                  <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate_revoke" [events]="events_revoke"
+                    (eventClicked)="eventClicked_revoke($event)"   [refresh]="refresh_revoke" (dayClicked)="dayClicked_revoke($event.day)"
+                    (beforeViewRender)="beforeMonthViewRender_revoke($event)" [cellTemplate]="customCellTemplate_revoke">
+                  </mwl-calendar-month-view>
+                </div>
+              </div>
+            </div>
+
+
+
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab id="TaxDetails">
+          <ng-template ngbTabTitle><i class="fa fa-calendar-times-o" aria-hidden="true"></i>&nbsp;&nbsp;Tax Details
+          </ng-template>
+          <ng-template ngbTabContent>
+            <div class="row" >
+              <div class="col-lg-12  text-center ">
+                  <ngb-alert class="p-1" [dismissible]="false">
+                      <strong> These tax details for current Month only </strong>
+                  </ngb-alert>
+              </div>
+          </div>
+           
+            <form [formGroup]="taxDetailsForm">
+
+
+              <div class="row">
+                <div class="form-group  mb-0 form-group-vertical col-12 col-xs-12 col-lg-12 col-md-4 col-sm-6">
+                  <div class="row align-items-center">
+                    <label class="form-label col-md-3 mb-0" style="font-size: 14px !important;"> Consider PAN Card </label>
+                    <div class="col-md-9">
+                      <input type="checkbox" class="toggle1" id="toggle1" disabled formControlName="IsPanExist" />
+                      <label for="toggle1">
+                        <span class="on">Yes</span>
+                        <span class="off">No</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <label style="font-size: 11px;"><i>(Making this value <b>NO</b> will calculate tax at 20%.)</i></label>
+                </div>
+              </div>
+              <hr class="mt-1 mb-2">
+              <div class="row">
+                <div class="form-group mb-0 form-group-vertical col-12 col-xs-12 col-lg-12 col-md-4 col-sm-6">
+                  <div class="row align-items-center">
+                    <label class="form-label col-md-3 mb-0 " style="font-size: 14px !important;"> Exempt Current Month Tax </label>
+                    <div class="col-md-9">
+                      <input type="checkbox" class="toggle1" id="toggle2" formControlName="IsTaxExempted" />
+                      <label for="toggle2">
+                        <span class="on">Yes</span>
+                        <span class="off">No</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <label style="font-size: 11px;"><i>(Making this value <b>Yes</b> will calculate zero income tax.)</i></label>
+
+                </div>
+              </div>
+              <hr class="mt-1 mb-2">
+              <div class="row">
+                <div class="form-group mb-0 form-group-vertical col-12 col-xs-12 col-md-4 col-lg-12 col-sm-6">
+                  <div class="row align-items-center ">
+                    <label class="form-label col-md-3 mb-0" style="font-size: 14px !important;"> Consider Proof For Tax </label>
+                    <div class="col-md-9">
+                      <input type="checkbox" formControlName="proofMode" class="toggle1" id="toggle3" />
+                      <label for="toggle3">
+                        <span class="on">Yes</span>
+                        <span class="off">No</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <label style="font-size: 11px;"><i>(Making this value <b>Yes</b> will consider the approved proof amount for tax
+                      calculation. If
+                      value is <b>No</b> the declared value will be used for tax mode.)</i></label>
+                </div>
+              </div>
+              <hr class="mt-1 mb-2">
+              <div class="row">
+                <div class="form-group mb-0 form-group-vertical col-12 col-xs-12 col-md-4 col-lg-12 col-sm-6">
+                  <div class="row align-items-center ">
+                    <label class="form-label col-md-3 mb-0" style="font-size: 14px !important;"> Consider New Tax Regime </label>
+                    <div class="col-md-9">
+                      <input type="checkbox" class="toggle1" id="toggle4" formControlName="IsNewTaxRegime" />
+                      <label for="toggle4">
+                        <span class="on">Yes</span>
+                        <span class="off">No</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <label style="font-size: 11px;"><i >(Making this value <b>Yes</b> will consider the rules for new tax regime.)</i></label>
+                  <label style="font-size: 11px;"><i>Note: Standard deduction loss from house property ,investments from sec 80c will not be
+                      consider.</i></label>
+                </div>
+              </div>
+              <hr class="mt-1 mb-2">
+              <div class=" form-group mb-0 form-group-vertical col-xs-12 col-sm-12" style="padding: 0px !important;">
+                <label class="form-label " style="font-size: 14px !important;">Remarks</label>
+                <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                  id="remarks" formControlName="remarks" name="remarks"></textarea>
+              </div>
+              <!-- <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+                <div class="col-lg-6">
+                  <button class="btn " type="button" (click)="viewTaxDetialsRemarks()">
+                    <i class="mdi mdi-history  m-r-xs"></i> &nbsp;
+                    View History</button>
+                </div>
+              </div>  -->
+            </form>
+             
+           
+          </ng-template>
+        </ngb-tab>
+
+      </ngb-tabset>
+
+
+      <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+        <div class="col-lg-6">
+          <ul class="list-inline">
+
+          </ul>
+        </div>
+        <div class="col-lg-6 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+
+              <li class="list-inline-item"> <button class="btn btn-default" type="button"
+                  (click)="close_payrollinputs_edit()">
+                  <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                  Cancel</button>
+              </li>
+              <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit"
+                  id="btnSubmit" (click)="saveTimeCardDetails()">
+                  <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                      Save
+                    </span></div>
+                </button></li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </nz-drawer>
+
+    <div id="popup_history" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+      aria-labelledby="popup_history" aria-hidden="true">
+      <div style="display: block;" class="modal fade show animated fadeInDownBig">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header" style="padding: 15px !important;">
+
+              <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                <small class="header-pretitle"><b>Import History</b></small>
+                <h6 class="modal-title subheader_h6" id="popup_release_AL">{{ClientName}} - {{ClientContractName}}</h6>
+              </div>
+
+              <div class="modal-close" (click)="close_historylog()" style="margin-top: 5px;"><span
+                  class="mdi mdi-close pull-left"></span>
+              </div>
+            </div>
+
+
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="job-box ">
+                    <div class="inbox-message">
+                      <ul>
+                        <li *ngFor="let i of lstImportHistory" style="width: 100% !important;">
+
+                          <h5 class="step-header col-md-12" style="font-weight: 500;margin-bottom: 2rem;">
+                            Imported By : {{i.ImportedBy}} | <b> Imported On : {{i.ImportedOn | date:'d MMMM , y'}} | No
+                              of Records : {{i.ImportedRecords}}</b>
+                          </h5>
+
+                          <div class="media" *ngFor="let item of i.OutData">
+                            <div class="media-left vertical-align-middle">
+                              <div class="setup-icon-section">
+                                <svg version="1.1" x="0" y="0" viewBox="0 0 512 512" xml:space="preserve"
+                                  class="icon setup-icon vertical-align-middle"
+                                  style="width: 22px;display: block;margin: 0 auto;margin-top: 11px;">
+                                  <path fill="#0a609eeb"
+                                    d="M509.8 452.9V490c0 11.6-9.4 21.1-21.1 21.1l-465.5.8c-5.6 0-11-2.2-14.9-6.2-4-4-6.2-9.3-6.2-14.9v-37.9c0-44.9 17.4-87.1 49-119 31.6-31.9 73.7-49.7 118.5-50.1H339c45.5-.5 88.3 16.9 120.7 48.9 32.3 32 50.1 74.7 50.1 120.2z">
+                                  </path>
+                                  <path fill="#DEEFFF"
+                                    d="M255.8 428.8c-11.7 0-21.1-9.5-21.1-21.1V283.8h42.2v123.9c0 11.7-9.5 21.1-21.1 21.1z">
+                                  </path>
+                                  <path fill="#0a609eeb"
+                                    d="M375.7 119.5c0 65.9-53.8 119.4-120 119.4-66.1 0-120-53.6-120-119.4S189.6.1 255.8.1c66.1 0 119.9 53.6 119.9 119.4z">
+                                  </path>
+                                </svg>
+                              </div>
+                            </div>
+                            <div class="media-body">
+                              <div class="pull-left">
+                                <h5 class="step-header col-md-12" style="font-weight: 500;">
+                                  {{item.EmployeeCode}} | <b class="link"> {{item.EmployeeName}}</b>
+                                </h5>
+                                <p class="col-md-12 setup-step-description font-small">
+                                  Cost Code : {{item.CostCode}} - Work Days : {{item.WorkDays}}
+                                </p>
+
+                              </div>
+                            </div>
+                            <div class="media-right vertical-align-middle link-to-details">
+
+                              <span class="text-success font-semibold">
+                                <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"
+                                  class="org-setup-status-icon completed">
+                                  <rect class="legend-rect" y="2" width="100" height="100" rx="50" fill="inherit"
+                                    stroke="inherit" transform="translate(0 90)"></rect>
+                                </svg>{{item.DOJ}}
+                              </span>
+                            </div>
+                          </div>
+
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="pull-left left-margin-btn">
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
+    
+
+<div id="popup_markFnf" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+data-keyboard="false" aria-labelledby="popup_markFnf" aria-hidden="true">
+<div style="display: block;" class="modal fade show animated fadeInDownBig">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header" style="padding: 15px !important;">
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Mark F&F (Employee) </b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL">Mark Employment Contract for Seperation</h6>
+        </div>
+
+        <div class="modal-close" (click)="modal_dismiss_popup_markFnf()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12  col-sm-12  p-r-50">
+            <div class="job-box ">
+              <div class="inbox-message">
+                <ul>
+                  <li *ngFor="let i of processedEMPMarkFnF" style="width: 100% !important;">
+
+                    <div class="media">
+                      <div class="media-left vertical-align-middle">
+                        <div class="setup-icon-section">
+                          <svg version="1.1" x="0" y="0" viewBox="0 0 512 512" xml:space="preserve"
+                            class="icon setup-icon vertical-align-middle"
+                            style="width: 22px;display: block;margin: 0 auto;margin-top: 11px;">
+                            <path fill="#0a609eeb"
+                              d="M509.8 452.9V490c0 11.6-9.4 21.1-21.1 21.1l-465.5.8c-5.6 0-11-2.2-14.9-6.2-4-4-6.2-9.3-6.2-14.9v-37.9c0-44.9 17.4-87.1 49-119 31.6-31.9 73.7-49.7 118.5-50.1H339c45.5-.5 88.3 16.9 120.7 48.9 32.3 32 50.1 74.7 50.1 120.2z">
+                            </path>
+                            <path fill="#DEEFFF"
+                              d="M255.8 428.8c-11.7 0-21.1-9.5-21.1-21.1V283.8h42.2v123.9c0 11.7-9.5 21.1-21.1 21.1z">
+                            </path>
+                            <path fill="#0a609eeb"
+                              d="M375.7 119.5c0 65.9-53.8 119.4-120 119.4-66.1 0-120-53.6-120-119.4S189.6.1 255.8.1c66.1 0 119.9 53.6 119.9 119.4z">
+                            </path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="media-body">
+                        <div class="pull-left">
+                          <h5 class="step-header col-md-12" style="font-weight: 500;">
+                            {{i.EmployeeName}} <b *ngIf="i.PayRunId > 0" class="link" (click)="linkForPayrun(i)">
+                              &nbsp; PayRun# {{i.PayRunId}} <i class="fa fa-external-link" aria-hidden="true"></i></b>
+                          </h5>
+                          <p class="col-md-12 setup-step-description font-small" *ngIf="i.ErrorMessage">
+                            {{i.ErrorMessage}}
+                          </p>
+                          <p class="col-md-12 setup-step-description font-small" *ngIf="!i.ErrorMessage">
+                            This employee marked as contract seperation
+                          </p>
+                        </div>
+                      </div>
+                      <div class="media-right vertical-align-middle link-to-details">
+                        <span class="text-pending font-semibold" *ngIf="i.ErrorMessage">
+                          <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"
+                            class="org-setup-status-icon pending">
+                            <rect class="legend-rect" y="2" width="100" height="100" rx="50" fill="inherit"
+                              stroke="inherit" transform="translate(0 90)"></rect>
+                          </svg>Failed
+                        </span>
+                        <span class="text-success font-semibold" *ngIf="!i.ErrorMessage">
+                          <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"
+                            class="org-setup-status-icon completed">
+                            <rect class="legend-rect" y="2" width="100" height="100" rx="50" fill="inherit"
+                              stroke="inherit" transform="translate(0 90)"></rect>
+                          </svg>Success
+                        </span>
+                      </div>
+                    </div>
+
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="pull-left left-margin-btn">
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<div id="popup_contractSeparation" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+data-keyboard="false" aria-labelledby="popup_contractSeparation" aria-hidden="true">
+<div style="display: block;" class="modal fade show animated fadeInDownBig">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b> Mark F&F </b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL">Mark Employment Contract for Seperation</h6>
+        </div>
+
+        <div class="modal-close" (click)="modal_dismiss_contractSeparation()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12  col-sm-12  p-r-50">
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+              <label class="form-label"> Resignation Date</label>
+              <input type="text" placeholder="Resignation Date" class="form-control"
+              [(ngModel)]="markFnf_ResignationDate" [maxDate]="markfnf_maxDate" [minDate]="markfnf_minDate"  bsDatepicker placement="bottom" readonly  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+              <label class="form-label"> LWD </label>
+              <input type="text" placeholder="Last Working Date" class="form-control"
+              [(ngModel)]="markFnf_LastWorkingDate"  [maxDate]="markfnf_maxDate" [minDate]="markfnf_minDate" bsDatepicker placement="bottom" readonly  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+              <label class="form-label"> Reason </label>
+              <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="remarks" [(ngModel)]="markfnf_Reason"
+              ></textarea>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="pull-right right-margin-btn">
+          <div class="text-right">
+            <ul class="list-inline">
+              <li class="list-inline-item"> <button class="btn btn-default" type="button"
+                  (click)="modal_dismiss_contractSeparation()">
+                  <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                  Cancel</button>
+              </li>
+              <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit"
+                  id="btnSubmit" (click)="confirmMarkFnF()">
+                  <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                      Confirm
+                    </span></div>
+                </button></li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<div id="popup_TaxDetailsRemarkshistory" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+data-keyboard="false" aria-labelledby="popup_TaxDetailsRemarkshistory" aria-hidden="true">
+<div style="display: block;" class="modal fade show animated fadeInDownBig">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header" style="padding: 15px !important;">
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Tax Details Remarks History</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL">{{ClientName}} - {{ClientContractName}}</h6>
+        </div>
+
+        <div class="modal-close" (click)="close_taxDetailsRemarkshistory()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12  col-sm-12  p-r-50">
+            <div class="job-box ">
+              <div class="inbox-message">
+                <ul>
+                  <li *ngFor="let i of lstImportHistory" style="width: 100% !important;">
+
+                    <h5 class="step-header col-md-12" style="font-weight: 500;margin-bottom: 2rem;">
+                      Imported By : {{i.ImportedBy}} | <b> Imported On : {{i.ImportedOn | date:'d MMMM , y'}} | No
+                        of Records : {{i.ImportedRecords}}</b>
+                    </h5>
+
+                    <div class="media" *ngFor="let item of i.OutData">
+                      <div class="media-left vertical-align-middle">
+                        <div class="setup-icon-section">
+                          <svg version="1.1" x="0" y="0" viewBox="0 0 512 512" xml:space="preserve"
+                            class="icon setup-icon vertical-align-middle"
+                            style="width: 22px;display: block;margin: 0 auto;margin-top: 11px;">
+                            <path fill="#0a609eeb"
+                              d="M509.8 452.9V490c0 11.6-9.4 21.1-21.1 21.1l-465.5.8c-5.6 0-11-2.2-14.9-6.2-4-4-6.2-9.3-6.2-14.9v-37.9c0-44.9 17.4-87.1 49-119 31.6-31.9 73.7-49.7 118.5-50.1H339c45.5-.5 88.3 16.9 120.7 48.9 32.3 32 50.1 74.7 50.1 120.2z">
+                            </path>
+                            <path fill="#DEEFFF"
+                              d="M255.8 428.8c-11.7 0-21.1-9.5-21.1-21.1V283.8h42.2v123.9c0 11.7-9.5 21.1-21.1 21.1z">
+                            </path>
+                            <path fill="#0a609eeb"
+                              d="M375.7 119.5c0 65.9-53.8 119.4-120 119.4-66.1 0-120-53.6-120-119.4S189.6.1 255.8.1c66.1 0 119.9 53.6 119.9 119.4z">
+                            </path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="media-body">
+                        <div class="pull-left">
+                          <h5 class="step-header col-md-12" style="font-weight: 500;">
+                            {{item.EmployeeCode}} | <b class="link"> {{item.EmployeeName}}</b>
+                          </h5>
+                          <p class="col-md-12 setup-step-description font-small">
+                            Cost Code : {{item.CostCode}} - Work Days : {{item.WorkDays}}
+                          </p>
+
+                        </div>
+                      </div>
+                      <div class="media-right vertical-align-middle link-to-details">
+
+                        <span class="text-success font-semibold">
+                          <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"
+                            class="org-setup-status-icon completed">
+                            <rect class="legend-rect" y="2" width="100" height="100" rx="50" fill="inherit"
+                              stroke="inherit" transform="translate(0 90)"></rect>
+                          </svg>{{item.DOJ}}
+                        </span>
+                      </div>
+                    </div>
+
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="pull-left left-margin-btn">
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>

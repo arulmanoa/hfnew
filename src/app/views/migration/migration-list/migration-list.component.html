@@ -1,0 +1,204 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="">
+
+            <app-loading-screen></app-loading-screen>
+
+
+            <div class="row m-t-b-10">
+                <div class="col-lg-6">
+                    <ul class="list-inline">
+
+                        <div class="showGirdActionButtons">
+                            <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                                <div class="massOperationsPanel d-i-b">
+
+
+                                    <!-- <button class="btn btn-default btn-sm m-r-sm ">
+                                        <i class="mdi mdi-delete-forever"></i> Delete
+                                    </button> -->
+                                </div>
+                            </div>
+                        </div>
+                    </ul>
+
+                </div>
+                <!--end col-->
+                <div class="col-lg-6 text-right">
+                    <div class="text-right">
+                        <ul class="list-inline">
+                            <li class="list-inline-item" *ngIf="selectedmigrationRecords?.length > 0"> <button [disabled]="!disableBtn" type="button" class="btn btn-primary" (click)="releaseAL()"><i *ngIf="disableBtn" class="mdi mdi-library-plus m-r-xs"></i> <span *ngIf="disableBtn"> Migrate </span> <div *ngIf="!disableBtn" class="spinner-grow spinner-grow-sm" role="status">
+                                <span class="sr-only">Loading...</span>
+                              </div>
+                                </button></li>
+
+                            <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="doRefresh()"><i class="mdi mdi-refresh m-r-xs"></i> Refresh</button></li>
+
+                        </ul>
+                    </div>
+                </div>
+                <!--end col-->
+            </div>
+            <!-- end row  -->
+            <br>
+
+
+
+
+
+
+            <div class="docs-page" *ngIf="spinner && !empty_data">
+            <div class="Error full-screen">
+                <div><img src="assets/Images/folder.svg" style="height: 6rem;"> </div>
+                <h1><span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"> </span>
+                </h1>
+                <p>Please wait while we set things up for you</p>
+            </div>
+        </div>
+        
+        <div class="content m-b report-content" *ngIf="!spinner && !empty_data">
+           <angular-slickgrid gridId="grdmigration" [columnDefinitions]="migrationColumnDefinitions" [gridOptions]="migrationGridOptions" [dataset]="migrationDataset" (onAngularGridCreated)="migrationGridReady($event)" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                        gridWidth="100%">
+                    </angular-slickgrid>
+
+        </div>
+
+        <div class="docs-page" *ngIf="empty_data">
+            <div class="Error full-screen">
+                <div><img src="assets/Images/antenna.svg" style="height: 6rem;"> </div>
+                <h1>Uh ho
+                </h1>
+                <p>No data found. Something went wrong</p>
+            </div>
+        </div>
+
+
+       
+
+
+
+
+    </div>
+</div>
+
+
+
+
+<div id="popup_release_AL" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_release_AL" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 700px !important">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-xs-11">
+                        <h4 class="modal-title" id="popup_release_AL">Employee Transition</h4>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="overflow-y: scroll !important;">
+                    <div id="overlay">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div *ngFor="let item of selectedmigrationRecords" class="al-list">
+                            <div class="media al-list">
+                                <div class="media-body align-self-center">
+                                    <h4 class="font-14 m-0"><b>{{item.CandidateName | uppercase}} ... </b> {{item.ClientName}} </h4><small class="text-muted">{{item.PrimaryEmail}} -
+                                        {{item.PrimaryMobile}}</small>
+                                </div>
+
+                                <span class="badge badge-success" style="width: 15%;" *ngIf="item.Status == 1"> Success</span>
+                                <span class="badge badge-danger" style="width: 15%;" *ngIf="item.Status == 0 || item.Status == 2"> Failed </span>
+
+
+                            </div>
+
+                            <p style="text-align: center;color: #1ecab8;font-style: italic;" class="help-text" *ngIf="item.Message && item.Status == 1">( {{item.Message}} ) </p>
+                            <p style="text-align: center;color: #f1646c;font-style: italic;" class="help-text" *ngIf="item.Message && item.Status == 0 || item.Status == 2">( {{item.Message}} ) </p>
+
+                            <hr style="width: 100%;">
+                        </div>
+
+
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-12" *ngIf="!isSuccessMigration">
+                            <label style="padding-bottom: 5px;"> Remarks <span class="required"> *</span></label>
+                            <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="ALRemarks" id="ALRemarks"></textarea>
+                        </div>
+                        <!-- 
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label style="padding-bottom: 5px;">AL Release <span class="required"> *</span> </label>
+                            <label class="container" style="padding-left: 0px;">
+                                <input type="checkbox" class="form-control" [(ngModel)]="isALRelease">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div> -->
+
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: 0px solid #dee2e6;">
+                    <div *ngIf="!isLoading && !isSuccessMigration">
+                        <div class="pull-right">
+                            <button class="btn btn-default pull-right" type="button" (click)="modal_dismiss()"> <i
+                                    class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel</button>
+
+                            <button class="btn btn-primary" (click)="confirmRelease()"> <i
+                                    class="mdi mdi-clipboard-check" style="cursor:pointer"></i> Confirm</button> &nbsp;
+                        </div>
+                    </div>
+
+                    <div *ngIf="isSuccessMigration">
+                        <div class="pull-right">
+
+                            <button class="btn btn-primary" (click)="Continue()"> <i
+                                        class="mdi mdi-checkbox-multiple-marked-circle" style="cursor:pointer"></i> Ok, Continue</button> &nbsp;
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center pull-right" *ngIf="isLoading">
+                        <strong class="text-right"> Processing... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popup_previewLetter" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_previewLetter" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- <div class="modal-body"> -->
+                <div class="wrapper">
+                    <h6 class="h6-c"> Appointment Letter
+
+                        <a class="icon btn-icon pull-right m-l-n-xxxl chrome-back-btn m-t-n-sm" data-dismiss="modal" (click)="modal_dismiss()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+                    </h6>
+                    <!-- <p>Resize me in your browser or pull me up in different size screen to see the magic of the <a href="https://benmarshall.me/resize-videos-proportionally-intrinsic-ratios/">intrinsic ratio technique</a>.</p> -->
+                    <div class="iframe-container" *ngIf="iframeContent == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                        <img src="assets/Images/Ciel.png" class="imgc">
+                        <span>
+                                <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                                    &nbsp; Please wait...</i>
+                                <span class="sr-only">Please wait...</span>
+                        </span>
+                    </div>
+
+                    <div class="iframe-container" *ngIf="iframeContent != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+                        <iframe [src]="iframeContent" frameborder="0" scrolling="no"></iframe>
+                    </div>
+                </div>
+                <!-- </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>

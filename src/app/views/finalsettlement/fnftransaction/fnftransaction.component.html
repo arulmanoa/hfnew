@@ -1,0 +1,1338 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="docs-page" *ngIf="!outputPageLayout">
+      <div class="Error full-screen">
+        <div><img src="assets/Images/designer-life.svg" style="height: 6rem;"> </div>
+        <h1>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"> </span>
+        </h1>
+        <p>Please wait while we set things up for you</p>
+      </div>
+    </div>
+    <ng-container *ngIf="roleCode != 'RegionalHR'">
+      <app-searchbar-view [Content]="'PayTransaction'" *ngIf="!searchPanel && outputPageLayout && businessType === 3"
+        style="margin-top: -15px;" [searchConfiguration]="searchConfiguration"
+        [disableSearchButton]="activeTabName == 'Add' ? diableSearchForAdd : disableSearchForProcess"
+        (searchButtonClicked)="onClickingSearchButton($event)" (isClose)="isCloseContent($event)">
+      </app-searchbar-view>
+
+      <app-searchbar-view *ngIf="!searchPanel && outputPageLayout && businessType !== 3"
+        [searchConfiguration]="searchConfiguration" (searchButtonClicked)="onClickingSearchButton($event)"
+        (isClose)="isCloseContent($event)">
+      </app-searchbar-view>
+    </ng-container>
+
+    <div class="content m-b report-content animated fadeInDown int-header-content-panel"
+      *ngIf="searchPanel && businessType === 3">
+      <!-- <label class="form-label searchbar-label">Search Criteria</label> -->
+      <span class="es-text">
+        <span *ngIf="searchObject !== undefined">
+          <b> {{searchObject.ClientName}} </b> <span *ngIf="searchObject.ContractName != null"> &nbsp; | &nbsp;
+            {{searchObject.ContractName}} </span> <span *ngIf="searchObject.TeamName != null"> &nbsp; | &nbsp;
+            {{searchObject.TeamName}} </span> <span *ngIf="searchObject.PayPeriodName != null">&nbsp; | &nbsp;
+            {{searchObject.PayPeriodName}} </span>
+        </span>
+        <span *ngIf="searchObject === undefined"> No record were found! Please try after sometimes. </span>
+        <button class="btn btn-default btn-bold" style="margin-top: -5px;float: right; margin-left: 20px;"
+          (click)="openSearch()" tooltip="Custom filter" data-original-title="" title="">
+          <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i>
+        </button>
+      </span>
+    </div>
+
+    <div class="content m-b report-content animated fadeInDown int-header-content-panel"
+      *ngIf="searchPanel && businessType !== 3 && roleCode != 'RegionalHR'">
+      <!-- <label class="form-label searchbar-label">Search Criteria</label> -->
+      <span class="es-text">
+        <span *ngIf="searchObject !== undefined">
+          <b> <span *ngIf="searchObject.TeamName != null"> {{searchObject.TeamName}} </span> </b>
+          <span *ngIf="searchObject.PayPeriodName != null">&nbsp; | &nbsp; {{searchObject.PayPeriodName}} </span>
+          <span *ngIf="searchObject === undefined"> No record were found! Please try after sometimes. </span>
+        </span>
+        <button class="btn btn-default btn-bold" style="margin-top: -5px;float: right; margin-left: 20px;"
+          (click)="openSearch()" tooltip="Custom filter" data-original-title="" title="">
+          <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i>
+        </button>
+      </span>
+    </div>
+
+    <!-- <div class="text-center ma-5" *ngIf="spinner && searchPanel">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+          aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div> -->
+
+    <div class="content m-b report-content animated fadeInDown" style="margin-top: -10px;margin-bottom: 10px;"
+      *ngIf="searchPanel">
+      <div *ngIf="clientIdSME != 1988 && !this.isAllenClient">
+        <ngb-tabset (tabChange)="beforeTabChange($event)" [(activeId)]="activeTabName">
+          <ngb-tab id="Add" [disabled]="spinner">
+            <ng-template ngbTabTitle><i class="fa fa-plus-square-o"
+                aria-hidden="true"></i>&nbsp;&nbsp;Add/Edit</ng-template>
+            <ng-template ngbTabContent>
+
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+              <div class="row" style="margin-top: 10px" *ngIf="!spinner">
+
+                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                  <div class="text-left">
+                    <ul class="list-inline">
+
+                      <li class="list-inline-item">
+                        <button class="btn btn-danger btn-bold" (click)="revokeFnF('add')"
+                          *ngIf="roleCode != 'PayrollOps'" tooltip-placement="bottom"
+                          tooltip="Cancel FnF and Make Employee Active" data-original-title="" title="">
+                          <i class="mdi mdi-cancel font-size-md"></i> Revoke Separation
+                        </button>
+                      </li>
+
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                  <div class="text-right">
+                    <ul class="list-inline">
+
+
+
+                      <li class="list-inline-item"><button type="button" class="btn btn-primary"
+                          (click)="chooseEmployee()">
+                          <i class="mdi mdi-account-multiple-outline  m-r-xs"></i> Choose Employee
+                        </button>
+                      </li>
+
+
+                      <li class="list-inline-item">
+                        <button type="button" tooltip="Refresh Records" class="btn btn-primary-custom"
+                          (click)="refreshAddDataset()">
+                          <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                        </button>
+                      </li>
+
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="!spinner && isAddDSDuplicateEntry">
+                <div class="col-lg-12 text-center">
+                  <ngb-alert [dismissible]="false">
+                    <strong>The list item could not be displayed or updated because duplicate values were found in the
+                      list. Please reach out to your Support Administrator. </strong>
+                  </ngb-alert>
+                </div>
+              </div>
+
+
+              <div class="" *ngIf="addPageLayout && !spinner && !isAddDSDuplicateEntry" style="margin-top: 10px">
+                <angular-slickgrid gridId="add" [columnDefinitions]="addColumnDefinitions"
+                  [gridOptions]="addGridOptions" [dataset]="addDataset"
+                  (onAngularGridCreated)="addAngularGridReady($event)" gridWidth="100%"
+                  (sgOnClick)="onAddCellClicked($event.detail.eventData, $event.detail.args)"
+                  (sgOnSelectedRowsChanged)="onAddSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+                </angular-slickgrid>
+              </div>
+
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="Process" [disabled]="spinner">
+            <ng-template ngbTabTitle><i class="fa fa-plus-square-o"
+                aria-hidden="true"></i>&nbsp;&nbsp;Process</ng-template>
+            <ng-template ngbTabContent>
+              <ngb-tabset (tabChange)="onChange_Processtabset($event)" [(activeId)]="process_ActiveTabName">
+                <ngb-tab id="PAYINPUTS" [disabled]="spinner">
+                  <ng-template ngbTabTitle>&nbsp;
+                    <i class="fa fa-external-link" aria-hidden="true"></i> &nbsp;Input/Output
+                  </ng-template>
+                  <ng-template ngbTabContent>
+
+                    <div class="text-center ma-5" *ngIf="spinner">
+                      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                          aria-hidden="true"></span>
+                        Please wait...
+                      </button>
+                    </div>
+
+                    <div class="row" *ngIf="!spinner" style="margin-top: 10px;margin-bottom: 10px;">
+                      <div class="col-lg-4 col-md-4 col-xs-12 col-xxs-12 col-12 text-left">
+                        <div class="text-left">
+                          <ul class="list-inline">
+                            <li class="list-inline-item"><button type="button" class="btn btn-primary-custom"
+                                (click)="do_process_TimeCard()">
+                                <i class="mdi mdi-play  m-r-xs"></i>Process
+                              </button></li>
+
+                            <li class="list-inline-item">
+
+                              <button class="btn btn-danger btn-bold" (click)="revokeFnF('output')"
+                                tooltip-placement="bottom" tooltip="Cancel FnF and Make Employee Active"
+                                data-original-title="" title="">
+                                <i class="mdi mdi-cancel font-size-md"></i> Revoke FnF
+                              </button>
+                            </li>
+
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-8 col-md-8 col-xs-12 col-xxs-12 col-12 text-right">
+                        <div class="text-right">
+                          <ul class="list-inline">
+
+
+                            <li class="list-inline-item animated slideInRight" *ngIf="businessType === 3">
+                              <button type="button" class="btn btn-primary" (click)="submitForVerification()">
+                                <i class="mdi mdi-checkbox-multiple-marked-outline  m-r-xs"></i> Submit to QC
+                              </button>
+                            </li>
+
+                            <li class="list-inline-item" *ngIf="businessType === 3">
+                              <button type="button" class="btn btn-primary-custom"
+                                (click)="do_initiate_Sale_order('PAYINPUTS')">
+                                <i class="mdi mdi-tag-plus  m-r-xs"></i> Choose Employees for Pay Run
+                              </button>
+                            </li>
+
+                            <li class="list-inline-item" *ngIf="businessType !== 3">
+                              <button type="button" class="btn btn-primary-custom" (click)="do_Create_PayRun()">
+                                <i class="mdi mdi-checkbox-multiple-marked-outline  m-r-xs"></i> Initiate Pay Run
+                              </button>
+                            </li>
+
+                            <li class="list-inline-item">
+                              <button type="button" tooltip="Refresh Processing Status of records"
+                                class="btn btn-primary-custom" (click)="refreshOuputDataset()">
+                                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                              </button>
+                            </li>
+
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="!spinner && isOutputDuplicateEntry">
+                      <div class="col-lg-12 text-center">
+                        <ngb-alert [dismissible]="false">
+                          <strong>The list item could not be displayed or updated because duplicate values were found in
+                            the list. Please reach out to your Support Administrator. </strong>
+                        </ngb-alert>
+                      </div>
+                    </div>
+
+                    <div class="" *ngIf="outputPageLayout && !spinner && !isOutputDuplicateEntry">
+                      <angular-slickgrid gridId="output" [columnDefinitions]="outputColumnDefinitions"
+                        [gridOptions]="outputGridOptions" [dataset]="outputDataset"
+                        (onAngularGridCreated)="outputAngularGridReady($event)" gridWidth="100%"
+                        (sgOnClick)="onOuputCellClicked($event.detail.eventData, $event.detail.args)"
+                        (sgOnSelectedRowsChanged)="onOutputSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+                      </angular-slickgrid>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 10px;" *ngIf="!spinner">
+
+                      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                        <div class="text-left">
+                          <ul class="list-inline">
+                            <li class="list-inline-item">
+                              <button type="button" class="btn btn-default" (click)="downloadPaysheet()">
+                                <i class="mdi mdi-download  m-r-xs"></i> Download Paysheet
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                        <div class="text-right">
+                          <ul class="list-inline">
+
+
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab id="PAYRUN" [disabled]="spinner">
+                  <ng-template ngbTabTitle>&nbsp; <i class="fa fa-cube" aria-hidden="true"></i> &nbsp; Pay Run
+                  </ng-template>
+                  <ng-template ngbTabContent>
+
+                    <div class="text-center ma-5" *ngIf="spinner">
+                      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                          aria-hidden="true"></span>
+                        Please wait...
+                      </button>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 10px;" *ngIf=" !spinner">
+
+                      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                        <div class="text-left">
+                          <ul class="list-inline">
+
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+
+                        <div class="text-right">
+                          <ul class="list-inline">
+
+                            <li class="list-inline-item">
+                              <button type="button" class="btn btn-primary-custom"
+                                (click)="do_initiate_Sale_order('PAYRUN')">
+                                <i class="mdi mdi-tag-plus  m-r-xs"></i> Initiate Pay Out
+                              </button>
+                            </li>
+
+
+                          </ul>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row" *ngIf="!spinner && isPayRunDuplicateEntry">
+                      <div class="col-lg-12 text-center">
+                        <ngb-alert [dismissible]="false">
+                          <strong>The list item could not be displayed or updated because duplicate values were found in
+                            the list. Please reach out to your Support Administrator. </strong>
+                        </ngb-alert>
+                      </div>
+                    </div>
+
+                    <div *ngIf="!spinner && !isPayRunDuplicateEntry">
+                      <angular-slickgrid gridId="payrun" [columnDefinitions]="payrunColumnDefinitions"
+                        [gridOptions]="payrunGridOptions" [dataset]="payrunDataset" gridWidth="100%"
+                        (sgOnSelectedRowsChanged)="onpayrunSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                        (sgOnClick)="onpayrunCellClicked($event.detail.eventData, $event.detail.args)"
+                        (onAngularGridCreated)="payrunAngularGridReady($event)">
+                      </angular-slickgrid>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+              </ngb-tabset>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div>
+
+      <div *ngIf="clientIdSME == 1988 && this.isAllenClient">
+        <div *ngIf="roleCode == 'RegionalHR'">
+          <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+              <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+              Please wait...
+            </button>
+          </div>
+
+          <div class="row" style="margin-top: 10px" *ngIf="!spinner">
+
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+              <div class="text-left">
+                <ul class="list-inline">
+
+                  <li class="list-inline-item">
+                    <button class="btn btn-danger btn-bold" (click)="revokeFnF('add')" *ngIf="roleCode != 'PayrollOps'"
+                      tooltip-placement="bottom" tooltip="Cancel FnF and Make Employee Active" data-original-title=""
+                      title="">
+                      <i class="mdi mdi-cancel font-size-md"></i> Revoke Separation
+                    </button>
+                  </li>
+                  <!-- <li class="list-inline-item"><button type="button" class="btn btn-primary" [disabled]="addSelectedItems != undefined && (addSelectedItems.length == 0 || addSelectedItems.length > 1)" (click)="viewEmployeeStatus()" *ngIf="roleCode == 'RegionalHR'" ><i class="mdi mdi-account-multiple-outline  m-r-xs"></i> View Employee Status
+                </button>
+              </li> -->
+
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+              <div class="text-right">
+                <ul class="list-inline">
+
+                  <li class="list-inline-item"><button type="button" class="btn btn-primary"
+                      (click)="doOpenEmployeePreviewScreen()">
+                      <i class="mdi mdi-eye  m-r-xs"></i> View Details
+                    </button>
+                  </li>
+
+                  <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="chooseEmployee()">
+                      <i class="mdi mdi-account-multiple-outline  m-r-xs"></i> Choose Employee
+                    </button>
+                  </li>
+
+
+                  <li class="list-inline-item">
+                    <button type="button" tooltip="Refresh Records" class="btn btn-primary-custom"
+                      (click)="refreshAddDataset()">
+                      <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                    </button>
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="!spinner && isAddDSDuplicateEntry">
+            <div class="col-lg-12 text-center">
+              <ngb-alert [dismissible]="false">
+                <strong>The list item could not be displayed or updated because duplicate values were found in the list.
+                  Please reach out to your Support Administrator. </strong>
+              </ngb-alert>
+            </div>
+          </div>
+
+
+          <div class="" *ngIf="addPageLayout && !spinner && !isAddDSDuplicateEntry" style="margin-top: 10px">
+            <angular-slickgrid gridId="add" [columnDefinitions]="addColumnDefinitions" [gridOptions]="addGridOptions"
+              [dataset]="addDataset" (onAngularGridCreated)="addAngularGridReady($event)" gridWidth="100%"
+              (sgOnClick)="onAddCellClicked($event.detail.eventData, $event.detail.args)"
+              (sgOnSelectedRowsChanged)="onAddSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+            </angular-slickgrid>
+          </div>
+        </div>
+
+        <div *ngIf="roleCode == 'PayrollOps'">
+          <ngb-tabset (tabChange)="onChange_Processtabset($event)" [(activeId)]="process_ActiveTabName">
+            <ngb-tab id="PAYINPUTS" [disabled]="spinner">
+              <ng-template ngbTabTitle>&nbsp;
+                <i class="fa fa-external-link" aria-hidden="true"></i> &nbsp;Input/Output
+              </ng-template>
+              <ng-template ngbTabContent>
+
+                <div class="text-center ma-5" *ngIf="spinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+
+                <div class="row" *ngIf="!spinner" style="margin-top: 10px;margin-bottom: 10px;">
+                  <div class="col-lg-4 col-md-4 col-xs-12 col-xxs-12 col-12 text-left">
+                    <div class="text-left">
+                      <ul class="list-inline">
+                        <li class="list-inline-item"><button type="button" class="btn btn-primary-custom"
+                            (click)="do_process_TimeCard()">
+                            <i class="mdi mdi-play  m-r-xs"></i>Process
+                          </button></li>
+
+                        <li class="list-inline-item">
+
+                          <button class="btn btn-danger btn-bold" *ngIf="roleCode != 'PayrollOps'"
+                            (click)="revokeFnF('output')" tooltip-placement="bottom"
+                            tooltip="Cancel FnF and Make Employee Active" data-original-title="" title="">
+                            <i class="mdi mdi-cancel font-size-md"></i> Revoke FnF
+                          </button>
+                        </li>
+
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-8 col-md-8 col-xs-12 col-xxs-12 col-12 text-right">
+                    <div class="text-right">
+                      <ul class="list-inline">
+
+                        <li class="list-inline-item animated slideInRight" *ngIf="businessType === 3">
+                          <button type="button" class="btn btn-primary" (click)="submitForVerification()">
+                            <i class="mdi mdi-checkbox-multiple-marked-outline  m-r-xs"></i> Submit to QC
+                          </button>
+                        </li>
+
+                        <li class="list-inline-item" *ngIf="businessType === 3">
+                          <button type="button" class="btn btn-primary-custom"
+                            (click)="do_initiate_Sale_order('PAYINPUTS')">
+                            <i class="mdi mdi-tag-plus  m-r-xs"></i> Choose Employees for Pay Run
+                          </button>
+                        </li>
+
+                        <li class="list-inline-item" *ngIf="businessType !== 3">
+                          <button type="button" class="btn btn-primary-custom" (click)="do_Create_PayRun()">
+                            <i class="mdi mdi-checkbox-multiple-marked-outline  m-r-xs"></i> Initiate Pay Run
+                          </button>
+                        </li>
+
+                        <li class="list-inline-item">
+                          <button type="button" tooltip="Refresh Processing Status of records"
+                            class="btn btn-primary-custom" (click)="refreshOuputDataset()">
+                            <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                          </button>
+                        </li>
+
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="!spinner && isOutputDuplicateEntry">
+                  <div class="col-lg-12 text-center">
+                    <ngb-alert [dismissible]="false">
+                      <strong>The list item could not be displayed or updated because duplicate values were found in the
+                        list. Please reach out to your Support Administrator. </strong>
+                    </ngb-alert>
+                  </div>
+                </div>
+
+                <div class="" *ngIf="outputPageLayout && !spinner && !isOutputDuplicateEntry">
+                  <angular-slickgrid gridId="output" [columnDefinitions]="outputColumnDefinitions"
+                    [gridOptions]="outputGridOptions" [dataset]="outputDataset"
+                    (onAngularGridCreated)="outputAngularGridReady($event)" gridWidth="100%"
+                    (sgOnClick)="onOuputCellClicked($event.detail.eventData, $event.detail.args)"
+                    (sgOnSelectedRowsChanged)="onOutputSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+                  </angular-slickgrid>
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;" *ngIf="!spinner">
+
+                  <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                    <div class="text-left">
+                      <ul class="list-inline">
+                        <li class="list-inline-item">
+                          <button type="button" class="btn btn-default" (click)="downloadPaysheet()">
+                            <i class="mdi mdi-download  m-r-xs"></i> Download Paysheet
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                    <div class="text-right">
+                      <ul class="list-inline">
+
+
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="PAYRUN" [disabled]="spinner">
+              <ng-template ngbTabTitle>&nbsp; <i class="fa fa-cube" aria-hidden="true"></i> &nbsp; Pay Run
+              </ng-template>
+              <ng-template ngbTabContent>
+
+                <div class="text-center ma-5" *ngIf="spinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;" *ngIf=" !spinner">
+
+                  <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                    <div class="text-left">
+                      <ul class="list-inline">
+
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+
+                    <div class="text-right">
+                      <ul class="list-inline">
+
+                        <li class="list-inline-item">
+                          <button type="button" class="btn btn-primary-custom"
+                            (click)="do_initiate_Sale_order('PAYRUN')">
+                            <i class="mdi mdi-tag-plus  m-r-xs"></i> Initiate Pay Out
+                          </button>
+                        </li>
+
+
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row" *ngIf="!spinner && isPayRunDuplicateEntry">
+                  <div class="col-lg-12 text-center">
+                    <ngb-alert [dismissible]="false">
+                      <strong>The list item could not be displayed or updated because duplicate values were found in the
+                        list. Please reach out to your Support Administrator. </strong>
+                    </ngb-alert>
+                  </div>
+                </div>
+
+                <div *ngIf="!spinner && !isPayRunDuplicateEntry">
+                  <angular-slickgrid gridId="payrun" [columnDefinitions]="payrunColumnDefinitions"
+                    [gridOptions]="payrunGridOptions" [dataset]="payrunDataset" gridWidth="100%"
+                    (sgOnSelectedRowsChanged)="onpayrunSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    (sgOnClick)="onpayrunCellClicked($event.detail.eventData, $event.detail.args)"
+                    (onAngularGridCreated)="payrunAngularGridReady($event)">
+                  </angular-slickgrid>
+                </div>
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+  </div>
+</div>
+
+<nz-drawer [nzVisible]="visible" [nzWidth]="840" nzTitle="Employee Pay Transaction" (nzOnClose)="close()">
+  <nz-descriptions [nzColumn]="2" *ngIf="rowRecord">
+    <nz-descriptions-item nzTitle="Employee Name" [nzSpan]="0.5"><b>{{rowRecord.EmployeeName}}</b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Employee Code" [nzSpan]="0.5"><b>{{rowRecord.EmployeeCode}}</b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="DOJ" [nzSpan]="1"><b>{{rowRecord.DOJ | date: 'MMMM d, y'}}</b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Pay Period" [nzSpan]="1"><b>{{rowRecord.PayPeriod}}</b></nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Team Name" [nzSpan]="0.5"><b>{{rowRecord.TeamName}}</b></nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Payable Days / Workdays" [nzSpan]="0.5"><b> {{rowRecord.Payabledays}} /
+        {{rowRecord.Workdays}} </b></nz-descriptions-item>
+
+  </nz-descriptions>
+  <button nzType="primary" class="pull-right mb-1" (click)="previewSlips(rowRecord.PaytransactionId)" nz-button>
+    Preview Settlement
+  </button>
+  <nz-divider></nz-divider>
+  <div *ngIf="Payitems">
+    <!-- <nz-divider></nz-divider> -->
+    <nz-table nzSize="small" [nzData]="Payitems" [nzTemplateMode]="false" [nzShowPagination]=false>
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Actual Amount</th>
+          <th>Earned Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of Payitems"
+          [ngStyle]="{'background': data.ProductTypeCode =='Total'  ? '#cbe2f7' : '#FFF' }">
+          <td>{{data.ProductDisplayName}}</td>
+          <td style="text-align: right !important;">{{data.ActualAmount | number : '1.2-2'}}</td>
+          <td style="text-align: right !important;">{{data.PayTotal | number : '1.2-2'}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <nz-divider></nz-divider>
+
+  <div class="row" style="margin-bottom: 10px;" *ngIf="outputPageLayout  && !spinner">
+
+    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+      <div class="text-left">
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <button type="button" class="btn btn-default" (click)="downloadExcel()">
+              <i class="mdi mdi-download  m-r-xs"></i> Download Excel
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+      <div class="text-right">
+        <ul class="list-inline">
+
+
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+</nz-drawer>
+
+<nz-drawer [nzVisible]="showEmpStatusDrawer" [nzWidth]="640" nzIcon="user" nzTitle="Employee Status View"
+  (nzOnClose)="closeEmpStatusDrawer()">
+  <div class="row">
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Employee Code</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.EmployeeCode != undefined && selectedEmpStatusView.EmployeeCode
+        != null ? selectedEmpStatusView.EmployeeCode : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Employee Name</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.EmployeeName != undefined && selectedEmpStatusView.EmployeeName
+        != null ? selectedEmpStatusView.EmployeeName : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Designation</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.Designation != undefined && selectedEmpStatusView.Designation !=
+        null ? selectedEmpStatusView.Designation : '-' }}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Date of Joining</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.DOJ != undefined && selectedEmpStatusView.DOJ != null ?
+        selectedEmpStatusView.DOJ : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Location</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.Location != undefined && selectedEmpStatusView.Location != null ?
+        selectedEmpStatusView.Location : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Reporting To</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.RequestedRelievingDate != undefined &&
+        selectedEmpStatusView.RequestedRelievingDate != null ? selectedEmpStatusView.RequestedRelievingDate : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Employement Type</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.EmploymentType != undefined &&
+        selectedEmpStatusView.EmploymentType ? selectedEmpStatusView.EmploymentType: '-'}}</p>
+      <!-- employment type needs to be send -->
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Resigned On</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.ResignedOn != undefined && selectedEmpStatusView.ResignedOn !=
+        null ? selectedEmpStatusView.ResignedOn: '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Requested Relieving Date</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.RequestedRelievingDate != undefined &&
+        selectedEmpStatusView.RequestedRelivingDate != null ? selectedEmpStatusView.RequestedRelievingDate : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Employee (Reason - Remarks)</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.Reason != undefined && selectedEmpStatusView.Reason != null ?
+        selectedEmpStatusView.Reason : '-' }} - {{ selectedEmpStatusView.Remarks != undefined &&
+        selectedEmpStatusView.Remarks != undefined ? selectedEmpStatusView : '-' }}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Notice Period</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.NoticePeriod != undefined && selectedEmpStatusView.NoticePeriod
+        != null ? selectedEmpStatusView.NoticePerdiod : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Approved Reliving Date</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.ApprovedRelievingDate != undefined &&
+        selectedEmpStatusView.ApprovedRelievingDate ? selectedEmpStatusView.ApprovedRelievingDate : '-'}}</p>
+      <!-- we are not getting -->
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Approver Remarks</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.ManagerRemarks != undefined &&
+        selectedEmpStatusView.ManagerRemarks != null ? selectedEmpStatusView.ManagerRemarks : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label emp-label">Process Status</label>
+      <p class="emp-text-bold">{{selectedEmpStatusView.ProcessStatus != undefined && selectedEmpStatusView.ProcessStatus
+        != null ? selectedEmpStatusView.ProcessStatus : '-'}}</p>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap;">
+      <div class="card alignCard">
+        <h5 class="card-header">Employee</h5>
+        <div class="card-body">
+          <p class="card-text">Resigned On: {{ selectedEmpStatusView.ResignedOn != undefined &&
+            selectedEmpStatusView.ResignedOn != null ? selectedEmpStatusView.ResignedOn: '-' }}</p>
+          <p class="card-text">Status: <span class="text-success">APPROVED</span></p>
+        </div>
+      </div>
+      <i class="fa fa-arrow-right" style="margin: 8% 0" aria-hidden="true"></i>
+
+      <div class="card alignCard">
+        <h5 class="card-header">Manager</h5>
+        <div class="card-body">
+          <p class="card-text">Approved On: {{ selectedEmpStatusView.ApprovedRelievingDate != undefined &&
+            selectedEmpStatusView.ApprovedRelievingDate != null ? selectedEmpStatusView.ApprovedRelievingDate: '-' }}
+          </p>
+          <p class="card-text">Status: <span class="text-success">APPROVED</span>
+        </div>
+      </div>
+
+      <div class="card alignCard border-info">
+        <h5 class="card-header">Regional HR</h5>
+        <div class="card-body">
+          <p class="card-text">Approved On: {{'-'}}</p>
+          <p class="card-text">Status: {{ selectedEmpStatusView.ProcessStatus != undefined &&
+            selectedEmpStatusView.ProcessStatus != null ? selectedEmpStatusView.ProcessStatus : '-' }}</p>
+          <p class="card-text">NDC Status: {{ selectedEmpStatusView.NDCStatus != undefined &&
+            selectedEmpStatusView.NDCStatus != null ? selectedEmpStatusView.NDCStatus : '-' }}</p>
+
+        </div>
+      </div>
+      <i class="fa fa-arrow-right" style="margin: 8% 0" aria-hidden="true"></i>
+
+      <div class="card alignCard">
+        <h5 class="card-header">Corporate HR</h5>
+        <div class="card-body">
+          <p class="card-text">Approved On: {{'-'}}</p>
+          <p class="card-text">Status: {{ '-' }}</p>
+        </div>
+      </div>
+
+      <div class="card alignCard">
+        <h5 class="card-header">Payroll Ops</h5>
+        <div class="card-body">
+          <p class="card-text">Approved On: {{'-'}}</p>
+          <p class="card-text">Status: {{ '-' }}</p>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</nz-drawer>
+
+
+<div id="popup_chooseEmployee" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_chooseEmployee"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="popup_chooseEmployee"> Choose Employee - F&F</h6>
+            <div class="modal-close" (click)="modal_dismiss()"><span class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body" style="min-height: 25rem;">
+
+          <div class="d-flex align-items-center docs-page" *ngIf="isLoading">
+            <strong class="text-center"> Loading... &nbsp;&nbsp;&nbsp;</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+          </div>
+
+          <!-- <app-searchbar-view *ngIf="beforeEmployee" [Content]="'General-small'" [searchConfiguration] ="searchConfiguration"
+          (searchButtonClicked)="onClickingSearchButton($event)"></app-searchbar-view>> -->
+
+
+          <div class="row" *ngIf="beforeEmployee && ActiveEmployeeList?.length > 0">
+
+            <label class="form-label" style="margin-left: 15px; margin-right: 15px;">Start searching for a employee by
+              emp. code or emp. name or client code or client name </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+              placeholder=" &#61442;  Start searching for a employee by emp. code or emp. name or client code or client name"
+              style="margin-left: 15px; margin-right: 15px;margin-bottom: 15px;">
+
+            <div class="col-md-12 transitions" style="padding: 0px;">
+              <div class="job-box ">
+                <div class="inbox-message">
+                  <ul>
+                    <li *ngFor="let i of ActiveEmployeeList  | filter: searchText" style="width: 100% !important;">
+                      <a href="javascript:;" (click)="selectedEmployee($event, i)">
+                        <div class="message-avatar">
+                          <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                        </div>
+                        <div class="message-body">
+                          <div class="message-body-heading">
+                            <h5>{{i.EmployeeName}} - {{i.EmployeeCode}} <span class="pending"
+                                *ngIf="i.isSelected">Selected</span></h5>
+                            <span> <b>DOJ : {{i.DOJ | date : 'MMM d, y' }}</b></span>
+                          </div>
+                          <p>{{i.ClientName}} | {{i.ClientContractCode}}</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="col-12 col-md-12 col-sm-12" *ngIf="!beforeEmployee">
+            <div class="clearfix">
+
+              <div class="row-top" style="margin-top:3rem !important;">
+                <div class="user-wrapper">
+                  <span class="user-image"></span>
+                  <div class="profile-user">
+                    <span class="user"> {{label_EmployeeName}}</span>
+                    <span class="profile-website">
+                      <i class="mdi mdi-barcode" style="vertical-align: middle;"></i> <span class="username">&nbsp; Code
+                        : {{label_EmployeeCode}} </span>
+
+                    </span>
+                    <span class="username"> <i class="mdi  " style="vertical-align: middle;"></i> </span>
+                    <span class="profile-location">
+                      <i class="mdi mdi-account-multiple-outline" style="vertical-align: middle;"></i>
+                      <span class="username">&nbsp;Client Name : {{label_ClientName}} </span>
+
+                    </span>
+                    <span class="profile-website">
+                      <i class="mdi mdi-barcode" style="vertical-align: middle;"></i> <span class="username">&nbsp;
+                        Client Code : {{label_ClientContractCode}} </span>
+
+                    </span>
+                  </div>
+                </div>
+                <span class="follow">{{Label_DOJ | date : 'MMM d, y' }}</span>
+
+              </div>
+
+              <div class="row-middle">
+
+
+              </div>
+
+
+
+            </div>
+          </div>
+
+          <br>
+
+          <div *ngIf="!beforeEmployee">
+
+            <div class="form-group col-xs-12 col-sm-12">
+              <label class="form-label text-center" style="font-size: 16px; 
+              text-transform: uppercase;">Full-n-Final Type </label>
+
+              <div class="divider"></div>
+            </div>
+
+            <div class="radio-tile-group">
+              <div class="input-container">
+
+                <input class="c-card" type="radio" [(ngModel)]="isResignation" class="radio-button" [value]="true"
+                  [checked]="isResignation" tabindex="0">
+
+                <div class="radio-tile">
+
+                  <div class="card-state-icon"></div>
+
+                  <label>
+
+                    <div class="image">
+                      <div class="icon walk-icon">
+                        <i class="mdi mdi-account-remove"
+                          style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                      </div>
+                    </div>
+
+                    <label class="radio-tile-label">Process Resignation Request</label>
+
+                  </label>
+
+                </div>
+              </div>
+              <div class="input-container">
+
+                <input class="c-card" type="radio" [(ngModel)]="isResignation" class="radio-button" [value]="false"
+                  [checked]="isTermination" tabindex="0">
+
+                <div class="radio-tile">
+
+                  <div class="card-state-icon"></div>
+
+                  <label>
+
+                    <div class="image">
+                      <div class="icon walk-icon">
+                        <i class="mdi mdi-account-remove"
+                          style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                      </div>
+                    </div>
+
+                    <label class="radio-tile-label">Initiate Separation</label>
+
+                  </label>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="radio-tile-group">
+              <div class="input-container" *ngFor="let item of ELCTypes">
+                <input type="radio" id="walk" class="radio-button" value="{{item.id}}" name="checkbox"
+                  (change)="lifeCycleChange($event)" />
+                <div class="radio-tile">
+                  <div class="icon walk-icon">
+                    <i class="mdi {{item.icon}}"></i>
+                  </div>
+                  <label for="{{item.name}}" class="radio-tile-label">{{item.name}}</label>
+                </div>
+              </div>
+            </div> -->
+
+            <!-- </div> -->
+
+
+            <!-- <ul style="text-align: center;">
+              <li *ngFor="let item of ELCTypes">
+                <input type="checkbox" id="myCheckbox{{item.name}}" [(ngModel)]=item.checked   [checked]="item.checked" (change)="ttypechange($event, item)"  [value]="item.id"/>
+                <label class="normal" for="myCheckbox{{item.name}}" style="border: 1px solid  #0a609eeb;width: 125px;height: 100px;">
+                  <i class="mdi {{item.icon}}" style="font-size: 25px;"></i>       
+                        <br>
+                  <span class="radio-tile-label"> {{item.name}}</span>
+                </label>
+              </li>
+            </ul> -->
+
+
+
+
+          </div>
+
+        </div>
+        <div class="modal-footer" style="padding: 0px;">
+          <button type="button" *ngIf="!beforeEmployee" class="btn upgrade-btn" id="btn_onboarding_submit"
+            (click)="start()" style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i>
+            {{editing?'Edit':'Start'}}
+          </button>
+
+          <button type="button" *ngIf="isProceed" class="btn upgrade-btn" id="btn_onboarding_submit" (click)="proceed()"
+            style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> PROCEED
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_chooseCategory" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_chooseCategory"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left">Push To Queue Result</h6>
+            <div class="modal-close" (click)="modal_dismiss_display()"><span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <!-- <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                <small class="header-pretitle"><b>Processing Status (Employee) </b></small>
+                <h6 class="modal-title subheader_h6" id="popup_release_AL" >{{ClientName}} <span> - </span>
+                  {{ClientContractName}} </h6>
+              </div> -->
+
+          <!-- <div class="modal-close" (click)="modal_dismiss_display()" style="margin-top: 5px;"><span
+                  class="mdi mdi-close pull-left"></span>
+              </div> -->
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12  col-sm-12  p-r-50">
+              <div class="job-box ">
+                <div class="inbox-message">
+                  <ul>
+                    <li *ngFor="let i of processedEMP" style="width: 100% !important;">
+                      <a href="javascript:;">
+                        <div class="message-avatar">
+                          <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                        </div>
+                        <div class="message-body">
+                          <div class="message-body-heading">
+                            <h5>{{i.EmployeeName}} - <b *ngIf="i.IsPushedToQueue" style="color: green;">Success</b>
+                              <b style="color: red;" *ngIf="!i.IsPushedToQueue">Failed</b>
+                            </h5>
+                          </div>
+                          <p>{{i.Remarks}}</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left left-margin-btn">
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_displayResult" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_displayResult"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left">Result</h6>
+            <div class="modal-close" (click)="modal_dismiss_displayResult()"><span
+                class="mdi mdi-close pull-left"></span></div>
+          </div>
+
+          <!-- <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                <small class="header-pretitle"><b>Processing Status (Employee) </b></small>
+                <h6 class="modal-title subheader_h6" id="popup_release_AL" >{{ClientName}} <span> - </span>
+                  {{ClientContractName}} </h6>
+              </div> -->
+
+          <!-- <div class="modal-close" (click)="modal_dismiss_display()" style="margin-top: 5px;"><span
+                  class="mdi mdi-close pull-left"></span>
+              </div> -->
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12  col-sm-12  p-r-50">
+              <div class="job-box ">
+                <div class="inbox-message">
+                  <ul>
+                    <li *ngFor="let i of resultList" style="width: 100% !important;">
+                      <a href="javascript:;">
+                        <div class="message-avatar">
+                          <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                        </div>
+                        <div class="message-body">
+                          <div class="message-body-heading">
+                            <h5>{{i.EmployeeName}} - <b *ngIf="i.Status" style="color: green;">Success</b>
+                              <b style="color: red;" *ngIf="!i.Status">Failed</b>
+                            </h5>
+                          </div>
+                          <p>{{i.ErrorMessage}}</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left left-margin-btn">
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="modal_employeepreview_aside_left" class="modal fixed-left fade" tabindex="-1" role="dialog"
+  aria-labelledby="modal_employeepreview_aside_left" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-sm modal-dialog-aside" style="max-width: 750px !important;">
+
+      <div class="modal-content" *ngIf="employeeProfile">
+
+        <div class="row" style="padding: 15px;">
+          <div class="col-lg-8">
+
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> Employee Details
+            </h6>
+            <small class="header-pretitle hed"><b> Resigned On : {{employeeProfile.ResignedOn}} |
+                LWD : {{employeeProfile.LWD}}
+                {{employeeProfile.LWD ? employeeProfile.LWD : employeeProfile.ApprovedRelievingDate | date}}
+              </b></small>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" data-dismiss="modal" (click)="dismiss_employeepreview()" style="margin-top: -5px;">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-body"
+          style="margin-top: -15px;max-height: calc(110vh - 143px) !important;overflow: auto !important;">
+
+          <div class="row" style="margin: 12px;">
+            <div class="col-lg-12">
+              <div class="row employee-profile-container"
+                style="background: #EFF4FF; padding: 15px;border-radius: 5px;">
+                <div class="col-lg-1">
+                  <img class="imgcenter" src="assets/Images/employeeavatar.svg">
+                </div>
+                <div class="col-lg-7 text-left">
+                  <p class="hed" style="margin-bottom: 0px;color: black;"><b>{{employeeProfile.EmployeeName ?
+                      employeeProfile.EmployeeName : '-' }}</b></p>
+                  <small class="hed"><b>DOJ: <span class="doj">{{employeeProfile.DOJ ? employeeProfile.DOJ :
+                        '-'}}</span> | Designation: <span class="designation">{{employeeProfile.Designation ?
+                        employeeProfile.Designation : '-' }}</span></b></small>
+                </div>
+                <div class="col-lg-4" style="margin-top: 8px; text-align: right;">
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="employeeProfile" style="padding: 15px;">
+            <div class="form-group form-group-vertical col-md-12">
+              <span class="" style="color: #337AB7;font-weight: 600;
+            ">Transaction Information</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Transaction Type</label>
+              <span class="resignation-text-bold">{{employeeProfile.TransactionType ? employeeProfile.TransactionType :
+                '-'}}
+              </span>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Designation</label>
+              <span class="resignation-text-bold">{{employeeProfile.Designation ? employeeProfile.Designation : '-' }}
+              </span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">DOJ</label>
+              <span class="resignation-text-bold">{{employeeProfile.DOJ ? employeeProfile.DOJ : '-'}}
+              </span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Notice Period Days</label>
+              <span class="resignation-text-bold">{{employeeProfile.NoticePeriodDays ? employeeProfile.NoticePeriodDays
+                : '-'}}
+              </span>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Resignation Date</label>
+
+              <span class="resignation-text-bold" *ngIf="employeeProfile.ResignationDate">{{
+                employeeProfile.ResignationDate | date }}</span>
+              <span class="resignation-text-bold" *ngIf="!employeeProfile.ResignationDate">-</span>
+
+            </div>
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Reason</label>
+              <span class="resignation-text-bold">{{employeeProfile.Reason ? employeeProfile.Reason :
+                '-'}}</span>
+            </div>
+
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Employee Remarks</label>
+              <span class="resignation-text-bold">{{employeeProfile.EmployeeRemarks ? employeeProfile.EmployeeRemarks :
+                '-'}}</span>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Requested Relieving Date</label>
+              <span class="resignation-text-bold">{{employeeProfile.RequestedRelievingDate ?
+                employeeProfile.RequestedRelievingDate :
+                '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Approved Relieving Date</label>
+              <span class="resignation-text-bold" *ngIf="employeeProfile.ApprovedRelievingDate">{{
+                employeeProfile.ApprovedRelievingDate | date }}</span>
+              <span class="resignation-text-bold" *ngIf="!employeeProfile.ApprovedRelievingDate">-</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Manager Remarks</label>
+              <span class="resignation-text-bold">{{employeeProfile.ManagerRemarks ? employeeProfile.ManagerRemarks :
+                '-'}}</span>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Work Location</label>
+              <span class="resignation-text-bold">{{employeeProfile.Location ? employeeProfile.Location :
+                '-'}}</span>
+            </div>
+
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Reporting Manager</label>
+              <span class="resignation-text-bold">{{employeeProfile.ReportingManager ? employeeProfile.ReportingManager
+                :
+                '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Department</label>
+              <span class="resignation-text-bold">{{employeeProfile.Department ? employeeProfile.Department :
+                '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Employment Type</label>
+              <span class="resignation-text-bold">{{employeeProfile.EmploymentType ?
+                employeeProfile.EmploymentType : '-'}}</span>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Category</label>
+              <span class="resignation-text-bold">{{employeeProfile.Category ? employeeProfile.Category : '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6" *ngIf="employeeProfile.DocumentId > 0">
+              <label class="form-label resignation-label">Attachment</label>
+              <h6 class="form_body_content_span downloadattachmentbtn" (click)="downloadAttachments()"
+                matTooltip="download attachment" *ngIf="employeeProfile.DocumentId > 0">
+                {{employeeProfile.DocumentName}}
+                <span style="cursor: pointer;display: inline-block;padding-right: 5px;" title="download attachment">
+                  <i class="mdi mdi-download"
+                    style="display: block; top: 5px;position: relative;color: #FFF;font-size: 18px;"></i>
+                </span>
+              </h6>
+            </div>
+
+
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="row" style="width: 103%;">
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-default btn-icon-text" (click)="getResignationHistory()">
+                  <i class="mdi mdi-history m-r-xs"></i> <span> Resignation History </span>
+                </button>
+            </div>
+            <div class="col-lg-6 text-right">
+              <button class="btn btn-blank" (click)="dismiss_employeepreview()" style="color:  #000 !important;font-weight: 600 !important;
+              font-size: 12px;"> Close
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

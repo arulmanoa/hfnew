@@ -1,0 +1,1571 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show modal-aside-left" tabindex="-1"
+  role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog modal-dialog-aside" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body" id="modalform"
+        style="max-height: calc(110vh - 143px) !important;overflow-x: hidden !important;">
+
+        <div class="row" style="padding-bottom: 1rem;">
+          <div class="col-md-6">
+            <h3 class="header_lable">Exemptions</h3>
+            <p class="small subheader_lable">Sec 10 | Exemptions</p>
+          </div>
+          <div class="col-md-6" style="padding: 3px;">
+            <div class="row">
+              <!-- <div class="col-md-4">
+                <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Qualifying Amount</h6>
+                <h3
+                  style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                  ₹ 15,000</h3>
+
+              </div> -->
+              <div class="col-md-4">
+                <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Claimed Amount</h6>
+                <h3
+                  style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                  {{TotalClaimedAmount |
+                  currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+
+              </div>
+              <div class="col-md-4">
+                <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Approved Amount</h6>
+                <h3
+                  style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                  {{TotalApprovedAmount |
+                  currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <ngb-tabset (tabChange)="onChangetabset($event)" [(activeId)]="activeTabName">
+              <ng-container *ngFor="let item of popupTaxBills">
+                <ngb-tab id="{{item.ProductId}}">
+                  <ng-template ngbTabTitle> {{item.ProductName}}
+                    <!-- <span class="badge badge-light">4</span> -->
+                  </ng-template>
+                  <ng-template ngbTabContent>
+                    <div class="row hidden-sm">
+                      <div class="col-xl-3 col-lg-6" (click)="doCheckStatusBox(-1)">
+                        <div class="card card-stats mb-4 mb-xl-0" [ngClass]="{'saved': selectedStatusBox=='-1'}">
+                          <div class="card-body" style="width: 265px !important;height: 75px !important;">
+                            <div class="row">
+                              <div class="col">
+                                <span class="h2 font-weight-bold mb-0"
+                                  style="color:#3498DB;font-size: 14px;">{{BillCounts.Saved}}</span>
+                                <h5 class="card-title mb-0" style="color:#3498DB;font-size: 14px;">Saved Bills
+                                </h5>
+                              </div>
+                              <div class="col-auto">
+                                <div class=" icon icon-shape text-white rounded-circle shadow"
+                                  style="background-color: #D9EEFC;">
+                                  <i class="mdi mdi-content-save-outline" style="color: #3498DB;"></i>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-xl-3 col-lg-6" (click)="doCheckStatusBox(0)">
+                        <div class="card card-stats mb-4 mb-xl-0" [ngClass]="{'pending': selectedStatusBox=='0'}">
+                          <div class="card-body" style="width: 265px !important;height: 75px !important;">
+                            <div class="row">
+                              <div class="col">
+                                <span class="h2 font-weight-bold mb-0" style="color:#EE9A15;font-size: 14px;">
+                                  {{BillCounts.Pending}}</span>
+                                <h5 class="card-title mb-0" style="color:#EE9A15;font-size: 14px;">Pending Bills
+                                </h5>
+                              </div>
+                              <div class="col-auto">
+                                <div class=" icon icon-shape text-white rounded-circle shadow"
+                                  style="background-color: #FFE9C7;">
+                                  <i class="mdi mdi-clipboard-outline" style="color: #EE9A15;"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                      <div class="col-xl-3 col-lg-6" (click)="doCheckStatusBox(1)">
+                        <div class="card card-stats mb-4 mb-xl-0" [ngClass]="{'approved': selectedStatusBox=='1'}">
+                          <div class="card-body" style="width: 265px !important;height: 75px !important;">
+                            <div class="row">
+                              <div class="col">
+                                <span class="h2 font-weight-bold mb-0" style="color:#2DA05E;font-size: 14px;">
+                                  {{BillCounts.Approved}}</span>
+                                <h5 class="card-title mb-0" style="color:#2DA05E;font-size: 14px;">Approved Bills
+                                </h5>
+                              </div>
+                              <div class="col-auto">
+                                <div class=" icon icon-shape text-white rounded-circle shadow"
+                                  style="background-color: #E2FEEE;">
+                                  <i class="mdi mdi-check-circle-outline" style="color: #2DA05E;"></i>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-xl-3 col-lg-6" (click)="doCheckStatusBox(2)">
+                        <div class="card card-stats mb-4 mb-xl-0" [ngClass]="{'rejected': selectedStatusBox=='2'}">
+                          <div class="card-body" style="width: 265px !important;height: 75px !important;">
+                            <div class="row">
+                              <div class="col">
+                                <span class="h2 font-weight-bold mb-0" style="color:#E74C3C;font-size: 14px;">
+                                  {{BillCounts.Rejected}} </span>
+                                <h5 class="card-title mb-0" style="color:#E74C3C;font-size: 14px;">Rejected Bills
+                                </h5>
+                              </div>
+                              <div class="col-auto">
+                                <div class=" icon icon-shape text-white rounded-circle shadow"
+                                  style="background-color: #FFE4E1;">
+                                  <i class="mdi mdi-close-circle-outline" style="color: #E74C3C;"></i>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <br />
+                    <div class="row" style="margin-right: -15px;margin-left: -15px;">
+                      <div class="col-md-6 text-left">
+                        <h3> {{ IsLTA ? 'My LTA Claim' : 'My Bills' }}
+                          <a *ngIf="IsLTA" (click)="download_FAQ()" href="javascript:;" style="color: #ff8518ed;
+                          cursor: pointer;
+                          font-size: 12px;
+                          margin-left: 10px;">Download LTA Rules & FAQs
+                            <span *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status"
+                              aria-hidden="true"></span>
+                          </a>
+
+                       
+
+                        </h3>
+
+
+                        <span>
+                          <span class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Claimed Amount : <span
+                              style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;color: #000;">
+                              {{SelectedExempTotalClaimedAmount |
+                              currency:'INR':'symbol-narrow':'1.2-2'}}</span> </span>
+                          <span class="small" style="line-height: 2px;
+                              font-size: 12px;
+                              font-weight: 600;
+                              color: #d3d3d3;
+                              margin-top: 16px;margin-left: 16px;">Approved Amount : <span
+                              style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;color: #000;">
+                              {{SelectedExempTotalApprovedAmount |
+                              currency:'INR':'symbol-narrow':'1.2-2'}}</span> </span>
+                        </span>
+
+                      </div>
+
+                      <div class="col-md-6 text-right" *ngIf="!isrendering_spinner">
+                        <div class="row" style=" position: relative;
+                          transform: translatey(-50%);
+                          top: 60%;">
+                          <div class="col-lg-12 text-right">
+                            <button class="btn btn-white" *ngIf="!IsOpenBillsCard && !IsLTA" (click)="AddBills(true)"
+                              style="background: #146BA2;color: #ffffff;">
+                              <i class="mdi mdi-plus"></i>
+                              &nbsp;
+                              {{ IsLTA ? 'Journey Details' : 'Add Bills'}}
+                            </button>
+
+                            <button class="btn btn-white"
+                              *ngIf="!IsOpenBillsCard && IsLTA && shouldShowJourneyAddButton()" (click)="AddBills(true)"
+                              style="background: #146BA2;color: #ffffff;">
+                              <i class="mdi mdi-plus"></i>
+                              &nbsp;
+                              {{ IsLTA ? 'Journey Details' : 'Add Bills'}}
+                            </button>
+
+                            <button class="btn btn-white" *ngIf="IsOpenBillsCard" (click)="AddBills(false)"
+                              style="background: #146BA2;color: #ffffff;">
+                              <i class="mdi mdi-minus"></i>
+                              &nbsp;
+                              {{ IsLTA ? 'Hide' : 'Hide Bills'}}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br />
+
+                    <div class="row" *ngIf="IsOpenBillsCard"
+                      style="background: #F7F7F7;padding: 14px;margin-top: 10px;margin: 0px; margin-top: 9px !important;border-radius: 4px;">
+
+                      <ng-container *ngIf="IsLTA">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                              <label class="form-label"> Travel Start Date <span class="required">*</span>
+                              </label>
+                              <input class="form-control" [(ngModel)]="TravelStartDate" type="text" readonly
+                                (ngModelChange)="onChangeTravelStartDate($event)" name="TravelStartDate" bsDatepicker
+                                placement="bottom"
+                                [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                placeholder="DD-MM-YYYY">
+                            </div>
+
+                            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                              <label class="form-label"> Travel End Date <span class="required">*</span>
+                              </label>
+                              <input class="form-control" [(ngModel)]="TravelEndDate" type="text" readonly
+                                [minDate]="EnddateminDate" name="TravelEndDate" bsDatepicker placement="bottom"
+                                [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                placeholder="DD-MM-YYYY">
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="col-md-6 text-left">
+
+                            </div>
+                            <div class="col-md-6 text-right">
+
+                              <button class="btn btn-white text-left" (click)="openModal(dependentDetailsModal, 'New')"
+                                style="background: #F4F4F4;
+                            color: #146BA2;border: 1px solid #146BA2;font-size: 12px;font-weight: 600 !important;"
+                                *ngIf="IsLTA">
+                                <i class="mdi mdi-plus"></i>
+                                Add family/traveller's details</button>
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="col-lg-12" *ngIf="IsLTA && LstDependent.length > 0">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <h3>Family/Traveller's Details
+                              </h3>
+                            </div>
+
+                            <div class="card col-lg-2" *ngFor="let dependent of LstDependent; let i = index"
+                              style="border: 1px solid #ece9e9 !important; box-shadow: 0px 3px 3px 2px #d5dadf59; margin: 15px; padding: 10px;">
+
+                              <h6 style="font-weight: 600; color: black;font-size: 14px;">{{ dependent.TravellerName }}
+                                <i class="mdi mdi-trash-can-outline" matTooltip="Delete"
+                                  (click)="deleteDependent(dependent, i)"
+                                  style="top: -3px; color: #0d395f; font-size: 18px; float: right;"></i>
+                                <i class="mdi mdi-pencil-outline" matTooltip="Edit"
+                                  (click)="editDependent(dependent,dependentDetailsModal)"
+                                  style="top: -3px; color: #0d395f; font-size: 18px; float: right; margin-right: 10px;"></i>
+                              </h6>
+                              <span style="font-size: 12px;"><strong>Relationship:</strong>
+                                {{getRelationShipName1(dependent.RelationshipType)}}</span>
+                              <span style="font-size: 12px;"><strong>Date of Birth:</strong> {{ dependent.DateOfBirth |
+                                date }}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <br />
+
+                        <ng-container *ngIf="JourneyBills.length > 0">
+
+                          <div class="col-md-12 text-left" style="margin-top: 10px;">
+                            <h3>Travel Details
+                            </h3>
+                          </div>
+
+                          <div class="col-md-12">
+                            <table class="table table-bordered table-striped">
+                              <thead>
+                                <tr>
+                                  <th style="font-weight: bold; font-size: 12px;">Ticket/Expense Amount</th>
+                                  <th style="font-weight: bold; font-size: 12px;">Invoice/Ticket/Boarding Pass Number
+                                  </th>
+                                  <th style="font-weight: bold; font-size: 12px;">Invoice/Ticket/Boarding Pass Date</th>
+                                  <th style="font-weight: bold; font-size: 12px;">File Name</th>
+                                  <th style="font-weight: bold; font-size: 12px;">Status</th>
+                                  <th style="font-weight: bold; font-size: 12px;width: 7%;">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <ng-container *ngFor="let item of JourneyBills">
+                                  <tr *ngIf="item.Modetype != 2">
+                                    <td>{{ item.BillAmount }}</td>
+                                    <td>{{ item.BillNumber }}</td>
+                                    <td>{{ item.BillDate | date }}</td>
+                                    <td>{{ item.FileName }}</td>
+                                    <td>
+                                      <p
+                                        style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);">
+                                        <span class="badge badge-saved"
+                                          *ngIf="!item.IsProposed && item.Status  == 0 && item.EmployeeTaxExemptionId == 0">
+                                          Saved </span>
+                                        <span class="badge badge-warning1"
+                                          *ngIf="!item.IsProposed && item.Status  == 0 && item.EmployeeTaxExemptionId > 0">
+                                          Pending </span>
+                                        <span class="badge badge-danger1"
+                                          *ngIf="!item.IsProposed && item.Status  == 2 && item.EmployeeTaxExemptionId > 0">
+                                          Rejected </span>
+                                        <span class="badge badge-success1"
+                                          *ngIf="!item.IsProposed && item.Status  ==1 && item.EmployeeTaxExemptionId > 0">
+                                          Approved </span>
+
+                                        <span class="badge badge-saved"
+                                          *ngIf="item.IsProposed && item.BillId > 0 && item.Status  == 0 && item.EmployeeTaxExemptionId == 0">
+                                          Saved </span>
+                                        <span class="badge badge-warning1"
+                                          *ngIf="item.IsProposed && item.BillId > 0 && item.Status  == 0 && item.EmployeeTaxExemptionId > 0">
+                                          Pending </span>
+                                        <span class="badge badge-danger1"
+                                          *ngIf="item.IsProposed && item.BillId > 0 && item.Status  == 2 && item.EmployeeTaxExemptionId > 0">
+                                          Rejected </span>
+                                        <span class="badge badge-success1"
+                                          *ngIf="item.IsProposed && item.BillId > 0 && item.Status  ==1 && item.EmployeeTaxExemptionId > 0">
+                                          Approved </span>
+
+                                        <span class="badge badge-declaration"
+                                          *ngIf="!item.IsProposed && item.BillId == 0 ">
+                                          Declaration </span>
+
+                                        <span class="badge badge-declaration"
+                                          *ngIf="item.IsProposed && item.BillId == 0">
+                                          Declaration </span>
+
+                                        <span class="badge badge-declaration"
+                                          *ngIf="!item.IsProposed && item.BillId > 0">
+                                          Proof </span>
+
+
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <div class="" (click)="doEditJourneyBills(item, i)"
+                                        style="cursor: pointer;display: inline-block;padding-right: 5px;" id="plus"
+                                        ngbTooltip="Edit">
+                                        <i class="mdi mdi-pencil-outline" matTooltip="Edit" style="display: block;
+                                margin: 0 auto;
+                                top: -3px;
+                                position: relative;
+                                color: #0d395f;
+                                font-size: 18px;">
+                                        </i>
+                                      </div>
+                                      <div class="" (click)="doDeleteJourneyBills(item, i)" matTooltip="Delete"
+                                        ngbTooltip="Delete"
+                                        style="cursor: pointer;display: inline-block;padding-left: 5px;" id="plus">
+                                        <i class="mdi mdi-trash-can-outline" matTooltip="Delete" style="display: block; 
+                                    margin: 0 auto;
+                                    top: -3px;
+                                    position: relative;
+                                    color: red;
+                                    font-size: 18px;"></i>
+                                      </div>
+
+
+                                    </td>
+
+                                  </tr>
+                                </ng-container>
+                              </tbody>
+                            </table>
+                          </div>
+                        </ng-container>
+                      </ng-container>
+
+
+                      <ng-container *ngIf="IsLTA && LstDependent.length > 0">
+
+                        <div class="col-md-12" style="margin-top: 2rem;">
+                          <div class="row">
+                            <div class="col-md-6 text-left">
+                              <h3> {{ IsLTA ? 'Enter Travel Details' : 'Enter Bill Details' }} </h3>
+                            </div>
+                            <div class="col-md-6 text-right">
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="col-xs-12 col-md-4">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label"> Travel From City (Origin) <span
+                                class="required">*</span>
+                            </label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" [(ngModel)]="TravelFromCity" type="text"
+                                name="Travel From city (Origin) " placeholder="Bangalore" autocomplete="off">
+                            </label>
+                            <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('TravelFromCity')" class="help-block">
+                              Travel From city (Origin) is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label"> Travel To City (Destination) <span
+                                class="required">*</span>
+                            </label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" [(ngModel)]="TravelToCity" type="text" name="TravelToCity"
+                                placeholder="Goa" autocomplete="off">
+                            </label>
+                            <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('TravelToCity')" class="help-block">
+                              Travel To city (Destination) is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label class="form-label">Transport Mode <span class="required">*</span> </label>
+                            <ng-select [items]="TravelTypes" placeholder="Transport Mode" [(ngModel)]="TravelType"
+                              bindLabel="name" bindValue="id">
+                            </ng-select>
+
+
+                          </div>
+                        </div>
+
+
+
+                        <div class="col-xs-12 col-md-4">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label">
+                              {{ IsLTA ? 'Ticket/Expense amount' : 'Bill Amount' }}
+                              <span class="required">{{getRequired('BillAmount')}}</span> </label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" onkeypress="return /[0-9]/i.test(event.key)"
+                                [(ngModel)]="BillAmount" type="text" name="BillAmount" placeholder="1000.00"
+                                autocomplete="off">
+                            </label>
+                            <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('BillAmount')" class="help-block">
+                              Bill Amount is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label">
+                              {{ IsLTA ? 'Invoice/Ticket/Boarding Pass Number' : 'Bill Number' }}
+                              <span class="required">{{getRequired('BillNumber')}}</span>
+                            </label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" [(ngModel)]="BillNumber" type="text" name="BillNumber"
+                                placeholder="WEY23400099" autocomplete="off">
+                            </label>
+                            <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('BillNumber')" class="help-block">
+                              Bill Number is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                          <label class="form-label">
+                            {{ IsLTA ? 'Invoice/Ticket/Boarding Pass Date' : 'Bill Date' }}
+                            <span class="required">{{getRequired('BillDate')}}</span>
+                          </label>
+                          <input class="form-control" [(ngModel)]="BillDate" type="text" readonly name="startDate"
+                            bsDatepicker placement="left"
+                            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            placeholder="DD-MM-YYYY">
+                          <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('BillDate')" class="help-block">
+                            Bill Date is required
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                          <label class="form-label searchbar-label">Remarks</label>
+                          <label class="qcsummarylabel form-text text-muted">
+                            <textarea class="form-control" [(ngModel)]="BillRemarks" rows="4" spellcheck="false"
+                              placeholder="Type your message here..." id="BillRemarks"></textarea>
+                          </label>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="row" *ngIf="currentTaxMode == 2 || BillId > 0">
+                            <div>
+                              <div class="form-group">
+                                <label class="form-label searchbar-label">Attachments
+                                  <!-- <span class="help-text m-l-5"
+                                    style="font-size: 10px;" *ngIf="IsLTA"> (Boarding pass, Train ticket, Bus ticket,
+                                    Cab bill or Fuel bills if travelled by own vehicle)
+                                  </span>  -->
+                                  <span class="required">* </span>
+                                  <i *ngIf="IsLTA" class="mdi mdi-information-outline" placement="right"
+                                    style="cursor: pointer;"
+                                    ngbTooltip="Upload proof documents here (Boarding pass, Train ticket, Bus ticket, Cab bill or Fuel bills if travelled by own vehicle) in 'Zip, PDF, Word, JPG, JPEG, TIFF, PNG'">
+
+                                  </i> </label>
+                                <div class="upload-files-container" draggable="true">
+                                  <div class="drag-file-area"
+                                    style="height: 95px; cursor: pointer;margin: 0px 0 0px;width: 217px;"
+                                    *ngIf="isLoading">
+                                    <label class="label" style="margin-bottom: -5px;width: 100%;cursor: pointer;">
+                                      <h3 class="dynamic-message"
+                                        style="color: #146BA2;top: 5%;position: relative;font-size: 10px;text-align: left;">
+
+                                        {{ IsLTA ? 'Upload proof documents here ( please zip multiple files, in case
+                                        any)' : 'Upload your files here ' }}
+                                      </h3>
+                                      <span style="display: block;font-size: 10px;"> (Max size:
+                                        2MB) </span>
+                                      <span class="browse-files"> <input #myInput type="file"
+                                          step="height: 100%;width: 100%;padding: 7px;" class="default-file-input"
+                                          accept="application/msword,  application/pdf, image/*"
+                                          (change)="onFileUpload($event, medical, 'Medical')" />
+                                      </span>
+                                    </label>
+                                  </div>
+
+                                  <div class="d-flex align-items-center" style="margin-top: 10%;" *ngIf="!isLoading">
+                                    <strong class="text-right"> {{docSpinnerText}} ...
+                                      &nbsp;&nbsp;&nbsp;</strong>
+                                    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                                  </div>
+                                </div>
+                                <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('BillId')" class="help-block">
+                                  Attachments is required
+                                </div>
+                              </div>
+                            </div>
+                            <div style="padding: 5px;" *ngIf="BillId > 0">
+                              <div id="scroll-wrapper scrollbox_delayed">
+                                <div id="thumbnails">
+                                  <div class="thumbnail-container" style="position: relative;
+                          border: 1px solid steelblue;
+                          margin: 16px;
+                          display: inline-block;
+                          height: 95px;                             
+                          border-radius: 3px;
+                          width: 110px;
+                          margin-left: 5px;">
+                                    <div class="box">
+                                      <button type="button" class="delete" (click)="doDeleteFile(BillId)">
+                                        <span style="background-color: #e1e1e1;
+                                                  border-radius: 10%;"><i class="fa fa-minus-circle"
+                                            style="margin-top: 2px;" aria-hidden="true"></i></span>
+                                      </button>
+                                      <button type="button" class="delete" style="right: 1px;top: 70px;font-size: 20px;"
+                                        (click)="doViewFile(BillId)">
+                                        <span style="border-radius: 14%;background: #e4e4e4;"><i
+                                            class="mdi mdi-progress-download" style="color: #787c7b;"></i> </span>
+                                      </button>
+                                      <div>
+                                        <span class="material-icons p-r-10">
+                                          file_present
+                                        </span>
+                                        <span class="file-name" matTooltip="{{FileName}}">
+                                          {{FileName}} </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4"
+                          *ngIf="(PermissibleRoles() && Id > 0) || (PermissibleRoles() &&  currentTaxMode == 2 ) ">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label"> Approved Amount </label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" onkeypress="return /[0-9]/i.test(event.key)"
+                                [(ngModel)]="BillApprovedAmount" type="text" name="BillApprovedAmount"
+                                placeholder="1000.00" autocomplete="off">
+                            </label>
+                          </div>
+                        </div>
+
+                      </ng-container>
+
+                      <ng-container *ngIf="!IsLTA">
+
+                        <div class="col-md-12" style="margin-top: 2rem;">
+                          <div class="row">
+                            <div class="col-md-6 text-left">
+                              <h3> {{ IsLTA ? 'Enter Travel Details' : 'Enter Bill Details' }} </h3>
+                            </div>
+                            <div class="col-md-6 text-right">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label">
+                              {{ IsLTA ? 'Ticket/Expense amount' : 'Bill Amount' }}
+                              <span class="required">{{getRequired('BillAmount')}}</span> </label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" onkeypress="return /[0-9]/i.test(event.key)"
+                                [(ngModel)]="BillAmount" type="text" name="BillAmount" placeholder="1000.00"
+                                autocomplete="off">
+                            </label>
+                            <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('BillAmount')" class="help-block">
+                              Bill Amount is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label">
+                              {{ IsLTA ? 'Invoice/Ticket/Boarding Pass Number' : 'Bill Number' }}
+                              <span class="required">{{getRequired('BillNumber')}}</span>
+                            </label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" [(ngModel)]="BillNumber" type="text" name="BillNumber"
+                                placeholder="WEY23400099" autocomplete="off">
+                            </label>
+                            <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('BillNumber')" class="help-block">
+                              Bill Number is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                          <label class="form-label">
+                            {{ IsLTA ? 'Invoice/Ticket/Boarding Pass Date' : 'Bill Date' }}
+                            <span class="required">{{getRequired('BillDate')}}</span>
+                          </label>
+                          <input class="form-control" [(ngModel)]="BillDate" type="text" readonly name="startDate"
+                            bsDatepicker placement="left"
+                            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            placeholder="DD-MM-YYYY">
+                          <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('BillDate')" class="help-block">
+                            Bill Date is required
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                          <label class="form-label searchbar-label">Remarks</label>
+                          <label class="qcsummarylabel form-text text-muted">
+                            <textarea class="form-control" [(ngModel)]="BillRemarks" rows="4" spellcheck="false"
+                              placeholder="Type your message here..." id="BillRemarks"></textarea>
+                          </label>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="row" *ngIf="currentTaxMode == 2 || BillId > 0">
+                            <div>
+                              <div class="form-group">
+                                <label class="form-label searchbar-label">Attachments <span
+                                    class="required">*</span></label>
+                                <div class="upload-files-container" draggable="true">
+                                  <div class="drag-file-area" style="height: 95px; cursor: pointer;margin: 0px 0 0px;"
+                                    *ngIf="isLoading">
+                                    <label class="label" style="margin-bottom: -5px;width: 100%;cursor: pointer;">
+                                      <h3 class="dynamic-message" style="color: #146BA2;top: 5%;position: relative;">
+
+                                        {{ IsLTA ? 'Upload proof documents here' : 'Upload your files here ' }}
+                                      </h3>
+                                      <span style="display: block;font-size: 10px;">(Max size:
+                                        2MB) </span>
+                                      <span class="browse-files"> <input #myInput type="file"
+                                          step="height: 100%;width: 100%;padding: 7px;" class="default-file-input"
+                                          accept="application/msword,  application/pdf, image/*"
+                                          (change)="onFileUpload($event, medical, 'Medical')" />
+                                      </span>
+                                    </label>
+                                  </div>
+
+                                  <div class="d-flex align-items-center" style="margin-top: 10%;" *ngIf="!isLoading">
+                                    <strong class="text-right"> {{docSpinnerText}} ...
+                                      &nbsp;&nbsp;&nbsp;</strong>
+                                    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                                  </div>
+                                </div>
+                                <div *ngIf="IsBillsAdded && !CheckIsNullOrEmpty('BillId')" class="help-block">
+                                  Attachments is required
+                                </div>
+                              </div>
+                            </div>
+                            <div style="padding: 5px;" *ngIf="BillId > 0">
+                              <div id="scroll-wrapper scrollbox_delayed">
+                                <div id="thumbnails">
+                                  <div class="thumbnail-container" style="position: relative;
+                          border: 1px solid steelblue;
+                          margin: 16px;
+                          display: inline-block;
+                          height: 95px;                             
+                          border-radius: 3px;
+                          width: 110px;
+                          margin-left: 5px;">
+                                    <div class="box">
+                                      <button type="button" class="delete" (click)="doDeleteFile(BillId)">
+                                        <span style="background-color: #e1e1e1;
+                                                  border-radius: 10%;"><i class="fa fa-minus-circle"
+                                            style="margin-top: 2px;" aria-hidden="true"></i></span>
+                                      </button>
+                                      <button type="button" class="delete" style="right: 1px;top: 70px;font-size: 20px;"
+                                        (click)="doViewFile(BillId)">
+                                        <span style="border-radius: 14%;background: #e4e4e4;"><i
+                                            class="mdi mdi-progress-download" style="color: #787c7b;"></i> </span>
+                                      </button>
+                                      <div>
+                                        <span class="material-icons p-r-10">
+                                          file_present
+                                        </span>
+                                        <span class="file-name" matTooltip="{{FileName}}">
+                                          {{FileName}} </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4"
+                          *ngIf="(PermissibleRoles() && Id > 0) || (PermissibleRoles() &&  currentTaxMode == 2 ) ">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label"> Approved Amount </label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" onkeypress="return /[0-9]/i.test(event.key)"
+                                [(ngModel)]="BillApprovedAmount" type="text" name="BillApprovedAmount"
+                                placeholder="1000.00" autocomplete="off">
+                            </label>
+                          </div>
+                        </div>
+
+                      </ng-container>
+
+
+                      <div class="col-md-12 text-right" *ngIf="IsLTA && LstDependent.length > 0">
+                        <button class="btn btn-white" (click)="AddNewLTABills()" style="background: #146BA2;color: #ffffff;border-radius: 5px;
+                      font-size: 12px;">
+                          {{selectedBillObject != null ? 'Update Bill' : 'Add Bill'}}
+                        </button>
+                      </div>
+
+                      <div class="col-md-12" *ngIf="IsLTA && JourneyBills.length > 0">
+                        <div class="form-group">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="options" id="option1" value="1"
+                              [(ngModel)]="selectedLTADeclarationOption">
+                            <label class="form-check-label" style="color: red;" for="option1">I hereby declare that I
+                              have not availed LTA
+                              benefit in Current LTA Block Year i.e 2022 to 2025</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="options" id="option2" value="2"
+                              [(ngModel)]="selectedLTADeclarationOption">
+                            <label class="form-check-label" style="color: red;" for="option2">I hereby declare that I
+                              have availed LTA
+                              benefit in earlier year of Current LTA Block Year i.e 2022 to 2025</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-md-12" style="margin-left: -15px;" *ngIf="IsLTA && JourneyBills.length > 0">
+                        <input type="checkbox" [(ngModel)]="incurredBillDeclaration" />
+                        <label style="margin-left: 10px;
+                        font-weight: 600;"> I hereby declare that the shortest route was taken for the above mentioned
+                          travel</label>
+
+                      </div> -->
+
+
+
+
+
+                      <div class="col-md-12 text-right" *ngIf="!IsLTA">
+                        <button class="btn btn-blank" style="font-size: 12px;color: #949494;" (click)="clear()">
+                          &nbsp;Cancel
+                        </button>
+                        <button class="btn btn-white" (click)="PushBills()" style="background: #146BA2;color: #ffffff;border-radius: 5px;
+                        font-size: 12px;">
+                          Save Bill
+                        </button>
+                      </div>
+
+
+                    </div>
+
+
+                    <ng-container *ngIf="!IsOpenBillsCard && !IsLTA">
+                      <div class="row" style="margin-top: 1rem;padding-left: 5px;padding-right: 15px;">
+                        <div class="col-md-1 text-center"
+                          *ngIf="(selectedStatusBox == -1 || selectedStatusBox == 'All')">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;padding-left: 15px;">
+                            <input type="checkbox" [(ngModel)]="selectAll" (click)="selectAllClaimRequest($event)"
+                              style="cursor: pointer;" />
+                          </p>
+                        </div>
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Bill Number</p>
+                        </div>
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Bill Date</p>
+                        </div>
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Declared Amount (₹)
+                          </p>
+                        </div>
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Approved Amount (₹)
+                          </p>
+                        </div>
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Status </p>
+                        </div>
+                        <div class="col-md-1">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Action </p>
+                        </div>
+                      </div>
+
+                      <div class="d-flex align-items-center" *ngIf="isrendering_spinner" style=" margin: 0;
+                    position: absolute;
+                    margin-top: 10px;
+                    left: 50%;
+                    transform: translate(-50%, -50%);">
+                        <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                      </div>
+
+                      <ng-container *ngIf="!isrendering_spinner && getLimitedBillDetails().length  == 0 && !IsLTA">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="card" style="border: none !important;padding: 2rem;">
+                              <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot"
+                                data-maintainscrollposition="True" style="text-align: center">
+                                <p style="margin-bottom: 8px;"><span id="MainContent_ctl143"
+                                    class="LabelMediumBig">There
+                                    are no
+                                    bill entries
+                                    in this screen yet.</span></p>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+
+
+                      <ng-container *ngIf="!isrendering_spinner && getLimitedBillDetails().length > 0">
+                        <ng-conainer *ngFor="let item of getLimitedBillDetails();let i = index">
+                          <div class="card tab-item"
+                            style="margin: 3px;background: #FFFFFF;box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);border-radius: 4px;margin-right: 15px;cursor: pointer;">
+                            <div class="card-body" style="padding: 10px;">
+                              <div class="row">
+                                <div class="text-left" class="col-md-1 text-center"
+                                  *ngIf="(selectedStatusBox == -1 || selectedStatusBox == 'All')">
+                                  <div *ngIf="item.Status  == 0 && item.EmployeeTaxExemptionId == 0">
+                                    <input type="checkbox" [(ngModel)]="item.isSelected"
+                                      (click)="selectBillEntries(item,item.isSelected, $event)"
+                                      style="cursor: pointer;" />
+                                  </div>
+                                </div>
+                                <div class="text-left" class="col-md-2">
+                                  <h6 class="h6-content subheading"> {{item.BillNumber}} </h6>
+                                </div>
+                                <div class="text-center" class="col-md-2">
+                                  <h6 class="h6-content subheading">{{item.BillDate | date}} </h6>
+                                </div>
+                                <div class="text-right" class="col-md-2">
+                                  <h6 class="h6-content subheading">{{item.BillAmount |
+                                    currency:'INR':'symbol-narrow':'1.2-2'}}</h6>
+                                </div>
+                                <div class="text-right" class="col-md-2">
+                                  <h6 class="h6-content subheading">{{item.ApprovedAmount |
+                                    currency:'INR':'symbol-narrow':'1.2-2'}}
+
+
+                                  </h6>
+                                </div>
+                                <div class="text-center" class="col-md-1">
+                                  <p
+                                    style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);">
+                                    <span class="badge badge-saved"
+                                      *ngIf="!item.IsProposed && item.Status  == 0 && item.EmployeeTaxExemptionId == 0">
+                                      Saved </span>
+                                    <span class="badge badge-warning1"
+                                      *ngIf="!item.IsProposed && item.Status  == 0 && item.EmployeeTaxExemptionId > 0">
+                                      Pending </span>
+                                    <span class="badge badge-danger1"
+                                      *ngIf="!item.IsProposed && item.Status  == 2 && item.EmployeeTaxExemptionId > 0">
+                                      Rejected </span>
+                                    <span class="badge badge-success1"
+                                      *ngIf="!item.IsProposed && item.Status  ==1 && item.EmployeeTaxExemptionId > 0">
+                                      Approved </span>
+
+                                    <span class="badge badge-saved"
+                                      *ngIf="item.IsProposed && item.BillId > 0 && item.Status  == 0 && item.EmployeeTaxExemptionId == 0">
+                                      Saved </span>
+                                    <span class="badge badge-warning1"
+                                      *ngIf="item.IsProposed && item.BillId > 0 && item.Status  == 0 && item.EmployeeTaxExemptionId > 0">
+                                      Pending </span>
+                                    <span class="badge badge-danger1"
+                                      *ngIf="item.IsProposed && item.BillId > 0 && item.Status  == 2 && item.EmployeeTaxExemptionId > 0">
+                                      Rejected </span>
+                                    <span class="badge badge-success1"
+                                      *ngIf="item.IsProposed && item.BillId > 0 && item.Status  ==1 && item.EmployeeTaxExemptionId > 0">
+                                      Approved </span>
+
+                                    <span class="badge badge-declaration" *ngIf="!item.IsProposed && item.BillId == 0 ">
+                                      Declaration </span>
+
+                                    <span class="badge badge-declaration" *ngIf="item.IsProposed && item.BillId == 0">
+                                      Declaration </span>
+
+                                    <span class="badge badge-declaration" *ngIf="!item.IsProposed && item.BillId > 0">
+                                      Proof </span>
+
+                                    <!-- <span class="badge badge-declaration"
+                                    *ngIf="item.BillId > 0">
+                                    Proof </span> -->
+
+                                  </p>
+
+                                </div>
+                                <div class="col-md-2 text-right">
+
+                                  <div class="" (click)="toggle(i)"
+                                    style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                                    matTooltip="Approve" id="plus">
+                                    <i *ngIf="hideRuleContent[i]" class="mdi mdi-arrow-up-drop-circle-outline" style="display: block;
+                margin: 0 auto;
+                top: -3px;
+                position: relative;
+                color: #5d5f5e;
+                font-size: 18px;padding-right: 5px;">
+                                    </i>
+                                    <i *ngIf="!hideRuleContent[i]" class="mdi mdi-arrow-down-drop-circle-outline" style="display: block;
+                margin: 0 auto;
+                top: -3px;
+                position: relative;
+                color: #5d5f5e;
+                font-size: 18px;padding-right: 5px;">
+                                    </i>
+
+                                  </div>
+
+
+                                  <div class="" (click)="doEditBills(item, i)"
+                                    style="cursor: pointer;display: inline-block;padding-right: 5px;" id="plus">
+                                    <i class="mdi mdi-pencil-outline" matTooltip="Edit" style="display: block;
+                             margin: 0 auto;
+                             top: -3px;
+                             position: relative;
+                             color: #0d395f;
+                             font-size: 18px;">
+                                    </i>
+                                  </div>
+
+                                  <div class="" (click)="doDeleteBills(item, i)" matTooltip="Delete"
+                                    style="cursor: pointer;display: inline-block;padding-left: 5px;" id="plus">
+                                    <i class="mdi mdi-trash-can-outline" matTooltip="Delete" style="display: block; 
+                margin: 0 auto;
+                top: -3px;
+                position: relative;
+                color: red;
+                font-size: 18px;"></i>
+                                  </div>
+
+                                </div>
+
+                              </div>
+                            </div>
+                            <div class="card-footer" *ngIf="hideRuleContent[i]">
+                              <div class="row" style="margin-bottom: -15px;">
+
+
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                    <label class="form-label searchbar-label">Remarks</label>
+                                    <label class="qcsummarylabel form-text text-muted">
+                                      <h3 style="font-size: 12px;margin-bottom: 0px;">
+                                        {{item.Remarks}}
+                                      </h3>
+                                    </label>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-4" *ngIf="(item.Status  == 2 || item.Status  == 1)">
+                                  <div class="form-group">
+                                    <label class="form-label searchbar-label">Approver Remarks</label>
+                                    <label class="qcsummarylabel form-text text-muted">
+                                      <h3 style="font-size: 12px;margin-bottom: 0px;"
+                                        *ngIf="item.RejectedRemarks != null && item.RejectedRemarks != ''">
+                                        {{item.RejectedRemarks}}
+                                      </h3>
+                                      <h3 style="font-size: 12px;margin-bottom: 0px;"
+                                        *ngIf="item.RejectedRemarks == null || item.RejectedRemarks == ''">
+                                        ---
+                                      </h3>
+                                    </label>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-4" *ngIf="item.BillId > 0">
+                                  <div class="form-group">
+                                    <label class="form-label searchbar-label">
+                                      <span style="color: #000 !important;"> <span
+                                          style="padding-right: 5px;color: #000 !important;"> Attachments
+                                        </span>
+                                        <i class="fa fa-download" matTooltip="Download"
+                                          (click)="downloadBillDocument(item)" style="font-size: 14px;position: relative;
+                             top: 2px;cursor: pointer;"></i>
+                                      </span>
+
+                                    </label>
+                                    <label class="qcsummarylabel form-text text-muted">
+                                      <h3 style="font-size: 12px;margin-bottom: 0px;">
+                                        <span>
+                                          <i class="fa fa-files-o" style="font-size: 14px;position: relative;
+                               top: 2px;"></i>
+                                          <span style="padding-right: 5px;"> {{item.FileName}} </span>
+                                        </span>
+                                      </h3>
+                                    </label>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                            </div>
+                          </div>
+                        </ng-conainer>
+                      </ng-container>
+
+                    </ng-container>
+
+
+
+
+
+
+                    <ng-container *ngIf="!IsOpenBillsCard && IsLTA">
+                      <div class="row" style="margin-top: 1rem;padding-left: 5px;padding-right: 15px;">
+                        <!-- <div class="col-md-1 text-center"
+                          *ngIf="(selectedStatusBox == -1 || selectedStatusBox == 'All')">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;padding-left: 15px;">
+                            <input type="checkbox" [(ngModel)]="selectAll" (click)="selectAllClaimRequest($event)"
+                              style="cursor: pointer;" />
+                          </p>
+                        </div> -->
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Journey Start Date
+                          </p>
+                        </div>
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Journey End Date
+                          </p>
+                        </div>
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Total Declared
+                            Amount (₹)
+                          </p>
+                        </div>
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Total Approved
+                            Amount (₹)
+                          </p>
+                        </div>
+                        <div class="col-md-2">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Total Bills </p>
+                        </div>
+                        <div class="col-md-1">
+                          <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Action </p>
+                        </div>
+                      </div>
+
+                      <div class="d-flex align-items-center" *ngIf="isrendering_spinner" style=" margin: 0;
+                    position: absolute;
+                    margin-top: 10px;
+                    left: 50%;
+                    transform: translate(-50%, -50%);">
+                        <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                      </div>
+
+                      <ng-container *ngIf="!isrendering_spinner && getLimitedBillDetails().length  == 0">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="card" style="border: none !important;padding: 2rem;">
+                              <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot"
+                                data-maintainscrollposition="True" style="text-align: center">
+                                <p style="margin-bottom: 8px;"><span id="MainContent_ctl143"
+                                    class="LabelMediumBig">There
+                                    are no
+                                    bill entries
+                                    in this screen yet.</span></p>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+
+
+                      <ng-container *ngIf="!isrendering_spinner && EmployeeJourneys.length > 0">
+                        <ng-conainer *ngFor="let item of EmployeeJourneys;let i = index">
+                          <div class="card tab-item"
+                            style="margin: 3px;background: #FFFFFF;box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);border-radius: 4px;margin-right: 15px;cursor: pointer;">
+                            <div class="card-body" style="padding: 10px;">
+                              <div class="row">
+                                <!-- <div class="text-left" class="col-md-1 text-center"
+                                  *ngIf="(selectedStatusBox == -1 || selectedStatusBox == 'All')">
+                                  <div *ngIf="item.Status  == 0 && item.EmployeeTaxExemptionId == 0">
+                                    <input type="checkbox" [(ngModel)]="item.isSelected"
+                                      (click)="selectBillEntries(item,item.isSelected, $event)"
+                                      style="cursor: pointer;" />
+                                  </div>
+                                </div> -->
+                                <div class="text-left" class="col-md-2">
+                                  <h6 class="h6-content subheading"> {{item.JourneyStartDate |date}} </h6>
+                                </div>
+                                <div class="text-center" class="col-md-2">
+                                  <h6 class="h6-content subheading text-center">{{item.JourneyEndDate | date}} </h6>
+                                </div>
+                                <div class="text-right" class="col-md-2">
+                                  <h6 class="h6-content subheading text-center">{{item.TotalDeclaredAmount |
+                                    currency:'INR':'symbol-narrow':'1.2-2'}}</h6>
+                                </div>
+                                <div class="text-right" class="col-md-2">
+                                  <h6 class="h6-content subheading text-center">{{item.TotalApprovedAmount |
+                                    currency:'INR':'symbol-narrow':'1.2-2'}}
+
+
+                                  </h6>
+                                </div>
+                                <div class="text-center" class="col-md-1">
+                                  <p
+                                    style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);text-align: center;">
+                                    {{item.TotalBills}}
+
+                                </div>
+                                <div class="col-md-2 text-right">
+
+                                  <div class="" (click)="toggle_LTA(i)"
+                                    style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                                    matTooltip="Approve" id="plus">
+                                    <i *ngIf="hideRuleContent_LTA[i]" class="mdi mdi-arrow-up-drop-circle-outline"
+                                      style="display: block;
+                margin: 0 auto;
+                top: -3px;
+                position: relative;
+                color: #5d5f5e;
+                font-size: 18px;padding-right: 5px;">
+                                    </i>
+                                    <i *ngIf="!hideRuleContent_LTA[i]" class="mdi mdi-arrow-down-drop-circle-outline"
+                                      style="display: block;
+                margin: 0 auto;
+                top: -3px;
+                position: relative;
+                color: #5d5f5e;
+                font-size: 18px;padding-right: 5px;">
+                                    </i>
+
+                                  </div>
+
+
+                                  <div class="" (click)="doEditBillsLTA(item, i)"
+                                    style="cursor: pointer;display: inline-block;padding-right: 5px;" id="plus">
+                                    <i class="mdi mdi-pencil-outline" matTooltip="Edit" style="display: block;
+                             margin: 0 auto;
+                             top: -3px;
+                             position: relative;
+                             color: #0d395f;
+                             font-size: 18px;">
+                                    </i>
+                                  </div>
+
+                                  <!-- <div class="" (click)="doDeleteBills(item, i)" matTooltip="Delete"
+                                    style="cursor: pointer;display: inline-block;padding-left: 5px;" id="plus">
+                                    <i class="mdi mdi-trash-can-outline" matTooltip="Delete" style="display: block; 
+                margin: 0 auto;
+                top: -3px;
+                position: relative;
+                color: red;
+                font-size: 18px;"></i>
+                                  </div> -->
+
+                                </div>
+
+                              </div>
+                            </div>
+                            <div class="card-footer" *ngIf="hideRuleContent_LTA[i]">
+                              <div class="row" *ngFor="let chid of item.Bills">
+
+
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                    <label class="form-label searchbar-label">Ticket/Expense amount - Date</label>
+                                    <label class="qcsummarylabel form-text text-muted">
+                                      <h3 style="font-size: 12px;margin-bottom: 0px;">
+                                        {{chid.BillAmount |
+                                        currency:'INR':'symbol-narrow':'1.2-2' }} - {{chid.BillDate
+                                        | date }}
+                                      </h3>
+                                    </label>
+                                  </div>
+                                </div>
+
+                                <!-- <div class="col-md-4" *ngIf="(chid.Status  == 2 || chid.Status  == 1)">
+                                  <div class="form-group">
+                                    <label class="form-label searchbar-label">Approver Remarks</label>
+                                    <label class="qcsummarylabel form-text text-muted">
+                                      <h3 style="font-size: 12px;margin-bottom: 0px;"
+                                        *ngIf="chid.RejectedRemarks != null && chid.RejectedRemarks != ''">
+                                        {{chid.RejectedRemarks}}
+                                      </h3>
+                                      <h3 style="font-size: 12px;margin-bottom: 0px;"
+                                        *ngIf="chid.RejectedRemarks == null || chid.RejectedRemarks == ''">
+                                        ---
+                                      </h3>
+                                    </label>
+                                  </div>
+                                </div> -->
+
+                                <div class="col-md-4">
+                                  <label class="form-label searchbar-label">Status</label>
+                                  <p
+                                    style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);">
+                                    <span class="badge badge-saved"
+                                      *ngIf="!chid.IsProposed && chid.Status  == 0 && chid.EmployeeTaxExemptionId == 0">
+                                      Saved </span>
+                                    <span class="badge badge-warning1"
+                                      *ngIf="!chid.IsProposed && chid.Status  == 0 && chid.EmployeeTaxExemptionId > 0">
+                                      Pending </span>
+                                    <span class="badge badge-danger1"
+                                      *ngIf="!chid.IsProposed && chid.Status  == 2 && chid.EmployeeTaxExemptionId > 0">
+                                      Rejected </span>
+                                    <span class="badge badge-success1"
+                                      *ngIf="!chid.IsProposed && chid.Status  ==1 && chid.EmployeeTaxExemptionId > 0">
+                                      Approved </span>
+
+                                    <span class="badge badge-saved"
+                                      *ngIf="chid.IsProposed && chid.BillId > 0 && chid.Status  == 0 && chid.EmployeeTaxExemptionId == 0">
+                                      Saved </span>
+                                    <span class="badge badge-warning1"
+                                      *ngIf="chid.IsProposed && chid.BillId > 0 && chid.Status  == 0 && chid.EmployeeTaxExemptionId > 0">
+                                      Pending </span>
+                                    <span class="badge badge-danger1"
+                                      *ngIf="chid.IsProposed && chid.BillId > 0 && chid.Status  == 2 && chid.EmployeeTaxExemptionId > 0">
+                                      Rejected </span>
+                                    <span class="badge badge-success1"
+                                      *ngIf="chid.IsProposed && chid.BillId > 0 && chid.Status  ==1 && chid.EmployeeTaxExemptionId > 0">
+                                      Approved </span>
+
+                                    <span class="badge badge-declaration" *ngIf="!chid.IsProposed && chid.BillId == 0 ">
+                                      Declaration </span>
+
+                                    <span class="badge badge-declaration" *ngIf="chid.IsProposed && chid.BillId == 0">
+                                      Declaration </span>
+
+                                    <span class="badge badge-declaration" *ngIf="!chid.IsProposed && chid.BillId > 0">
+                                      Proof </span>
+
+
+                                  </p>
+                                </div>
+
+                                <div class="col-md-4" *ngIf="chid.BillId > 0">
+                                  <div class="form-group">
+                                    <label class="form-label searchbar-label">
+                                      <span style="color: #000 !important;"> <span
+                                          style="padding-right: 5px;color: #000 !important;"> Attachments
+                                        </span>
+                                        <i class="fa fa-download" matTooltip="Download"
+                                          (click)="downloadBillDocument(chid)" style="font-size: 14px;position: relative;
+                             top: 2px;cursor: pointer;"></i>
+                                      </span>
+
+                                    </label>
+                                    <label class="qcsummarylabel form-text text-muted">
+                                      <h3 style="font-size: 12px;margin-bottom: 0px;">
+                                        <span>
+                                          <i class="fa fa-files-o" style="font-size: 14px;position: relative;
+                               top: 2px;"></i>
+                                          <span style="padding-right: 5px;"> {{chid.FileName}} </span>
+                                        </span>
+                                      </h3>
+                                    </label>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                            </div>
+                          </div>
+                        </ng-conainer>
+                      </ng-container>
+
+                    </ng-container>
+
+
+
+
+
+
+
+                  </ng-template>
+                </ngb-tab>
+              </ng-container>
+            </ngb-tabset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12 text-center" *ngIf="popupTaxBills.length == 0">
+            <b>There is no applicable exemption product. </b>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="modal-footer">
+
+        <div class="row"> 
+          <div class="col-lg-12 text-left" *ngIf="IsLTA && !IsOpenBillsCard && LstExmptionBillDetails.length > 0 && getPendingExemptionBills()">
+           
+            <div class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="incurredExpense" (click)="onClickIncurredExpenseLTA($event)" />
+              <label> This is to certify that I have actually incurred the above fare expense on the LTA
+                programme, along with my spouse, children and parents / brothers / sisters, as per details provided
+                above,
+                mainly and wholly depending upon me</label>
+            </div>
+
+          </div>
+          <div class="col-lg-12 text-right">
+            <button class="btn btn-link" *ngIf="!IsOpenBillsCard" style="margin-right: 10px;" type="button"
+              (click)="close_slider_exemptions()">
+              Close </button>
+
+            <!-- <button
+              [disabled]="(IsLTA && !incurredExpense || LstSelectedBillitems.length == 0) || (!IsLTA && LstSelectedBillitems.length === 0)"
+              class="btn btn-primary"
+              style="padding-left: 25px; padding-right: 25px; height: 36px; background-color: #27AE60; border: #27AE60;"
+              type="Submit" name="btnSubmit" id="btnSubmit" (click)="sendForApproval()">Send For Approval
+            </button> -->
+
+            <ng-container *ngIf="LstExmptionBillDetails.length > 0">
+            <button *ngIf="IsLTA && !IsOpenBillsCard  && getPendingExemptionBills()" [disabled]="!incurredExpense" class="btn  btn-primary" style="padding-left: 25px;padding-right: 25px;height: 36px;
+                              background-color: #27AE60;border: #27AE60;" type="Submit" name="btnSubmit" id="btnSubmit"
+              (click)="sendForApproval()"> Send For Approval
+            </button>
+
+           
+              <button *ngIf="!IsLTA && !IsOpenBillsCard" [disabled]="LstSelectedBillitems.length == 0"
+                class="btn  btn-primary" style="padding-left: 25px;padding-right: 25px;height: 36px;
+            background-color: #27AE60;border: #27AE60;" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="sendForApproval()"> Send For Approval
+              </button>
+            </ng-container>
+              <button class="btn btn-link" *ngIf="IsOpenBillsCard" style="margin-right: 10px;" type="button"
+                (click)="AddBills(false)">
+                Close
+              </button>
+           
+            <button *ngIf="IsLTA && IsOpenBillsCard" class="btn btn-white" (click)="PushBillsForLTA()"
+              style="background: #146BA2;color: #ffffff;">
+              Save Bills
+            </button>
+
+
+
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="dependentDetailsModal" class="modal fade" tabindex="1" role="dialog" aria-labelledby="dependentDetailsModal"
+  aria-hidden="true">
+  <div style="display: block;z-index: 1050;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <!-- <ng-template #dependentDetailsModal let-modal> -->
+        <!-- <div class="modal fade show modal-dependent-details" tabindex="-1" role="dialog" style="display: block;"> -->
+        <div class="modal-header">
+          <h4 class="modal-title" style="font-size: 15px; font-weight: 600;">Family/Traveller's details</h4>
+          <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Traveller's Name *</label>
+                <input class="form-control" [(ngModel)]="TravellerName" type="text" name="TravellerName"
+                  placeholder="Traveller Name" autocomplete="off">
+              </div>
+              <div *ngIf="IsDependentAdded && !CheckIsNullOrEmpty('TravellerName')" class="help-block">
+                Traveller Name is required
+              </div>
+            </div>
+
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Relationship with employee *</label>
+                <ng-select [items]="relationshipDependent" placeholder="-- select an option --"
+                  [(ngModel)]="RelationshipType" bindLabel="name" bindValue="id">
+                </ng-select>
+              </div>
+              <div *ngIf="IsDependentAdded && !CheckIsNullOrEmpty('RelationshipType')" class="help-block">
+                Relationship Type is required
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Date of Birth *</label>
+                <input class="form-control" [(ngModel)]="DateOfBirth" type="text" readonly name="dateOfBirth"
+                  bsDatepicker placement="bottom" [maxDate]="maxDateOfDOB"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                  placeholder="DD-MM-YYYY">
+              </div>
+              <div *ngIf="IsDependentAdded && !CheckIsNullOrEmpty('DateOfBirth')" class="help-block">
+                Date Of Birth is required
+              </div>
+            </div>
+
+            <!-- <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Travel Type *</label>
+
+                <ng-select [items]="TravelTypes" placeholder="Travel Type" [(ngModel)]="TravelType" bindLabel="name"
+                  bindValue="id">
+                </ng-select>
+
+
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Travel Date From *</label>
+                <input class="form-control" [(ngModel)]="TravelDateFrom" type="text" readonly name="startDateFrom"
+                  bsDatepicker placement="top"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                  placeholder="DD-MM-YYYY">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Travel Date To *</label>
+                <input class="form-control" [(ngModel)]="TravelDateTo" type="text" readonly name="startDateTo"
+                  bsDatepicker placement="top"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                  placeholder="DD-MM-YYYY">
+              </div>
+            </div> -->
+
+            <!-- <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Expense *</label>
+                <input class="form-control" [(ngModel)]="Expense" type="text" name="Expense" placeholder="Expense"
+                  autocomplete="off">S
+              </div>
+            </div> -->
+
+            <!-- <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label">Comments</label>
+                <textarea class="form-control" [(ngModel)]="OtherDetails" name="OtherDetails"
+                  placeholder="Comments"></textarea>
+              </div>
+            </div> -->
+
+
+
+          </div>
+
+
+          <!-- <div class="row">
+
+        <div class="col-xs-12 col-md-6">
+          <div class="form-group">
+            <label class="form-label searchbar-label">Dependant Name *</label>
+            <label class="qcsummarylabel form-text text-muted">
+              <input class="form-control" [(ngModel)]="DependentName" type="text" name="NameOfLender"
+                placeholder="Dependant Name" autocomplete="off">
+            </label>
+            <div *ngIf="IsDependentAdded && !CheckIsNullOrEmpty('DependentName')" class="help-block">
+              Dependant Name is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+          <label class="form-label">Relationship</label>
+          <ng-select [items]="relationship" placeholder="-- select an option --" [(ngModel)]="Relationship"
+            bindLabel="name" bindValue="id" (change)="onChangeRelationship($event)">
+          </ng-select>
+          <div *ngIf="IsDependentAdded && !CheckIsNullOrEmpty('Relationship')" class="help-block">
+            Relationship Name is required
+          </div>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+          <label class="form-label">Date of Birth *</label>
+          <input class="form-control" [(ngModel)]="DateOfBirth" type="text" readonly name="startDate" bsDatepicker
+            placement="left"
+            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+            placeholder="DD-MM-YYYY">
+          <div *ngIf="IsDependentAdded && !CheckIsNullOrEmpty('DateOfBirth')" class="help-block">
+            Date Of Birth is required
+          </div>
+        </div>
+
+
+      </div> -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="PushDependent()">
+            {{ TravelID != null ? 'Update' : 'Add' }}
+          </button>
+        </div>
+        <!-- </div> -->
+        <!-- </ng-template> -->
+      </div>
+    </div>
+  </div>
+</div>

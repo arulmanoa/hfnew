@@ -1,0 +1,157 @@
+<!-- <div class="overflow-x:hidden">
+  <app-tool-bar (toggleProvidedProvided)="toggleProvidedProvided()" (toggleRightNavProvided)="toggleRightNavProvided()"></app-tool-bar>
+</div>
+<div class="container-fluid">
+  <div class="row d-flex d-md-block flex-nowrap wrapper">
+    <div class=" col-4 col-sm-2  col-lg-2 float-left  pl-0 pr-0  collapse width" id="sidebar" style="width:170px" [ngbCollapse]="!opened">
+
+      <div class="list-group border-0 card text-center text-md-left sidebarFullView" style="padding-top: 10px;" >
+     
+        <div *ngFor="let LeftNavMenuItem of LeftNavMenuValues">
+          <a [routerLink]="LeftNavMenuItem.RouterLink" class="list-group-item" data-parent="#sidebar" *ngIf="!LeftNavMenuItem.items.length"
+          style="border-top-style: none;
+          border-bottom-width: thin;">
+            <i class="{{LeftNavMenuItem.IconValue}}"  style="color:whitesmoke"></i> <span class="d-none d-md-inline"  style="color:whitesmoke">{{LeftNavMenuItem.IconName}}</span>
+          </a>
+          <a href="#{{LeftNavMenuItem.IconName}}" class="list-group-item d-inline-block collapsed" data-toggle="collapse"
+            *ngIf="LeftNavMenuItem.items.length" aria-expanded="false"
+            style="border-top-style: none;
+          border-bottom-width: thin;"><i class="{{LeftNavMenuItem.IconValue}}"  style="color:whitesmoke"></i>
+            <span class="d-none d-md-inline"  style="color:whitesmoke">{{LeftNavMenuItem.IconName}}</span>
+          </a>
+          <div class="collapse" id="{{LeftNavMenuItem.IconName}}" *ngFor="let LeftNavMenuinnerItem of LeftNavMenuItem.items">
+            <a routerLink="LeftNavMenuinnerItem.RouterLink" class="list-group-item" data-parent="#sidebar" *ngIf="!LeftNavMenuinnerItem.items.length"
+            style="border-top-style: none;
+          border-bottom-width: thin; padding-left:2rem;">
+              <i class="{{LeftNavMenuinnerItem.IconValue}}" style="color:whitesmoke"></i> <span class="d-none d-md-inline" style="color:whitesmoke">{{LeftNavMenuinnerItem.IconName}}</span>
+            </a>
+            <a href="#{{LeftNavMenuinnerItem.IconName}}" class="list-group-item" data-toggle="collapse" *ngIf="LeftNavMenuinnerItem.items.length"
+              aria-expanded="false"> <i class="{{LeftNavMenuinnerItem.IconValue}}"
+              style="border-top-style: none;
+          border-bottom-width: thin;"></i> <span class="d-none d-md-inline">{{LeftNavMenuinnerItem.IconName}}</span>
+            </a>
+            <div class="collapse" id="{{LeftNavMenuinnerItem.IconName}}" *ngFor="let LeftNavMenuSubinnerItem of LeftNavMenuinnerItem.items">
+              <a routerLink="LeftNavMenuSubinnerItem.RouterLink" class="list-group-item" data-parent="#sidebar"
+              style="border-top-style: none;
+          border-bottom-width: thin;">
+                <i class="{{LeftNavMenuSubinnerItem.IconValue}}"></i> <span class="d-none d-md-inline">{{LeftNavMenuSubinnerItem.IconName}}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-2 col-sm-2  col-lg-1 float-left  pl-0 pr-0  collapse width miniSideBar"   id="sidebar" [ngbCollapse]="opened">
+      <div class="list-group border-0 card text-center text-md-left" style="padding-top: 10px;    background-image: linear-gradient(#0f223a, #0f223a);">
+      
+        <div *ngFor="let LeftNavMenuItem of LeftNavMenuValues">
+          <a id="{{LeftNavMenuItem.IconName}}{{LeftNavMenuItem.id}}" routerLink="LeftNavMenuItem.RouterLink" class="list-group-item"
+            data-parent="#sidebar" *ngIf="!LeftNavMenuItem.items.length" style="border-top-style: none;
+            border-bottom-width: thin;">
+            <i class="{{LeftNavMenuItem.IconValue}}" style="color:whitesmoke"></i> 
+            <span class="d-none d-md-inline"></span>
+            <dx-tooltip target="#{{LeftNavMenuItem.IconName}}{{LeftNavMenuItem.id}}" showEvent="dxhoverstart" hideEvent="dxhoverend">
+              <div *dxTemplate="let data = data of 'content'">
+                {{LeftNavMenuItem.MenuName}}
+              </div>
+            </dx-tooltip>
+          </a>
+        
+          <a href="#{{LeftNavMenuItem.IconName}}" id="{{LeftNavMenuItem.IconName}}{{LeftNavMenuItem.id}}" class="list-group-item d-inline-block collapsed"
+            data-toggle="collapse" *ngIf="LeftNavMenuItem.items.length" aria-expanded="false" style="border-top-style: none;
+            border-bottom-width: thin;"><i class="{{LeftNavMenuItem.IconValue}}"  style="color:whitesmoke">
+              <dx-tooltip target="#{{LeftNavMenuItem.IconName}}{{LeftNavMenuItem.id}}" showEvent="dxhoverstart"
+                hideEvent="dxhoverend">
+                <div *dxTemplate="let data = data of 'content'">
+                  {{LeftNavMenuItem.MenuName}}
+                </div>
+              </dx-tooltip>
+            </i>
+
+          </a>
+         
+          <div class="collapse" id="{{LeftNavMenuItem.IconName}}" *ngFor="let LeftNavMenuinnerItem of LeftNavMenuItem.items">
+            <a id="{{LeftNavMenuinnerItem.IconName}}{{LeftNavMenuinnerItem.id}}" routerLink="LeftNavMenuinnerItem.RouterLink"
+              class="list-group-item" data-parent="#sidebar" *ngIf="!LeftNavMenuinnerItem.items.length" style="border-top-style: none;
+              border-bottom-width: thin;padding-left:2rem; ">
+              <i class="{{LeftNavMenuinnerItem.IconValue}}"  style="color:whitesmoke"></i>
+              <dx-tooltip target="#{{LeftNavMenuinnerItem.IconName}}{{LeftNavMenuinnerItem.id}}" showEvent="dxhoverstart"
+                hideEvent="dxhoverend">
+                <div *dxTemplate="let data = data of 'content'">
+                  {{LeftNavMenuinnerItem.MenuName}}
+                </div>
+              </dx-tooltip>
+            </a>
+           
+            <a href="#{{LeftNavMenuinnerItem.IconName}}" id="{{LeftNavMenuinnerItem.IconName}}{{LeftNavMenuinnerItem.id}}"
+              class="list-group-item" data-toggle="collapse" *ngIf="LeftNavMenuinnerItem.items.length" aria-expanded="false" style="border-top-style: none;
+              border-bottom-width: thin;">
+              <i class="{{LeftNavMenuinnerItem.IconValue}}" style="color:whitesmoke"></i>
+
+            </a>
+            <dx-tooltip target="#{{LeftNavMenuinnerItem.IconName}}{{LeftNavMenuinnerItem.id}}" showEvent="dxhoverstart"
+              hideEvent="dxhoverend">
+              <div *dxTemplate="let data = data of 'content'">
+                {{LeftNavMenuinnerItem.MenuName}}
+              </div>
+            </dx-tooltip>
+            
+            <div class="collapse" id="{{LeftNavMenuinnerItem.IconName}}" *ngFor="let LeftNavMenuSubinnerItem of LeftNavMenuinnerItem.items">
+              <a id="{{LeftNavMenuSubinnerItem.IconName}}{{LeftNavMenuSubinnerItem.id}}" routerLink="LeftNavMenuSubinnerItem.RouterLink"
+                class="list-group-item" data-parent="#sidebar" style="border-top-style: none;
+                border-bottom-width: thin;">
+                <i class="{{LeftNavMenuSubinnerItem.IconValue}}"></i>
+                <dx-tooltip target="#{{LeftNavMenuSubinnerItem.IconName}}{{LeftNavMenuSubinnerItem.id}}" showEvent="dxhoverstart"
+                  hideEvent="dxhoverend">
+                  <div *dxTemplate="let data = data of 'content'">
+                    {{LeftNavMenuSubinnerItem.MenuName}}
+                  </div>
+                </dx-tooltip>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-2 col-sm-2  col-lg-1 float-right  pl-0 pr-0  width" style="width:755px;"  id="sidebarRightNav" [hidden]="!RightNavopened">
+      <div class="list-group border-0 card text-center text-md-left">
+        <div class="row list-group-item">
+          <div class="col-md-12" >
+            <input type="checkbox"  class="checkbox"[(ngModel)]="gridLayoutEnable" (change)="OnGridLayoutSettingChange()" /> Grid Layout 
+          </div>
+        </div>        
+
+      </div>
+    </div>
+    <main class="col-12 col-sm-12 col-lg-12 maincontent" style="padding-right:0" >
+
+      <div id="content">
+
+
+        <nav class="navbar navbar-default"  style="padding-right:0;padding-left: 0px;
+        padding-top: 0px;background-color: #f9f9f9;">
+
+
+
+          <div class="" style="width:100%; overflow-x: auto; overflow-y:auto; height: 100%;padding-bottom:0">
+
+            <div class="navbar-header">
+
+              <router-outlet></router-outlet>
+              <br />
+            </div>
+          </div>
+        </nav>
+      </div>
+    </main>
+    
+  </div>
+</div>
+
+
+
+
+ -->

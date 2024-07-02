@@ -1,0 +1,171 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <small class="header-pretitle" *ngIf="Id == 0"><b>Create new Cost Code</b></small>
+        <small class="header-pretitle" *ngIf="Id != 0"><b>Edit Cost Code</b></small>
+      </div>
+
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;">
+
+        <div class="d-flex align-items-center" *ngIf="spinner"
+          style=" margin: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+          <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+        <br />
+
+        <div class="row" *ngIf="!spinner">
+          <div class="col-lg-12">
+
+            <form [formGroup]="costCodeForm">
+              <div class="row">
+                <div *ngIf="BusinessType == 3" class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Client Name <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="LstClient" placeholder="-- Select Client --" formControlName="ClientId"
+                    [ngClass]="{'ng-touched': submitted && g.ClientId.errors }" bindLabel="Name" bindValue="Id"
+                    (change)="onChangeClient($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && g.ClientId.invalid" class="help-block">
+                    <div *ngIf="g.ClientId.errors.required">Client Name is required
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="BusinessType == 3" class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Client Contract Name <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="LstClientContract" placeholder="-- Select Client Contract --"
+                    formControlName="ClientContractId"
+                    [ngClass]="{'ng-touched': submitted && g.ClientContractId.errors }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.ClientContractId.invalid" class="help-block">
+                    <div *ngIf="g.ClientContractId.errors.required">Client Contract Name is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Code <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" style="text-transform:uppercase"
+                    name="Code" formControlName="Code" [ngClass]="{ 'is-invalid': submitted && g.Code.errors }"
+                    placeholder="AO-KA/CL-KA" autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.Code.errors" class="invalid-feedback">
+                    <div *ngIf="g.Code.errors.required">Team Code is required
+                    </div>
+                  </div>
+                  <!-- <div *ngIf="clientForm.get('Code').errors || clientForm.get('Code').touched" class="help-block">
+                    <span *ngIf="clientForm.get('Code').errors.minlength">
+                      Client Code should be minimum 5 characters
+                    </span>
+                  </div> -->
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Description <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" name="Description" #Description
+                    formControlName="Description" [ngClass]="{ 'is-invalid': submitted && g.Description.errors }"
+                    placeholder="CLIENT-STATE/COMPANY-STATE" autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.Description.errors" class="invalid-feedback">
+                    <div *ngIf="g.Description.errors.required">Description is required
+                    </div>
+                  </div>
+                  <!-- <div *ngIf="clientForm.get('Name').errors || clientForm.get('Name').touched" class="help-block">
+                    <span *ngIf="clientForm.get('Name').errors.minlength">
+                      Client Name should be minimum 5 characters
+                    </span>
+                  </div> -->
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Billing Contact Location <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="ClientContactLocationList" placeholder="-- Select Billing Contact --"
+                    formControlName="BillingContactLocationMappingId"
+                    [ngClass]="{'ng-touched': submitted && g.BillingContactLocationMappingId.errors }"
+                    bindLabel="DisplayName" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.BillingContactLocationMappingId.invalid" class="help-block">
+                    <div *ngIf="g.BillingContactLocationMappingId.errors.required">Billing Contact Location is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Shipping Contact <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="ClientAddressDetailsList" placeholder="-- Select Shipping Contact --"
+                    formControlName="ShippingContactId"
+                    [ngClass]="{'ng-touched': submitted && g.ShippingContactId.errors }" bindLabel="DisplayName"
+                    bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.ShippingContactId.invalid" class="help-block">
+                    <div *ngIf="g.ShippingContactId.errors.required">Shipping Contact is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Company Branch<span class="required">*</span>
+                  </label>
+                  <ng-select [items]="CompanyBranchList" placeholder="-- Select Branch Name --"
+                    formControlName="CompanyBranchId" [ngClass]="{'ng-touched': submitted && g.CompanyBranchId.errors }"
+                    bindLabel="BranchName" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.CompanyBranchId.invalid" class="help-block">
+                    <div *ngIf="g.CompanyBranchId.errors.required">Company Branch is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label"> Status </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" formControlName="IsActive">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+
+
+              </div>
+            </form>
+
+            <br />
+            <br />
+            <br />
+
+          </div>
+
+        </div>
+
+
+        <div class="row footr">
+          <div class="col-md-6 text-left ">
+          </div>
+          <div class="col-md-6 text-right ">
+            <button class="btn btn-link" type="button"
+              style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="close()">
+              &nbsp; &nbsp; Cancel &nbsp; &nbsp; </button>
+
+            <button class="btn btn-primary" (click)="doSaveTeam()" *ngIf="!spinner"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Save &nbsp; &nbsp;
+            </button>
+
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>

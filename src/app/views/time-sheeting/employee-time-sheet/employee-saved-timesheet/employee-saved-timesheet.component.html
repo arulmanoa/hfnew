@@ -1,0 +1,50 @@
+<div class="w-100" #employeeSavedTimesheet>
+  <div class="text-center ma-5" *ngIf="spinner">
+    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+      Please wait...
+    </button>
+  </div>
+  <div class="text-center ma-5" *ngIf=" !spinner && showNoDataFound">
+    <span>No records found!</span>
+  </div>
+  <div class="col-12 color-white" *ngIf="!spinner && !showNoDataFound">
+    <div class="w-100">
+      <table class="table custom-table">
+        <thead>
+          <tr>
+            <!-- <th> <input type="checkbox" [(ngModel)]="isSelectAll"> </th> -->
+            <th>Date(s)</th>
+            <th>Total Working Hours</th>
+            <!-- <th>Overtime(hrs)</th> -->
+            <th>Saved on</th>
+            <th> </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of pagedDataList">
+            <!-- <td>
+                <input type="checkbox" class="cursor-pointer" [(ngModel)]="data.isSelected" (change)="onCheckboxClicked($event, data)" />
+              </td> -->
+            <td>{{data.PeriodFrom | date: 'dd MMM yyyy'}} - {{data.PeriodTo | date: 'dd MMM yyyy'}}</td>
+            <td>{{ data.TotalHours }}</td>
+            <!-- <td>{{ data.overTime }}</td> -->
+            <td>{{ data.SubmittedOn | date: 'dd MMM yyyy' }}</td>
+            <td>
+              <button class="btn text-color cursor-pointer" (click)="updateSavedTimeSheetEntry(data)">Edit</button>
+              <button class="btn btn-primary cursor-pointer action-btn" (click)="submitTimeSheetEntry(data)">Submit for
+                Approval</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="custom-table-pagination cursor-pointer">
+        <button class="btn prev" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <span class="page" *ngFor="let page of pages" [class.active]="page === currentPage"
+          (click)="changePage(page)">{{ page }}</span>
+        <button class="btn next" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+      </div>
+    </div>
+  </div>
+</div>

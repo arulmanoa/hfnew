@@ -1,0 +1,283 @@
+
+nb-checkbox label span{
+  float: right;
+  color: white;
+  border-color: white;
+}
+
+:host ::ng-deep .highlights
+{
+  border-style: solid;
+  border-width: thin;
+  border-color: #E74C3C !important;
+}
+
+.li.nav-tab.active
+{
+  background-color: white;
+}
+.active
+{
+  background-color: white;
+}
+:host ::ng-deep .droppedStyle
+{
+ position:relative;
+ float:unset;
+ left:0;
+ top:0;
+ display:inline-block;
+
+ border-style:solid;
+ border-color:grey;
+ border-radius:10px;
+ padding-left:3px;
+ padding-right:3px;
+ padding-top:1px;
+ padding-bottom:1px;
+ border-width:thin;
+ margin-left:2px;
+ margin-right:2px;
+ margin-top:1px;
+ margin-bottom:1px;
+ background-color:aliceblue;
+}
+
+
+.accordion {
+  background:linear-gradient(to left, steelblue, #40dc7e);
+  color: #444;
+  cursor: pointer;
+  padding: 8px;
+  margin-right: 3rem;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  color:white;
+}
+
+.active, .accordion:hover {
+  //background: linear-gradient(to left, steelblue, #40dc7e);; 
+}
+
+.panel {
+  width:100%;
+  padding: 8px 0px 3px 8px;
+    display: none;
+    margin-right: 3rem;
+    margin-bottom: 0.5rem;
+  display: none;
+  background-color: white;
+  overflow: hidden;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+////////////////
+p {
+  font-family: Lato;
+}
+
+.highlight{
+  background-color: red;
+}
+
+.hideChildren>div{
+   display: none;
+}
+
+div{
+ // border : solid 1px blue;
+  //margin: 4px;
+  //padding: 4px;
+}
+
+
+////////////////////////////////////
+
+// @import '../../../app/@theme/styles/themes';
+// @import '~bootstrap/scss/mixins/breakpoints';
+// @import '~@nebular/theme/styles/global/breakpoints';
+
+// @include nb-install-component() {
+
+//   nb-tabset {
+//     height: 100%;
+//     display: flex;
+//     flex-direction: column;
+//   }
+
+//   nb-tab {
+//     padding: nb-theme(padding);
+//   }
+
+//   /deep/ ngx-tab1, /deep/ ngx-tab2 {
+//     display: block;
+//     padding: nb-theme(padding);
+//   }
+
+//   @include media-breakpoint-down(xs) {
+//     nb-tabset /deep/ul {
+//       font-size: 1rem;
+//       padding: 0 0.25rem;
+//     }
+//   }
+
+
+// }
+
+
+/////////////////////////////////////////////////
+
+
+  
+  li {
+    flex: 0;
+    display: flex;
+    // align-items: stretch;
+    // padding: 20px;
+    background: linear-gradient(to bottom, steelblue, #40dc7e); // #cc181e;
+    cursor: pointer;
+    transition: all .5s ease;
+    
+          &:hover 
+          {
+            background:linear-gradient(to top, steelblue, #40dc7e); //#E74C3C;
+          }
+    
+          &.active 
+          {
+            flex: min-content;
+            min-width: min-content;
+            max-width: min-content;
+            //background: #fff;
+            cursor: default;
+            
+            h2 
+            {
+              color: #E74C3C;
+            }
+            
+            .section-content 
+            {
+              flex: 5;
+              display: flex;
+              opacity: 1;
+              transform: scaleX(1);
+              // color: #E74C3C;
+              min-width: min-content;
+            
+            }
+          }
+    
+    .section-title {
+      flex: 0;
+
+      width:30px;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: white;
+      
+      // h2 
+      // {
+      //   margin-left: -15px;
+      //   transform: rotate(-90deg);
+      //   //white-space: nowrap;
+      // }
+    }
+    
+    .section-content {
+      //width:0px;
+      flex:0;
+      display: none;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      transition: all .25s .1s ease-out;
+    }
+  }
+  
+  
+
+
+// .div_1
+// {
+//   color: white;
+//   background-color: black;
+//   position: absolute;
+//   top:10%;
+//   border: 2px solid black;
+//   width: 100px;
+//   height: 100px;
+//   cursor: move;
+// }
+
+// .div_2
+// {
+//   margin-left:200px;
+//   border: 2px solid black;
+//   width: 400px;
+//   height: 300px;
+// }
+
+.divOperators
+{
+    float:left;position:relative;border-style:solid;border-color:grey;
+            border-radius:10px;padding-left:3px;padding-right:3px;padding-top:1px;padding-bottom:1px;border-width:thin;
+            margin-left:2px;margin-right:2px;margin-top:1px;margin-bottom:1px;background-color:aliceblue;width: 28px;
+            text-align: center;
+}
+
+.divOperatorInsert
+{
+    float:left;position:relative;border-style:solid;border-color:grey;
+            border-radius:10px;padding-left:3px;padding-right:3px;padding-top:1px;padding-bottom:1px;border-width:thin;
+            margin-left:2px;margin-right:2px;margin-top:1px;margin-bottom:1px;background-color:aliceblue;width: 28px;
+            text-align: center;
+}
+
+.divOperatorHeads
+{
+     position:relative; /*it can be fixed too*/
+     float: left;
+        left:0; right:0;
+        top:0; bottom:0;
+        margin-top: 2px;
+}
+
+
+.divCondition
+{
+    overflow-y: scroll;width:100%;border-style: solid;border-color: grey;border-width:thin;margin: 3px;height:100%;
+}
+
+.divTrue
+{
+    overflow-y: scroll;width:100%;border-style: solid;border-color: grey;border-width:thin;margin: 3px;height:100%;
+}
+
+.divFalse
+{
+    overflow-y: scroll;width:100%;border-style: solid;border-color: grey;border-width:thin;margin: 3px;height:100%;
+}
+
+.divOperatorSep
+{
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-top: 0px;
+    padding-bottom:0px;
+    height: 100%;
+}

@@ -1,0 +1,867 @@
+<div class="page-wrapper" style="padding-top: 0px;">
+  <div class="page-content">
+
+    <app-loading-screen></app-loading-screen>
+
+   
+    <!-- <app-searchbar-view *ngIf="beforeEmployee" [searchConfiguration] ="searchConfiguration"
+        (searchButtonClicked)="onClickingSearchButton($event)"></app-searchbar-view> -->
+  
+    <div class="content report-content search-bar-margin" *ngIf="isHistoryHidden && isAllenDigital">
+      <!-- Search Bar -->
+      <div class="accordion" id="accordionSearch" style="margin-top: 10px;">
+        <div class="card-header" id="headingTwo">
+          <h5 class="my-0" style="height:1.5rem;">
+              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#CanCollapse" 
+              aria-expanded="false" aria-controls="clientCollapse" style="padding-top: 0px;text-decoration: none;">
+                  <p class="card-header-title"> <i class="fa fa-search p-r-10 search-icon"
+                          aria-hidden="true"></i> Search Criteria</p>
+              </button>
+          </h5>
+        </div>
+
+        <div id="CanCollapse" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionSearch">
+          <div class="card-body" style="padding-top: 10px; padding-bottom: 15px;">
+            <app-searchbar-view *ngIf="activeTabName === 'myBucket'" [searchConfiguration]="searchConfiguration" Content="General"
+            (searchButtonClicked)="onClickingSearchButton($event)" >
+            </app-searchbar-view>
+
+            <app-searchbar-view *ngIf="activeTabName === 'searchAll'" [searchConfiguration]="searchConfigurationForSearchAll" Content="General"
+            (searchButtonClicked)="onClickingSearchAllSearchButton($event)" >
+            </app-searchbar-view>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- For Seach Panel -->
+    <!-- <div class="content report-content post" style="margin-top: 10px;margin-bottom: -10px;">
+      <div class="col-12 col-md-12 col-sm-12" style="padding:0px">
+
+        <div class="row">
+
+          <div class="form-group-vertical col-xs-12 col-sm-3">
+            <label class="form-label searchbar-label">Contract Code</label>
+            <div class="form-group m-t-m5">
+              <div class="input-group">
+                <input class="form-control" [(ngModel)]="ClientCode" style="border-radius: 3px 0px 0px 3px !important;"
+                  placeholder="CLI0001" autocomplete="none|false|no">
+                <div class="input-group-addon"><i class="mdi mdi-account-multiple icon-color"></i></div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-vertical col-xs-12 col-sm-3">
+            <label class="form-label searchbar-label">Client Name</label>
+            <div class="form-group m-t-m5">
+              <div class="input-group">
+                <input class="form-control" [(ngModel)]="ClientName" style="border-radius: 3px 0px 0px 3px !important;"
+                  placeholder="INTEGRUM TECHNOLOGIES" autocomplete="none|false|no">
+                <div class="input-group-addon"><i class="mdi mdi-account-multiple icon-color"></i></div>
+
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group-vertical col-xs-12 col-sm-3">
+            <label class="form-label searchbar-label">Employee Code</label>
+            <div class="form-group m-t-m5">
+              <div class="input-group">
+                <input class="form-control" [(ngModel)]="EmployeeCode"
+                  style="border-radius: 3px 0px 0px 3px !important;" placeholder="30000" autocomplete="none|false|no">
+                <div class="input-group-addon"><i class="mdi mdi-account icon-color"></i></div>
+
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group-vertical col-xs-12 col-sm-6 col-md-3 col-lg-3">
+            <label class="form-label searchbar-label">Transaction Status</label>
+            <div class="form-group m-t-m5">
+              <div class="input-group">
+                <ng-select [items]="ELCStatusList" placeholder="Status" [(ngModel)]="TransactionStatus" bindLabel="name"
+                  bindValue="id" style="border-radius: 3px 0px 0px 3px !important;width: 86% !important">
+                </ng-select>
+
+                <div class="input-group-addon"><i class="mdi mdi-comment-processing-outline icon-color"></i></div>
+
+              </div>
+            </div>
+          </div>
+
+         
+        </div>
+        <div class="row" style="float: right;padding-right: 6px;">
+          <div class="col-12 col-md-12 col-sm-12">
+            <ul class="list-inline">
+              <li class="list-inline-item">
+
+                <button class="btn btn-primary btn-sm" (click)="searchData()" style="margin-top: -5px;">
+                  <i class="mdi mdi-file-find"></i> Search
+                </button>
+              </li>
+              <li class="list-inline-item">
+
+                <button class="btn btn-default btn-bold" prevent-double-submit tooltip="Clear" style="margin-top: -5px;"
+                  (click)="clearSearchCriteria()" tooltip-placement="bottom" data-original-title="" title="">
+                  <i class="mdi mdi-close font-size-md"></i> Clear
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+
+
+    </div> -->
+
+    <br>
+
+    <!-- For Old Grid -->
+    <!-- <div class="docs-page" *ngIf="spinner">
+      <div class="Error full-screen">
+        <div><img src="assets/Images/folder.svg" style="height: 6rem;"> </div>
+        <h1>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"> </span>
+        </h1>
+        <p>Please wait while we set things up for you</p>
+      </div>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner && dataset?.length > 0" style="min-height: 30% !important;">
+      <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+        [dataset]="dataset" gridWidth="100%" (onAngularGridCreated)="angularGridReady($event)">
+      </angular-slickgrid>
+
+    </div>
+    <div class="docs-page" *ngIf="dataset?.length == 0 && !spinner">
+      <div class="Error full-screen">
+        <div><img src="assets/Images/empty_data.svg" style="height: 6rem;"> </div>
+        <h4>Oops! No data found with current filters
+        </h4>
+        <p>There seems to be no data available to show. Try in some other time or input.</p>
+      </div>
+    </div> -->
+
+
+    <div class="content  report-content minus-margin"   *ngIf="isHistoryHidden">
+        
+      <div class="history-button" *ngIf="!spinner && isAllenDigital">
+        <button (click)="fetchElcHistory()"><i class="fa fa-eye m-r-xs"></i> View Transaction History</button>
+      </div>
+            <ngb-tabset (tabChange)="beforeMyBucketTabChange($event)" [(activeId)]="activeMyBucketTabName" [disabled]="spinner">
+              <ngb-tab id="Pending">
+                <ng-template ngbTabTitle><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;&nbsp;Pending</ng-template>
+                <ng-template ngbTabContent>
+
+                  <!-- spinner -->
+                  <div class="text-center ma-5" *ngIf="spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                            role="status" aria-hidden="true"></span>
+                        Please wait...
+                    </button>
+                  </div>
+
+                  <!-- Buttons -->
+                  <div class="row" *ngIf="!spinner" style="margin-top: 10px">
+
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+                      <div class="text-left">
+                        <ul class="list-inline">
+              
+                  
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                      <div class="text-right">
+                        <ul class="list-inline">
+                          
+              
+                          <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="chooseEmployee()">
+                              <i class="mdi mdi-account-multiple-outline  m-r-xs"></i> Choose Employee
+                            </button></li>
+              
+                        </ul>
+                      </div>
+                    </div>
+              
+                  </div>
+
+                  <!-- Grid -->
+                  <div *ngIf="!spinner" style="margin-top: 10px" >
+                    <angular-slickgrid gridId="pendingBucket" [columnDefinitions]="pendingBucketColumnDefinitions" 
+                    [gridOptions]="pendingBucketGridOptions" [dataset]="dataset" 
+                    (sgOnSelectedRowsChanged)="pendingBucketSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    (onAngularGridCreated)="pendingBucketGridReady($event)" 
+                    gridWidth="100%">
+                    </angular-slickgrid>
+                  </div>
+
+                  <!-- Row to show Count -->
+                  <div class="row" style="margin-top: -10px;;" *ngIf="!spinner">
+                    <div class="col-lg-6">
+            
+                    </div>
+                    <div class="col-lg-6" style="text-align: right;">
+                      <label> <b> Total Employee(s) : <b> {{dataset?.length}}</b></b></label>
+                    </div>
+                  </div>
+                </ng-template>
+              </ngb-tab>
+              <ngb-tab id="Saved">
+                <ng-template ngbTabTitle><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;&nbsp;Saved</ng-template>
+                <ng-template ngbTabContent>
+
+                  <!-- spinner -->
+                  <div class="text-center ma-5" *ngIf="spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                            role="status" aria-hidden="true"></span>
+                        Please wait...
+                    </button>
+                  </div>
+
+                  <!-- Buttons -->
+                  <div class="row" *ngIf="!spinner" style="margin-top: 10px">
+
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+                      <div class="text-left">
+                        <ul class="list-inline">
+              
+              
+                          <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="onClickingSubmitButton()">
+                              <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Submit
+                            </button></li>
+
+              
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                      <div class="text-right">
+                        <ul class="list-inline">
+                          
+                          <li class="list-inline-item">
+                            <button class="btn btn-danger btn-bold"  (click)="voidElcTransactions()"
+                              tooltip-placement="bottom" tooltip="Cancel selected transactions" data-original-title="" title="">
+                              <i class="mdi mdi-cancel font-size-md"></i> Cancel Transactions
+                            </button>
+                          </li>
+              
+                          <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="chooseEmployee()">
+                              <i class="mdi mdi-account-multiple-outline  m-r-xs"></i> Choose Employee
+                            </button></li>
+              
+                        </ul>
+                      </div>
+                    </div>
+              
+                  </div>
+
+                  <!-- Grid -->
+                  <div *ngIf="!spinner" style="margin-top: 10px" >
+                    <angular-slickgrid gridId="grdInSavedBucket" [columnDefinitions]="inSavedBucketColumnDefinitions" 
+                    [gridOptions]="inSavedBucketGridOptions" [dataset]="dataset" 
+                    (sgOnSelectedRowsChanged)="inSavedBucketSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    (onAngularGridCreated)="inSavedBucketGridReady($event)" 
+                    gridWidth="100%">
+                    </angular-slickgrid>
+                  </div>
+
+                  <!-- Row to show Count -->
+                  <div class="row" style="margin-top: -10px;;" *ngIf="!spinner">
+                    <div class="col-lg-6">
+            
+                    </div>
+                    <div class="col-lg-6" style="text-align: right;">
+                      <label> <b> Total Employee(s) : <b> {{dataset?.length}}</b>
+                          &nbsp; &nbsp; &nbsp; Selected Employee(s) : <b> {{selectedItems?.length}}</b></b></label>
+                    </div>
+                  </div>
+                </ng-template>
+              </ngb-tab>
+              <ngb-tab id="Rejected">
+                <ng-template ngbTabTitle><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;&nbsp;Rejected</ng-template>
+                <ng-template ngbTabContent>
+                  <!-- spinner -->
+                  <div class="text-center ma-5" *ngIf="spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                            role="status" aria-hidden="true"></span>
+                        Please wait...
+                    </button>
+                  </div>
+                  <!-- Grid -->
+                  <div *ngIf="!spinner">
+                    <angular-slickgrid gridId="grdInSavedBucket" [columnDefinitions]="rejectedBucketColumnDefinitions" 
+                    [gridOptions]="rejectedBucketGridOptions" [dataset]="dataset" 
+                    (onAngularGridCreated)="rejectedBucketGridReady($event)" gridWidth="100%">
+                    </angular-slickgrid>
+                  </div>
+                  <!-- Row to show Count -->
+                  <div class="row" style="margin-top: -10px;;" *ngIf="!spinner">
+                    <div class="col-lg-6">
+            
+                    </div>
+                    <div class="col-lg-6" style="text-align: right;">
+                      <label> <b> Total Employee(s) : <b> {{dataset?.length}}</b></b></label>
+                    </div>
+                  </div>
+                </ng-template>
+              </ngb-tab>
+              
+            </ngb-tabset>
+          
+          
+       
+
+     
+        
+       
+
+  
+    </div>
+
+    <div class="content report-content" style="margin-top: 15px; " *ngIf="!isHistoryHidden">
+
+
+      <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                role="status" aria-hidden="true"></span>
+            Please wait...
+        </button>
+      </div>
+
+      
+      <div class="history-button" (click)="hideElcHistory()" *ngIf="!spinner">
+        <button><i class="fa fa-eye-slash m-r-xs"></i> Hide Transaction History</button>
+      </div>
+
+      <div *ngIf="!spinner" class="m-t-50" >
+        <angular-slickgrid gridId="historyGrid" [columnDefinitions]="historyColumnDefinitions" 
+        [gridOptions]="historyGridOptions" [dataset]="dataset" 
+        (onAngularGridCreated)="historyGridReady($event)" 
+        gridWidth="100%">
+        </angular-slickgrid>
+      </div>
+      <div class="row" style="margin-top: -10px;;" *ngIf="!spinner">
+        <div class="col-lg-6">
+
+        </div>
+        <div class="col-lg-6" style="text-align: right;">
+          <label> <b> Total Result(s) : <b> {{dataset?.length}}</b></b></label>
+        </div>
+      </div>
+
+    </div>
+
+    
+
+  </div>
+</div>
+
+
+<div id="popup_salary_breakup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_salary_breakup"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="popup_salary_breakup"> Life cycle - Transaction</h6>
+            <div class="modal-close" (click)="modal_dismiss()"><span class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body" style="min-height: 25rem;">
+
+          <div class="d-flex align-items-center docs-page" *ngIf="isLoading">
+            <strong class="text-center"> Loading... &nbsp;&nbsp;&nbsp;</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+          </div>
+
+          <div class="row" *ngIf="beforeEmployee && ActiveEmployeeList?.length > 0">
+            
+            <label class="form-label" style="margin-left: 15px; margin-right: 15px;">Start searching for a employee by emp. code or emp. name or client code or client name </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no" placeholder=" &#61442;  Start searching for a employee by emp. code or emp. name or client code or client name" style="margin-left: 15px; margin-right: 15px;margin-bottom: 15px;">
+
+            <div class="col-md-12 transitions" style="padding: 0px;">
+              <div class="job-box ">
+                <div class="inbox-message">
+                  <ul>
+                    <li *ngFor="let i of ActiveEmployeeList  | filter: searchText" style="width: 100% !important;">
+                      <a href="javascript:;" (click)="selectedEmployee($event, i)">
+                        <div class="message-avatar">
+                          <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                        </div>
+                        <div class="message-body" >
+                          <div class="message-body-heading">
+                            <h5>{{i.EmployeeName}} - {{i.EmployeeCode}}  <span class="pending" *ngIf= "i.isSelected" >Selected</span></h5>
+                            <span> <b>DOJ :  {{i.DOJ | date : 'MMM d, y' }}</b></span>
+                          </div>
+                          <p>{{i.ClientName}} | {{i.ClientContractCode}}</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="col-12 col-md-12 col-sm-12" *ngIf="!beforeEmployee">
+            <div class="clearfix">
+
+              <div class="row-top" style="margin-top:3rem !important;">
+                <div class="user-wrapper">
+                   <span class="user-image"></span>
+                   <div class="profile-user">
+                       <span class="user"> {{label_EmployeeName}}</span>
+                       <span class="profile-website">
+                        <i class="mdi mdi-barcode" style="vertical-align: middle;"></i>   <span class="username">&nbsp; Code :   {{label_EmployeeCode}} </span>
+                       
+                      </span>
+                       <!-- <span class="username">   <i class="mdi  " style="vertical-align: middle;"></i>  </span> -->
+                       <span class="profile-location" *ngIf="businessType == 3">
+                        <i class="mdi mdi-account-multiple-outline" style="vertical-align: middle;"></i>
+                        <span class="username">&nbsp;Client Name :   {{label_ClientName}} </span>
+                       
+                      </span>
+                       
+                   </div>
+                </div>
+                <span class="follow">{{Label_DOJ | date : 'MMM d, y' }}</span>
+
+              </div>
+
+              <div class="row-middle">
+               
+               
+              </div>
+
+
+              <!-- <div style="margin-top:1em;" class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <small class="form-text text-muted">Employee Name </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      {{label_EmployeeName}}
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <small>Employee Code </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      {{label_EmployeeCode}}
+                    </label>
+
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <small>Client Name </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      {{label_ClientName}}
+                    </label>
+
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <small>Client Contract Code </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      {{label_ClientContractCode}}
+                    </label>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+
+
+          <!-- <div class="col-lg-3 col-md-3 col-12">
+          <ul class="list-inline">
+              
+                <div class="form-group">
+                    
+                  
+                  <ng-select [items]="DropDown" placeholder="ELC Changes" [(ngModel)]="selectedSalaryDetails" (change)="lifeCycleChange($event)" bindLabel="Name" bindValue="Id">
+                   
+                  </ng-select>               
+    
+                </div>
+            
+          </ul>
+      </div> -->
+
+          <!-- <div class="blob"></div> -->
+
+          <br>
+
+          
+          <div *ngIf="!beforeEmployee">
+          <div class="form-group col-xs-12 col-sm-12">
+            <label class="form-label text-center" style="font-size: 16px;
+        text-transform: uppercase;">Transaction Type </label>
+
+            <div class="divider"></div>
+          </div>
+
+
+
+                              <!-- <ul class="checkbox-grid">                                                                                       
+                                                <div *ngFor="let item of ELCTypes">                                                                                                                                                      
+                                                    <li><input type="checkbox" [checked]="item.checked" (change)="ttypechange($event, Month)"  [value]="item.id" />{{item.name}}</li>
+                                                </div>
+                                            </ul> -->
+
+
+
+
+                                            <!-- <div class="grid-wrapper"> -->
+                                           
+
+                                            <!-- <div class="grid-wrapper">
+                                              <div class="card-wrapper" *ngFor="let item of ELCTypes">
+                                                <input class="c-card" type="checkbox"  (change)="ttypechange($event, Month)"  [value]="item.id" [checked]="item.checked" >
+                                                <div class="card-content">
+                                                  <div class="card-state-icon"></div>
+                                                  <label for="{{item.id}}">
+                                                    <div class="image"> <div class="icon walk-icon">
+                                                      <i class="mdi {{item.icon}}"></i>
+                                                    </div></div>
+                                                    <label for="test" class="radio-tile-label">{{item.name}}</label>
+                                                  </label>
+                                                </div>
+                                              </div> 
+                                          
+                                          </div> -->
+
+          <!-- <div class="radio-tile-group">
+            <div class="input-container" *ngFor="let item of ELCTypes">
+              <input type="radio" id="walk" class="radio-button" value="{{item.id}}" name="checkbox"
+                (change)="lifeCycleChange($event)" />
+              <div class="radio-tile">
+                <div class="icon walk-icon">
+                  <i class="mdi {{item.icon}}"></i>
+                </div>
+                <label for="{{item.name}}" class="radio-tile-label">{{item.name}}</label>
+              </div>
+            </div>
+          </div> -->
+         
+        <!-- </div> -->
+
+
+        <ul style="text-align: center;">
+          <li *ngFor="let item of ELCTypes">
+            <input type="checkbox" id="myCheckbox{{item.name}}" [(ngModel)]=item.checked   [checked]="item.checked" (change)="ttypechange($event, item)"  [value]="item.id"/>
+            <label class="normal" for="myCheckbox{{item.name}}" style="border: 1px solid  #0a609eeb;width: 150px;height: 100px;">
+              <i class="mdi {{item.icon}}" style="font-size: 25px;"></i>       
+                     <br>
+              <span class="radio-tile-label"> {{item.name}}</span>
+            </label>
+          </li>
+        </ul>
+
+      
+
+
+      </div>
+     
+
+      </div>
+      <div class="modal-footer" style="padding: 0px;">
+        <button type="button" *ngIf="!beforeEmployee" class="btn upgrade-btn" id="btn_onboarding_submit"
+          (click)="start()" style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> {{editing?'Edit':'Start'}}
+        </button>
+
+        <button type="button" *ngIf="isProceed" class="btn upgrade-btn" id="btn_onboarding_submit"
+        (click)="proceed()" style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> PROCEED
+      </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- Salary Breakup modal  -->
+<div id="viewCTC" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewCTC"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="viewCTC"> View Salary Breakup</h6>
+            <div class="modal-close" (click)="modal_dismiss_Current_SalaryBreakup()"><span
+                class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                <table class="table table-bordered table-container responsive">
+                  <thead>
+                    <tr class="document_table_tr">
+                      <th scope="col" style="width: 40%; text-align: left!important">Product Code</th>
+                      <!-- <th scope="col" style="width: 20%;text-align: center">Is Overidable</th>                                     -->
+                      <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+                      <th scope="col" style="width: 20%;text-align: center">Annually</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let item of modalRateset?.RatesetProducts; let i = index"
+                      [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                      <td class="table-td-center">
+                        <span class="productName_span"> {{item.DisplayName}} </span>
+                      </td>
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value.toFixed(2)}}
+                        </label>
+                        <!-- <input type="number" max="" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value.toFixed(2)}}"
+                          class="form-control"> -->
+                      </td>
+
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value * 12 | number : '1.2-2'}}
+                        </label>
+                        <!-- <input type="text" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value * 12}}"
+                          class="form-control"> -->
+                      </td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Client Approval Table modal -->
+<div id="popup_client_approval" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_client_approval"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="popup_salary_breakup">Approval</h6>
+            <div class="modal-close" (click)="modal_dismiss_client_approval()"><span
+                class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row m-b">
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+              <div class="text-right">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <button prevent-double-submit type="button" class="btn upgrade-btn"
+                        (click)="addAttachment()"> <i class="mdi mdi-plus m-r-xs"></i> Add
+                        Attachment
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="clientApprovalTbl == undefined || clientApprovalTbl == null || clientApprovalTbl.length === 0">
+            <div class="col-12" style="text-align: center;">
+              No Attachments are added.
+            </div>
+          </div>
+          <div class="row"  *ngIf="clientApprovalTbl?.length> 0" >
+            <div class="col-12">
+              <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                <table class="table table-bordered table-container">
+                  <thead>
+                      <tr class="document_table_tr">
+                          <th scope="col" style="width:20%;font-weight: 500 !important;">
+                              Approval For</th>
+                          <th scope="col" style="width:15%;font-weight: 500;">Approval
+                              Type
+                          </th>
+                          <th scope="col" style="width:15%;font-weight: 500;">Document
+                              Name
+                          </th>
+                          <th scope="col" style="width:20%;font-weight: 500;">
+                              Remarks </th>
+                          <th scope="col" style="width:10%;font-weight: 500;">Status
+                          </th>
+                          <!-- <th scope="col" style="width:10%;font-weight: 500;">
+                              File(Attachment)</th> -->
+                          <th scope="col" style="width:10%;font-weight: 500;">Actions</th>
+
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let item of clientApprovalTbl; let i = index" >
+                      <tr *ngIf ="item.UIStatus !== 0">
+
+
+                          <td class="document_table_docName">
+                            <span *ngIf="item.DocumentApprovalFor == 3">Min. Wages Non-Adherence</span>
+                            <span  *ngIf="item.DocumentApprovalFor == 5">Others</span>
+                            <span *ngIf="item.DocumentApprovalFor == 6">ELC</span>
+                          </td>
+                          <td class="document_table_docName">
+                            <span *ngIf="item.DocumentApprovalType == 1">Internal</span>
+                          <span  *ngIf="item.DocumentApprovalType == 2">External</span>
+                          </td>
+                          <td class="document_table_docName">
+                              {{item.DocumentName}}
+                          </td>
+                          <td class="document_table_docName">
+                              {{item.Remarks}}
+                          </td>
+
+                          <td class="document_table_docName">
+                              <span class="badge badge-warning"
+                                  *ngIf="item.Status == 1">Pending</span>
+                              <span class="badge badge-danger"
+                                  *ngIf="item.Status == 2">Rejected</span>
+                              <span class="badge badge-success"
+                                  *ngIf="item.Status == 4">Approved</span>
+
+                          </td>
+                          <!-- <td class="table_header document_table_docNo">
+                              <a href="JavaScript:;" *ngIf="item.DocumentName" (click)="editApprovalFile(item,i)" class="btn subheader__btn-primary btn-icon mr-2">
+                                  <i class="mdi mdi-eye font-16"></i>
+                              </a>[class.disabled]="isGuid(item.Id) == false ? true : null"
+                          </td> -->
+                          <td class="table_header document_table_docNo">
+                              <a href="JavaScript:;" *ngIf="item.DocumentName"
+                                  (click)="editApprovalFile(item,i)"
+                                  class="btn subheader__btn-primary btn-icon mr-2"
+                                  [class.disabled]="item.Status == 4 ? true : null">
+                                  <i class="fa fa-pencil-square-o font-16"></i>
+                              </a>
+                              <a href="JavaScript:;" *ngIf="item.DocumentName"
+                                  (click)="deleteApprovalFile(item)"
+                                  class="btn subheader__btn-primary btn-icon mr-2"
+                                  [class.disabled]="item.Status == 4 ? true : null">
+                                  <i class="fa fa-trash-o font-16"></i>
+                              </a>
+
+                          </td>
+
+
+                      </tr>
+                    </ng-container>
+                  </tbody>
+
+              </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding: 0px;">
+          <button type="button"  class="btn upgrade-btn" id="btn_onboarding_submit"
+            (click)="submitForVerification()" style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> Submit
+          </button>
+  
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Display Result Modal -->
+<div id="popup_displayResult" class="modal fade" tabindex="-1" role="dialog"  aria-labelledby="popup_displayResult" 
+aria-hidden="true">
+      <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header" style="padding: 15px !important;">
+              <div class="col-xs-11">
+                <h6 class="modal-title pull-left" >Result</h6>
+                <div class="modal-close" (click)="modal_dismiss_displayResult()"><span class="mdi mdi-close pull-left"></span></div>
+              </div>
+
+              <!-- <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                <small class="header-pretitle"><b>Processing Status (Employee) </b></small>
+                <h6 class="modal-title subheader_h6" id="popup_release_AL" >{{ClientName}} <span> - </span>
+                  {{ClientContractName}} </h6>
+              </div> -->
+
+              <!-- <div class="modal-close" (click)="modal_dismiss_display()" style="margin-top: 5px;"><span
+                  class="mdi mdi-close pull-left"></span>
+              </div> -->
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="job-box ">
+                    <div class="inbox-message">
+                      <ul>
+                        <li *ngFor="let i of resultList" style="width: 100% !important;">
+                          <a href="javascript:;">
+                            <div class="message-avatar">
+                              <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                            </div>
+                            <div class="message-body">
+                              <div class="message-body-heading">
+                                <h5>{{i.EmployeeCode}} | {{i.EmployeeName}} - <b *ngIf="i.Status" style="color: green;">Success</b>
+                                  <b style="color: red;" *ngIf="!i.Status">Failed</b> </h5>
+                              </div>
+                              <p>{{i.ErrorMessage}}</p>
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="pull-left left-margin-btn">
+
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+</div>

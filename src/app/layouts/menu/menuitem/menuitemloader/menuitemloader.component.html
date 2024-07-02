@@ -1,0 +1,105 @@
+<!-- <ul class="x-navigation">
+
+
+  
+</ul> -->
+
+<!-- <ul class="x-navigation x-navigation-minimized">
+    <li class="xn-profile">
+        <a href="#" class="profile-mini">
+            <img src="https://themifycloud.com/demos/templates/joli/assets/images/users/avatar.jpg" alt="John Doe">
+        </a>
+
+    </li>
+</ul> -->
+
+<!-- <div class="page-sidebar page-sidebar-fixed scroll mCustomScrollbar _mCS_1 mCS-autoHide mCS_disabled" style="height: 358px;">
+    <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" tabindex="0">
+        <div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+
+        </div>
+    </div>
+</div> -->
+
+
+
+<ul [ngClass]="menuClass" *ngIf="IsNewWebMenuItems">
+
+
+  <li [ngClass]="(item.ChildMenuItems && item.ChildMenuItems.length)?'xn-openable':''" *ngFor="let item of MenuItems">
+    <ng-container *ngIf="item.Type == 0">
+      <ng-container *ngIf='item.Route;else withoutHref'>
+        <a routerLink="{{item.Route}}" href="{{item.Route}}" (click)="menuClick(item)"  class="d-flex align-items-center">
+          <span [ngClass]="item.Icon == null ? 'fa fa-list-ul' : item.Icon"></span>
+          <span class="xn-text" [ngStyle]="{'display': (isCollapsed==true) ? 'none' : 'inline'}">{{item.MenuName}}</span>
+        </a>
+      </ng-container>
+
+      <ng-template #withoutHref>
+        <a href="#"><span [ngClass]="item.Icon == null ? 'fa fa-list-ul' : item.Icon"></span> <span class="xn-text"
+            [ngStyle]="{'display':(isCollapsed==true)?'none':'inline'}">{{item.MenuName}}</span></a>
+      </ng-template>
+
+
+      <app-menuitemloader class="menuItemLoader" *ngIf="item.ChildMenuItems && item.ChildMenuItems.length > 0"
+        [MenuItems]="item.ChildMenuItems" [isFirstMenu]="'False'" [isCollapsed]="isCollapsed"
+        [isDesktopView]="isDesktopView"></app-menuitemloader>
+    </ng-container>
+
+    <ng-container *ngIf="item.Type == 1">
+      <a href="javascript:;" (click)="goToExternalSite(item)"><span
+          [ngClass]="item.Icon == null ? 'fa fa-list-ul' : item.Icon"></span> <span class="xn-text"
+          [ngStyle]="{'display':(isCollapsed==true)?'none':'inline   '}">{{item.MenuName}}</span></a>
+    </ng-container>
+
+    <!-- </ng-container> -->
+
+    <!-- <ng-container *ngIf="item.id == -1000">
+            <a href="javascript:;" (click)="goToHyre()"><span class="fa fa fa-search"></span> <span class="xn-text"
+                    [ngStyle]="{'display':(isCollapsed==true)?'none':'inline   '}">Recruitment</span></a>
+        </ng-container>
+
+        <ng-container *ngIf="item.id == -1001">
+            <a href="javascript:;" (click)="gotoSkill2Talent()"><span class="fa fa-line-chart"></span> <span class="xn-text"
+                    [ngStyle]="{'display':(isCollapsed==true)?'none':'inline   '}">Performance</span></a>
+        </ng-container> -->
+  </li>
+
+</ul>
+
+
+
+<ul [ngClass]="menuClass" *ngIf="!IsNewWebMenuItems">
+
+  <li [ngClass]="(item.subMenu && item.subMenu.length)?'xn-openable':''" *ngFor="let item of MenuItems">
+
+    <ng-container *ngIf="item.id != -1000 && item.id != -1001">
+      <ng-container *ngIf='item.url;else withoutHref'>
+        <a routerLink="{{item.url}}" href="{{item.url}}" (click)="menuClick(item)"><span class="{{item.icon}}"></span>
+          <span class="xn-text" [ngStyle]="{'display':(isCollapsed==true)?'none':'inline   '}">{{item.text}}</span></a>
+      </ng-container>
+
+      <ng-template #withoutHref>
+        <a href="#"><span class="{{item.icon}}"></span> <span class="xn-text"
+            [ngStyle]="{'display':(isCollapsed==true)?'none':'inline'}">{{item.text}}</span></a>
+      </ng-template>
+
+
+      <app-menuitemloader class="menuItemLoader" *ngIf="item.subMenu && item.subMenu.length > 0"
+        [MenuItems]="item.subMenu" [isFirstMenu]="'False'" [isCollapsed]="isCollapsed"
+        [isDesktopView]="isDesktopView"></app-menuitemloader>
+    </ng-container>
+
+    <ng-container *ngIf="item.id == -1000">
+      <a href="javascript:;" (click)="goToHyre()"><span class="fa fa fa-search"></span> <span class="xn-text"
+          [ngStyle]="{'display':(isCollapsed==true)?'none':'inline   '}">Recruitment</span></a>
+    </ng-container>
+
+    <ng-container *ngIf="item.id == -1001">
+      <a href="javascript:;" (click)="gotoSkill2Talent()"><span class="fa fa-line-chart"></span> <span class="xn-text"
+          [ngStyle]="{'display':(isCollapsed==true)?'none':'inline   '}">Performance</span></a>
+    </ng-container>
+  </li>
+
+
+</ul>

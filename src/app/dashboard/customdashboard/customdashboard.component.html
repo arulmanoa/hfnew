@@ -1,0 +1,328 @@
+<!-- <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template">
+                <h1>
+                    Coming soon...!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer> -->
+
+<app-loading-screen></app-loading-screen>
+
+
+
+<div class="page-wrapper ff" style="padding-top: 0px;" *ngIf="isEmployeeLogin">
+    <div class="page-content">
+        <div class="docs-page" *ngIf="spinner">
+            <div class="Error full-screen">
+                <div><img src="assets/Images/search-engine-marketing.png" style="height: 6rem;"> </div>
+                <h1>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"> </span>
+                </h1>
+                <p>Please wait while we set things up for you</p>
+            </div>
+        </div>
+        <div class="container-fluid background" *ngIf="isEmployeeLogin && !spinner" style="padding-top: 1rem;">
+
+            <div id="content-header">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="header-name">
+                            <h3 class="tour-step-one" style="font-weight: 600;">Hi, <span>{{EmployeeName}}</span></h3>
+                            <p>have a <span>pleasant</span> day</p>
+                        </div>
+                    </div>
+                    <div class="col-6" style="text-align: right;">
+                        <div class="header-name">
+                            <h5 class="tour-step-one">{{greet}}!</h5>
+                            <p>Welcome Back</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-xl-9">
+
+                    <div class="card">
+                        <div class="card-header" style="padding: 0.95rem 1.5rem;">
+
+
+                            <h4 class="card-header-title card-heder-title1">
+                                Salary Trend
+                            </h4>
+
+                            <span class="text-muted mr-3">
+              <!-- Last year comparision: -->
+            </span>
+
+
+
+                        </div>
+                        <div class="card-body" style="height: 25.9rem; padding: 30px;">
+
+
+
+                            <div class="chart">
+                                <canvas baseChart [datasets]="barChartSalaryData" [labels]="barChartSalaryLabels" [options]="barChartSalaryOptions" [plugins]="barChartSalaryPlugins" [legend]="barChartSalaryLegend" [chartType]="barChartSalaryType">
+      </canvas> </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-12 col-xl-12">
+
+                    <div class="card">
+                        <div class="card-header" style="padding: 0rem 1.5rem;">
+
+                            <h4 class="card-header-title card-heder-title1">
+                                Salary Breakup <br>
+
+                            </h4>
+
+                            <ul class="nav nav-tabs nav-tabs-sm card-header-tabs salary-nav-tabs" style="line-height: 10px;">
+                                <li class="nav-item" data-toggle="chart" data-target="#salesChart" data-trigger="click" data-action="toggle" data-dataset="0" *ngFor="let item of SalaryBreakup; let i = index" (click)="changeBreakup(i, item.Id)">
+                                    <a class="nav-link" [class.active]="selectedIndex === i" href="#" data-toggle="tab">
+                      {{item.PayCyclePeriodName}}
+                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                        <div class="card-body widget-traffic-sources">
+                            <div class="div_center_align" *ngIf="SalaryBreakup.length == 0">
+                                <span> No Data Available </span>
+                            </div>
+
+                            <div *ngIf="SalaryBreakup.length > 0">
+                                <div class="row" style="margin-top: 0px;">
+
+                                    <div class="col-lg-6">
+                                        <div class="card-body-top">
+                                            <div style="margin-right: 10px;">
+                                                <!-- <h6 style="margin-bottom: 0px;">{{PayperiodStartDate}}</h6>
+                        <label style="color: gray !important;">Start Date</label> -->
+                                            </div>
+                                            <div style="margin-right: 10px;">
+                                                <!-- <h6 style="margin-bottom: 0px;">-</h6> -->
+
+                                            </div>
+                                            <div>
+                                                <!-- <h6 style="margin-bottom: 0px;">{{PayperiodEndDate}}</h6>
+                        <label style="color: gray !important;">End Date</label> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <!-- <small>{{PayperiodStartDate}} - {{PayperiodEndDate}}</small>  -->
+                                        <button class="btn btn-default p-l-30 p-r-30 text-right" type="button" (click)="downloadPayslip()">
+                      <span class="mdi mdi-arrow-collapse-down primary-color" role="status" aria-hidden="true"></span>
+                     Download Payslip
+                   </button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+
+
+
+                                    <div class="col-lg-6 col-sm-12 col-xs-12" style="margin-right: -10rem;left: -60px;">
+                                        <div class="chart">
+                                            <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [colors]="donutColors" [legend]="doughnutChartLegend" [plugins]="doughnutChartPlugins" [chartType]="doughnutChartType">
+          </canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-12 col-xs-12">
+
+
+                                        <ul class="list-unstyled mr-b-0 col-6 d-flex flex-column justify-content-center" style="min-width: 100%;margin-top: 4rem;">
+                                            <li *ngFor="let i of donutChartBreakupLabel"><span class="shape-circle" [ngStyle]="{'background':i.colorCode}"></span> <span class="flex-1">{{i.label}}</span> <span class="text-muted">₹ {{i.value}}</span> <small class="text-success fs-12"></small>
+                                            </li>
+                                            <!-- <li><span class="shape-circle" style="background: #405189"></span>  <span class="flex-1">Gross Pay</span>  <span class="text-muted">5,391</span>  <small class="text-success fs-12"></small>
+                </li>
+                <li><span class="shape-circle" style="background: #ffe483"></span>  <span class="flex-1">Income Tax</span>  <span class="text-muted">4,987</span>  <small class="text-danger fs-12"></small>
+                </li>
+                               <li><span class="shape-circle" style="background: #f4364c"></span>  <span class="flex-1">Total Deductions</span>  <span class="text-muted">24,569</span>  <small class="text-success fs-12"></small>
+                </li> -->
+                                        </ul>
+                                    </div>
+                                    <div class="col-lg-5 col-sm-12 col-xs-12" style="max-width: 34%;">
+                                        <!-- <h4 class="card-title">April</h4> -->
+                                        <p class="card-description" style="font-size: 16px;">Pay Items</p>
+                                        <div class="row" *ngFor="let i of donutChartBreakupPayitems |  orderBy:ProductTypeId">
+                                            <div class="col-8">
+
+                                                <!-- <span class="shape-circle1"  [ngClass]="{'font-bold':i.ProductCode == 'GrossEarn' , 'Deduc':i.ProductCode == 'GrossDedn', 'NetPay':i.ProductCode == 'NetPay', 'IncomeTax':i.ProductCode == 'IncomeTax'}"   >  </span> -->
+                                                {{i.ProductDisplayName}}
+
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <p class="mb-0" [ngClass]="{'font-bold':i.ProductCode == 'GrossEarn','font-bold':i.ProductCode == 'GrossDedn', 'font-bold':i.ProductCode == 'NetPay', 'font-bold':i.ProductCode == 'IncomeTax'}"> {{i.PayTotal | number : '1.2-2'}}</p>
+                                            </div>
+
+                                        </div>
+                                        <!-- <div class="accordion" id="accordion" role="tablist"> 
+            <div class="p-10" > -->
+                                        <!-- <div class="" role="tab" id="heading-1">
+                    <h6 class="mb-0"> <a data-toggle="collapse" href="#collapse-1" aria-expanded="false" aria-controls="collapse-1" data-abc="true" class="collapsed"> Gross Pay $45,000 </a> </h6>
+                </div>
+                <div id="collapse-1" class="collapse" role="tabpanel" aria-labelledby="heading-1" data-parent="#accordion" style="">
+                    <div class="card-body" *ngFor="let i of donutChartBreakupPayitems">
+                        <div class="row">
+                            <div class="col-8"> {{i.ProductDisplayName}} </div>
+                            <div class="col-4">
+                                <p class="mb-0">   {{i.ActualAmount | number : '1.2-2'}}</p>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div> -->
+                                        <!-- </div>
+            </div> -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- <div class="col-12 col-xl-4">
+
+            <div class="card card-fill">
+              <div class="card-header">
+    
+               
+                <h4 class="card-header-title">
+                  Recent Notification
+                </h4>
+    
+              
+                <a class="small" href="#!">View all</a>
+    
+              </div>
+              <div class="card-body">
+    
+               
+
+                <div class="list-group list-group-flush list-group-activity my-n3">
+                  <div class="list-group-item">
+                    <div class="row">
+                      <div class="col-auto">
+     
+                        
+                        <div class="avatar avatar-sm avatar-online">
+                          <img class="avatar-img rounded-circle" src="https://image.flaticon.com/icons/svg/2885/2885650.svg" alt="...">
+                        </div>
+    
+                      </div>  
+                      <div class="col ml-n2">
+    
+                        
+                        <h5 class="mb-1">
+                          Dianna Smiley
+                        </h5>
+    
+                        
+                        <p class="small text-gray-700 mb-0">
+                          Uploaded the files "Launchday Logo" and "New Design".
+                        </p>
+    
+                       
+                        <small class="text-muted">
+                          2m ago
+                        </small>
+    
+                      </div>
+                    </div> 
+                  </div>
+                  <div class="list-group-item">
+                    <div class="row">
+                      <div class="col-auto">
+    
+                        
+                        <div class="avatar avatar-sm avatar-online">
+                          <img class="avatar-img rounded-circle" src="https://image.flaticon.com/icons/svg/2885/2885650.svg" alt="...">
+                        </div>
+    
+                      </div>
+                      <div class="col ml-n2">
+    
+                        
+                        <h5 class="mb-1">
+                          Ab Hadley
+                        </h5>
+    
+                        
+                        <p class="small text-gray-700 mb-0">
+                          Shared the "Why Dashkit?" post with 124 subscribers.
+                        </p>
+    
+                       
+                        <small class="text-muted">
+                          1h ago
+                        </small>
+    
+                      </div>
+                    </div> 
+                  </div>
+                  <div class="list-group-item">
+                    <div class="row">
+                      <div class="col-auto">
+    
+                        
+                        <div class="avatar avatar-sm avatar-offline">
+                          <img class="avatar-img rounded-circle" src="https://image.flaticon.com/icons/svg/2885/2885650.svg" alt="...">
+                        </div>
+    
+                      </div>
+                      <div class="col ml-n2">
+    
+                        
+                        <h5 class="mb-1">
+                          Adolfo Hess
+                        </h5>
+    
+                        
+                        <p class="small text-gray-700 mb-0">
+                          Exported sales data from Launchday's subscriber data.
+                        </p>
+    
+                       
+                        <small class="text-muted">
+                          3h ago
+                        </small>
+    
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+    
+              </div>
+            </div>
+    
+          </div> -->
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1 @@
+<input type="file" #fileUpload (change)="onFilesSelected($event)" (click)="$event.stopPropagation();" [accept]="ALLOWED_FILE_TYPES" [multiple]="isMultiple" />

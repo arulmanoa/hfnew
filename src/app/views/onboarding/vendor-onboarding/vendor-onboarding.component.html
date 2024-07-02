@@ -1,0 +1,1250 @@
+<div class="page-wrapper" style="margin-top: 10px;">
+  <div class="page-content">
+
+    <app-loading-screen></app-loading-screen>
+
+    <div class="row" style="margin-bottom: 15px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="padding-top: 10px;">
+          <h6 class="h6_c" style="font-size: 16px;
+          font-weight: 700;"> Vendor Onboarding </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+
+            <li class="list-inline-item"><button type="button" prevent-double-submit class="btn upgrade-btn"
+                id="btn_onboarding_submit" [disabled]="!disableBtn" (click)="doSaveOrSubmit('Submit')"> <i
+                  class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Submit
+              </button></li>
+
+            <li class="list-inline-item"><button type="button" prevent-double-submit class="btn btn-primary"
+                [disabled]="!disableBtn" (click)="doSaveOrSubmit('onlySave')">
+                <i class="mdi mdi-content-save  m-r-xs"></i> Save
+              </button></li>
+
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onClose()">
+                <i class="mdi mdi-close  m-r-xs"></i>Close
+              </button>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-light-danger alert-elevate" *ngIf="invaid_fields?.length> 0">
+      <div class="alert-icon"><i class="mdi mdi-alert"></i></div>
+      <div class="alert-text">
+        <h6 class="card-title">Error with your submission</h6>
+        <hr>
+        <span><b>( * ) Denotes required field. Please check the form and submit again.</b></span>
+        <br>
+        <span *ngFor="let item of invaid_fields"
+          style="text-transform: capitalize;color: #f1646c;font-weight: 500;">{{getLetterSpace(item)}},
+          &nbsp; </span>
+      </div>
+    </div>
+
+    <!-- If the candidate has rejected by Ops it should be shown only REC/OPS-->
+    <div class="alert alert-light-danger alert-elevate" *ngIf="TransactionRemarks != null && TransactionRemarks !=''">
+      <div class="alert-icon"><i class="mdi mdi-alert"></i></div>
+      <div class="alert-text">
+        <h6 class="card-title">Transaction Notes</h6>
+        <hr>
+        <span style="color: #f1646c;font-weight: 500;">{{TransactionRemarks}} - Looks like one of the
+          documents does not meet the validation criteria. Please check!
+          &nbsp; </span>
+      </div>
+    </div>
+
+    <!-- if the candidate documents are rejected by qc team it will showing only OPS/REC  -->
+    <div *ngIf="isDocumentInfo">
+      <div class="alert alert-light alert-elevate" *ngIf="rejectedLst?.length > 0 && ApprovalStatus">
+        <div class="alert-icon"><i class="mdi mdi-alert"></i></div>
+        <div class="alert-text">
+          <h6 class="card-title">Rejection - Overview</h6>
+
+          <span class="help-text"> <span
+              class="badge badge--inline badge--pill badge--danger badge--rounded">NOTE</span> Looks
+            like one of the documents does not meet the validation criteria. Please check! </span>
+          <br>
+          <hr>
+          <span><b>{{ApprovalRemarks}}</b></span>
+
+          <ul class="list-style" *ngIf="rejectedLst?.length> 0">
+            <li *ngFor="let rejected of rejectedLst">
+              <div *ngIf="rejected.Accordion == 'Document_Details' && isDocumentInfo">
+                {{rejected.DocumentTypeName}}
+                <strong *ngIf="rejected.Remarks"> - </strong> {{rejected.Remarks}}
+              </div>
+              <div *ngIf="rejected.Accordion == 'Client_Approvals' && isClientApproval">
+                {{rejected.DocumentTypeName}}
+                <div *ngIf="rejected.DocumentTypeName"> - </div> {{rejected.Remarks}}
+              </div>
+              <div *ngIf="rejected.Accordion == 'Bank_Details' && isBankInfo">
+                {{rejected.DocumentTypeName}}
+                <div *ngIf="rejected.DocumentTypeName"> - </div> {{rejected.Remarks}}
+              </div>
+              <div *ngIf="rejected.Accordion == 'Family_Details' && isFamilydetails">
+                {{rejected.DocumentTypeName}}
+                <div *ngIf="rejected.DocumentTypeName"> - </div> {{rejected.Remarks}}
+              </div>
+              <div *ngIf="rejected.Accordion == 'Education_Details' && isAcademicInfo">
+                {{rejected.DocumentTypeName}}
+                <div *ngIf="rejected.DocumentTypeName"> - </div> {{rejected.Remarks}}
+              </div>
+              <div *ngIf="rejected.Accordion == 'Experience_Details' && isEmploymentInfo">
+                {{rejected.DocumentTypeName}}
+                <div *ngIf="rejected.DocumentTypeName"> - </div> {{rejected.Remarks}}
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="content m-b report-content" style="margin-top: 10px;">
+
+      <form [formGroup]="candidatesForm" onsubmit="return false;">
+        <ngb-tabset (tabChange)="loadData($event)" [(activeId)]="activeTabName">
+
+          <ngb-tab id="General">
+            <ng-template ngbTabTitle><i class="fa fa-get-pocket" aria-hidden="true"></i>&nbsp;&nbsp;General
+            </ng-template>
+            <ng-template ngbTabContent>
+
+              <div class="d-flex justify-content-center" *ngIf="should_spin_onboarding && ClientList.length == 0">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+
+              </div>
+
+
+              <div class="row" *ngIf="ClientList.length > 0">
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  [ngStyle]="BusinessType == 1 ?{'display': 'none'} : {'display': 'block'}">
+                  <label class="form-label">Client <span class="required">*</span></label>
+                  <ng-select formControlName="clientName" [ngClass]="{'ng-touched': submitted && g.clientName.invalid }"
+                    #select [items]="ClientList" [searchable]="true" bindValue="Id" bindLabel="Name"
+                    placeholder="-- select a client --" (change)="onChangeClient($event)">
+
+                  </ng-select>
+
+                  <div *ngIf="submitted && g.clientName.invalid" class="help-block">
+                    <div *ngIf="g.clientName.errors.required">Client Name is required</div>
+                  </div>
+                </div>
+
+
+
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  [ngStyle]="BusinessType == 1 ?{'display': 'none'} : {'display': 'block'}">
+                  <label class=" form-label">Client Contract <span class="required">*</span>
+                    <span class="form__length" *ngIf="isRateCardType">
+                      {{RateCardTypelable}}</span></label>
+
+                  <ng-select #select1 [items]="ClientContractList" [searchable]="true"
+                    placeholder="-- select a client contract --" bindValue="Id" bindLabel="Name"
+                    formControlName="clientContract" [ngClass]="{'ng-touched': submitted && g.clientContract.errors }"
+                    (change)="onChangeContract($event)">
+
+                  </ng-select>
+                  <div *ngIf="submitted && g.clientContract.invalid" class="help-block">
+                    <div *ngIf="g.clientContract.errors.required">Client Contract is
+                      required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+
+                  <label class=" form-label">
+                    <ng-container *ngIf="BusinessType != 1">Client SPOC </ng-container>
+                    <ng-container *ngIf="BusinessType == 1">HR SPOC </ng-container>
+                    <span class="required"> * </span>
+
+                  </label>
+                  <ng-select #select4 [items]="ClientContactList" [searchable]="true"
+                    placeholder="-- select a Client SPOC --" bindValue="Id" bindLabel="Name"
+                    formControlName="clientSPOC" [ngClass]="{'ng-touched': submitted && g.clientSPOC.errors }">
+                  </ng-select>
+                  <div *ngIf="submitted && g.clientSPOC.invalid" class="help-block">
+                    <div *ngIf="g.clientSPOC.errors.required">
+                      <ng-container *ngIf="BusinessType != 1">Client SPOC </ng-container>
+                      <ng-container *ngIf="BusinessType == 1">HR SPOC </ng-container>
+                      is required
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  *ngIf="this.candidatesForm.controls.firstName">
+                  <label class="form-label">Name <span class="required">*</span> <span class="help-text m-l-5">(as per
+                      Aadhaar Card)</span>
+
+
+                    <span class="form__length"> {{ firstName.value?.length }}/100</span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false"
+                    onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="firstName" maxlength="100" #firstName
+                    formControlName="firstName" [ngClass]="{
+               'is-invalid': submitted && g.firstName.errors }" placeholder="First Name" autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.firstName.errors" class="invalid-feedback">
+                    <div *ngIf="g.firstName.errors.required">Name is required
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  *ngIf="this.candidatesForm.controls.gender">
+                  <label class="form-label">Gender <span class="required">*</span></label>
+
+
+                  <ng-select [items]="gender" placeholder="-- select Gender --" formControlName="gender"
+                    [ngClass]="{'ng-touched': submitted && g.gender.invalid }" bindLabel="name" bindValue="id">
+                  </ng-select>
+
+                  <div *ngIf="submitted && g.gender.invalid" class="help-block">
+                    <div *ngIf="g.gender.errors.required">Gender is required
+                    </div>
+                  </div>
+
+
+
+                </div>
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  *ngIf="this.candidatesForm.controls.email">
+                  <label class="form-label">Email <span class="required">*</span></label>
+                  <input class="form-control" type="email" name="email"
+                    pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                    formControlName="email" [ngClass]="{'is-invalid': submitted && g.email.errors
+                }" placeholder="example@domain.com" autocomplete="none|false|no">
+
+                  <div *ngIf="candidatesForm.get('email').errors && candidatesForm.get('email').touched "
+                    class="help-block">
+                    <div *ngIf="g.email.errors">E-Mail is required
+                    </div>
+                    <span *ngIf="candidatesForm.get('email').errors.pattern"> Please enter
+                      valid email (pattern mismatch)
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  *ngIf="this.candidatesForm.controls.mobile">
+                  <label class="form-label">Mobile No. <span class="required">*</span></label>
+                  <div class="input-group" style="margin-top: 0px;">
+                    <div class="input-group-prepend">
+                      <button disabled tabindex="-1" class="btn btn-outline-secondary dropdown-toggle"
+                        style="color: #fff; width: 90px;background-color: #6c757d;border-color: #6c757d;" type="button"
+                        data-toggle="dropdown
+               " aria-haspopup="true" aria-expanded="false">+ {{countryCode}}</button>
+                      <div class="dropdown-menu" style="height: 200px;overflow-y: auto; border-radius: 0px;">
+                        <a class="dropdown-item" (click)="theFunction(item)"
+                          *ngFor="let item of LstcountryCode">{{item.name}}</a>
+                      </div>
+                    </div>
+                    <input class="form-control" minlength="10"
+                      style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;" type="text"
+                      maxlength="10" onkeypress="return /^[0-9]+$/i.test(event.key)
+               " name="mobile" formControlName="mobile" [ngClass]="{'is-invalid': submitted && g.mobile.errors }"
+                      placeholder="9876543210" onpaste="return false;" autocomplete="none|false|no">
+                  </div>
+                  <div *ngIf="candidatesForm.get('mobile').errors && candidatesForm.get('mobile').touched "
+                    class="help-block">
+                    <div *ngIf="g.mobile.errors">Mobile no is required
+                    </div>
+                    <span *ngIf="candidatesForm.get('mobile').errors.minlength"> Mobile No
+                      should be minimum 10 characters
+                    </span>
+                  </div>
+
+                </div>
+
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  *ngIf="this.candidatesForm.controls.dateOfBirth">
+                  <label class="form-label">Date of Birth <span class="required">* </span> <i
+                      class="mdi mdi-information-outline" placement="right" style="cursor: pointer;"
+                      ngbTooltip="Please Specify as per aadhaar, if DOB not available in aadhaar, Please specify as per PAN card."></i>
+                    <span class="help-text m-l-5">(Please specify as per Aadhaar -
+                      DD-MM-YYYY)</span> </label>
+                  <input type="text" class="form-control" bsDatepicker placement="top" [maxDate]="DOBmaxDate"
+                    (bsValueChange)="onChangeDOB($event)" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+                containerClass:'theme-default' }" name="dateOfBirth" formControlName="dateOfBirth"
+                    [ngClass]="{'is-invalid': submitted && g.dateOfBirth.errors }" placeholder="12-12-1990"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.dateOfBirth.errors" class="invalid-feedback">
+                    <div *ngIf="g.dateOfBirth.errors.required">DOB is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  *ngIf="this.candidatesForm.controls.fatherName">
+                  <label class="form-label">Father's Name <span class="required">*</span> <span
+                      class="help-text m-l-5">(Please specify as per Aadhaar)</span>
+                    <span class="form__length"> {{ fatherName.value?.length }}/100</span>
+                  </label>
+                  <input class="form-control" spellcheck="false" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                    name="fatherName" maxlength="100" #fatherName formControlName="fatherName" [ngClass]="{
+               'is-invalid': submitted && g.fatherName.errors }" placeholder="Father's Name"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.fatherName.errors" class="invalid-feedback">
+                    <div *ngIf="g.fatherName.errors.required">Father's Name is required
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                  *ngIf="this.candidatesForm.controls.nationality">
+                  <label class="form-label">Nationality <span class="required">*</span></label>
+
+
+
+
+                  <ng-select [items]="nationality" placeholder="-- select Nationality --"
+                    (change)="onChangeNationality($event)" formControlName="nationality"
+                    [ngClass]="{'ng-touched': submitted && g.nationality.invalid }" bindLabel="name" bindValue="id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.nationality.invalid" class="help-block">
+                    <div *ngIf="g.nationality.errors.required">Nationality is required
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4" style="margin-bottom: 15px;"
+                  *ngIf="this.candidatesForm.controls.isDifferentlyabled">
+                  <label class="form-label" style="margin-top: -5px;">Is Differently
+                    abled (%)</label>
+                  <div class="form-group" style="width: 15%;float: left;">
+
+                    <div class="p-t-10">
+
+                      <label class="el-switch el-switch-green">
+                        <input type="checkbox" formControlName="isDifferentlyabled" />
+                        <span class="el-switch-style"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group" style="width: 85%;float: right;"
+                    *ngIf="candidatesForm.controls.isDifferentlyabled.value == true">
+                    <div class="input-group" style="width: 20%;margin-top: 5px;">
+                      <input class="form-control" type="number" min="0" max="100"
+                        (onkeypress)="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+                        name="differentlyabledPercentage" formControlName="differentlyabledPercentage"
+                        [ngClass]="{'is-invalid': submitted && g.differentlyabledPercentage.errors }"
+                        style="border-radius: 3px 0px 0px 3px !important;" placeholder="50"
+                        autocomplete="none|false|no">
+                      <!-- <div class="input-group-addon">%</div> -->
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                  *ngIf="this.candidatesForm.controls.country && nonIndian">
+                  <label class="form-label">Country <span class="required">*</span></label>
+
+                  <ng-select [items]="CountryList_NonIndian" placeholder="-- select Country --"
+                    formControlName="country" [ngClass]="{'ng-touched': submitted && g.country.invalid }"
+                    bindLabel="Name" bindValue="Id">
+                  </ng-select>
+
+                  <div *ngIf="submitted && g.country.invalid" class="help-block">
+                    <div *ngIf="g.country.errors.required">Country is required
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                  *ngIf="this.candidatesForm.controls.workPermitType && nonIndian">
+
+                  <label class="form-label">WorkPermit Type <span class="required">*</span></label>
+                  <input class="form-control" type="text" name="workPermitType" formControlName="workPermitType"
+                    [ngClass]="{'is-invalid': submitted && g.workPermitType.errors }" placeholder="E-Pass"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.workPermitType.errors" class="invalid-feedback">
+                    <div *ngIf="g.workPermitType.errors.required">WorkPermit Type is
+                      required
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                  *ngIf="this.candidatesForm.controls.isValidFrom && nonIndian">
+
+                  <label class="form-label">WorkPermit Valid From <span class="required">*</span></label>
+                  <input class="form-control" type="text" class="form-control" bsDatepicker placement="top" readonly
+                    (bsValueChange)="onChangeWorkPermitDate($event)"
+                    [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                    name="isValidFrom" formControlName="isValidFrom"
+                    [ngClass]="{'is-invalid': submitted && g.isValidFrom.errors }" placeholder="12-12-1990"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.isValidFrom.errors" class="invalid-feedback">
+                    <div *ngIf="g.isValidFrom.errors.required">WorkPermit Valid From is
+                      required
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  *ngIf="this.candidatesForm.controls.isValidTill && nonIndian">
+
+                  <label class="form-label">WorkPermit Valid Till <span class="required"> * </span></label>
+                  <input class="form-control" type="text" class="form-control" bsDatepicker placement="top" readonly
+                    [minDate]="workPermitminDate"
+                    [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                    name="isValidTill" formControlName="isValidTill"
+                    [ngClass]="{'is-invalid': submitted && g.isValidTill.errors }" placeholder="12-12-1990"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.isValidTill.errors" class="invalid-feedback">
+                    <div *ngIf="g.isValidTill.errors.required">WorkPermit Valid Till is
+                      required
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                  *ngIf="this.candidatesForm.controls.location">
+                  <label class="form-label"> Location<span class="required">*</span> <span
+                      class="form__length createNew" *ngIf="!StateName" (click)="createNew()"> + Create New</span> <span
+                      class="form__length">
+                      {{CityName}}, {{StateName}} </span></label>
+
+
+                  <ng-select [items]="ClientLocationList" (change)="onChangeOfferLocation($event)"
+                    placeholder="-- select location --" formControlName="location"
+                    [ngClass]="{'ng-touched':submitted &&  g.location.errors }" bindLabel="LocationName" bindValue="Id">
+                  </ng-select>
+
+                  <div *ngIf="submitted && g.location.invalid" class="help-block">
+                    <div *ngIf="g.location.errors.required">Location is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                  *ngIf="this.candidatesForm.controls.designation">
+                  <label class="form-label">Designation <span class="required">*</span></label>
+                  <input class="form-control" type="text" name="designation" formControlName="designation"
+                    onkeydown="return (event.keyCode!=13);"
+                    [ngClass]="{'is-invalid': submitted && g.designation.errors }" placeholder="Software Engineer"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.designation.errors" class="invalid-feedback">
+                    <div *ngIf="g.designation.errors.required">Designation is required
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-4 col-md-4 col-sm-4">
+                  <label class="form-label">PAN No <span class="required">*</span>
+                  </label>
+
+                  <input class="form-control" type="text" pattern="^[a-zA-Z]{3}[pPcCHhaAbBgGlLfFTtjJ]{1}[a-zA-Z]{1}[0-9]{4}[a-zA-Z]{1}?$"
+                    maxlength="10" name="PANNO" formControlName="PANNO" placeholder="ABCDE1234F"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.PANNO.errors" class="invalid-feedback">
+                    <div *ngIf="g.PANNO.errors.required">PAN no is required
+                    </div>
+                  </div>
+                  <div *ngIf="candidatesForm.get('PANNO').errors && candidatesForm.get('PANNO').touched"
+                    class="help-block">
+                    <span *ngIf="candidatesForm.get('PANNO').errors.pattern || candidatesForm.get('PANNO').errors.invalid"> Please match
+                      the requested format. (Ex: ABCPD1234E)
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-4 col-md-4 col-sm-4">
+                  <label class="form-label">Aadhaar Number<span class="required"> * </span></label>
+
+                  <input class="form-control" minlength="12" maxlength="12" type="number" name="aadhaarNumber"
+                    formControlName="aadhaarNumber" [ngClass]="{'is-invalid': submitted && g.aadhaarNumber.errors }"
+                    placeholder="9878 0909 5634" autocomplete="none|false|no"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" autocomplte="off" pattern="^([0-9X]){12}?$">
+                 
+                    <div *ngIf="submitted && g.aadhaarNumber.invalid"
+                    class="help-block">
+                    <div *ngIf="aadhaarNumber.errors.required">Aadhaar Number is required
+                    </div>
+                  </div>
+
+                    <div *ngIf="candidatesForm.get('aadhaarNumber').errors && candidatesForm.get('aadhaarNumber').touched"
+                    class="help-block">
+                    <span *ngIf="candidatesForm.get('aadhaarNumber').errors.minlength"> Aadhaar Number
+                      should be minimum 12 characters 
+                    </span>
+                    <span
+                    *ngIf="candidatesForm.get('aadhaarNumber').errors.pattern">
+                    Please match the
+                    requested format. (Ex: 1012 3456 7891)
+                </span>
+                  </div>
+
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                  *ngIf="this.candidatesForm.controls.paymentType">
+                  <label class="form-label">Payment Type <span class="required">*</span></label>
+
+
+                  <ng-select [items]="paymentType" placeholder="-- select Payment Type --" formControlName="paymentType"
+                    [ngClass]="{'ng-touched': submitted && g.paymentType.invalid }" bindLabel="name" bindValue="id">
+                  </ng-select>
+
+                  <div *ngIf="submitted && g.paymentType.invalid" class="help-block">
+                    <div *ngIf="g.paymentType.errors.required">Payment Type is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                  <label class="form-label">Payable Rate <span class="required">*</span>
+                  </label>
+                  <input class="form-control" type="number" maxlength="10"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" name="payableRate" formControlName="payableRate"
+                    (keyup)="onChangeAnnaulSalary($event.target.value)"
+                    [ngClass]="{'is-invalid': submitted && g.payableRate.errors }" placeholder="500000"
+                    autocomplete="none|false|no">
+
+                  <div *ngIf="submitted && g.payableRate.errors" class="invalid-feedback">
+                    <div *ngIf="g.payableRate.errors.required">Payable Rate is required
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                  <label class="form-label">Billable Rate <span class="required">*</span>
+                  </label>
+                  <input class="form-control" type="number" maxlength="10"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" name="billableRate" formControlName="billableRate"
+                    [ngClass]="{'is-invalid': submitted && g.billableRate.errors }" placeholder="500000"
+                    autocomplete="none|false|no">
+
+                  <div *ngIf="submitted && g.billableRate.errors" class="invalid-feedback">
+                    <div *ngIf="g.billableRate.errors.required">Billable Rate is required
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+        >
+        <label class="form-label">Salary Type <span
+                class="required">*</span></label>
+
+
+
+        <ng-select [items]="salaryType" placeholder="-- select salary Type --"
+            formControlName="salaryType"
+            [ngClass]="{'ng-touched': submitted && g.salaryType.errors }"
+            bindLabel="name" bindValue="id" (change)="onChangeSalary($event)">
+        </ng-select>
+
+
+        <div *ngIf="submitted && g.salaryType.invalid" class="help-block">
+            <div *ngIf="g.salaryType.errors.required">Salary Type is required
+            </div>
+        </div>
+    </div> -->
+
+                <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-4" >
+                <label class="form-label">Pay Structure <span
+                        class="required">*</span></label>
+                <ng-select [items]="PayGroupList" placeholder="-- select an option --"
+                    bindValue="PayGroupId" bindLabel="Name" formControlName="paystructure"
+                    (change)="onChangePayGroup($event)"
+                    [ngClass]="{'ng-touched': submitted && g.paystructure.errors }">
+
+                </ng-select>
+
+                <div *ngIf="submitted && g.paystructure.invalid" class="help-block">
+                    <div *ngIf="g.paystructure.errors.required">Pay Structure is required
+                    </div>
+                </div>
+            </div> -->
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                  <label class="form-label">Letter Template <span class="required">*</span></label>
+                  <ng-select [items]="LetterTemplateListAL" placeholder="-- select an option --"
+                    formControlName="AppointmentLetterTemplateId"
+                    [ngClass]="{'ng-touched': submitted && g.AppointmentLetterTemplateId.errors }" bindLabel="Name"
+                    bindValue="TemplateId">
+                  </ng-select>
+                  <div *ngIf="submitted && g.AppointmentLetterTemplateId.invalid" class="help-block">
+                    <div *ngIf="g.AppointmentLetterTemplateId.errors.required">Letter
+                      Template is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                  <label class="form-label">Actual DOJ <span class="required">*</span></label>
+                  <input class="form-control" onkeydown="return (event.keyCode!=13);" name="ActualDOJ"
+                    (ngModelChange)="onChangeDOJ($event)" [minDate]="ActualDOJminDate" [maxDate]="ActualDOJmaxDate"
+                    formControlName="ActualDOJ" bsDatepicker placement="top"
+                    [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                    placeholder="01-01-2000" [ngClass]="{'is-invalid': submitted && g.ActualDOJ.errors }" type="text"
+                    autocomplete="none|false|no" readonly>
+                  <div *ngIf="submitted && g.ActualDOJ.errors" class="invalid-feedback">
+                    <div *ngIf="g.ActualDOJ.errors.required">Actual DOJ is required
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                  <label class="form-label ">Team Name <span class="required">*</span></label>
+
+                  <ng-select [items]="TeamList" placeholder="-- select on option --" formControlName="TeamId"
+                    [ngClass]="{'ng-touched': submitted && g.TeamId.errors }" bindLabel="code" bindValue="Id">
+                  </ng-select>
+
+                  <div *ngIf="submitted && g.TeamId.invalid" class="help-block">
+                    <div *ngIf="g.TeamId.errors.required">Team Name is required
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row">
+                <div class="col-xs-12 col-sm-12"
+                  *ngIf="ClientList.length > 0 && isEmptyObject(DynamicFieldDetails) != true && isEmptyObject(this.DynamicFieldDetails) != null">
+                  <app-dynamicfieldform #validateChildComponentForm [col_span_size]="4" [RoleCode]="RoleCode"
+                    [dynamicFieldDetails]="getDynamicAccordionFields('isOfferInfo')">
+                  </app-dynamicfieldform>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12" style="text-align: center"
+                *ngIf="ClientList.length > 0 && !should_spin_onboarding">
+                <button class="btn btn-default btn-sm m-r-sm" onkeydown="return (event.keyCode!=13);"
+                  *ngIf="previewLetter" (click)="PreviewLetter()">
+                  <i class="mdi mdi-file-send m-r-xs"></i>
+                  Preview Letter
+                </button>
+
+
+                <button class="btn btn-default btn-sm m-r-sm" onkeydown="return (event.keyCode!=13);" *ngIf="previewCTC"
+                  (click)="PreviewCTC()">
+                  <!-- <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" ></span> -->
+
+                  <i class="mdi mdi-file-check m-r-xs"></i>
+                  View Salary Breakup
+                </button>
+
+              </div>
+
+
+
+
+
+
+            </ng-template>
+          </ngb-tab>
+
+          <ngb-tab id="isCommunicationdetails">
+            <ng-template ngbTabTitle><i class="fa fa-address-book-o" aria-hidden="true"></i>&nbsp;&nbsp;Communication
+            </ng-template>
+            <ng-template ngbTabContent>
+
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+
+              <br>
+              <div class="row" *ngIf="!spinner">
+                <div class="col-xs-12  col-sm-6">
+
+                </div>
+
+                <div class="col-xs-12  col-sm-6">
+                  <div class="row" style="margin: 0px;  margin-top: -10px; margin-bottom: 19px;">
+                    <div class="col-xs-12">
+                      <div class="pretty p-svg p-curve">
+                        <input type="checkbox" value="yes" #isSameAddress id="isSameAddress"
+                          (change)="onSameAddressPresentChanged(isSameAddress.checked)" />
+                        <div class="state p-success">
+
+                          <svg class="svg svg-icon" viewBox="0 0 20 20">
+                            <path
+                              d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                              style="stroke: white;fill:white;"></path>
+                          </svg>
+                          <label>Permanent Address is same as Present Address</label>
+                        </div>
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xs-12  col-sm-6">
+
+
+                  <div class="form-group form-group-vertical col-xs-12"
+                    *ngIf="this.candidatesForm.controls.presentAddressdetails">
+                    <label class="form-label">Present Address Line 1
+                      <span class="required">*</span>
+                      <span class="form__length">
+                        {{ presentAddressdetails.value?.length }}/50</span>
+                    </label>
+                    <input class="form-control" name="presentAddressdetails" #presentAddressdetails maxlength="50"
+                      formControlName="presentAddressdetails"
+                      [ngClass]="{'is-invalid': submitted && g.presentAddressdetails.errors }"
+                      placeholder="Falt/Building/Door No" spellcheck="off">
+                    <div *ngIf="submitted && g.presentAddressdetails.errors" class="invalid-feedback">
+                      <div *ngIf="g.presentAddressdetails.errors.required">Present Address
+                        details is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12"
+                    *ngIf="this.candidatesForm.controls.presentAddressdetails1">
+                    <label class="form-label">Present Address Line 2 </label>
+                    <input class="form-control" name="presentAddressdetails1" formControlName="presentAddressdetails1"
+                      placeholder="Street/Area/Locality" spellcheck="off">
+
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12"
+                    *ngIf="this.candidatesForm.controls.presentAddressdetails2">
+                    <label class="form-label">Present Address Line 3 </label>
+                    <input class="form-control" rows="5" cols="40" name="presentAddressdetails2"
+                      formControlName="presentAddressdetails2" placeholder="City/Town" spellcheck="off">
+
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.candidatesForm.controls.presentCountryName">
+                        <label class="form-label">Country Name <span class="required">*</span></label>
+                        <ng-select [items]="CountryList" (change)="onChangeStateByCountryId($event)"
+                          placeholder="-- select an option --" formControlName="presentCountryName"
+                          [ngClass]="{'ng-touched': submitted && g.presentCountryName.errors }" bindLabel="Name"
+                          bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.presentCountryName.invalid" class="help-block">
+                          <div *ngIf="g.presentCountryName.errors.required">Country is
+                            required
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.candidatesForm.controls.presentStateName">
+                        <label class="form-label">State Name <span class="required">*</span></label>
+                        <ng-select [items]="StateList" placeholder="-- select on option --"
+                          formControlName="presentStateName"
+                          [ngClass]="{'ng-touched': submitted && g.presentStateName.errors }" bindLabel="Name"
+                          bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.presentStateName.invalid" class="help-block">
+                          <div *ngIf="g.presentStateName.errors.required">State Name
+                            is required
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.candidatesForm.controls.presentCity">
+                        <label class="form-label">City
+                          <span class="required">*</span>
+
+                        </label>
+                        <input class="form-control" type="text" name="presentCity" formControlName="presentCity"
+                          [ngClass]="{'is-invalid': submitted && g.presentCity.errors }" placeholder="Bangalore"
+                          autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.presentCity.errors" class="invalid-feedback">
+                          <div *ngIf="g.presentCity.errors.required">City is required
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.candidatesForm.controls.presentPincode">
+                        <label class="form-label">Pincode
+                          <span class="required">*</span>
+                          <span class="form__length">
+                            {{ presentPincode.value?.length }}/6</span>
+                        </label>
+                        <input class="form-control" type="text" minlength="6"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" name="presentPincode" #presentPincode
+                          maxlength="6" formControlName="presentPincode"
+                          [ngClass]="{'is-invalid': submitted && g.presentPincode.errors }" placeholder="560001"
+                          autocomplete="none|false|no">
+
+                        <div *ngIf="submitted && g.presentPincode.invalid" class="help-block">
+                          <div *ngIf="g.presentPincode.errors.required">Pincode is
+                            required
+                          </div>
+                        </div>
+
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                <div class="col-xs-12  col-sm-6">
+
+                  <div class="form-group form-group-vertical col-xs-12"
+                    *ngIf="this.candidatesForm.controls.permanentAddressdetails">
+                    <label class="form-label">Permanent Address Line 1 <span class="required">*</span>
+                      <span class="form__length">
+                        {{ permanentAddressdetails.value?.length }}/50</span></label>
+                    <input class="form-control" name="permanentAddressdetails" formControlName="permanentAddressdetails"
+                      #permanentAddressdetails maxlength="50"
+                      [ngClass]="{'is-invalid': submitted && g.permanentAddressdetails.errors }"
+                      placeholder="Falt/Building/Door No" spellcheck="off">
+                    <div *ngIf="submitted && g.permanentAddressdetails.errors" class="invalid-feedback">
+                      <div *ngIf="g.permanentAddressdetails.errors.required">Permanent
+                        Address details is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12"
+                    *ngIf="this.candidatesForm.controls.permanentAddressdetails1">
+                    <label class="form-label">Permanent Address Line 2 </label>
+                    <input class="form-control" name="permanentAddressdetails1"
+                      formControlName="permanentAddressdetails1" placeholder="Street/Area/Locality" spellcheck="off">
+
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12"
+                    *ngIf="this.candidatesForm.controls.permanentAddressdetails2">
+                    <label class="form-label">Permanent Address Line 3 </label>
+                    <input class="form-control" rows="5" cols="40" name="permanentAddressdetails2"
+                      formControlName="permanentAddressdetails2" placeholder="City/Town" spellcheck="off">
+
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.candidatesForm.controls.permanentCountryName">
+                        <label class="form-label">Country Name <span class="required">*</span></label>
+
+                        <ng-select [items]="CountryList" (change)="onChangeStateByCountryId1($event)"
+                          placeholder="-- select an option --" formControlName="permanentCountryName"
+                          [ngClass]="{'ng-touched': submitted && g.permanentCountryName.errors }" bindLabel="Name"
+                          bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.permanentCountryName.invalid" class="help-block">
+                          <div *ngIf="g.permanentCountryName.errors.required">Country
+                            is required
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.candidatesForm.controls.permanentStateName">
+                        <label class="form-label">State Name <span class="required">*</span></label>
+                        <ng-select [items]="StateList1" placeholder="-- select on option --"
+                          formControlName="permanentStateName"
+                          [ngClass]="{'ng-touched': submitted && g.permanentStateName.errors }" bindLabel="Name"
+                          bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.permanentStateName.invalid" class="help-block">
+                          <div *ngIf="g.permanentStateName.errors.required">State Name
+                            is required
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.candidatesForm.controls.presentCity">
+                        <label class="form-label">City <span class="required">*</span>
+
+                        </label>
+                        <input class="form-control" type="text" name="permanentCity" formControlName="permanentCity"
+                          [ngClass]="{'is-invalid': submitted && g.permanentCity.errors }" placeholder="Bangalore"
+                          autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.permanentCity.errors" class="invalid-feedback">
+                          <div *ngIf="g.permanentCity.errors.required">City is
+                            required
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.candidatesForm.controls.permanentPincode">
+                        <label class="form-label">Pincode <span class="required">*</span>
+                          <span class="form__length">
+                            {{ permanentPincode.value?.length }}/6</span>
+                        </label>
+                        <input class="form-control" type="text" minlength="6"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" maxlength="6" #permanentPincode
+                          name="permanentPincode" formControlName="permanentPincode"
+                          [ngClass]="{'is-invalid': submitted && g.permanentPincode.errors }" placeholder="560001"
+                          autocomplete="none|false|no">
+
+
+                        <div *ngIf="submitted && g.permanentPincode.invalid" class="help-block">
+                          <div *ngIf="g.permanentPincode.errors.required">Pincode is
+                            required
+                          </div>
+                        </div>
+
+
+
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+
+          <ngb-tab id="isBankInfo" *ngIf="candidatesForm.controls.clientContract.value != null">
+            <ng-template ngbTabTitle><i class="fa fa-university" aria-hidden="true"></i>&nbsp;&nbsp;Bank Information
+            </ng-template>
+            <ng-template ngbTabContent>
+
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+              <br>
+
+              <div class="row" *ngIf="!spinner">
+                <div class="col-lg-12 text-right">
+
+
+
+
+                  <span class="es-text">You can add <b>custom bank info</b> here.
+                    <button prevent-double-submit type="button" class="btn upgrade-btn" (click)="addBank()"> <i
+                        class="mdi mdi-plus  m-r-xs"></i> Add Bank
+                    </button>
+                  </span>
+                </div>
+              </div>
+              <br>
+              <div class="row tablerow">
+
+                <div class="col-md-12 col-sm-12 col-12">
+
+                  <angular-slickgrid gridId="grid_Bank" [data]="ruleGrid" [columnDefinitions]="columnDefinitions_Bank"
+                    [gridOptions]="gridOptions_Bank" [dataset]="LstBank" gridWidth="100%"
+                    (onAngularGridCreated)="angularGridReady_Bank($event)">
+                  </angular-slickgrid>
+
+                </div>
+              </div>
+
+
+            </ng-template>
+          </ngb-tab>
+
+          <ngb-tab id="isDocumentInfo" *ngIf="candidatesForm.controls.clientContract.value != null">
+            <ng-template ngbTabTitle><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp;
+              Documents
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+              <br>
+
+              <div class="row" style="width: 100%;" *ngIf="!spinner">
+                <div class="col-12" *ngIf="documentTbl?.length > 0">
+                  <table class="table table-bordered table-container">
+                    <thead>
+                      <tr class="document_table_tr">
+                        <th scope="col" style="width:30%;font-weight: 500 !important;">
+                          Document Name</th>
+                        <th scope="col" style="width:18%;font-weight: 500;">
+                          Document
+                          no
+                        </th>
+                        <th scope="col" style="width:5%;font-weight: 500;">
+                          Status
+                        </th>
+                        <th scope="col" style="width:20%;font-weight: 500;">
+                          Category
+                          Type
+                        </th>
+                        <th scope="col" style="width:22%;font-weight: 500;">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr *ngFor="let item of documentTbl; let i = index" id="{{item.DocumentName}}_border">
+
+                        <td class="document_table_docName table-vertical-align">
+                          <b> {{item.DocumentName}} <span class="help-text-c" *ngIf="item.IsMandatory == 'True'">
+                              *</span></b>
+                        </td>
+                        <td class="txt-align table-vertical-align">
+                          <span style="font-family: cursive;">{{item.DocumentNumber}}
+                          </span>
+                        </td>
+                        <td class="txt-align table-vertical-align">
+                          <label *ngIf="item.Status == null"> - </label>
+                          <span class="badge badge-warning" *ngIf="item.Status == 0">Pending</span>
+                          <span class="badge badge-danger" *ngIf="item.Status == 2">Rejected</span>
+                          <span class="badge badge-success" *ngIf="item.Status == 1">Approved</span>
+                        </td>
+
+                        <td class="txt-align table-vertical-align">
+                          <label *ngIf="item.CategoryType == null"> - </label>
+
+                          <label *ngIf="item.CategoryType != null">
+
+                            <small *ngFor="let i of item.CategoryType">
+                              <label *ngIf="i.isChecked" class="font-12">
+                                {{i.Code}}, </label>
+                            </small>
+                          </label>
+                        </td>
+                        <td class="document_table_docName " style="text-align: center">
+
+                          <button *ngIf="item.FileName == null" class="btn btn-default btn-sm m-r-sm "
+                            style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                            (click)="document_file_upload(item)"><i class="fa fa-upload m-r-xs"></i> Upload
+                          </button>
+                          <button *ngIf="item.FileName != null" class="btn btn-default btn-sm m-r-sm "
+                            style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                            (click)="document_file_edit(item)" [disabled]="item.Status == 1 ? true : null"><i
+                              class="fa fa-pencil-square-o m-r-xs"></i>
+                            Edit
+                          </button>
+                          <button *ngIf="item.FileName != null" class="btn btn-default btn-sm m-r-sm "
+                            style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                            (click)="document_file_delete(item)" [disabled]="item.Status == 1 ? true : null"><i
+                              class="fa fa-trash-o m-r-xs"></i> Delete
+                          </button>
+                          <button *ngIf="item.FileName != null" class="btn btn-default btn-sm m-r-sm "
+                            style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                            (click)="document_file_view(item, 'Documents')"><i class="fa fa-eye m-r-xs"></i> View
+                          </button>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
+
+
+
+
+
+            </ng-template>
+          </ngb-tab>
+
+        </ngb-tabset>
+      </form>
+    </div>
+
+
+  </div>
+</div>
+
+
+
+<div id="popup_viewDocs" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_viewDocs" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;"> Candidate
+                Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+            </h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="modal_dismiss4()" style="margin-top: -15px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+
+            <div style="float: right;margin-right: 45px;margin-top: -3px;">
+              <app-filedownload [documentId]="documentURLId">
+              </app-filedownload>
+            </div>
+
+          </div>
+          <!-- <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b> Candidate Documents</b></small>
+          <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+          </h6>
+        </div>
+
+        <div class="modal-close" *ngIf="!shouldRendering" (click)="modal_dismiss4()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div> -->
+        </div>
+
+
+        <div class="modal-body">
+          <div class="iframe-container" *ngIf="documentURL == null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <img src="assets/Images/clientlogo/{{clientminiLogoLink}}" style="opacity: .5;">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <div class="iframe-container" *ngIf="documentURL != null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+            <iframe [src]="documentURL" frameborder="0" scrolling="yes" style="width: 100%;height: 100%;"></iframe>
+            <img style="top: 0 !important;
+              right: 0px !important;
+              position: absolute !important;
+              z-index: 9;
+              height: 55px !important;
+              vertical-align: top;
+              opacity: inherit;
+              bottom: unset !important;
+              left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientLogoLink}}">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div id="popup_viewDocs1" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_viewDocs1" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                Employee Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+            </h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="modal_dismiss_docs()" style="margin-top: -15px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+
+            <div style="float: right;margin-right: 45px;margin-top: -3px;">
+              <app-filedownload [documentId]="documentURLId">
+              </app-filedownload>
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="modal-body">
+          <div class="iframe-container" *ngIf="documentURL == null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <img src="assets/Images/Ciel.png" style="opacity: .5;">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <div class="iframe-container" *ngIf="documentURL != null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 350px;">
+
+            <iframe [src]="documentURL" frameborder="0" scrolling="yes" height="100%"
+              style="width: 100%;height: 100%;"></iframe>
+            <img style="top: 0 !important; 
+                right: 0px !important;
+                position: absolute !important;
+                z-index: 9;
+                height: 55px !important;
+                vertical-align: top;
+                opacity: inherit;
+                bottom: unset !important;
+                left: unset !important;" src="../../../../assets/Images/cielhr.png">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

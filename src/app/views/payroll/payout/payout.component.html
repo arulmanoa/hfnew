@@ -1,0 +1,1371 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+        <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+        </div>
+        <nz-back-top [nzTemplate]="tpl" [nzVisibilityHeight]="100">
+            <ng-template #tpl>
+                <div class="ant-back-top-inner">UP</div>
+            </ng-template>
+        </nz-back-top>
+
+        <div class="row" *ngIf="!spinner">
+            <div class="col-lg-6 col-xs-12 col-sm-12">
+                <div class="headerbar">
+                    <div>
+                        <h2 class="header_title" *ngIf="currentUrl == '/app/payroll/payoutTransaction_ops'">Payout Requests - <span class="badge badge-success" style="display: inline;color:white !important;">
+                No of Batch : {{dynamicBankDetails.length}}
+              </span></h2>
+                        <h2 class="header_title" *ngIf="currentUrl == '/app/payroll/payoutTransaction_finance'">Payout Approvals - <span class="badge badge-success" style="display: inline;color:white !important;">
+                No of Batch : {{dynamicBankDetails.length}}
+              </span></h2>
+                        <h2 class="header_title" *ngIf="currentUrl == '/app/payroll/payoutTransaction'">Confirm Payout - <span class="badge badge-success" style="display: inline;color:white !important;">
+                No of Batch : {{dynamicBankDetails.length}}
+              </span></h2>
+                        <p class="subheader_title" *ngIf="BehaviourObject_Data">
+                            # {{BehaviourObject_Data.Id}} | {{BehaviourObject_Data.ClientName}} | {{BehaviourObject_Data.PayPeriod}} | {{BehaviourObject_Data.PayStatus}}
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xs-12 col-sm-12  text-right " *ngIf="!spinner">
+                <ul class="list-inline">
+
+
+
+                    <li class="list-inline-item" *ngIf="(currentUrl == '/app/payroll/payoutTransaction_finance' || currentUrl == '/app/payroll/payoutTransaction_ops') && BehaviourObject_Data.StatusCode < 7400">
+                        <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="holdPayout('Hold')">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Hold Batch </span></div>
+            </button>
+                    </li>
+                    <li class="list-inline-item" *ngIf="(currentUrl == '/app/payroll/payoutTransaction_finance') && BehaviourObject_Data.StatusCode < 7400">
+                        <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="openConfirmationSlider()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-spellcheck"></i> Approve Batch </span>
+              </div>
+            </button>
+                    </li>
+
+                    <li class="list-inline-item">
+                        <button type="button" class="btn btn-primary" (click)="do_Refresh()" [disabled]="releasePayout_separate_spin">
+            <i class="mdi mdi-refresh m-r-xs"></i> Refresh
+          </button></li>
+
+                    <li class="list-inline-item">
+                        <button class="btn  btn-default" type="Submit" name="btnSubmit" id="btnSubmit" (click)="close_batch()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Close </span></div>
+            </button>
+                    </li>
+                    <!-- <div class="pos-rlt sm-btn-component"  (click)="do_approve_hold_batch('Approve')" *ngIf="currentUrl == '/app/payroll/payoutTransaction_finance'"> <span> <i class="mdi mdi-checkbox-marked-outline "></i>
+            Approve
+            Batch</span>
+        </div> -->
+
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="content m-b report-content" style="margin-top: -15px;" *ngIf="!spinner">
+
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 m-t-2">
+                    <!-- <p class="subheader_title" *ngIf="BehaviourObject_Data">
+          Requested On & By : {{BehaviourObject_Data.RequestedOn | date: 'dd-MM-yyyy'}} & {{BehaviourObject_Data.RequesterName}} ~ Approved On & By : {{BehaviourObject_Data.ApprovedOn | date :'dd-MM-yyyy'}} &
+         {{BehaviourObject_Data.ApproverName}}
+        </p> -->
+
+                    <p class="subheader_title" *ngIf="BehaviourObject_Data && currentUrl == '/app/payroll/payoutTransaction_ops'">
+                        Requested On : {{BehaviourObject_Data.RequestedOn | date: 'dd-MM-yyyy'}}
+                    </p>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 m-t-2">
+                    <div style="float: right;" *ngIf="currentUrl == '/app/payroll/payoutTransaction_finance' || currentUrl == '/app/payroll/payoutTransaction'">
+                        <a href="javascript:;" (click)="seeClientDetails()">{{seemoreTxt}}</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Details  -->
+            <div class="row" *ngIf="showClientDetails && (currentUrl == '/app/payroll/payoutTransaction_finance' || currentUrl == '/app/payroll/payoutTransaction')">
+
+                <div class="col-lg-3">
+                    <div class="card card_shadow">
+                        <div class="card-body" style="height: 7.4rem;padding: 1rem;">
+                            <div>
+                                <h6 _ngcontent-c8="" class="card-title card-cus"> Client Details </h6>
+                            </div>
+                            <div class="headerbar-right">
+                                <div class="media" style="width: 50% !important;">
+                                    <div class="media-body">
+                                        <label>Credit Score </label>
+                                        <h6> 0%</h6>
+                                    </div>
+                                </div>
+                                <div class="media" style="width: 50% !important;">
+                                    <div class="media-body">
+                                        <label>Client Type</label>
+                                        <h6 style="font-size: 0.75rem;"> P&C/C&P </h6>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card_shadow">
+                        <div class="card-body" style="height: 7.4rem;padding: 1rem;">
+                            <div>
+                                <h6 _ngcontent-c8="" class="card-title card-cus"> Credit Notes </h6>
+                            </div>
+                            <div class="headerbar-right">
+                                <div class="media" style="width: 50% !important;">
+                                    <div class="media-body">
+                                        <label>Last Availed Amt. </label>
+                                        <h6> INR -- </h6>
+                                    </div>
+                                </div>
+                                <div class="media" style="width: 50% !important;">
+                                    <div class="media-body">
+                                        <label>Availed Date</label>
+                                        <h6 style="font-size: 0.75rem;">DD MMM, YYYY </h6>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card_shadow">
+                        <div class="card-body" style="height: 7.4rem;padding: 1rem;">
+                            <div>
+                                <h6 _ngcontent-c8="" class="card-title card-cus"> Payment Trend</h6>
+                            </div>
+                            <div class="headerbar-right">
+                                <div class="media" style="width: 50% !important;">
+                                    <div class="media-body">
+                                        <label> Collected </label>
+                                        <h6> INR -- </h6>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card_shadow">
+                        <div class="card-body" style="height: 7.4rem;padding: 1rem;">
+                            <div>
+                                <h6 _ngcontent-c8="" class="card-title card-cus"> Outstanding </h6>
+                            </div>
+                            <div class="headerbar-right">
+                                <div class="media" style="width: 50% !important;">
+                                    <div class="media-body">
+                                        <label>Current O/S </label>
+                                        <h6> INR --</h6>
+                                    </div>
+                                </div>
+                                <div class="media" style="width: 50% !important;">
+                                    <div class="media-body">
+                                        <label>Last Payment Received Ons</label>
+                                        <h6 style="font-size: 0.75rem;">DD MMM, YYYY </h6>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row  m-b-4rem ">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                    <div class="row wrapper-div">
+                        <!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-t-2">
+              <div style="float: right;">
+                <a href="javascript:;" (click)="viewClientDetails()">View Credit Score</a>
+              </div>
+            </div> -->
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-t-2">
+                            <!-- [ngClass]="dynamicBankDetails.length > 0 ? (currentUrl == '/app/payroll/payoutTransaction' ? 'order-1' :  'order-2') : 'order-2'" -->
+                            <div [ngClass]="(dynamicBankDetails.length > 1 && currentUrl == '/app/payroll/payoutTransaction' ? 'order-1' :  '')">
+
+                                <div class="row" *ngIf="!spinner && isPayOutDuplicateEntry">
+                                    <div class="col-lg-12 text-center">
+                                        <ngb-alert [dismissible]="false">
+                                            <strong>The list item could not be displayed or updated because duplicate values were found in the list. Please reach out to your Support Administrator. </strong>
+                                        </ngb-alert>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="!spinner && !isPayOutDuplicateEntry">
+
+                                    <!-- <div class="accordion" id="accordionExample-faq">
+                  <div class="card shadow-none border mb-1">
+
+                    <div class="card-header" id="headingTwo">
+                        <h5 class="my-0"><button class="btn btn-link ml-4 collapsed" type="button"
+                                data-toggle="collapse" data-target="#onBoardingCollapse" aria-expanded="false"
+                                aria-controls="onBoardingCollapse">
+                                <p class="card-header-title"><i class="material-icons p-r-10">
+                                        domain </i> Payout Batch : #{{BehaviourObject_Data.Id}} |  No.Of Employee(s) :  {{dataset.length}}  </p>
+                            </button></h5>
+                    </div>
+
+                    <div id="onBoardingCollapse" class="collapse show" aria-labelledby="headingOne"
+                        data-parent="#accordionExample-faq">
+                        <div class="card-body">
+                        -->
+
+                                    <div class="row" *ngIf="!spinner" style="padding-bottom: 15px;">
+
+                                        <div class="col-lg-9 col-md-8 col-xs-12 col-xxs-12 col-12 text-left">
+
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                                            <p style="font-weight: 700;margin-bottom:0px; text-align: right;margin-top: 1rem;" *ngIf="BehaviourObject_Data "> # {{BehaviourObject_Data.Id}} | No.Of Employee(s) : <b> {{dataset.length}} </b>
+                                                <!-- <b *ngIf="dataset.length > 0"> {{dataset.length}} </b> -->
+                                            </p>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="row" style="padding-left: 15px;padding-bottom: 15px;">
+
+
+                                        <div class="col-lg-8 col-xs-12 col-sm-12  p-l-0">
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <button type="button" class="btn btn-default-danger" [disabled]="selectedItems.length == 0" (click)="do_delete_selctedEmp()">
+                          <i class="mdi mdi-delete m-r-xs"></i>Void From Payout &nbsp;
+                        </button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button type="button" class="btn btn-default-danger" (click)="do_hold_selctedEmp('Hold')">
+                          <i class="mdi mdi-hand-pointing-right m-r-xs"></i>Hold for payout &nbsp;
+                        </button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button type="button" class="btn btn-default-danger" (click)="do_hold_selctedEmp('Release')">
+                          <i class="mdi mdi-play m-r-xs"></i>Release for payout &nbsp;
+                        </button>
+                                                </li>
+                                                <li class="list-inline-item" *ngIf="currentUrl == '/app/payroll/payoutTransaction' || currentUrl == '/app/payroll/payoutTransaction_finance'">
+                                                    <button type="button" class="btn btn-default-danger" (click)="do_hold_selctedEmp('Stop')">
+                          <i class="mdi mdi-stop-circle m-r-xs"></i>Stop for payout&nbsp;
+                        </button>
+                                                </li>
+                                                <!-- <li class="list-inline-item" *ngIf="currentUrl == '/app/payroll/payoutTransaction' || currentUrl == '/app/payroll/payoutTransaction_finance'">
+                    <button type="button" class="btn btn-default" (click)="do_changeBank()">
+                      <i class="mdi mdi-bank m-r-xs"></i>Change Bank &nbsp;
+                    </button>
+                  </li> -->
+                                            </ul>
+                                        </div>
+
+
+                                        <div class="col-lg-4 col-xs-12 col-sm-12  p-l-0 text-right" style="padding-top: 5px;padding-bottom: 5px;">
+                                            <ul class="list-inline">
+
+                                                <!-- <li class="list-inline-item" >
+                      <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit"
+                        (click)="lockPayout()">
+                        <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-lock-reset"></i>
+                            Lock
+                            PayOut</span>
+                        </div>
+                       
+                      </button>
+                    </li> -->
+
+                                                <!-- <li class="list-inline-item" *ngIf="currentUrl == '/app/payroll/payoutTransaction'">
+                      <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                        (click)="holdPayout()">
+                        <div class="pos-rlt sm-btn-component" > <span> <i class="mdi mdi-gesture-double-tap"></i> Hold PayOut
+                          </span>
+                        </div>
+                      
+                      </button>
+                    </li> -->
+                                                <!-- <li class="list-inline-item" *ngIf="selectedModeOfTransfer == '1' && currentUrl == '/app/payroll/payoutTransaction'">
+                      <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit"
+                        (click)="openConfirmationSlider()">
+                        <div class="pos-rlt sm-btn-component" > <span> <i class="mdi mdi-checkbox-marked-outline "></i>
+                            Confirm
+                            PayOut</span>
+                        </div>
+                       
+                      </button>
+                    </li> -->
+                                                <li class="list-inline-item">
+                                                    <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="releaseBatch()">
+                          <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-checkbox-marked-outline "></i>
+                              Create Payout Batch</span>
+                          </div>
+                          <!-- <div class="pos-rlt sm-btn-component" *ngIf="currentUrl == '/app/payroll/payoutTransaction_finance'"> <span> <i class="mdi mdi-checkbox-marked-outline "></i>
+                          Approve
+                          Batch</span>
+                      </div> -->
+                        </button>
+                                                </li>
+
+                                                <li class="list-inline-item" *ngIf="BehaviourObject_Data != null">
+                                                    <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="do_saveChanges()">
+                          <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-checkbox-marked-outline "></i>
+                              Save Changes</span>
+                          </div>
+                          <!-- <div class="pos-rlt sm-btn-component" *ngIf="currentUrl == '/app/payroll/payoutTransaction_finance'"> <span> <i class="mdi mdi-checkbox-marked-outline "></i>
+                          Approve
+                          Batch</span>
+                      </div> -->
+                        </button>
+                                                </li>
+
+                                                <li class="list-inline-item" *ngIf="selectedModeOfTransfer == '2'">
+                                                    <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="generatebankFile()">
+                          <div class="pos-rlt sm-btn-component"> <span> <i
+                                class="mdi mdi-checkbox-multiple-marked-circle-outline "></i>
+                              Generate Bank File</span>
+                          </div>
+                        </button>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinition" [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+                                                (onAngularGridCreated)="angularGridReady($event)">
+                                            </angular-slickgrid>
+                                        </div>
+                                        <!-- </div>
+            </div>
+          </div>
+        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- [ngClass]="currentUrl == '/app/payroll/payoutTransaction' ? 'order-1' : 'order-2'" -->
+                            <div [ngClass]="(dynamicBankDetails.length > 1 && currentUrl == '/app/payroll/payoutTransaction' ? 'order-1' :  '')">
+                                <div class="row">
+                                    <div class="col-lg-12" *ngFor="let item of dynamicBankDetails; let i= index">
+                                        <div *ngIf="item.isLoading">
+
+                                            <div class="text-center ma-5" *ngIf="releasePayout_separate_spin" style="padding:15px;">
+                                                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+                         #{{item.PayOutInformationId}} Refreshing...
+                        </button>
+                                            </div>
+
+                                        </div>
+                                        <div *ngIf="!item.isLoading">
+                                            <div class="row" *ngIf="!spinner">
+
+                                                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                                                    <!-- <p style="font-weight: 700;margin-bottom:0px; text-align: left;margin-top: 1rem;" *ngIf="item.isRetryApplicable">  Auto refresh will happen in  <span style="color: #08c;" *ngIf="timer != '0'"> {{ timer }}  </span>   </p> -->
+                                                </div>
+
+                                                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                                                    <p style="font-weight: 700;margin-bottom:0px; text-align: right;margin-top: 1rem;"># {{item.PayOutInformationId}} | No.Of Employee(s) : {{item.TableDataSrc.length}} | {{item.PayOutStatus}}
+                                                    </p>
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                            <div class="row" *ngIf="!spinner">
+                                                <div class="col-lg-5 col-xs-5 col-sm-5">
+                                                    <div class="headerbar m-b-0">
+                                                        <div class="form-group form-group-vertical col-xs-6 col-sm-6 p-l-0">
+
+
+
+
+                                                            <label class="form-label">Company Bank <span class="required"></span>
+                              <span class="form__length createNew" (click)="checkFundBalance(item, 'child')"
+                                *ngIf="item.ModeOfTransfer == '1'" style="cursor: pointer;"> <span
+                                  *ngIf="SpinnerShouldhide" class="spinner-border spinner-border-sm" role="status"
+                                  aria-hidden="true"></span> <b> <i *ngIf="!SpinnerShouldhide && item.BankFundBalance"
+                                    class="fa fa-refresh" (click)="checkFundBalance(item,'child', i)"
+                                    style="cursor: pointer;"></i> &nbsp; <b *ngIf="!SpinnerShouldhide">
+                                    {{item.BankFundBalance | number : '1.2-2'}} </b></b> <b
+                                  *ngIf="!SpinnerShouldhide && !item.BankFundBalance"> &nbsp; Check fund Balance </b>
+                              </span>
+                            </label>
+                                                            <ng-select [items]="companyBankList" [clearable]="false" [(ngModel)]="item.CompanyBankAccountId" placeholder="-- select an option --" bindLabel="Details" disabled bindValue="Id">
+                                                            </ng-select>
+                                                            <span class="badge badge-warning" style="display: inline;color:white !important;">
+                              {{getModeOfTransfer(item)}}
+                            </span>
+                                                        </div>
+                                                        <div class="form-group form-group-vertical col-xs-6 col-sm-6 p-l-0">
+
+                                                            <label class="form-label">Status <span class="required"></span>
+                             
+                            </label>
+                                                            <ng-select [items]="item.Statuslist" placeholder="-- select an option --" (change)="onChangePayoutDetails_Status($event,item)" bindLabel="name" bindValue="id">
+                                                            </ng-select>
+
+                                                        </div>
+                                                        <!-- <div class="headerbar-right m-b-0" style="width: 50%;">
+                          <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label">Mode of fund Transfer <span class="required"></span></label>
+
+                            <div class="page-links">
+                              <input id="tab-1_{{item.Id}}" type="radio" name="tab" [disabled]="isDisbaledModeAPI" [checked]='false' class="payroll_radio" value="1"   (click)="onChangeModeOfTransfer_dynamic(item,'1')"><label
+                                style="color: black;padding-left: 6px;" for="tab-1_{{item.Id}}" class="tab">API</label> &nbsp;
+                              <input id="tab-2_{{item.Id}}" type="radio" name="tab" [disabled]="isDisbaledModeFileShare" [checked]='true' class="payroll_radio" value="2"  (click)="onChangeModeOfTransfer_dynamic(item,'2')"><label
+                                style="color: black;padding-left: 6px" for="tab-2_{{item.Id}}" class="tab">File Share</label>
+                            </div>
+                          </div>
+                        </div> -->
+                                                    </div>
+                                                    <div class="headerbar m-b-0" style="padding-bottom: 5px;">
+                                                        <input type="text" class="form-control" style="width: 50%;
+                          border-color: rgb(87 85 85 / 65%);" name="search" [(ngModel)]="item.searchText" autocomplete="none|false|no" placeholder="Search employee by name or code">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-7 col-xs-12 col-sm-12  p-l-0 text-right" style="padding-top: 25px;">
+
+
+
+
+                                                    <ul class="list-inline" style="margin-bottom: 10px;" *ngIf="item.PayOutStatusCode >= '7700'">
+
+
+
+                                                        <li class="list-inline-item" *ngIf="item.isRetryApplicable && item.ModeOfTransfer == '1' && currentUrl == '/app/payroll/payoutTransaction'">
+                                                            <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="retryPayout_dynamic(item,'RetryPayout')" [disabled]="releasePayout_separate_spin">
+                              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-refresh "></i> Retry
+                                  Payout</span>
+                              </div>
+                            </button>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <button type="button" class="btn btn-primary" (click)="do_Refresh_releasePayout(item)" [disabled]="releasePayout_separate_spin">
+                              <i class="mdi mdi-refresh m-r-xs"></i> Refresh
+                            </button></li>
+                                                    </ul>
+
+
+                                                    <div class="container" *ngIf="item.PayOutStatusCode >= 7700" style="margin-top: -5px;padding-right: 0px;">
+                                                        <h6 style="font-size: 14px;"><b>Payout Status : {{item.PayoutStatusTooltip}}</b></h6>
+                                                        <div class="progress" title="{{item.PayoutStatusTooltip}}" *ngIf="item.SuccessRate == '0' && item.ProgressRate == '0' && item.FailedRate == '0'">
+
+                                                            <div class="progress-bar progress-bar-todo" role="progressbar" style="width:100%">
+                                                                to do
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="progress" title="{{item.PayoutStatusTooltip}}" *ngIf="item.SuccessRate > '0' || item.ProgressRate > '0' || item.FailedRate > '0'">
+
+                                                            <div class="progress-bar progress-bar-success" role="progressbar" [ngStyle]="{'width': item.SuccessRate+'%'}">
+                                                                Success
+                                                            </div>
+                                                            <div class="progress-bar progress-bar-warning" role="progressbar" [ngStyle]="{'width': item.ProgressRate+'%'}">
+                                                                In Progress
+                                                            </div>
+                                                            <div class="progress-bar progress-bar-danger" role="progressbar" [ngStyle]="{'width': item.FailedRate+'%'}">
+                                                                Failed
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <ul class="list-inline" *ngIf="item.PayOutStatusCode < 7700">
+                                                        <!-- <nz-progress nz-tooltip nzTitle="3 done / 3 in progress / 4 to do" [nzPercent]="60" [nzSuccessPercent]="30"></nz-progress> -->
+
+
+                                                        <li class="list-inline-item" *ngIf="currentUrl == '/app/payroll/payoutTransaction'">
+                                                            <button class="btn btn-default" type="Submit" name="btnSubmit" id="btnSubmit" (click)="exportExcel_dynamic(item.TableDataSrc)">
+                              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-gesture-double-tap"></i>
+                                  Export Excel
+                                </span>
+                              </div>
+                            </button>
+                                                        </li>
+
+                                                        <li class="list-inline-item" *ngIf="item.ModeOfTransfer == '1' && (currentUrl == '/app/payroll/payoutTransaction' || currentUrl == '/app/payroll/payoutTransaction_finance')">
+                                                            <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="holdPayout_dynamic(item,'HoldPayout', item.TableDataSrc)">
+                              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-gesture-double-tap"></i>
+                                  Cancel and Move all to Parent
+                                </span>
+                              </div>
+                            </button>
+                                                        </li>
+                                                        <li class="list-inline-item" *ngIf="item.ModeOfTransfer == '1' && currentUrl == '/app/payroll/payoutTransaction'">
+                                                            <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="confirmPayout_dynamic(item,'ConfirmPayout')">
+                              <div class="pos-rlt sm-btn-component"> <span> <i
+                                    class="mdi mdi-checkbox-marked-outline "></i>
+                                  Confirm
+                                  PayOut</span>
+                              </div>
+                            </button>
+                                                        </li>
+                                                        <li class="list-inline-item" *ngIf="item.ModeOfTransfer == '2' && (currentUrl == '/app/payroll/payoutTransaction' || currentUrl == '/app/payroll/payoutTransaction_finance')">
+                                                            <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="generatebankFile_dynamic(item)">
+                              <div class="pos-rlt sm-btn-component"> <span> <i
+                                    class="mdi mdi-checkbox-multiple-marked-circle-outline "></i>
+                                  Generate Bank File</span>
+                              </div>
+                            </button>
+                                                        </li>
+                                                        <li class="list-inline-item" *ngIf="(currentUrl == '/app/payroll/payoutTransaction' || currentUrl == '/app/payroll/payoutTransaction_finance')">
+                                                            <button type="button" class="btn btn-primary" (click)="do_Refresh_releasePayout(item)" [disabled]="releasePayout_separate_spin">
+                              <i class="mdi mdi-refresh m-r-xs"></i> Refresh
+                            </button>
+                                                        </li>
+
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                            <div class="card card-dashboard-pageviews" style="border: 1px solid rgb(67 65 65 / 44%);border-radius: 0px;">
+
+                                                <div class="card-body" style="padding: 0px;padding-top: 1.25rem;">
+
+                                                    <table class="table tableBodyScroll font-fam">
+                                                        <thead>
+                                                            <tr>
+                                                                <!-- <th *ngIf="(currentUrl == '/app/payroll/payoutTransaction')">
+                                <p
+                                  style="font-weight: 700;margin-bottom:0px; text-align: left;padding-top: 15px !important;">
+                                  <input type="checkbox" [(ngModel)]="item.selectAll"
+                                    (click)="selectAll_PayoutEmployee($event,item)"> </p>
+                              </th> -->
+
+                                                                <th style="width: 3%;">
+
+                                                                    <input type="checkbox" [disabled]="(currentUrl != '/app/payroll/payoutTransaction')" [(ngModel)]="item.selectAll" (click)="selectAll_PayoutEmployee($event,item)">
+
+                                                                </th>
+                                                                <th style="width: 9%;">EMP. CODE</th>
+                                                                <th style="width: 9%;">EMP. NAME</th>
+                                                                <th style="width: 10%;">PAY PERIOD</th>
+                                                                <th style="width: 9%;">MOBILE NO.</th>
+                                                                <th style="width: 8%;">ACC. NO.</th>
+                                                                <th style="width: 7%;">NET PAY</th>
+                                                                <th style="width: 8%;">UTR</th>
+                                                                <th style="width: 10%;">STATUS</th>
+                                                                <th style="width: 8%;">ERR.MSG.</th>
+
+                                                                <th style="width: 9%;" class="text-center" *ngIf="(currentUrl == '/app/payroll/payoutTransaction' || currentUrl == '/app/payroll/payoutTransaction_finance')">
+                                                                </th>
+                                                                <th style="width: 10%;"></th>
+                                                                <!-- <th></th> -->
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody class="tbdy">
+                                                            <ng-container *ngIf="item.TableDataSrc.length == 0">
+                                                                <tr>
+                                                                    <td colspan="12" style="text-align: center;">No records found! </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                            <tr *ngFor="let datas of item.TableDataSrc  | filter: item.searchText" style="margin-left: 5px;">
+                                                                <!-- <td style="text-align: center !important"
+                                *ngIf="(currentUrl == '/app/payroll/payoutTransaction') && datas.StatusCode == '7729' || datas.StatusCode == '7749'" class="text-center">
+                                <input type="checkbox" [(ngModel)]="datas.isSelected"
+                                  (click)="onChangeRetryCheckbox(datas, item, $event)">
+                              </td>
+                              <td style="text-align: center !important"
+                                *ngIf="(currentUrl == '/app/payroll/payoutTransaction') && datas.StatusCode != '7729' && datas.StatusCode != '7749'" class="text-center">
+                              </td> -->
+
+                                                                <td style="width: 3%;" *ngIf="(currentUrl == '/app/payroll/payoutTransaction') && (datas.StatusCode == '7729' || datas.StatusCode == '7749' || datas.StatusCode == '7500')">
+                                                                    <input type="checkbox" [disabled]="(currentUrl != '/app/payroll/payoutTransaction') || (datas.StatusCode == '7729' || datas.StatusCode == '7749')" [(ngModel)]="datas.isSelected" (click)="onChangeRetryCheckbox(datas, item, $event)">
+                                                                </td>
+                                                                <td style="width: 3%;" *ngIf="(currentUrl == '/app/payroll/payoutTransaction') && (datas.StatusCode != '7729' && datas.StatusCode != '7749' && datas.StatusCode != '7500')">
+                                                                    <input type="checkbox" disabled>
+                                                                </td>
+                                                                <td style="width: 3%;" *ngIf="(currentUrl != '/app/payroll/payoutTransaction')">
+                                                                    <input type="checkbox" disabled>
+                                                                </td>
+                                                                <td class="overflow" style="width: 9%;" title="{{datas.EmployeeCode}}">{{datas.EmployeeCode}}</td>
+                                                                <td class="overflow" style="width: 9%;" title="{{datas.EmployeeName}}">{{datas.EmployeeName}}</td>
+                                                                <td class="overflow" style="width: 10%;" title="{{datas.PayPeriodName}}">{{datas.PayPeriodName}}</td>
+                                                                <td class="overflow" style="width: 9%;" title="{{datas.MobileNumber}}">{{datas.MobileNumber}}</td>
+                                                                <td class="overflow" style="width: 8%;" title="{{datas.AccountNumber}}">{{datas.AccountNumber}}</td>
+                                                                <td class="overflow" style="width: 7%;" title="{{datas.NetPay}}"><a href="javascript:;" style="color: #08c;" (click)="onNetPay_Slider(datas)">{{datas.NetPay | number : '1.2-2'}}</a> </td>
+                                                                <td class="overflow" style="width: 8%;" title="{{datas.AcknowledgmentDetail}}">{{datas.AcknowledgmentDetail}}</td>
+                                                                <!-- <td >{{datas.IsPaymentHoldDisplayName}}</td> -->
+                                                                <td class="overflow" style="width: 10%;" title="{{datas.Status}}">{{datas.Status}} <i *ngIf="datas.StatusCode == '7749' || datas.StatusCode == '7529'" class="mdi mdi-information" style="cursor:pointer" title="Error Msg : {{datas.ErrorMessage}}" tooltip="Error Msg : {{datas.ErrorMessage}}"></i>                                                                    </td>
+                                                                <td class="overflow" style="width: 9%;" title="{{datas.ErrorMessage}}">{{datas.ErrorMessage}}</td>
+
+                                                                <td class="text-center" style="cursor: pointer;width: 9%;" *ngIf="(currentUrl == '/app/payroll/payoutTransaction' || currentUrl == '/app/payroll/payoutTransaction_finance')">
+                                                                    <button (click)="move_to_parent_dynamic(datas, item.TableDataSrc, item)" type="button" *ngIf="item.PayOutStatusCode !=7550 && (datas.StatusCode <=  '7500' ||  datas.StatusCode == '7749' || datas.StatusCode == '7529')" class="ant-btn d-inline-flex align-items-center ant-btn-sm"
+                                                                        style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i
+                                      class="fa fa-arrows" aria-hidden="true" style="padding-right: 5px;"></i>Move to
+                                    Parent</span></button>
+                                                                    <!-- <i ngbTooltip="Move to Parent" (click)="move_to_parent_dynamic(datas, item.TableDataSrc)" class="fa fa-arrows"
+                                aria-hidden="true"></i> -->
+                                                                </td>
+                                                                <td style="width: 10%;"> <button (click)="checkPaymentStatus(datas, item)" *ngIf="item.ModeOfTransfer != 2 && datas.StatusCode == '7800'" type="button" class="ant-btn d-inline-flex align-items-center ant-btn-sm"
+                                                                        style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i
+                                      class="fa fa-refresh" aria-hidden="true" style="padding-right: 5px;"></i>Check
+                                    Status</span></button> </td>
+
+                                                                <!-- <td class="text-center" style="cursor: pointer;"
+                                *ngIf="(currentUrl == '/app/payroll/payoutTransaction' || currentUrl == '/app/payroll/payoutTransaction_finance')">
+                                <button (click)="retry_dynamic(datas, item.TableDataSrc, item)" type="button"
+                                *ngIf="datas.StatusCode == '7729' || datas.StatusCode == '7749'"
+                                  class="ant-btn d-inline-flex align-items-center ant-btn-sm"
+                                  style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i
+                                      class="fa fa-arrows" aria-hidden="true" style="padding-right: 5px;"></i>Retry</span></button>
+                              
+                              </td> -->
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="row">
+
+
+                    </div>
+
+
+
+
+
+                    <div class="row" *ngIf="index == 1">
+                        <div class="col-lg-7 col-md-7 col-sm-6 col-xs-12 m-t-2" style="margin-top: 2rem;">
+
+                            <div class="card" style="box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,.03), 0 0.9375rem 1.40625rem rgba(4,9,20,.03), 0 0.25rem 0.53125rem rgba(4,9,20,.05), 0 0.125rem 0.1875rem rgba(4,9,20,.03);
+              transition: all .2s;">
+
+                                <div class="card-body" style="height: 18.9rem; padding: 30px;">
+                                    <div style="margin-bottom: 1.4rem;">
+                                        <h4 _ngcontent-c8="" class="card-title"> Client Details </h4>
+                                        <h5 _ngcontent-c8="" class="card-subtitle">Credit Score : 82%</h5>
+                                    </div>
+
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label>Client Type </label>
+                                                <h6> Pay and Collect </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label>Number of employees</label>
+                                                <h6>3 </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label>Credit Period</label>
+                                                <h6> April</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card" style="margin-top: 1rem;">
+                                <div class="card-body" style="height: 10.9rem; padding: 30px;">
+                                    <div style="margin-bottom: 1.4rem;">
+                                        <h4 _ngcontent-c8="" class="card-title"> Payment Trend</h4>
+                                        <h5 _ngcontent-c8="" class="card-subtitle">Overview</h5>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12  m-t-2" style="margin-top: 2rem;">
+
+                            <div class="card" style="box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,.03), 0 0.9375rem 1.40625rem rgba(4,9,20,.03), 0 0.25rem 0.53125rem rgba(4,9,20,.05), 0 0.125rem 0.1875rem rgba(4,9,20,.03);
+              transition: all .2s;margin-bottom: 1rem;">
+
+                                <div class="card-body" style="height: 11.9rem; padding: 30px;">
+                                    <div style="margin-bottom: 1.4rem;">
+                                        <h4 _ngcontent-c8="" class="card-title"> Outstanding </h4>
+                                        <h5 _ngcontent-c8="" class="card-subtitle"></h5>
+                                    </div>
+
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label>Current O/S </label>
+                                                <h6> INR 45800</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label>Last Payment Received Ons</label>
+                                                <h6>22 Mar, 2020 </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="card" style="box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,.03), 0 0.9375rem 1.40625rem rgba(4,9,20,.03), 0 0.25rem 0.53125rem rgba(4,9,20,.05), 0 0.125rem 0.1875rem rgba(4,9,20,.03);
+              transition: all .2s;margin-bottom: 1rem;">
+
+                                <div class="card-body" style="height: 11.9rem; padding: 30px;">
+                                    <div style="margin-bottom: 1.4rem;">
+                                        <h4 _ngcontent-c8="" class="card-title"> Paysheet Amount </h4>
+                                        <h5 _ngcontent-c8="" class="card-subtitle"></h5>
+                                    </div>
+
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label>Number of employees </label>
+                                                <h6>23 </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label>Payout Amount</label>
+                                                <h6>34,000.00 </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="card" style="box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,.03), 0 0.9375rem 1.40625rem rgba(4,9,20,.03), 0 0.25rem 0.53125rem rgba(4,9,20,.05), 0 0.125rem 0.1875rem rgba(4,9,20,.03);
+              transition: all .2s;margin-bottom: 1rem;">
+
+                                <div class="card-body" style="height: 11.9rem; padding: 30px;">
+                                    <div style="margin-bottom: 1.4rem;">
+                                        <h4 _ngcontent-c8="" class="card-title"> Credit Notes </h4>
+                                        <h5 _ngcontent-c8="" class="card-subtitle"></h5>
+                                    </div>
+
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label>Last Availed Amt </label>
+                                                <h6>44,000.00 </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label>Availed Date</label>
+                                                <h6>12 Feb, 2020 </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="row" *ngIf="index == 2">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-t-2" style="margin-top: 2rem;">
+                            <div class="success-icon">&#10004;</div>
+                            <div class="success-title">
+                                Payout Verified Successfully
+                            </div>
+                            <div class="card" style="box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,.03), 0 0.9375rem 1.40625rem rgba(4,9,20,.03), 0 0.25rem 0.53125rem rgba(4,9,20,.05), 0 0.125rem 0.1875rem rgba(4,9,20,.03);
+              transition: all .2s;margin: 5rem;">
+
+                                <div class="card-body" style="height: 18.9rem; padding: 30px;">
+                                    <div style="margin-bottom: 1.4rem;">
+                                        <h4 _ngcontent-c8="" class="card-title"> Confirmation </h4>
+                                        <h5 _ngcontent-c8="" class="card-subtitle">No of Payout(s) : 45</h5>
+                                    </div>
+
+                                    <div class="headerbar-right">
+                                        <div class="media" style="width: 15% !important;">
+                                            <div class="media-body">
+                                                <label style="font-size: 14px;">Approved </label>
+                                                <h6 style="font-size: 16px;"> 40 </h6>
+                                            </div>
+                                        </div>
+                                        <div class="media" style="width: 50% !important;">
+                                            <div class="media-body">
+                                                <label style="font-size: 14px;">Hold</label>
+                                                <h6 style="font-size: 16px;">5 </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="headerbar-right" style="width: 35%;
+                padding-left: 0px !important;
+                margin-left: -15px;">
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                            <label class="form-label">Company Bank <span class="required"></span></label>
+
+                                            <ng-select [items]="companyBankList" [clearable]="false" placeholder="-- select an option --" bindLabel="Details" bindValue="Id">
+                                            </ng-select>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="headerbar-right">
+                                        <div style="float: left;">
+                                            <a href="javascript:;" (click)="checkBalance()">Check fund balance</a>
+                                            <div>
+                                                <h6 class="tx-primary">77,555.00</h6>
+                                            </div>
+                                        </div>
+                                        <div style="float: right;">
+                                            <button class="btn  btn-default  m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit" (click)="closeModal()">
+                        <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Close </span></div>
+                      </button>
+
+                                            <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="do_approveorhold_payout('Approve')">
+                        <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-spellcheck"></i> Confirm </span>
+                        </div>
+                      </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<nz-drawer [nzVisible]="visible_clientDetails" [nzWidth]="1100" nzIcon="user" nzTitle="Payout - Client Information" (nzOnClose)="close_clientDetails()">
+
+    <div class="headerbar-right">
+        <div class="media">
+            <div class="media-body">
+                <label>Client Name</label>
+                <h6>Integrum Technologies Pvt Ltd.</h6>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-7 col-md-7 col-sm-6 col-xs-12 m-t-2" style="margin-top: 2rem;">
+
+            <div class="card" style="box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,.03), 0 0.9375rem 1.40625rem rgba(4,9,20,.03), 0 0.25rem 0.53125rem rgba(4,9,20,.05), 0 0.125rem 0.1875rem rgba(4,9,20,.03);
+      transition: all .2s;">
+
+                <div class="card-body" style="height: 18.9rem; padding: 30px;">
+                    <div style="margin-bottom: 1.4rem;">
+                        <h4 _ngcontent-c8="" class="card-title"> Client Details </h4>
+                        <h5 _ngcontent-c8="" class="card-subtitle">Credit Score : 82%</h5>
+                    </div>
+
+                    <div class="headerbar-right">
+                        <div class="media" style="width: 50% !important;">
+                            <div class="media-body">
+                                <label>Client Type </label>
+                                <h6> Pay and Collect </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="headerbar-right">
+                        <div class="media" style="width: 50% !important;">
+                            <div class="media-body">
+                                <label>Number of employees</label>
+                                <h6>3 </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="headerbar-right">
+                        <div class="media" style="width: 50% !important;">
+                            <div class="media-body">
+                                <label>Credit Period Days</label>
+                                <h6> 12</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 1rem;">
+                <div class="card-body" style="height: 10.9rem; padding: 30px;">
+                    <div style="margin-bottom: 1.4rem;">
+                        <h4 _ngcontent-c8="" class="card-title"> Payment Trend</h4>
+                        <h5 _ngcontent-c8="" class="card-subtitle">Overview</h5>
+                    </div>
+
+                    <span></span>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12  m-t-2" style="margin-top: 2rem;">
+
+            <div class="card" style="box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,.03), 0 0.9375rem 1.40625rem rgba(4,9,20,.03), 0 0.25rem 0.53125rem rgba(4,9,20,.05), 0 0.125rem 0.1875rem rgba(4,9,20,.03);
+      transition: all .2s;margin-bottom: 1rem;">
+
+                <div class="card-body" style="height: 11.9rem; padding: 30px;">
+                    <div style="margin-bottom: 1.4rem;">
+                        <h4 _ngcontent-c8="" class="card-title"> Outstanding </h4>
+                        <h5 _ngcontent-c8="" class="card-subtitle"></h5>
+                    </div>
+
+                    <div class="headerbar-right">
+                        <div class="media" style="width: 50% !important;">
+                            <div class="media-body">
+                                <label>Current O/S </label>
+                                <h6> INR 45800</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="headerbar-right">
+                        <div class="media" style="width: 50% !important;">
+                            <div class="media-body">
+                                <label>Last Payment Received Ons</label>
+                                <h6>22 Mar, 2020 </h6>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card" style="box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,.03), 0 0.9375rem 1.40625rem rgba(4,9,20,.03), 0 0.25rem 0.53125rem rgba(4,9,20,.05), 0 0.125rem 0.1875rem rgba(4,9,20,.03);
+      transition: all .2s;margin-bottom: 1rem;">
+
+                <div class="card-body" style="height: 11.9rem; padding: 30px;">
+                    <div style="margin-bottom: 1.4rem;">
+                        <h4 _ngcontent-c8="" class="card-title"> Paysheet Amount </h4>
+                        <h5 _ngcontent-c8="" class="card-subtitle"></h5>
+                    </div>
+
+                    <div class="headerbar-right">
+                        <div class="media" style="width: 50% !important;">
+                            <div class="media-body">
+                                <label>Number of employees </label>
+                                <h6>23 </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="headerbar-right">
+                        <div class="media" style="width: 50% !important;">
+                            <div class="media-body">
+                                <label>Payout Amount</label>
+                                <h6>34,000.00 </h6>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card" style="box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,.03), 0 0.9375rem 1.40625rem rgba(4,9,20,.03), 0 0.25rem 0.53125rem rgba(4,9,20,.05), 0 0.125rem 0.1875rem rgba(4,9,20,.03);
+      transition: all .2s;margin-bottom: 1rem;">
+
+                <div class="card-body" style="height: 11.9rem; padding: 30px;">
+                    <div style="margin-bottom: 1.4rem;">
+                        <h4 _ngcontent-c8="" class="card-title"> Credit Notes </h4>
+                        <h5 _ngcontent-c8="" class="card-subtitle"></h5>
+                    </div>
+
+                    <div class="headerbar-right">
+                        <div class="media" style="width: 50% !important;">
+                            <div class="media-body">
+                                <label>Last Availed Amt </label>
+                                <h6>44,000.00 </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="headerbar-right">
+                        <div class="media" style="width: 50% !important;">
+                            <div class="media-body">
+                                <label>Availed Date</label>
+                                <h6>12 Feb, 2020 </h6>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+</nz-drawer>
+
+
+<nz-drawer [nzVisible]="visible_employeeConfirmPayout" [nzWidth]="840" nzIcon="user" nzTitle="Confirmation - Payout" (nzOnClose)="close_employeeConfirmPayout()">
+    <!-- [checked]="x.PreferedAddress==1"   -->
+    <div *ngIf="!spinner && BehaviourObject_Data != undefined">
+        <div class="row">
+            <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+        <label class="form-label">Choose transfer method below <span class="required">*</span></label>
+        <label *ngFor="let x of transferType;let i = index">
+          <input type="radio" name="name" [value]="x.id" [(ngModel)]="SelectedTransferMethod"
+            (change)="RadioCheck(x.id)">
+          <b style="padding-right: 10px;"> {{ x.name }} &nbsp;</b>
+        </label>
+      </div> -->
+        </div>
+
+        <div class="headerbar-right">
+            <div class="media" style="width: 25% !important;">
+                <div class="media-body">
+                    <label>Bank Name</label>
+                    <!-- <h6> Yes Bank</h6> -->
+                    <h6 *ngIf="BehaviourObject_Data != undefined && BehaviourObject_Data.CompanyBankAccountId != null && BehaviourObject_Data.CompanyBankAccountId != 0">
+                        {{getBankName(BehaviourObject_Data.CompanyBankAccountId)}}</h6>
+                </div>
+            </div>
+            <div class="media" style="width: 25% !important;">
+                <div class="media-body">
+                    <label>Pay Out Date</label>
+                    <!-- <h6>13 Oct, 2020</h6> -->
+                    <h6 *ngIf="BehaviourObject_Data != undefined">{{BehaviourObject_Data.PayOutDate | date : 'd MMM yyyy'}}</h6>
+                </div>
+            </div>
+            <div class="media" style="width: 25% !important;">
+                <div class="media-body">
+                    <label>No of Employee</label>
+                    <h6 *ngIf="local_dataset.length > 0">{{local_dataset.length}}</h6>
+                    <!-- <h6>1</h6> -->
+                </div>
+            </div>
+            <div class="media" style="width: 25% !important;">
+                <div class="media-body">
+                    <label>Payout Amount</label>
+                    <h6>{{getPayOutAmount(local_dataset) | number : '1.2-2'}}</h6>
+                    <!-- <h6>INR 600</h6> -->
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-t-2">
+                <div class="card card-dashboard-pageviews" style="margin-top: 1rem;">
+                    <div class="card-header p-10" style="padding: 1rem;">
+                        <h6 class="card-title">Employee for Payout</h6>
+                        <button class="btn btn-default pull-right" type="button" (click)="exportAsXLSX()" style="margin-top: -30px;"> <i class="mdi mdi-file-excel"></i> &nbsp; Export </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="integrum-list-item" *ngFor="let i of local_dataset">
+                            <div>
+                                <h6>{{i.EmployeeName}} - {{i.EmployeeCode}}</h6>
+                                <span> {{i.BankName}} | {{i.AccountNumber}} | {{i.IFSCCode}} | {{i.MobileNumber}}</span>
+                            </div>
+                            <div>
+                                <h6 class="tx-primary">{{i.NetPay | number : '1.2-2'}}</h6>
+                                <span>Status : {{getPayoutDetailsStatus(i.Status)}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+            <div class="col-lg-6">
+                <ul class="list-inline">
+
+                </ul>
+            </div>
+            <div class="col-lg-6 text-right">
+                <div class="text-right">
+                    <ul class="list-inline">
+
+                        <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="close_employeeConfirmPayout()">
+                <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                Cancel</button>
+                        </li>
+                        <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="confirmPayout()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                    Proceed Now
+                  </span></div>
+              </button></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</nz-drawer>
+
+
+<div id="popup_bankconfirmation" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_bankconfirmation" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated fadeInDownBig">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header" style="padding: 15px !important;">
+
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Confirmation </b></small>
+                        <h6 class="modal-title subheader_h6" id="popup_release_AL" *ngIf="BehaviourObject_Data != undefined">
+                            {{BehaviourObject_Data.ClientName}} | Pay Amount : {{_selectedPayAmount_ReleaseBatch | number : '1.2-2'}}
+                        </h6>
+                    </div>
+
+                    <div class="modal-close" *ngIf="!shouldRendering" (click)="modal_dismiss2()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+
+
+                <div class="modal-body" style="padding-bottom: 3rem;">
+                    <div class="row">
+                        <div class="col-xs-12  col-sm-12  p-r-50">
+                            <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                <label class="form-label">Company Bank <span class="required"></span></label>
+                                <ng-select [items]="companyBankList" [clearable]="false" [(ngModel)]="dynamicCompanyId" (change)="onChangeBank($event)" placeholder="-- select an option --" bindLabel="Details" bindValue="Id">
+                                </ng-select>
+                                <label class="form-label" style="float: right;
+               padding-top: 3px;" *ngIf="dynamicCompanyId && !shouldRendering"> <span style="float: left;
+    font-weight: 700 !important;
+    color: #080808 !important;
+    padding-top: 3px;
+    padding-right: 10px;" *ngIf="popupBankFundBalance != null"> ₹ {{popupBankFundBalance}} |</span> <span style="float: right;
+                font-weight: 700 !important;color: #337ab7 !important;padding-top: 3px;cursor: pointer;"
+                    (click)="checkFundBalance_popup(dynamicCompanyId)"> Check fund Balance </span>
+                </label>
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12  col-sm-12  p-r-50">
+                            <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                <label class="form-label">Mode of Transfer <span class="required"></span></label>
+                                <ng-select [items]="modeTransferList" [disabled]="dynamicCompanyId == null" [clearable]="false" [(ngModel)]="dynamicModeTransfer" placeholder="-- select an option --" bindLabel="Name" bindValue="Id">
+                                </ng-select>
+                                <label class="form-label" style="float: right;
+               padding-top: 3px;" *ngIf="dynamicModeTransfer && !shouldRendering">
+                </label>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <div class="d-flex align-items-center" *ngIf="!shouldRendering && !popupBankStatus">
+                        <strong class="text-right"> {{popupBankMessage}} &nbsp;&nbsp;&nbsp;</strong>
+
+                    </div>
+
+                    <div class="d-flex align-items-center" *ngIf="shouldRendering && popupBankStatus">
+                        <strong class="text-right"> {{shouldRenderingTxt}}... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                    <div *ngIf="!shouldRendering && popupBankStatus">
+
+                        <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit" (click)="modal_dismiss2()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+            </button>
+                        <button class="btn btn-primary pull-right" type="button" (click)="confirmChangeBank()"> <i
+                class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Okay! Confirm</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popup_ConfirmPayout" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_ConfirmPayout" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated fadeInDownBig">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b> Confirmation - Payout </b></small>
+                        <h6 class="modal-title subheader_h6" id="popup_release_AL">Preview</h6>
+                    </div>
+
+                    <div class="modal-close" (click)="close_employeeConfirmPayout()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label">Choose transfer method below <span class="required">*</span></label>
+                            <label *ngFor="let x of transferType;let i = index">
+                <input type="radio" name="name" [value]="x.id" [(ngModel)]="SelectedTransferMethod"
+                  (change)="RadioCheck(x.id)">
+                <b style="padding-right: 10px;"> {{ x.name }} &nbsp;</b>
+              </label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6  col-sm-6  p-r-50">
+                            <div class="media" style="width: 100% !important;">
+                                <div class="media-body">
+                                    <label>No of Employee</label>
+                                    <h6 *ngIf="local_dataset.length > 0">{{local_dataset.length}}</h6>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-6  col-sm-6  p-r-50">
+                            <div class="media" style="width: 100% !important;">
+                                <div class="media-body">
+                                    <label>Payout Amount</label>
+                                    <h6>{{getPayOutAmount(local_dataset) | number : '1.2-2'}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right right-margin-btn">
+                        <div class="text-right">
+                            <ul class="list-inline">
+
+                                <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="close_employeeConfirmPayout()">
+                    <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                    Cancel</button>
+                                </li>
+                                <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="confirmPayout()">
+                    <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                        Proceed Now
+                      </span></div>
+                  </button></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<nz-drawer [nzVisible]="visible_netpaySlider" [nzWidth]="840" nzTitle="Employee Pay Transaction" (nzOnClose)="close_netpaySlider()">
+    <nz-descriptions [nzColumn]="2" *ngIf="rowRecord">
+        <nz-descriptions-item nzTitle="Employee Name" [nzSpan]="0.5"><b>{{rowRecord.EmployeeName}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Employee Code" [nzSpan]="0.5"><b>{{rowRecord.EmployeeCode}}</b>
+        </nz-descriptions-item>
+
+        <nz-descriptions-item nzTitle="Pay Period" [nzSpan]="0.5"><b>{{rowRecord.PayPeriodName}}</b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Mobile Number" [nzSpan]="0.5"><b>{{rowRecord.MobileNumber}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Account Number | IFSCCode" [nzSpan]="0.5"><b> {{rowRecord.AccountNumber}} |
+        {{rowRecord.IFSCCode}} </b></nz-descriptions-item>
+
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <div *ngIf="Payitems">
+        <!-- <nz-divider></nz-divider> -->
+        <nz-table nzSize="small" [nzData]="Payitems" [nzTemplateMode]="false" [nzShowPagination]=false>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Actual Amount</th>
+                    <th>Earned Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of Payitems" [ngStyle]="{'background': data.ProductTypeCode =='Total'  ? '#cbe2f7' : '#FFF' }" style="display: revert !important">
+                    <td>{{data.ProductDisplayName}}</td>
+                    <td style="text-align: right !important;">{{data.ActualAmount | number : '1.2-2'}}</td>
+                    <td style="text-align: right !important;">{{data.PayTotal | number : '1.2-2'}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <nz-divider></nz-divider>
+
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+            <div class="text-left">
+
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="text-right">
+                <ul class="list-inline">
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+</nz-drawer>

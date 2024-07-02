@@ -1,0 +1,70 @@
+<div class="mx-auto text-center">
+  <div class="row mx-auto text-center">
+    <div class="col-md-12" style="margin-left: 42%;margin-top: 35%;">
+      <img src="assets/Images/warning-outline.png" alt="warning">
+    </div>
+    <div class="row mx-auto text-center">
+      <div class="col-md-12 text-big">
+        Are you sure ?
+      </div>
+      <div class="col-md-12 mb-4 text-small">
+        Do you want {{title | lowercase}} <span class="text-black">{{rowData.EmployeeName}}'s</span> <br>
+        resignation request
+      </div>
+    </div>
+    <div class="row col-xs-12 col-lg-12 col-md-12 mb-2 text-left">
+
+      <div class="form-group form-group-vertical col-md-6" *ngIf="rowData.RelievingDateAsPerNoticePeriod">
+        <label class="form-label resignation-label">Relieving Date as per Notice Period</label>
+        <p class="resignation-text-bold">{{rowData.RelievingDateAsPerNoticePeriod}}</p>
+      </div>
+
+      <div class="form-group form-group-vertical col-md-6">
+        <label class="form-label resignation-label">{{rowData.FnFTransactionType == 1 ? 'Expected LWD' : 'Requested Relieving Date' }}  </label>
+        <p class="resignation-text-bold">{{rowData.RequestedRelievingDate ? rowData.RequestedRelievingDate : '-'}}</p>
+      </div>
+
+      <div class="form-group form-group-vertical col-md-6" *ngIf="rowData.ApprovedRelievingDate">
+        <label class="form-label resignation-label">Approved Relieving Date</label>
+        <p class="resignation-text-bold">{{rowData.ApprovedRelievingDate ? rowData.ApprovedRelievingDate : '-'}}</p>
+      </div>
+
+    </div>
+    <!-- APPROVED RESIGNATION DATE DETAILS -->
+    <div class="row col-xs-12 col-lg-12 col-md-12 mb-2 text-left" *ngIf="title == 'approve'"> 
+      <div class=" form-group col-xs-12 col-sm-12">
+        <label class="form-label ">Approved Relieving Date</label>
+        <input class="form-control" type="text" name="approvedRelievingDate" bsDatepicker placement="top"
+          (bsValueChange)="onChangeRelievedDate($event)" placeholder="12-12-2020" [minDate]="minDate" [maxDate]="maxDate"
+          [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+          [(ngModel)]="approvedRelievingDate" autocomplete="off" readonly required>
+      </div>
+    </div>
+    <!-- REMARKS -->
+    <div class="row col-xs-12 col-lg-12 col-md-12 mb-2 text-left">
+      <div class="form-group col-xs-12 col-sm-12">
+        <label class="form-label" *ngIf="title == 'approve'">Approval Remarks</label>
+        <label class="form-label" *ngIf="title == 'reject'">Rejection Remarks</label>
+        <textarea id="remarks" rows="3" maxlength="500" [(ngModel)]="remarks"
+          required="true" class="form-control w-100" autocomplete="off" placeholder=""></textarea>
+      </div>
+    </div>
+    <!-- BUTTONS -->
+    <div style="float: right; width: 100%;text-align: right;">
+      <button id="cancelResignBtn" class="btn btn-default m-r-sm" type="button" (click)="cancelDrawer()">
+        Cancel
+      </button>
+      <button [disabled]="!isRemarksValid()" id="rejectResignBtn" *ngIf="title == 'reject'" class="btn btn-danger" type="button" 
+      (click)="ApproveRejectResignationByManager('REJECT')" style="margin-right: 10%;">
+        Reject
+      </button>
+      <button id="approveResignBtn" *ngIf="title == 'approve'" class="btn btn-success" type="button"
+        (click)="ApproveRejectResignationByManager('APPROVE')" style="margin-right: 10%;">
+        Approve
+      </button>
+      <!-- <button nz-button style="margin-right: 8px;" (click)="close()">Cancel</button>
+      <button nz-button nzType="primary" (click)="close()">Submit</button> -->
+    </div>
+   
+  </div>
+</div>

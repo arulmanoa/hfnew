@@ -1,0 +1,15 @@
+import { FormControl, FormGroup, AbstractControl } from '@angular/forms';
+let previousValue = 0;
+
+export function mixmaxcheck(control: AbstractControl)  {
+    if (control.value > 100) {
+      control.setValue(previousValue);
+       return  true  ;
+    }else if(control.value < 1) {
+      control.setValue(previousValue);
+       return  true ;
+    }else{
+      previousValue = control.value;
+       return null;
+    }
+}

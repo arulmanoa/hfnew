@@ -1,0 +1,90 @@
+<div id="timesheetHistoryMainId" style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div id="timesheetHistoryId" class="modal-dialog modal-xl modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;font-family: Roboto;">
+        <div class="w-100">
+          <div class="">
+            <div class="d-flex align-items-center m-0" *ngIf="spinner"
+              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+              <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+            <div class="detailView" *ngIf="!spinner">
+              <div class="row">
+                <!-- HEADER DETAILS -->
+                <div class="col-lg-12" style="padding-top: 1rem;padding-left: 2rem;">
+                  <h3 class="modal_header">Timesheet Requests</h3>
+                  <div class="row">
+                    <div class="col-md-6 mt-3 mt-2">
+                      <button class="p-0 btn btn-back" ngbPopover="Close" triggers="mouseenter:mouseleave" 
+                        (click)="closeModal()"><span class="mdi mdi-arrow-left"></span> &nbsp;&nbsp;
+                        Request History
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- SEARCH -->
+              <div class="row" *ngIf="requestHistoryData && requestHistoryData.length > 0">
+                <div class="col-6 text-right"></div>
+                <div class="col-6 text-left">
+                  <input type="text" [(ngModel)]="searchText" placeholder="Search..." 
+                  autocomplete="none|false|no" class="form-control" />
+                </div>
+              </div>
+              <!-- NO DATA -->
+              <div class="row m-2" *ngIf="requestHistoryData && requestHistoryData.length === 0">
+                <div class="col-12 text-center">
+                  <span>No records found</span>
+                </div>
+              </div>
+              <!-- TABLE -->
+              <div class="row m-2" *ngIf="requestHistoryData && requestHistoryData.length > 0">
+                <div class="table w-100 table-height" style="height: 300px;">
+                  <table class="table custom-table">
+                    <thead>
+                      <tr>
+                        <th>Employee</th>
+                        <th>Requested Week</th>
+                        <th>Tag Name</th>
+                        <th>Total Working Hours</th>
+                        <th>Approved / Rejected on</th>
+                        <th>Approved / Rejected Remarks</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="cursor-pointer" *ngFor="let data of pagedDataList | filter: searchText" (click)="showDetailedView(data)">
+                        <td>
+                          <div>
+                            <p class="m-0">{{data.EmployeeName}}</p>
+                            <p class="m-0">{{data.EmployeeCode}}</p>
+                          </div>
+                        </td>
+                        <td>{{data.requestedWeek }}</td>
+                        <td>{{data.TagName}}</td>
+                        <td>{{ data.TotalHours }}</td>
+                        <td>{{ data.ApprovedRejectedOn | date: 'dd MMM yyyy' }}</td>
+                        <td>{{data.ApproverRemarks}}</td>
+                        <td>
+                          <span [ngClass]="{'rejected-status' : data.StatusName == 'Rejected', 'approved-status' : data.StatusName == 'Approved' }">
+                          {{ data.StatusName }}
+                        </span>
+                          
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>   
+                  <div class="custom-table-pagination">
+                    <button class="btn prev" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+                    <span class="page" *ngFor="let page of pages" [class.active]="page === currentPage" (click)="changePage(page)">{{ page }}</span>
+                    <button class="btn next" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+                  </div>       
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

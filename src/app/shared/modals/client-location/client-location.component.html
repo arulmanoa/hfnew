@@ -1,0 +1,320 @@
+<!-- <div class="wrapper-lg cell">
+
+      <div class="content m-b report-content"> -->
+<div style="display: block;" class="modal fade show">
+
+    <!-- <div id="modalpopupClientLocation" class="modal fade" tabindex="-1"
+                         role="dialog" aria-labelledby="modalpopupGenericMaster" aria-hidden="true"> -->
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <app-loading-screen></app-loading-screen>
+
+            <div class="modal-header">
+                <div class="col-xs-11">
+                    <!-- <h4 class="modal-title">Client Location</h4> -->
+                    <h4 class="modal-title">Location</h4>
+                </div>
+                <div class="col-xs-1">
+                    <button type="button" class="close" data-dismiss="modal" (click)="closeModal()"
+                        aria-label="Close"><span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <form [formGroup]="clientLocationForm">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div *ngIf="BusinessType=='3'" class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label>Client <span class="required">*</span> </label>
+                            <ng-select #select22 [items]="listOfclient" [searchable]="true" placeholder="----Select----"
+                                bindValue="Id" bindLabel="Name" formControlName="client"
+                                [ngClass]="{ 'is-invalid': submitted && f.client.errors }">
+                                <!-- [attr.disabled]="clientLocationForm.controls.Id.value ? true: null"  -->
+
+                                <ng-template ng-header-tmp>
+                                    <input placeholder="Search Client" type="text" class="form-control"
+                                        style="border: none;border-radius: 0px !important;background: white"
+                                        (input)="select22.filter($event.target.value)" />
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.client.invalid" class="help-block">
+                                <div *ngIf="f.client.errors.required">Client is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label>Location Code <span class="required">*</span> </label>
+                            <input type="text" placeholder="Location Code" class="form-control" formControlName="code"
+                                [ngClass]="{ 'is-invalid': submitted && f.code.errors }">
+
+                            <div *ngIf="submitted && f.code.errors" class="invalid-feedback">
+                                <div *ngIf="f.code.errors.required">Location Code is required</div>
+                                <div *ngIf="f.code.errors.minlength">Code must be at least 2 characters</div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- </div> -->
+
+
+                        <!-- <div class="row"> -->
+
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label>Location Name <span class="required">*</span> </label>
+                            <input type="text" placeholder="Location Name" class="form-control" formControlName="name"
+                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+                            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                                <div *ngIf="f.name.errors.required">Location Name is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label>Location Type<span class="required">*</span> </label>
+                            <select id="locationType" class="form-control" formControlName="locationType"
+                                [ngClass]="{ 'is-invalid': submitted && f.locationType.errors }">
+                                <option value="">----Select----</option>
+                                <option *ngFor="let locationType of listOflocationType"
+                                    [value]="locationType.ValueMember">
+                                    {{locationType.DisplayMember}}
+                                </option>
+                            </select>
+                            <div *ngIf="submitted && f.locationType.errors" class="invalid-feedback">
+                                <div *ngIf="f.locationType.errors.required">LocationType is required</div>
+                            </div>
+                        </div>
+                        <!-- </div> -->
+
+                        <!-- <div class="row"> -->
+
+                        <!-- <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                          <label class="form-label">Is Primary Location</label>
+                          &nbsp;
+                          &nbsp;
+                          <div class="pretty p-switch p-fill padding-top-10">
+                            <input type="checkbox" formControlName="isPrimaryLocation" checked enabled />
+                            <div class="state p-success">
+                              <label></label>
+                            </div>
+                          </div>
+                        </div> -->
+
+                        <!-- <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                      <label class="form-label">Is Primary Location</label>
+                      <div class="p-t-10">
+        
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" formControlName="isPrimaryLocation" checked enabled />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+        
+                    </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label>GST Number </label>
+                            <input type="text" maxlength="15" placeholder="GST Number" class="form-control"
+                                formControlName="gst">
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                            <label> Address <span class="required">*</span> </label>
+                            <textarea class="form-control" rows="3" spellcheck="false" id="address"
+                                onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                                formControlName="address"
+                                [ngClass]="{ 'is-invalid': submitted && f.address.errors }"></textarea>
+                            <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                                <div *ngIf="f.address.errors.required">Address Details is required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label>Country <span class="required">*</span> </label>
+                            <!-- <select id="country" class="form-control" formControlName="country"
+                          (change)="onChangeCountry($event.target.value)" 
+                            [ngClass]="{ 'is-invalid': submitted && f.country.errors }">
+                            <option value="">----Select----</option>
+                            <option *ngFor="let country of listOfcountry" [value]="country.Id">
+                              {{country.Name}}
+                            </option>
+                          </select> -->
+
+                            <ng-select #select11 [items]="listOfcountry" [searchable]="true" autocomplete="off"
+                                placeholder="----Select----" bindValue="Id" (change)="onChangeCountry($event)"
+                                bindLabel="Name" formControlName="country"
+                                [ngClass]="{ 'is-invalid': submitted && f.country.errors }">
+
+                                <ng-template ng-header-tmp>
+                                    <input placeholder="Search country" autocomplete="off" type="text"
+                                        class="form-control"
+                                        style="border: none;border-radius: 0px !important;background: white"
+                                        (input)="select11.filter($event.target.value)" />
+                                </ng-template>
+                            </ng-select>
+
+                            <div *ngIf="submitted && f.country.invalid" class="help-block">
+                                <div *ngIf="f.country.errors.required">Country Name is required</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label>State <span class="required">*</span> </label>
+                            <!-- <select id="state" class="form-control" formControlName="state"
+                            (change)="onChangeState($event.target.value)"
+                            [ngClass]="{ 'is-invalid': submitted && f.state.errors }">
+                            <option value="">----Select----</option>
+                            <option *ngFor="let state of listOfstate" [value]="state.Id">
+                              {{state.Name}}
+                            </option>
+                          </select> -->
+
+                            <ng-select #select14 [items]="listOfstate" [searchable]="true" autocomplete="off"
+                                placeholder="----Select----" bindValue="Id" (change)="onChangeState($event)"
+                                bindLabel="Name" formControlName="state"
+                                [ngClass]="{ 'is-invalid': submitted && f.state.errors }">
+
+                                <ng-template ng-header-tmp>
+                                    <input placeholder="Search State" autocomplete="off" type="text"
+                                        class="form-control"
+                                        style="border: none;border-radius: 0px !important;background: white"
+                                        (input)="select14.filter($event.target.value)" />
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.state.invalid" class="help-block">
+                                <div *ngIf="f.state.errors.required">State Name is required</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label>City<span class="required">*</span> </label>
+                            <!-- <select id="city" class="form-control" formControlName="city"
+                             [ngClass]="{ 'is-invalid': submitted && f.city.errors }">
+                            <option value="">----Select----</option>
+                            <option *ngFor="let city of listOfcity" [value]="city.Id">
+                              {{city.Name}}
+                            </option>
+                          </select> -->
+
+                            <ng-select #select15 [items]="listOfcity" [searchable]="true"
+                                (change)="onChangeCity($event)" autocomplete="off" placeholder="----Select----"
+                                bindValue="Id" bindLabel="Name" formControlName="city"
+                                [ngClass]="{ 'is-invalid': submitted && f.city.errors }">
+
+                                <ng-template ng-header-tmp>
+                                    <input placeholder="Search city" autocomplete="off" type="text" class="form-control"
+                                        style="border: none;border-radius: 0px !important;background: white"
+                                        (input)="select15.filter($event.target.value)" />
+                                </ng-template>
+                            </ng-select>
+
+                            <div *ngIf="submitted && f.city.invalid" class="help-block">
+                                <div *ngIf="f.city.errors.required">City Name is required</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label>Pincode <span class="required">*</span> </label>
+                            <input type="text" maxlength="6" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                                placeholder="Pin Code" class="form-control" formControlName="pin" autocomplete="off"
+                                [ngClass]="{ 'is-invalid': submitted && f.pin.errors }">
+
+                            <div *ngIf="submitted && f.pin.errors" class="invalid-feedback">
+                                <div *ngIf="f.pin.errors.required">Pin Code is required</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                          <label class="form-label">Is Billing Address</label>
+                          &nbsp;
+                          &nbsp;
+                          <div class="pretty p-switch p-fill padding-top-10">
+                            <input type="checkbox" formControlName="isBillingAddress" checked enabled />
+                            <div class="state p-success">
+                              <label></label>
+                            </div>
+                          </div>
+                        </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                            <label class="form-label">Is Billing Address</label>
+                            <div class="p-t-10">
+
+                                <label class="el-switch el-switch-green">
+                                    <input type="checkbox" formControlName="isBillingAddress" checked enabled />
+                                    <span class="el-switch-style"></span>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                          <label class="form-label">Is Shipping Address</label>
+                          &nbsp;
+                          &nbsp;
+                          <div class="pretty p-switch p-fill padding-top-10">
+                            <input type="checkbox" formControlName="isShippingAddress" checked enabled />
+                            <div class="state p-success">
+                              <label></label>
+                            </div>
+                          </div>
+                        </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                            <label class="form-label">Is Shipping Address</label>
+                            <div class="p-t-10">
+
+                                <label class="el-switch el-switch-green">
+                                    <input type="checkbox" formControlName="isShippingAddress" checked enabled />
+                                    <span class="el-switch-style"></span>
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                            <label class="form-label">Is Primary Location</label>
+                            <div class="p-t-10">
+
+                                <label class="el-switch el-switch-green">
+                                    <input type="checkbox" formControlName="isPrimaryLocation" />
+                                    <span class="el-switch-style"></span>
+                                </label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <!-- <button class="btn btn-primary" data-dismiss="modal">Cancel</button> &nbsp; -->
+                        <button class="btn btn-primary" type="submit" prevent-double-submit id="btnSubmit"
+                            (click)="saveClientLocationbutton()">
+                            <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i>
+                                    &nbsp; Save
+                                </span></div>
+                        </button> &nbsp;
+                        <button class="btn btn-default pull-right" type="button" (click)="closeModal()"><i
+                                class="fa fa-ban" aria-hidden="true"></i> &nbsp;Cancel</button>
+                        <!-- [disabled]="GenericForm.invalid" -->
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

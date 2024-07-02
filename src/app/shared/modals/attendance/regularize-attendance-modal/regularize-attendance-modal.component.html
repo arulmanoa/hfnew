@@ -1,0 +1,291 @@
+<div id="modal_aside_left" class="d-block modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div id="Employee_Regularize_Popup_content" class="modal-dialog modal-xl modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document"> 
+    <div class="modal-content">
+      <div class="modal-header p-4" style="background: #ffff;">
+        <div class="col-xs-12">
+          <h6 class="header-modal-title my-0 mx-1"> Attendance </h6>
+        </div>
+      </div>
+      <div class="modal-body no-padder" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;font-family: Roboto;">
+        <div class="row mb-1">
+          <div class="col-md-12" title="Close">
+            <button class="p-0 btn btn-back" (click)="closeEmployeeRegularizePopup('Modal Closed')">
+              <i class="mdi mdi-arrow-left"></i> &nbsp;&nbsp;
+              <span class="title_1">Regularize Attendance&nbsp;</span><span class="title_2">&nbsp;| {{attendanceDate | date:'dd MMM yyyy' }}</span>
+            </button>
+          </div>
+        </div>
+        <div class="d-flex align-items-center" *ngIf="isModalSpinner">
+          <strong class="text-center"> Loading... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+        <div *ngIf="!isModalSpinner">
+          <div class="flex-column custom-padding">
+            <div class="col-12 col-md-12 col-sm-12" *ngIf="!calculateAPICalled">
+              <div class="row my-2">
+                  <div class="col-md-6">
+                    <label class="form-label label-title">Shift</label>
+                    <div class="form-text label-value">{{shiftDetails.Code}} ({{ formatTimeRange()}}) </div>
+                  </div>
+                  <div class="col-md-6 d-flex justify-content-between" *ngIf="isBreakShift">
+                    <div class="p-0">
+                      <label class="form-label label-title">1st Half Working Hours</label>
+                      <div class="form-text label-value">{{firstHalfWorkingHrs}} <span class="small-text">(hh:mm)</span></div>
+                    </div>
+                    <div class="p-0">
+                      <label class="form-label label-title">2nd Half Working Hours</label>
+                      <div class="form-text label-value">{{secondHalfWorkingHrs}} <span class="small-text">(hh:mm)</span></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6" *ngIf="!isBreakShift">
+                    <label class="form-label label-title">Total Working Hours</label>
+                    <div class="form-text label-value">{{totalWorkingHours}} <span class="small-text">(hh:mm)</span></div>
+                  </div>
+              </div>
+              <div class="row overflow-x--auto">
+                <table class="table emp-regularize-table">
+                  <thead class="emp-regularize-table-header">
+                    <tr class="w-100">
+                      <th *ngIf="isBreakShift"> Shift Period </th>
+                      <th> In/Out </th>
+                      <th> Date & Time </th>
+                      <th *ngIf="this.AttendanceConfig.IsLocationToBeDisplayed || this.AttendanceConfig.IsMachineNameToBeDisplayed"> Work Location/Machine </th>
+                      <th *ngIf="this.AttendanceConfig.IsRemarksToBeDisplayedForEachEntry"> Remarks </th>
+                      <th style="width: 10%;"></th>
+                    </tr>
+                  </thead>
+                  <tbody class="emp-regularize-table-body">
+                    <tr *ngFor="let item of tableDataForRegularize; let i = index">
+                      <td style="width: 20%;" *ngIf="isBreakShift">
+                        <ng-select [items]="shiftPeriodDropDown" class="mt-above custom-style" placeholder="Choose..." bindLabel="Name" bindValue="Id"
+                          [(ngModel)]="item.Half_Type" [multiple]="false" [clearable]="false">
+                        </ng-select>
+                      </td>
+                      <td style="width: 20%;">
+                        <ng-select [items]="typeDropDown" class="mt-above custom-style" placeholder="Choose..." bindLabel="Name" bindValue="Id"
+                          [(ngModel)]="item.Type" [multiple]="false" [clearable]="false">
+                        </ng-select>
+                      </td>
+                      <td class="d-flex">
+                        <ng-select [items]="datesDropdown" class="custom-style" placeholder="Choose..." bindLabel="Name" bindValue="Id"
+                          [(ngModel)]="item.AttendanceDate" [multiple]="false" [clearable]="false" [disabled]="!item.isPunchInOutEditable">
+                        </ng-select>
+                        <input type=time class="custom-style form-control" [(ngModel)]="item.Time" step="1" [disabled]="!item.isPunchInOutEditable">
+                      </td>
+                      <td>
+                        <div *ngIf="this.AttendanceConfig.IsLocationToBeDisplayed && item.BiometricDeviceId == 0">
+                          <ng-select #searchSelect [items]="dropdownData" class="custom-style" placeholder="Choose..." bindLabel="LocationName" bindValue="Id" 
+                            [(ngModel)]="item.LocationId" [searchable]="false" [multiple]="false" [clearable]="false" [disabled]="!item.isPunchInOutEditable">
+                            <ng-template ng-header-tmp>
+                              <input placeholder="Search Location" type="text" class="form-control"
+                                style="border: none;border-radius: 0px !important;background: white"
+                                (input)="searchSelect.filter($event.target.value)" />
+                            </ng-template>
+                          </ng-select>
+                        </div>
+                        <div *ngIf="this.AttendanceConfig.IsMachineNameToBeDisplayed && item.BiometricDeviceId > 0 && item.LocationId == 0"><span>{{item.BioMetricDeviceName}}</span></div>
+                      </td>
+                      <td *ngIf="this.AttendanceConfig.IsRemarksToBeDisplayedForEachEntry" style="width: 40%;">
+                        <!-- <span *ngIf="!item.isPunchInOutEditable">{{item.Remarks}}</span> -->
+                        <input id="empRemarks" type="text" class="custom-style form-control" placeholder="Enter Remarks" [(ngModel)]="item.Remarks" 
+                        autocomplete="off" name="empRemarks" maxlength="200" />
+                      </td>
+                      <td class="text-center" style="width: 5%;">
+                        <button *ngIf="item.isDeleteAllowed" (click)="deleteInTable(i)" type="button" class="btn p-0 no-border">
+                          <i class="fa fa-trash-o m-r-sm action-btn-delete"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="row my-2">
+                <div class="col-12 col-sm-12 col-md-12">
+                  <div class="d-flex pull-right">
+                    <button (click)="addRowInTable()" type="button" class="btn btn-primary btn-action">Add Punch In/Out Details</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-block p-0 m-0" *ngIf="calculateAPICalled">
+              <div class="row">
+                <!-- BREAK SHIFT -->
+                <div class="col-sm-12 col-md-6 d-block pull-left" *ngIf="isBreakShift">
+                  <h6 class="modal-title px-3 mb-2">Existing Information</h6>
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label label-title" name="existingSecondHalf">Status</label>
+                    <div class="d-flex my-2" *ngIf="dontShowSplitStatus">
+                      <button class="btn"
+                        [class.holiday-status]="existingData.IntermittentStatus == 'Holiday'"
+                        [class.pending-status]="existingData.IntermittentStatus == 'WeekOff'"
+                        [class.approved-status]= "checkAttendanceStatus(existingData, existingData.IntermittentStatus) == 'Present'"
+                        [class.rejected-status]="existingData.IntermittentStatus == 'Absent'">
+                        {{existingData.IntermittentStatus}}
+                      </button>
+                    </div>
+                    <div class="py-2">
+                      <button class="btn" *ngIf="!dontShowSplitStatus"
+                        [class.holiday-status]="attendanceStatus == 'Holiday'"
+                        [class.pending-status]="attendanceStatus == 'WeekOff'"
+                        [class.approved-status]= "checkAttendanceStatus(existingData, attendanceStatus) == 'Present'"
+                        [class.rejected-status]="attendanceStatus == 'Absent'">
+                          {{attendanceStatus}}
+                      </button>
+                    </div>
+                    <div class="d-flex my-2" *ngIf="!dontShowSplitStatus">
+                      <span class="form-label label-title m-r-sm">
+                        <i class="fa fa-square" aria-hidden="true"
+                          [class.holiday-color]="firstHalfAttendanceStatus == 'Holiday'"
+                          [class.pending-color]="firstHalfAttendanceStatus == 'WeekOff'" 
+                          [class.approved-color]="checkAttendanceStatus(existingData, firstHalfAttendanceStatus) == 'Present'"
+                          [class.rejected-color]="firstHalfAttendanceStatus  == 'Absent'"
+                          style="background: transparent;">
+                        </i> 
+                        {{firstHalfAttendanceStatus}} - 1st Half
+                      </span>
+                      <span class="form-label label-title">
+                        <i class="fa fa-square" aria-hidden="true"
+                          [class.holiday-color]="secondHalfAttendanceStatus == 'Holiday'"
+                          [class.pending-color]="secondHalfAttendanceStatus == 'WeekOff'" 
+                          [class.approved-color]="checkAttendanceStatus(existingData, secondHalfAttendanceStatus) == 'Present'"
+                          [class.rejected-color]="secondHalfAttendanceStatus  == 'Absent'"
+                          style="background: transparent;">
+                        </i> 
+                        {{secondHalfAttendanceStatus}} - 2nd Half
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <div class="col-12 col-sm-12 col-md-4 pl-0 mb-3">
+                      <label class="form-label label-title" name="totalWorkingHoursBS">Total Working Hours</label>
+                      <span class="form-text label-value">{{totalWorkingHours}}<span class="small-text"> (hh:mm)</span> </span>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 pl-0 mb-3">
+                      <label class="form-label label-title" name="existingFirstHalfWrkHrs">1st Half Working Hours</label>
+                      <span class="form-text label-value"> {{firstHalfWorkingHrs}}<span class="small-text"> (hh:mm)</span></span>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 pl-0 mt-3">
+                      <label class="form-label label-title" name="existingSecondHalfWrkHrs">2nd Half Working Hours</label>
+                      <span class="form-text label-value"> {{secondHalfWorkingHrs}}<span class="small-text"> (hh:mm)</span></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-6 d-block pull-right" *ngIf="isBreakShift">
+                  <h6 class="modal-title px-3 mb-2">Regularzied Information</h6>
+                  <div class="p-0 col-xs-12 col-sm-12">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                      <label class="form-label label-title" name="regularizedStatus">Status</label>
+                      <div class="py-2">
+                        <button class="btn"  [class.holiday-status]="regularizedAttendanceStatus == 'Holiday'"
+                          [class.pending-status]="regularizedAttendanceStatus == 'WeekOff'"
+                          [class.approved-status]= "checkAttendanceStatus(regularizedData, regularizedAttendanceStatus) == 'Present'"
+                          [class.rejected-status]="regularizedAttendanceStatus  == 'Absent'">
+                          {{regularizedAttendanceStatus}}
+                        </button>
+                      </div>
+                      <div class="d-flex my-2">
+                        <span class="form-label label-title m-r-sm">
+                          <i class="fa fa-square" aria-hidden="true" 
+                          [class.holiday-color]="firstHalfRegAttendanceStatus == 'Holiday'"
+                          [class.pending-color]="firstHalfRegAttendanceStatus == 'WeekOff'" 
+                          [class.approved-color]="checkAttendanceStatus(regularizedData, firstHalfRegAttendanceStatus) == 'Present'"
+                          [class.rejected-color]="firstHalfRegAttendanceStatus  == 'Absent'" 
+                          style="background: transparent;"></i> 
+                          {{firstHalfRegAttendanceStatus}} - 1st Half
+                        </span>
+                        <span class="form-label label-title">
+                          <i class="fa fa-square" aria-hidden="true" 
+                          [class.holiday-color]="secondHalfRegAttendanceStatus == 'Holiday'"
+                          [class.pending-color]="secondHalfRegAttendanceStatus == 'WeekOff'" 
+                          [class.approved-color]="checkAttendanceStatus(regularizedData, secondHalfRegAttendanceStatus) == 'Present'"
+                          [class.rejected-color]="secondHalfRegAttendanceStatus  == 'Absent'" 
+                          style="background: transparent;"></i> 
+                          {{secondHalfRegAttendanceStatus}} - 2nd Half
+                        </span>
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                      <div class="col-12 col-sm-12 col-md-4 pl-0 mb-3">
+                        <label class="form-label label-title" name="regularizedWorkingHrs">Total Working Hours</label>
+                        <span class="form-text label-value">{{regularizedWorkingHours}}<span class="small-text"> (hh:mm)</span></span>
+                      </div>
+                      <div class="col-12 col-sm-12 col-md-4 pl-0 mb-3">
+                        <label class="form-label label-title" name="regFirstHalfWrkHrs">1st Half Working Hours</label>
+                        <span class="form-text label-value"> {{firstHalfRegWorkingHrs}}<span class="small-text"> (hh:mm)</span></span>
+                      </div>
+                      <div class="col-12 col-sm-12 col-md-4 pl-0 mt-3">
+                        <label class="form-label label-title" name="regSecondHalfWrkHrs">2nd Half Working Hours</label>
+                        <span class="form-text label-value"> {{secondHalfRegWorkingHrs}}<span class="small-text"> (hh:mm)</span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- OTHER SHIFTS -->
+                <div class="col-sm-12 col-md-6 d-block pull-left" *ngIf="!isBreakShift">
+                  <h6 class="modal-title px-3 mb-2">Existing Information</h6>
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label label-title" name="existingStatus">Status</label>
+                    <button class="btn" 
+                    [class.holiday-status]="attendanceStatus == 'Holiday'"
+                    [class.pending-status]="attendanceStatus == 'WeekOff'"
+                    [class.approved-status]= "checkAttendanceStatus(existingData, attendanceStatus) == 'Present'"
+                    [class.rejected-status]="attendanceStatus == 'Absent'">
+                      {{attendanceStatus}}
+                    </button>
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label label-title" name="existingHrs">Total Working Hours</label>
+                    <span class="form-text label-value"> {{totalWorkingHours}}<span class="small-text"> (hh:mm)</span></span>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-6 d-block pull-right" *ngIf="!isBreakShift">
+                  <h6 class="modal-title px-3 mb-2">Regularzied Information</h6>
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label label-title" name="regularizedStatus">Status</label>
+                    <button class="btn" 
+                    [class.holiday-status]="regularizedAttendanceStatus == 'Holiday'"
+                    [class.pending-status]="regularizedAttendanceStatus == 'WeekOff'"
+                    [class.approved-status]= "checkAttendanceStatus(regularizedData, regularizedAttendanceStatus) == 'Present'"
+                    [class.rejected-status]="regularizedAttendanceStatus  == 'Absent'">
+                      {{regularizedAttendanceStatus}}
+                    </button>
+                  </div>
+                  <div class="px-4 form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label label-title" name="regularizedWorkingHrs">Total Working Hours</label>
+                    <span class="form-text label-value">{{regularizedWorkingHours}} <span class="small-text"> (hh:mm)</span></span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                  <label class="form-label label-title" name="regularizedEmpRemarks"> Regularization Remarks <span class="required"></span>
+                  </label>
+                  <textarea class="form-control" type="text" maxlength="200" rows="3" [(ngModel)]="employeeOverallRemarks" spellcheck="false" id="employeeOverallRemarks">
+                  </textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div>
+          <div class="pull-right m-r-sm">
+            <div>
+              <button class="btn  btn-primary btn-action" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="confirmEmployeeRegularize()" [disabled]="isModalSpinner">
+                <span> <i class="fa fa-check" aria-hidden="true"></i> &nbsp;Confirm</span>
+              </button>
+            </div>
+          </div>
+          <button class="btn btn-cancel pull-right m-r-sm no-border" name="btnCancel" id="btnCancel" *ngIf="!calculateAPICalled" type="button" (click)="closeEmployeeRegularizePopup('Modal Closed')"> 
+            <i class="fa fa-times-circle-o" aria-hidden="true"></i> &nbsp;Cancel
+          </button>
+          <button class="btn btn-cancel pull-right m-r-sm no-border" name="btnCancel1" id="btnCancel1" *ngIf="calculateAPICalled" type="button" (click)="cancelConfirmModal()"> 
+            <i class="fa fa-times-circle-o" aria-hidden="true"></i> &nbsp;Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

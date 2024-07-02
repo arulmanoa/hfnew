@@ -1,0 +1,1062 @@
+<div class="page-wrapper ff">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+
+        <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button">
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+        </div>
+
+        <div class="row" *ngIf="!spinner">
+            <div class="col-12 col-xs-12 col-lg-4 col-md-4 col-sm-4 text-left">
+                <div class="text-left" style="padding-top: 10px;" *ngIf="prodDetails != null">
+                    <h6 class="h6_c" style="font-size: 16px;
+          font-weight: 700;"> {{prodDetails.ProductName}} </h6>
+                </div>
+
+            </div>
+            <div class="col-12 col-xs-12 col-lg-8 col-md-8 col-sm-8 text-right">
+                <ul class="list-inline">
+
+                    <li class="list-inline-item">
+                        <button type="button" class="btn btn-default mr-2" (click)='BackToInvestments()' style="display: inline;margin: 0 auto;">
+              <i class="mdi mdi-arrow-left m-r-xs"></i>Back to Investments
+            </button>
+                    </li>
+
+                    <li class="list-inline-item" *ngIf="isEnabled == '4'">
+                        <button type="button" class="btn btn-primary mr-2" (click)='openDrawerAddExpense(null, null)' style="display: inline;margin: 0 auto;">
+              <i class="mdi mdi-plus m-r-xs"></i> Add New Bill
+            </button>
+                    </li>
+                    <li class="list-inline-item" *ngIf="isEnabled == '4'">
+                    <button type="button" class="btn btn-primary mr-2" (click)='submitForApproval()' style="display: inline;margin: 0 auto;"> <i class="mdi mdi-content-save m-r-xs"></i>Consider for
+              submission
+            </button>
+                    </li>
+                    <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+              <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+            </button>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Card List -->
+        <br>
+
+        <div class="grid sm:grid-cols-4 gap-6" *ngIf="!spinner">
+
+            <label for="plan-hobby4" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;">Saved Bills</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{pendingSavedBill.length}}<span style="font-size: 12px;
+          color: black !important;"> Bills </span> </span>
+        </span>
+        <input type="radio" name="plan" id="plan-hobby4" value="hobby4" (click)="claimEnabled('4')"
+          [checked]="isEnabled == '4'" class="absolute h-0 w-0 appearance-none" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+            <label for="plan-hobby" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;">pending for Approval</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{pendingBills.length}}<span style="font-size: 12px;
+          color: black !important;"> Bills </span> </span>
+        </span>
+        <input type="radio" name="plan" id="plan-hobby" value="hobby" (click)="claimEnabled('1')"
+          [checked]="isEnabled == '1'" class="absolute h-0 w-0 appearance-none" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+            <label for="plan-hobby1" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;">Approved Bills</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{approvedBills.length}} <span style="font-size: 12px;
+          color: black !important;"> Bills </span></span>
+        </span>
+
+        <input type="radio" name="plan" id="plan-hobby1" value="hobby1" class="absolute h-0 w-0 appearance-none"
+          (click)="claimEnabled('3')" [checked]="isEnabled == '3'" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+
+            <label for="plan-growth" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;">Rejected Bills</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{rejectedBills.length}} <span style="font-size: 12px;
+          color: black !important;"> Bills </span> </span>
+        </span>
+
+        <input type="radio" name="plan" id="plan-growth" value="growth" class="absolute h-0 w-0 appearance-none"
+          (click)="claimEnabled('2')" [checked]="isEnabled == '2'" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+        </div>
+        <div class="content m-b report-content" style="margin-top: 10px;" *ngIf="!spinner">
+
+            <!-- ------ SAVED BILL -----  -->
+
+            <div *ngIf="isEnabled == '4'">
+                <div class="row" *ngIf="pendingSavedBill.length == 0">
+                    <div class="col-lg-12">
+                        <div class="card" style="border: none !important;padding: 2rem;">
+                            <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot" data-maintainscrollposition="True" style="text-align: center">
+                                <p style="margin-bottom: 8px;"><span id="MainContent_ctl143" class="LabelMediumBig">There are no
+                    bill entries
+                    in this screen yet.</span></p>
+
+                                <button type="button" class="btn btn-primary mr-2" (click)='openDrawerAddExpense(null, null)' style="display: inline;margin: 0 auto;">
+                  <i class="mdi mdi-plus m-r-xs"></i> Add New Bill
+                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;" *ngIf="pendingSavedBill.length > 0">
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+                        <div class="pretty p-icon p-curve p-bigger">
+                            <input type="checkbox" [(ngModel)]="selectAll" (click)="selectAllClaimRequest($event)" />
+                            <div class="state p-primary">
+                                <i class="icon mdi mdi-check"></i>
+                                <label style="font-weight: 600 !important;
+                padding-left: 4px;">Select All</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right" style="padding-right: 0px;">
+                        <div class="col-lg-12" style="float: left;">
+                            <label class="form-label" style="text-align: left;">Start searching for Bill number, amount
+              </label>
+                            <input class="form-control" type="text" name="search" [(ngModel)]="searchText_unclaimed_submiited" autocomplete="none|false|no" placeholder=" Start searching for category name, amount">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <ng-container *ngIf="pendingSavedBill && pendingSavedBill != null">
+                        <div class="col-md-6 col-sm-12 col-xs-12 mb-3" *ngFor="let item of pendingSavedBill  | filter: searchText_unclaimed_submiited ;let i = index">
+                            <div class="card" style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                                <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <span>
+                            <input type="checkbox" [(ngModel)]="item.isSelected"
+                              (click)="selectBillEntries(item,item.isSelected)" style="cursor: pointer;" />
+                          </span>
+                                                    <span style="font-size: 18px;font-weight: 600;color: black;padding-left: 10px;">BILL # &nbsp;
+                            {{item.BillNumber}}</span>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <span style="font-size: 13px;font-weight: 600;"> <span class="badge badge-soft-warning"
+                              style="display: inline;"> Saved </span> </span>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+                    /* margin-bottom: 0px; */
+                   padding-left: 0px;
+                   padding-top: 12px !important;">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                            DATE
+                            <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px;">{{item.BillDate | date :'dd-MM-yyyy'}} </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                            AMT.
+                            <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                            overflow: hidden; 
+                            width: 125px; 
+                            height: 1.2em; 
+                            white-space: nowrap"> ₹ {{item.BillAmount | number : '1.2-2'}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">
+                            APPROVED AMT. <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px;">₹ {{item.ApprovedAmount | number : '1.2-2'}}</p>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">REMARKS <span
+                              class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                          overflow: hidden; 
+                          width: 125px; 
+                          height: 1.2em; 
+                          white-space: nowrap"> {{item.Remarks}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col" style="text-align: right;">
+                                                <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit bill entry" (click)="do_editAppliedRequest(item,i, 'new')">
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-0" style="text-align: right;">
+                                                <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Delete bill entry" (click)="doDeleteBill(item,'new')">
+                                                    <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+
+            <!-- --------- PENDING BILLS ---------  -->
+            <div *ngIf="isEnabled == '1'">
+                <div class="row" *ngIf="pendingBills.length == 0">
+                    <div class="col-lg-12">
+                        <div class="card" style="border: none !important;padding: 2rem;">
+                            <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot" data-maintainscrollposition="True" style="text-align: center">
+                                <p style="margin-bottom: 8px;"><span id="MainContent_ctl143" class="LabelMediumBig">There are no
+                    bill entries
+                    in this screen yet.</span></p>
+
+                                <button type="button" class="btn btn-primary mr-2" (click)='openDrawerAddExpense(null, null)' style="display: inline;margin: 0 auto;">
+                  <i class="mdi mdi-plus m-r-xs"></i> Add New Bill
+                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;" *ngIf="pendingBills.length > 0">
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+                        <!-- <div class="pretty p-icon p-curve p-bigger">
+            <input type="checkbox" [(ngModel)]="selectAll" (click)="selectAllClaimRequest($event)" />
+            <div class="state p-primary">
+              <i class="icon mdi mdi-check"></i>
+              <label style="font-weight: 600 !important;
+              padding-left: 4px;">Select All</label>
+            </div>
+          </div> -->
+                    </div>
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right" style="padding-right: 0px;">
+                        <!-- <div class="col-lg-12" style="float: left;">
+            <label class="form-label" style="text-align: left;">Start searching for Bill number, amount
+            </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText_unclaimed_submiited"
+              autocomplete="none|false|no" placeholder=" Start searching for category name, amount">
+          </div> -->
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <ng-container *ngIf="pendingBills && pendingBills != null">
+                        <div class="col-md-6 col-sm-12 col-xs-12 mb-3" *ngFor="let item of pendingBills  | filter: searchText_unclaimed_submiited ;let i = index">
+                            <div class="card" style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                                <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <!-- <span>
+                          <input type="checkbox" [(ngModel)]="item.isSelected"
+                            (click)="selectBillEntries(item,item.isSelected)" style="cursor: pointer;" />
+                        </span> -->
+                                                    <span style="font-size: 18px;font-weight: 600;color: black;padding-left: 10px;">BILL # &nbsp;
+                            {{item.BillNumber}}</span>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <span style="font-size: 13px;font-weight: 600;"> <span class="badge badge-soft-warning"
+                              style="display: inline;"> Saved </span> </span>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+                  /* margin-bottom: 0px; */
+                 padding-left: 0px;
+                 padding-top: 12px !important;">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                            DATE
+                            <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px;">{{item.BillDate | date :'dd-MM-yyyy'}} </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                            AMT.
+                            <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                          overflow: hidden; 
+                          width: 125px; 
+                          height: 1.2em; 
+                          white-space: nowrap"> ₹ {{item.BillAmount | number : '1.2-2'}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">
+                            APPROVED AMT. <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px;">₹ {{item.ApprovedAmount | number : '1.2-2'}}</p>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">REMARKS <span
+                              class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                        overflow: hidden; 
+                        width: 125px; 
+                        height: 1.2em; 
+                        white-space: nowrap"> {{item.Remarks}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col" style="text-align: right;">
+                                                <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit bill entry" (click)="do_editAppliedRequest(item,i, 'old')">
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-0" style="text-align: right;">
+                                                <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Delete bill entry" (click)="doDeleteBill(item, 'old')">
+                                                    <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <!-- ---- APPROVED BILLS ----  -->
+            <div *ngIf="isEnabled == '3'">
+                <div class="row" *ngIf="approvedBills.length == 0">
+                    <div class="col-lg-12">
+                        <div class="card" style="border: none !important;padding: 2rem;">
+                            <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot" data-maintainscrollposition="True" style="text-align: center">
+                                <p style="margin-bottom: 8px;"><span id="MainContent_ctl143" class="LabelMediumBig">There are no
+                    bill entries
+                    in this screen yet.</span></p>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;" *ngIf="approvedBills.length > 0">
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+
+                    </div>
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right" style="padding-right: 0px;">
+                        <!-- <div class="col-lg-12" style="float: left;">
+            <label class="form-label" style="text-align: left;">Start searching for Bill number, amount
+            </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText_unclaimed_submiited"
+              autocomplete="none|false|no" placeholder=" Start searching for category name, amount">
+          </div> -->
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <ng-container *ngIf="approvedBills && approvedBills != null">
+                        <div class="col-md-6 col-sm-12 col-xs-12 mb-3" *ngFor="let item of approvedBills  | filter: searchText_unclaimed_submiited ;let i = index">
+                            <div class="card" style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                                <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <!-- <span>
+                          <input type="checkbox" [(ngModel)]="item.isSelected"
+                            (click)="selectBillEntries(item,item.isSelected)" style="cursor: pointer;" />
+                        </span> -->
+                                                    <span style="font-size: 18px;font-weight: 600;color: black;padding-left: 10px;">BILL # &nbsp;
+                            {{item.BillNumber}}</span>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <span style="font-size: 13px;font-weight: 600;"> <span class="badge badge-soft-success"
+                              style="display: inline;"> Approved </span> </span>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+                  /* margin-bottom: 0px; */
+                 padding-left: 0px;
+                 padding-top: 12px !important;">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                            DATE
+                            <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px;">{{item.BillDate | date :'dd-MM-yyyy'}} </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                            AMT.
+                            <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                          overflow: hidden; 
+                          width: 125px; 
+                          height: 1.2em; 
+                          white-space: nowrap"> ₹ {{item.BillAmount | number : '1.2-2'}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">
+                            APPROVED AMT. <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px;">₹ {{item.ApprovedAmount | number : '1.2-2'}}</p>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">REMARKS <span
+                              class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                        overflow: hidden; 
+                        width: 125px; 
+                        height: 1.2em; 
+                        white-space: nowrap"> {{item.Remarks}}</p>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col" style="text-align: right;">
+                      <a href="javascript:;" class="btn action-edit" style="margin-right: 5px"
+                        matTooltip="Edit bill entry" (click)="do_editAppliedRequest(item,i)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                      </a>
+                    </div>
+                    <div class="col-0" style="text-align: right;">
+                      <a href="javascript:;" class="btn action-edit" style="margin-right: 5px"
+                        matTooltip="Delete bill entry" (click)="doDeleteBill(item)">
+                        <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                      </a>
+                    </div> -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <!-- ------------ REJECTED BILLS ----------  -->
+
+            <div *ngIf="isEnabled == '2'">
+                <div class="row" *ngIf="rejectedBills.length == 0">
+                    <div class="col-lg-12">
+                        <div class="card" style="border: none !important;padding: 2rem;">
+                            <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot" data-maintainscrollposition="True" style="text-align: center">
+                                <p style="margin-bottom: 8px;"><span id="MainContent_ctl143" class="LabelMediumBig">There are no
+                    bill entries
+                    in this screen yet.</span></p>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;" *ngIf="rejectedBills.length > 0">
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+
+                    </div>
+                    <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right" style="padding-right: 0px;">
+                        <!-- <div class="col-lg-12" style="float: left;">
+            <label class="form-label" style="text-align: left;">Start searching for Bill number, amount
+            </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText_unclaimed_submiited"
+              autocomplete="none|false|no" placeholder=" Start searching for category name, amount">
+          </div> -->
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <ng-container *ngIf="rejectedBills && rejectedBills != null">
+                        <div class="col-md-6 col-sm-12 col-xs-12 mb-3" *ngFor="let item of rejectedBills  | filter: searchText_unclaimed_submiited ;let i = index">
+                            <div class="card" style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                                <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <!-- <span>
+                          <input type="checkbox" [(ngModel)]="item.isSelected"
+                            (click)="selectBillEntries(item,item.isSelected)" style="cursor: pointer;" />
+                        </span> -->
+                                                    <span style="font-size: 18px;font-weight: 600;color: black;padding-left: 10px;">BILL # &nbsp;
+                            {{item.BillNumber}}</span>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <span style="font-size: 13px;font-weight: 600;"> <span class="badge badge-soft-danger"
+                              style="display: inline;"> Rejected </span> </span>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+                  /* margin-bottom: 0px; */
+                 padding-left: 0px;
+                 padding-top: 12px !important;">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                            DATE
+                            <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px;">{{item.BillDate | date :'dd-MM-yyyy'}} </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                            AMT.
+                            <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                          overflow: hidden; 
+                          width: 125px; 
+                          height: 1.2em; 
+                          white-space: nowrap"> ₹ {{item.BillAmount | number : '1.2-2'}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">
+                            APPROVED AMT. <span class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px;">₹ {{item.ApprovedAmount | number : '1.2-2'}}</p>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">REMARKS <span
+                              class="required"></span></label>
+                                                    <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                        overflow: hidden; 
+                        width: 125px; 
+                        height: 1.2em; 
+                        white-space: nowrap"> {{item.Remarks}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col" style="text-align: right;">
+                                                <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit bill entry" (click)="do_editAppliedRequest(item,i, 'old')">
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-0" style="text-align: right;">
+                                                <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Delete bill entry" (click)="doDeleteBill(item, 'old')">
+                                                    <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+
+
+            <!-- -------------- END CARD --------------   -->
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<nz-drawer [nzVisible]="visible" [nzWidth]="840" [nzTitle]="productDetails" (nzOnClose)="cancelGridLayout()" >
+    <div class="row">
+        <div class="col-12" *ngIf="prodDetails != null">
+
+            <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                <span class="pull-left text-overflow" style="font-size: 20px;width: 100%;margin-top: -15px;">{{prodDetails.ProductName}}</span>
+                <div class="col" style="text-align: right;">
+                    <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" (click)='changeLayout("")'>
+          <i class="fa fa-th" data-toggle="tooltip" data-placement="bottom" title="Grid Entry" aria-hidden="true"
+            style="font-size: 16px;color: #838383;"></i>
+        </a> -->
+                </div>
+            </div>
+            <br>
+
+            <div>
+                <hr>
+            </div>
+            <div>
+                <form [formGroup]="expenseBillEntryForm">
+                    <div class="row">
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                            <label class="form-label">Bill Number <span class="required">*</span></label>
+                            <input class="form-control" placeholder="12122021ABC" name="billno" onkeypress="return /^[A-Za-z0-9 \s]+$/i.test(event.key)" formControlName="billno" type="text" id="billno" autocomplete="off">
+                            <div *ngIf="submitted && g.billno.invalid" class="invalid-feedback">
+                                <div *ngIf="g.billno.errors.required">Bill Number is required
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group  form-group-vertical col-xs-12 col-sm-6">
+                            <label class="form-label">Bill Date <span class="required">*</span></label>
+                            <input class="form-control" name="billDate" formControlName="billDate" bsDatepicker placement="bottom" readonly type="text" placeholder="01-01-2021" (bsValueChange)="onChangeExpenseDate($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                autocomplete="off" [maxDate]="BillMaxDate">
+                            <div *ngIf="submitted && g.billDate.invalid" class="invalid-feedback">
+                                <div *ngIf="g.billDate.errors.required">Bill Date is required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                            <label class="form-label ">Bill Amount <span class="required">*</span></label>
+                            <input class="form-control" placeholder="1200.00" type="text" onkeypress="return /[0-9]/i.test(event.key)" name="amount" formControlName="amount" autocomplete="off">
+
+                            <div *ngIf="submitted && g.amount.invalid" class="invalid-feedback">
+                                <div *ngIf="g.amount.errors.required">Bill amount is required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label ">Remarks</label>
+                                <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" formControlName="Remarks" name="Remarks"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label searchbar-label">Attachment <span class="help-text m-l-5">(Max file size
+                  2MB)</span></label>
+              <label class="qcsummarylabel form-text text-muted">
+                <label class="upload control" style="width: 100%; float: left;">
+                  <div class="upload-draggable is-primary">
+                    <section class="section">
+                      <div class="has-text-centered">
+                        <span class="icon is-large">
+                          <span style="padding-left: 10px;">
+                            <i class="fa fa fa-cloud-upload" style="color: #9ba7ca;"></i>
+                            &nbsp; Upload </span>
+                        </span>
+                      </div>
+                    </section>
+                  </div>
+                  <input class="form-control" type="file" accept="application/msword,  application/pdf, image/*"
+                    id="upload" formControlName="upload" name="upload" (change)="onFileUpload($event)"
+                    id="sTest-uploadFile-candidateAddResume">
+                </label>
+
+                 <p class="control" *ngFor="let item of LstmultipleDocs" style="float: left;
+                  padding: 10px;">
+                  <span class="file-name">
+                    <button class="btn btn-danger c-btn" (click)="doDeleteFile(item)"><a ngbTooltip="Delete Photo"
+                        id="sTest-deleteFile-candidateAddResume"
+                        style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block   ;margin-top: -5px;"><i
+                          class="fa fa-trash-o"></i></a>
+                    </button>
+
+                    <a target="blank" class="ahref" style="padding: 2px;">
+                      {{item.FileName}}
+                    </a>
+                  </span>
+                  <span class="badge badge-warning" style="display: inline;color:white !important;"
+                    *ngIf="item.Status == 0">
+                    Pending
+                  </span>
+                  <span class="badge badge-danger" style="display: inline;color:white !important;"
+                    *ngIf="item.Status == 2">
+                    Rejected
+                  </span>
+                  <span class="badge badge-success" style="display: inline;color:white !important;"
+                    *ngIf="item.Status == 1">
+                    Approved
+                  </span>
+                </p> 
+              </label>
+              <div *ngIf=" g.upload.touched && g.upload.invalid" class="alert alert-danger">
+                <div *ngIf=" g.upload.errors && g.upload.errors.required">File upload is required
+                </div>
+              </div>
+            </div>
+        </div> -->
+                        <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6" *ngIf="mode">
+                            <label class="form-label searchbar-label">Upload a receipt <span class="required">*</span> <span
+                  class="help-text m-l-5"> <i style="font-size: 10px;"> (Max file
+                    size
+                    2MB)</i> </span> </label>
+                            <label class="upload control" style="width: 50%; float: left;" *ngIf="!FileName">
+                <div class="upload-draggable is-primary">
+                  <section class="section">
+                    <div class="has-text-centered">
+                      <span class="icon is-large">
+                        <span style="padding-left: 10px;">
+                          <i class="fa fa fa-cloud-upload" style="color: #9ba7ca;"></i>
+                          Upload </span>
+                      </span>
+
+                    </div>
+                  </section>
+                </div>
+                <input type="file" accept="application/msword,  application/pdf, image/*"
+                  (change)="onFileUpload($event)" id="sTest-uploadFile-candidateAddResume">
+
+              </label>
+                            <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                                <div *ngIf="g.DocumentId.errors.required">Attachment is required
+                                </div>
+                            </div>
+                            <p class="control" *ngIf="FileName">
+
+                                <span class="file-name">
+                  <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a ngbTooltip="Delete file"
+                      id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                 display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                  </button>
+
+                  {{FileName}}
+                  <a target="blank" class="ahref" style="padding: 2px;">
+
+                  </a>
+
+                </span>
+
+                            </p>
+                        </div>
+                    </div>
+
+                </form>
+                <!-- <form [formGroup]="expenseBillEntryForm">
+          <div class="col-12 col-md-12 col-sm-12">
+            <div class="clearfix">
+
+              <div class="row">
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                  *ngIf="this.expenseBillEntryForm.controls.billno">
+                  <label class="form-label">Bill Number <span class="required">{{getRequired('billno')}}</span></label>
+                  <input class="form-control" name="billno" onkeypress="return /^[A-Za-z0-9 \s]+$/i.test(event.key)"
+                    formControlName="billno" [ngClass]="{ 'is-invalid': submitted && g.billno .errors }" type="text"
+                    autocomplete="off">
+                  <div *ngIf="submitted && g.expenseBillEntryForm.errors" class="invalid-feedback">
+                    <div *ngIf="g.billno.errors.required">Bill Number is required
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </form>
+      </div> -->
+            </div>
+
+        </div>
+        <div class="d-flex align-items-center" style="position: absolute;bottom: 10px;width: 100%;" *ngIf="!isLoading">
+            <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+        <div class="row" style="position: absolute;bottom: 10px;width: 100%;" *ngIf="isLoading">
+
+            <div style="float: right;" class="ng-star-inserted" style="width:95%;text-align: right !important;">
+                <button nz-button="" style="margin-right: 8px;" (click)="cancelGridLayout()" class="ant-btn">
+          <span class="ng-star-inserted">Cancel</span>
+        </button>
+                <button nz-button="" nztype="primary" style="margin-right: 8px;" (click)="save('false')" class="ant-btn ant-btn-primary">
+          <span class="ng-star-inserted">Save</span>
+        </button>
+                <button nz-button="" nztype="primary" class="ant-btn ant-btn-primary" (click)="save('true')">
+          <span class="ng-star-inserted">Save and Add New</span>
+        </button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</nz-drawer>
+
+<nz-drawer [nzVisible]="gridView" [nzWidth]="840" [nzTitle]="productDetails" (nzOnClose)="cancelGridLayout()">
+
+    <div class="col-12" *ngIf="prodDetails!=null ">
+        <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+            <span class="pull-left text-overflow">{{prodDetails.ProductName}}</span>
+            <div class="col" style="text-align: right;">
+                <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" (click)='changeLayout("cloumnLayout")'>
+                    <i class="fa fa-th " data-toggle="tooltip" data-placement="bottom" title="Grid Entry" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                </a>
+                <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" (click)='addNewColumn("new",AddColumnList.length-1)'>
+                    <i class="fa fa-plus-circle " data-toggle="tooltip" data-placement="bottom" title="Add New Bill" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                </a>
+
+            </div>
+        </div>
+
+        <div>
+
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th *ngFor="let list of gridViewColumnList ">{{list.displayName}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let columnList of AddColumnList let i=index">
+                        <td>
+                            <input class="form-control" name="billno" [(ngModel)]="columnList.BillNumber" onkeypress="return /^[A-Za-z0-9 \s]+$/i.test(event.key)" type="text" id="billno" autocomplete="off">
+                        </td>
+                        <td>
+                            <input class="form-control" name="billDate" bsDatepicker placement="bottom" readonly type="text" placeholder="01-01-2021" (bsValueChange)="onChangeExpenseDate($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                autocomplete="off" [maxDate]="BillMaxDate" [(ngModel)]="columnList.BillDate">
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" name="amount" autocomplete="off" [(ngModel)]="columnList.BillAmount">
+                        </td>
+                        <td>
+                            <input class="form-control" type="text" spellcheck="false" id="Remarks" name="Remarks" [(ngModel)]="columnList.Remarks">
+                        </td>
+                        <td>
+                            <!-- <label class="qcsummarylabel form-text text-muted">
+                <label class="upload control" style="width: 100%; float: left;">
+                  <div class="upload-draggable is-primary">
+                    <section>
+                      <div class="has-text-centered">
+                        <span class="icon is-large">
+                          <span style="padding-left: 10px;">
+                            <i class="fa fa fa-cloud-upload" style="color: #9ba7ca;"></i>
+                            &nbsp; Upload </span>
+                        </span>
+                      </div>
+                    </section>
+                  </div>
+                  <input class="form-control" type="file" accept="application/msword,  application/pdf, image/*"
+                    id="upload" name="upload" (change)="onFileUpload($event)" id="sTest-uploadFile-candidateAddResume">
+                </label>
+
+                <p class="control" *ngFor="let item of LstmultipleDocs" style="float: left;
+              padding: 10px;">
+                  <span class="file-name">
+                    <button class="btn btn-danger c-btn" (click)="doDeleteFile(item)"><a ngbTooltip="Delete Photo"
+                        id="sTest-deleteFile-candidateAddResume"
+                        style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block   ;margin-top: -5px;"><i
+                          class="fa fa-trash-o"></i></a>
+                    </button>
+
+                    <a target="blank" class="ahref" style="padding: 2px;">
+                      {{item.FileName}}
+                    </a>
+                  </span>
+                  <span class="badge badge-warning" style="display: inline;color:white !important;"
+                    *ngIf="item.Status == 0">
+                    Pending
+                  </span>
+                  <span class="badge badge-danger" style="display: inline;color:white !important;"
+                    *ngIf="item.Status == 2">
+                    Rejected
+                  </span>
+                  <span class="badge badge-success" style="display: inline;color:white !important;"
+                    *ngIf="item.Status == 1">
+                    Approved
+                  </span>
+                </p>
+              </label> -->
+                            <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+
+                                <label class="upload control" style="width: 50%; float: left;">
+                  <div class="upload-draggable is-primary">
+                    <section class="section">
+                      <div class="has-text-centered">
+                        <span class="icon is-large">
+                          <span style="padding-left: 10px;">
+                            <i class="fa fa fa-cloud-upload" style="color: #9ba7ca;"></i>
+                            Upload </span>
+                        </span>
+
+                      </div>
+                    </section>
+                  </div>
+                  <input type="file" accept="application/msword,  application/pdf, image/*"
+                    (change)="onFileUpload($event)" id="sTest-uploadFile-candidateAddResume"
+                    [(ngModel)]="columnList.FileName">
+
+                </label>
+                                <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                                    <div *ngIf="g.DocumentId.errors.required">Attachment is required
+                                    </div>
+                                </div>
+                                <p class="control" *ngIf="columnList.FileName">
+
+                                    <span class="file-name">
+                    <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a ngbTooltip="Delete file"
+                        id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                       display: block   ;margin-top: -5px;"><i
+                          class="fa fa-trash-o"></i></a> </button>
+
+                    {{columnList.FileName}}
+                    <a target="blank" class="ahref" style="padding: 2px;">
+
+                    </a>
+
+                  </span>
+
+                                </p>
+                            </div>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="float: right;" class="ng-star-inserted" style="width:95%;text-align: right !important;">
+                <button nz-button="" style="margin-right: 8px;" (click)="cancelGridLayout()" class="ant-btn">
+          <span class="ng-star-inserted">Cancel</span>
+        </button>
+                <button nz-button="" nztype="primary" style="margin-right: 8px;" (click)="clearGrid()" class="ant-btn ant-btn-primary">
+          <span class="ng-star-inserted">clear</span>
+        </button>
+                <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" 
+        (click)="saveGrid()">
+        <i class="fa fa-floppy-o " aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+      </a> -->
+                <button nz-button="" nztype="primary" style="margin-right: 8px;" (click)="saveGrid()" class="ant-btn ant-btn-primary">
+          <span class="ng-star-inserted">Save</span>
+        </button>
+                <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" 
+        (click)="saveGrid()">
+        <i class="fa fa-floppy-o " aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+      </a> -->
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+</nz-drawer>

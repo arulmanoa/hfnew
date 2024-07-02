@@ -1,0 +1,33 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="dfc100 overflow-y-auto">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Preview</h4>
+          <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()"><i
+              class="mdi mdi-close font-size-md icon-close"></i></a>
+        </div>
+
+        <div class="modal-body no-padder builtin-calling-wrapper">
+          <angular-editor id="txtHeader" [config]="config" [placeholder]="'Enter text here...'"
+            [(ngModel)]="htmlContent">
+          </angular-editor>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-default pull-right" type="button" data-dismiss="modal"
+            (click)="closeModal()">Cancel</button>
+          <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+            <div>
+              <div>
+                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="saveDoc()">
+                  <div class="pos-rlt sm-btn-component"> <span> Save </span></div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

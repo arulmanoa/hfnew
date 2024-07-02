@@ -1,0 +1,332 @@
+<div class="text-center ma-5" *ngIf="spinner">
+  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+    Please wait...
+  </button>
+</div>
+<div *ngIf="!spinner">
+  <form [formGroup]="employeeForm">
+    <div class="col-12 col-md-12 col-sm-12">
+      <div class="clearfix">
+        <div class="row" style="margin-top: 15px;">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group form-group-vertical col-xs-12"
+              *ngIf="this.employeeForm.controls.emergencyContactnumber && (this.BusinessType == 1 || this.BusinessType == 2)">
+              <label class="form-label">Emergency Contact No.
+                {{emergencyContactNumber}}
+              </label>
+              <div class="input-group" style="margin-top: 0px;">
+                <div class="input-group-prepend">
+                  <!-- <span class="input-group-text">{{countryCode}}</span> -->
+                  <button disabled tabindex="-1" class="btn btn-outline-secondary dropdown-toggle"
+                    style="color: #fff; width: 90px;background-color: #6c757d;border-color: #6c757d;" type="button"
+                    data-toggle="dropdown
+       " aria-haspopup="true" aria-expanded="false">+ {{countryCode}}</button>
+                  <!-- <div class="dropdown-menu" style="height: 200px;overflow-y: auto; border-radius: 0px;">
+                      <a class="dropdown-item" (click)="theFunction(item)" *ngFor="let item of LstcountryCode">{{item.name}}</a>
+                  </div> -->
+                </div>
+                <input class="form-control" minlength="10"
+                  style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;" type="text"
+                  maxlength="10" onkeypress="return /^[0-9]+$/i.test(event.key)
+       " name="emergencyContactnumber" formControlName="emergencyContactnumber"
+                  [ngClass]="{'is-invalid': submitted && g.emergencyContactnumber.errors }" placeholder="9876543210"
+                  onpaste="return false;" autocomplete="none|false|no">
+              </div>
+              <div
+                *ngIf="employeeForm.get('emergencyContactnumber').errors && employeeForm.get('emergencyContactnumber').touched "
+                class="help-block">
+                <div *ngIf="g.emergencyContactnumber.errors">Emergency Contact No. is required
+                </div>
+                <span *ngIf="employeeForm.get('emergencyContactnumber').errors.minlength"> Emergency Contact No.
+                  should be minimum 10 characters
+                </span>
+                <span *ngIf="employeeForm.get('mobile').value != null && employeeForm.get('emergencyContactnumber').value != null
+            && employeeForm.get('mobile').value != '' && employeeForm.get('emergencyContactnumber').value != ''
+            && employeeForm.get('mobile').value != undefined && employeeForm.get('emergencyContactnumber').value != undefined
+             && employeeForm.get('emergencyContactnumber').value == employeeForm.get('mobile').value"> The alternate
+                  mobile number should not be the same as the mobile number.
+                </span>
+              </div>
+
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12"
+              *ngIf="this.employeeForm.controls.emergencyContactPersonName && (this.BusinessType == 1 || this.BusinessType == 2)">
+              <label class="form-label">Emergency Contact Person Name
+                {{emergencyContactPersonName}}
+              </label>
+              <input class="form-control" spellcheck="false" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                pattern="[\x00-\x7F]+" name="emergencyContactPersonName" maxlength="100"
+                formControlName="emergencyContactPersonName" [ngClass]="{
+       'is-invalid': submitted && g.emergencyContactPersonName.errors }" placeholder="Emergency Contact Person Name" appUppercaseInput appAutocompleteOff 
+                autocomplete="none|false|no">
+              <div
+                *ngIf="employeeForm.get('emergencyContactPersonName').errors && employeeForm.get('emergencyContactPersonName').touched"
+                class="help-block">
+                <div *ngIf="g.emergencyContactPersonName.errors.required">Emergency Contact Person Name is required
+                </div>
+                <span *ngIf="employeeForm.get('emergencyContactPersonName').errors.pattern"> Entered special characters
+                  are not allowed
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12  col-sm-6">
+            <div class="row" style="margin: 0px;  margin-top: 15px; margin-bottom: 19px;">
+              <div class="col-xs-12">
+                <div class="pretty p-svg p-curve">
+                  <input type="checkbox" value="yes" #isSameAddress id="isSameAddress"
+                    (change)="onSameAddressPresentChanged(isSameAddress.checked)" />
+                  <div class="state p-success">
+
+                    <svg class="svg svg-icon" viewBox="0 0 20 20">
+                      <path
+                        d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                        style="stroke: white;fill:white;"></path>
+                    </svg>
+                    <label>Permanent Address is same as Present
+                      Address</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12  col-sm-6 borderright">
+            <div class="form-group form-group-vertical col-xs-12"
+              *ngIf="this.employeeForm.controls.presentAddressdetails">
+              <label class="form-label">Present Address Line 1
+                <span class="required">*</span>
+                <span class="form__length">
+                  {{ presentAddressdetails.value?.length }}/50</span>
+              </label>
+              <input class="form-control" name="presentAddressdetails" #presentAddressdetails maxlength="50"
+                formControlName="presentAddressdetails" appUppercaseInput appAutocompleteOff 
+                [ngClass]="{'is-invalid': submitted && g.presentAddressdetails.errors }"
+                placeholder="Falt/Building/Door No" spellcheck="off">
+              <div *ngIf="submitted && g.presentAddressdetails.errors" class="invalid-feedback">
+                <div *ngIf="g.presentAddressdetails.errors.required">Present
+                  Address
+                  details is required
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12"
+              *ngIf="this.employeeForm.controls.presentAddressdetails1">
+              <label class="form-label">Present Address Line 2 </label>
+              <input class="form-control" name="presentAddressdetails1" formControlName="presentAddressdetails1" appUppercaseInput appAutocompleteOff 
+                placeholder="Street/Area/Locality" spellcheck="off">
+            </div>
+            <div class="form-group form-group-vertical col-xs-12"
+              *ngIf="this.employeeForm.controls.presentAddressdetails2">
+              <label class="form-label">Present Address Line 3 </label>
+              <input class="form-control" rows="5" cols="40" name="presentAddressdetails2" appUppercaseInput appAutocompleteOff 
+                formControlName="presentAddressdetails2" placeholder="City/Town" spellcheck="off">
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="form-group form-group-vertical col-xs-12"
+                  *ngIf="this.employeeForm.controls.presentCountryName">
+                  <label class="form-label">Country Name <span class="required">*</span></label>
+                  <ng-select [items]="CountryList" (change)="onChangeStateByCountryId($event)"
+                    placeholder="-- select an option --" formControlName="presentCountryName"
+                    [ngClass]="{'ng-touched': submitted && g.presentCountryName.errors }" bindLabel="Name"
+                    bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.presentCountryName.invalid" class="help-block">
+                    <div *ngIf="g.presentCountryName.errors.required">
+                      Country is
+                      required
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group form-group-vertical col-xs-12"
+                  *ngIf="this.employeeForm.controls.presentStateName">
+                  <label class="form-label">State Name <span class="required">*</span></label>
+                  <ng-select [items]="StateList" placeholder="-- select an option --" formControlName="presentStateName"
+                    [ngClass]="{'ng-touched': submitted && g.presentStateName.errors }" bindLabel="Name" bindValue="Id"
+                    (change)="onChangeCityByStateId($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && g.presentStateName.invalid" class="help-block">
+                    <div *ngIf="g.presentStateName.errors.required">State
+                      Name
+                      is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="form-group form-group-vertical col-xs-12" *ngIf="this.employeeForm.controls.presentCity">
+                  <label class="form-label">City
+                    <span class="required">*</span>
+
+                  </label>
+
+                  <ng-select [items]="CityList" placeholder="-- select an option --" formControlName="presentCity"
+                    [ngClass]="{'ng-touched': submitted && g.presentCity.errors }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.presentCity.invalid" class="help-block">
+
+                    <!-- <input class="form-control" type="text" name="presentCity" formControlName="presentCity"
+                [ngClass]="{'is-invalid': submitted && g.presentCity.errors }" placeholder="Bangalore"
+                autocomplete="none|false|no">
+              <div *ngIf="submitted && g.presentCity.errors" class="invalid-feedback"> -->
+                    <div *ngIf="g.presentCity.errors.required">City is
+                      required
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group form-group-vertical col-xs-12" *ngIf="this.employeeForm.controls.presentPincode">
+                  <label class="form-label">Pincode
+                    <span class="required">*</span>
+                    <span class="form__length">
+                      {{ presentPincode.value?.length }}/6</span>
+                  </label>
+                  <input class="form-control" type="text" minlength="6" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                    name="presentPincode" #presentPincode maxlength="6" formControlName="presentPincode"
+                    [ngClass]="{'is-invalid': submitted && g.presentPincode.errors }" placeholder="560001"
+                    autocomplete="none|false|no" onpaste="return false;">
+
+                  <div *ngIf="submitted && g.presentPincode.invalid" class="help-block">
+                    <div *ngIf="g.presentPincode.errors.required">Pincode is
+                      required
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12  col-sm-6">
+            <div class="form-group form-group-vertical col-xs-12"
+              *ngIf="this.employeeForm.controls.permanentAddressdetails">
+              <label class="form-label">Permanent Address Line 1 <span class="required">*</span>
+                <span class="form__length">
+                  {{ permanentAddressdetails.value?.length
+                  }}/50</span></label>
+              <input class="form-control" name="permanentAddressdetails" formControlName="permanentAddressdetails"
+                #permanentAddressdetails maxlength="50" appUppercaseInput appAutocompleteOff 
+                [ngClass]="{'is-invalid': submitted && g.permanentAddressdetails.errors }"
+                placeholder="Falt/Building/Door No" spellcheck="off">
+              <div *ngIf="submitted && g.permanentAddressdetails.errors" class="invalid-feedback">
+                <div *ngIf="g.permanentAddressdetails.errors.required">Permanent
+                  Address details is required
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12"
+              *ngIf="this.employeeForm.controls.permanentAddressdetails1">
+              <label class="form-label">Permanent Address Line 2 </label>
+              <input class="form-control" name="permanentAddressdetails1" formControlName="permanentAddressdetails1" appUppercaseInput appAutocompleteOff 
+                placeholder="Street/Area/Locality" spellcheck="off">
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12"
+              *ngIf="this.employeeForm.controls.permanentAddressdetails2">
+              <label class="form-label">Permanent Address Line 3 </label>
+              <input class="form-control" rows="5" cols="40" name="permanentAddressdetails2" appUppercaseInput appAutocompleteOff 
+                formControlName="permanentAddressdetails2" placeholder="City/Town" spellcheck="off">
+
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="form-group form-group-vertical col-xs-12"
+                  *ngIf="this.employeeForm.controls.permanentCountryName">
+                  <label class="form-label">Country Name <span class="required">*</span></label>
+
+                  <ng-select [items]="CountryList" (change)="onChangeStateByCountryId1($event)"
+                    placeholder="-- select an option --" formControlName="permanentCountryName"
+                    [ngClass]="{'ng-touched': submitted && g.permanentCountryName.errors }" bindLabel="Name"
+                    bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.permanentCountryName.invalid" class="help-block">
+                    <div *ngIf="g.permanentCountryName.errors.required">
+                      Country
+                      is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group form-group-vertical col-xs-12"
+                  *ngIf="this.employeeForm.controls.permanentStateName">
+                  <label class="form-label">State Name <span class="required">*</span></label>
+                  <ng-select [items]="StateList1" placeholder="-- select an option --"
+                    formControlName="permanentStateName"
+                    [ngClass]="{'ng-touched': submitted && g.permanentStateName.errors }" bindLabel="Name"
+                    bindValue="Id" (change)="onChangeCityByStateId1($event)" >
+                  </ng-select>
+                  <div *ngIf="submitted && g.permanentStateName.invalid" class="help-block">
+                    <div *ngIf="g.permanentStateName.errors.required">State
+                      Name
+                      is required
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+
+            </div>
+
+
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+
+                <div class="form-group form-group-vertical col-xs-12" *ngIf="this.employeeForm.controls.presentCity">
+                  <label class="form-label">City <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="CityList1" 
+                  placeholder="-- select an option --" formControlName="permanentCity"
+                  [ngClass]="{'ng-touched': submitted && g.permanentCity.errors }" bindLabel="Name" bindValue="Id">
+                </ng-select>
+                <div *ngIf="submitted && g.permanentCity.Invalid" class="help-block">
+
+                  <!-- <input class="form-control" type="text" name="permanentCity" formControlName="permanentCity"
+                    [ngClass]="{'is-invalid': submitted && g.permanentCity.errors }" placeholder="Bangalore"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.permanentCity.errors" class="invalid-feedback"> -->
+                    <div *ngIf="g.permanentCity.errors.required">City is
+                      required
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group form-group-vertical col-xs-12"
+                  *ngIf="this.employeeForm.controls.permanentPincode">
+                  <label class="form-label">Pincode <span class="required">*</span>
+                    <span class="form__length">
+                      {{ permanentPincode.value?.length }}/6</span>
+                  </label>
+                  <input class="form-control" type="text" minlength="6" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                    maxlength="6" #permanentPincode name="permanentPincode" formControlName="permanentPincode"
+                    [ngClass]="{'is-invalid': submitted && g.permanentPincode.errors }" placeholder="560001"
+                    autocomplete="none|false|no" onpaste="return false;">
+
+
+                  <div *ngIf="submitted && g.permanentPincode.invalid" class="help-block">
+                    <div *ngIf="g.permanentPincode.errors.required">Pincode
+                      is
+                      required
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </form>
+</div>

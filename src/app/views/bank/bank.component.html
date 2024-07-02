@@ -1,0 +1,144 @@
+<app-loading-screen></app-loading-screen>
+<div class="page-wrapper">
+   <div class="page-content">
+        <div class="row"> 
+  
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+            <ul class="list-inline">
+                <li class="list-inline-item subheader__main" style="cursor: default !important">
+                    <h5 class="mt-0 p-l-5 subheader__title">Add Bank : </h5>
+                    
+                </li>
+            </ul>
+        </div>
+        
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="text-right">
+                <ul class="list-inline">
+           
+                    <li class="list-inline-item"><button type="submit" class="btn btn-primary" id="btnSubmit" (click)="saveBankbutton()">
+                        <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                    </button></li>
+                    <li class="list-inline-item">
+  
+                        <button class="btn btn-default btn-bold" tooltip="Manage Columns" (click)="confirmExit()" tooltip-placement="bottom" data-original-title="" title="">
+                                                <i class="mdi mdi-close font-size-md"></i>  
+                                            </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+  
+      </div>
+      &nbsp;
+      &nbsp;
+      <form [formGroup]="bankForm" >
+        <div class="row">
+            <div class="form-group form-group-vertical col-xs-4 col-sm-4">
+                    <label class="form-label"> Code <span class="required">*</span> </label>
+                    <input type="text" placeholder="Bank Code" class="form-control" formControlName="code"
+                      [ngClass]="{ 'is-invalid': submitted && f.code.errors }">
+      
+                    <div *ngIf="submitted && f.code.errors" class="invalid-feedback">
+                      <div *ngIf="f.code.errors.required"> Bank Code is required</div>
+                      <div *ngIf="f.code.errors.minlength">Code must be at least 3 characters</div>
+                    </div>
+                  </div>
+                 
+            <div class="form-group form-group-vertical col-xs-4 col-sm-4">
+              <label> Name <span class="required">*</span> </label>
+              <input type="text" placeholder="Bank Name" class="form-control"
+                formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+              <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                <div *ngIf="f.name.errors.required">Bank Name is required</div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-4 col-sm-4">
+                <label class="form-label">Status</label>
+                &nbsp;
+                &nbsp;
+                <div class="pretty p-switch p-fill padding-top-10">
+                  <input type="checkbox" formControlName="status" checked enabled />
+                  <div class="state p-success">
+                    <label></label>
+                  </div>
+                </div>
+              </div>
+
+            <div class="form-group form-group-vertical col-xs-4 col-sm-4">
+                <label> Alias Name </label>
+                <input type="text"  class="form-control"
+                  formControlName="aliasname" >                
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-4 col-sm-4">
+                  <label> UniqueValidation </label>
+                  <input type="text"  class="form-control"
+                    formControlName="uniqueValidation" >                
+                </div>
+  
+                       
+                                              
+      </div>  
+    
+      <div  >
+      
+                                              <div class="pull-right" style="padding-top: 10px;padding-bottom: 10px;">
+                                                  <button type="button" class="btn btn-primary" (click)="newBankBranchClick()">
+                                                      <i class="mdi mdi-file-plus m-r-xs"></i> Add Bank Branch </button>
+                                              </div>
+                                              <div class="text-center ma-5" *ngIf="spinner">
+                                                      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                                                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+                                                                  Please wait...
+                                                                </button>
+                                                  </div>
+                                           <div *ngIf="!spinner">
+                                              <angular-slickgrid gridId="gridBranch"  [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="datasetbranch" gridWidth="100%" (onAngularGridCreated)="angularGridReady($event)"  >
+                                              </angular-slickgrid>
+                                           </div>
+                                          
+                                      
+                                   </div>     
+                                    <div id="modaldeleteconfimation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modaldeleteconfimation" aria-hidden="true">
+                                        <div class="modal-dialog ">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <div class="col-xs-11">
+                                                        <h4 class="modal-title" id="modaldeleteconfimation">Confirmation</h4>
+                                                    </div>
+                                                    <div class="col-xs-1">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                                aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-body alert-warning">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            <i class="fa fa-warning fa-3x "></i>
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <div>
+                                                                <h5>
+                                                                    Are you sure you want to delete this value <span> {{deleteColumn}}</span>?
+                                                                </h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-danger btn-sm" (click)="delete()">Yes</button> &nbsp;
+                                                    <button class="btn btn-default btn-sm" data-dismiss="modal">No</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                            
+
+      
+  </form>
+        
+    </div>
+  </div>

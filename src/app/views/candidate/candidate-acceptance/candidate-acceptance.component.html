@@ -1,0 +1,319 @@
+<div class="page-wrapper" *ngIf="isAuthorized">
+    <div class="page-content" [ngClass]="isMobileResolution ? 'margin-size-zero' : 'margin-size' ">
+
+
+
+        <app-loading-screen></app-loading-screen>
+
+
+
+        <div class="card mt-3 portlet" *ngIf="doCheckAgree()">
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 col-xs-6">
+                        <div class="clearfix content-heading">
+                            <img class="d-flex mr-3 rounded-circle thumb-md pull-left"
+                                src="assets/Images/useravatar.png" />
+                            <h4 class="font-14 m-1">{{CanidateUI.CandidateName}} </h4><small
+                                class="text-muted">{{CanidateUI.Designation}}</small>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4 col-xs-12">
+                        <span class="offertext"><b *ngIf="CanidateUI.ApprovalFor == 1">Offer Summary</b> <b
+                                *ngIf="CanidateUI.ApprovalFor == 2">Appointment Summary</b></span>
+                    </div>
+                    <div class="col-12 col-md-4 col-xs-12 text-center">
+                        <button *ngIf="CanidateUI.ObjectStorageId" type="button"
+                            class="btn btn-label-danger btn-upper btn-sm btn-bold" (click)="downloadLetter()"> <i
+                                class="mdi  mdi-download ml-1"></i> &nbsp; Download</button> &nbsp;
+                        <button type="button" class="btn btn-label-success btn-upper btn-sm btn-bold"
+                            (click)="previewCTC()"> <i class="mdi mdi-file-document ml-1"></i> &nbsp; Preview
+                            CTC</button>
+                    </div>
+                </div>
+
+                <!-- <div class="media mb-4" style="width: 100% !important;margin-bottom: 3px !important;"><img class="d-flex mr-3 rounded-circle thumb-md" src="assets/Images/useravatar.png" alt="Generic placeholder image">
+                    <div class="media-body align-self-center">
+                        <h4 class="font-14 m-0">{{CanidateUI.CandidateName}} </h4><small class="text-muted">{{CanidateUI.Designation}}</small>
+                    </div>
+                    <div class="media-body align-self-center">
+                        <span class=""><b *ngIf="CanidateUI.ApprovalFor == 1">Offer Summary</b> <b *ngIf="CanidateUI.ApprovalFor == 2">Appointment  Summary</b></span>
+                    </div>
+                    <button *ngIf="CanidateUI.ObjectStorageId" type="button" class="btn btn-label-danger btn-upper btn-sm btn-bold" (click)="downloadLetter()"> <i class="mdi  mdi-download ml-1"></i> &nbsp; Download</button> &nbsp;
+                    <button type="button" class="btn btn-label-success btn-upper btn-sm btn-bold" (click)="previewCTC()"> <i class="mdi mdi-file-document ml-1"></i> &nbsp; Preview CTC</button>
+                </div> -->
+
+
+                <div style="text-align: center;display: block;margin: 0 auto;padding-top: 10px; padding-bottom: 15px;">
+                    <b>{{CanidateUI.ClientName}}</b></div>
+
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="widget__item">
+                            <div class="widget__info">
+                                <span class="widget__desc">Annual Salary</span>
+                                <span class="widget__value">
+                                    {{CanidateUI.AnnualSalary}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="widget__item">
+                            <div class="widget__info">
+                                <span class="widget__desc">Date of Joining</span>
+                                <span class="widget__value">{{CanidateUI.DateOfJoining | date: 'EEEE, MMMM d,
+                                    y'}}</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="widget__item">
+                            <div class="widget__info">
+                                <span class="widget__desc">Working Location</span>
+                                <span class="widget__value">{{CanidateUI.LocationName}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="widget__item">
+                            <div class="widget__info" *ngIf="BusinessType != 1">
+                                <span class="widget__desc">Client Name</span>
+                                <span class="widget__value">{{CanidateUI.ClientName}}</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+               
+
+                <div class="text-right">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <button type="button" class="btn upgrade-btn" (click)="acceptLetter()"> <i
+                                    class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Accept
+                            </button>
+                        </li>
+                        <li class="list-inline-item">
+                            <button type="button" class="btn btn-danger" (click)="rejectLetter()"> <i
+                                    class="fa fa-ban  m-r-xs"></i> Reject
+                            </button>
+                        </li>
+
+
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="footer">
+            <p> <b> © 2019 - 2023 Copyright : Powered by -
+                    <a href="javascript:;" (click)="onNavigate()" class="" style="text-decoration: none;"> HFactor
+                        &nbsp;</a>
+
+                    All rights reserved </b></p>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div id="popup_preview_ctc" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_preview_ctc"
+    aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-xs-11">
+                        <h4 class="modal-title" id="popup_preview_ctc"  style="font-size: 14px;
+                        font-weight: 600;"> Preview CTC</h4>
+                        <!-- <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" data-dismiss="modal"
+                            (click)="modal_dismiss()"><i class="mdi mdi-close font-size-md icon-close"></i></a> -->
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+
+                        <div class="col-12">
+                            <table class="table table-bordered table-container">
+                                <thead>
+                                    <tr class="document_table_tr">
+                                        <th scope="col" style="width: 40%; text-align: left!important">Product Code</th>
+                                        <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+                                        <th scope="col" style="width: 20%;text-align: center">Annually</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of RateSetList"
+                                        [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                                        <td>
+                                            {{item.DisplayName}}
+                                        </td>
+
+                                        <td style="text-align:right">
+                                            {{item.Value}}
+                                        </td>
+
+                                        <td style="text-align:right">
+                                            {{getAnnualValue(item.Value)}}
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-primary" (click)="modal_dismiss()"> <i class="mdi mdi-close"></i> &nbsp; Close</button> &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popup_reject" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_reject" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-xs-11">
+                        <h4 class="modal-title" id="popup_reject" style="font-size: 14px;
+                        font-weight: 600;">Confirm?</h4>
+                        <!-- <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" data-dismiss="modal"
+                            (click)="modal_dismiss1()"><i class="mdi mdi-close font-size-md icon-close"></i></a> -->
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="overlay">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                <label style="padding-bottom: 15px;"> Rejection Reason <span class="required"> *</span>
+                                </label>
+
+                                <div class="page-links">
+
+
+                                    <div class="pretty p-svg p-curve">
+                                        <input type="checkbox" [(ngModel)]="isCheckedS"
+                                            [ngModelOptions]="{standalone: true}" (change)="rejectreason('1')" />
+                                        <div class="state p-success">
+                                            <!-- svg path -->
+                                            <svg class="svg svg-icon" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                                                    style="stroke: white;fill:white;"></path>
+                                            </svg>
+                                            <label>Salary</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="page-links">
+
+                                    <div class="pretty p-svg p-curve">
+                                        <input type="checkbox" [(ngModel)]="isCheckedWL"
+                                            [ngModelOptions]="{standalone: true}" (change)="rejectreason('1')" />
+                                        <div class="state p-success">
+                                            <!-- svg path -->
+                                            <svg class="svg svg-icon" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                                                    style="stroke: white;fill:white;"></path>
+                                            </svg>
+                                            <label>Work Location</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="page-links">
+                                    <div class="pretty p-svg p-curve">
+                                        <input type="checkbox" [(ngModel)]="isCheckedD"
+                                            [ngModelOptions]="{standalone: true}" (change)="rejectreason('1')" />
+                                        <div class="state p-success">
+                                            <!-- svg path -->
+                                            <svg class="svg svg-icon" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                                                    style="stroke: white;fill:white;"></path>
+                                            </svg>
+                                            <label>Designation</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="page-links">
+                                    <div class="pretty p-svg p-curve">
+                                        <input type="checkbox" [(ngModel)]="isCheckedDOJ"
+                                            [ngModelOptions]="{standalone: true}" (change)="rejectreason('1')" />
+                                        <div class="state p-success">
+                                            <!-- svg path -->
+                                            <svg class="svg svg-icon" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                                                    style="stroke: white;fill:white;"></path>
+                                            </svg>
+                                            <label>DOJ</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="page-links">
+                                    <div class="pretty p-svg p-curve">
+                                        <input type="checkbox" [(ngModel)]="isCheckedO"
+                                            [ngModelOptions]="{standalone: true}" (change)="rejectreason('2')" />
+                                        <div class="state p-success">
+                                            <!-- svg path -->
+                                            <svg class="svg svg-icon" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                                                    style="stroke: white;fill:white;"></path>
+                                            </svg>
+                                            <label>Other</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                            <label style="padding-bottom: 15px;"> Remarks <span class="required"> *</span></label>
+                            <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="remarks"
+                                id="Remarks"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-primary" (click)="modal_dismiss1()"> <i class="mdi mdi-close"></i> &nbsp; Close</button> &nbsp;
+                        <button class="btn btn-primary" (click)="confirmReject()"> <i class="mdi mdi-check-bold"></i> &nbsp; Confirm</button> &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="alert alert-danger" role="alert" style="margin: 4rem;" *ngIf="isFailed">
+    We are sorry, you are not authorized user
+</div>

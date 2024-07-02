@@ -1,0 +1,47 @@
+<div style="display: block; opacity: 0.97;" class="modal modal-backdrop fade show">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header" style="padding: 15px !important;">
+
+
+              <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                  <small class="header-pretitle"><b>{{employeedetails.FirstName}} ~ {{employeedetails.Code}}</b>
+
+                  </small>
+                  <h6 class="modal-title subheader_h6" id="popup_release_AL">
+                      Preview</h6>
+              </div>
+              <div class="d-flex">
+                  <div *ngIf="docsObject.IsDowloadApplicable">
+                      <app-filedownload [documentId]="documentURLId">
+                      </app-filedownload>
+                  </div>
+                  <div>
+                      <button class="btn m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit" (click)="closeModal()">
+                      <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i></span></div>
+                      </button>
+                  </div>
+              </div>
+
+          </div>
+
+
+          <div class="modal-body">
+              <div class="iframe-container" *ngIf="documentURL == null" style="border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                  <img src="assets/Images/logo_menu.png" style="opacity: .5;width: 25px;">
+                  <span>
+          <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+            &nbsp; Please wait...</i>
+          <span class="sr-only">Please wait...</span>
+                  </span>
+              </div>
+              <div class="iframe-container" *ngIf="documentURL != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 70vh;">
+
+                  <iframe [src]="documentURL" frameborder="0" scrolling="yes" style="width: 100%;height: 100%;"></iframe>
+              </div>
+
+          </div>
+
+      </div>
+  </div>
+</div>

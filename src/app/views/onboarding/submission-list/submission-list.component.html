@@ -1,0 +1,740 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="row m-t-b-10">
+      <div class="showGirdActionButtons" *ngIf="!spinner && selectedmigrationRecords?.length> 0">
+        <div class="col-12 col-md-12 col-lg-12 ">
+
+          <!-- <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                        <div class="massOperationsPanel d-i-b"> -->
+
+          <!-- <button class="btn btn-default btn-sm m-r-sm " (click)="recall(selectedmigrationRecords)">
+                                <i class="mdi mdi-thumb-up-outline m-r-xs"></i>
+                                Claim Offer
+                            </button> -->
+          <button class="btn btn-default btn-sm m-r-sm btn-danger"
+            *ngIf="selectedmigrationRecords[0].OfferStatus=='Active' && selectedmigrationRecords[0].Status != 'OnbOpsSubmittedMigrationRequest'"
+            (click)="cancel_offer(selectedmigrationRecords)">
+            <i class="mdi mdi-tag-remove m-r-xs"></i>
+            Cancel Offer
+          </button><button class="btn btn-default btn-sm m-r-sm "
+            *ngIf="selectedmigrationRecords[0].OfferStatus=='In-Active'"
+            (click)="revise_offer(selectedmigrationRecords)">
+            <i class="mdi mdi-new-box m-r-xs"></i>
+            Make an Offer
+          </button>
+
+          <button class="btn btn-default btn-sm m-r-sm"
+            [disabled]="(selectedmigrationRecords[0].Status!='Ready to Migrate'&& selectedmigrationRecords[0].Status!='Employee Transition Completed' && selectedmigrationRecords[0].Status!='Migration Failed'&&  selectedmigrationRecords[0].Status!= 'OnbOpsSubmittedMigrationRequest')"
+            (click)="releaseAL(selectedmigrationRecords,'M')">
+            <i class="mdi mdi-comment-account-outline m-r-xs"></i>
+            {{ConvertToEmployeeText}}
+          </button>
+          <button class="btn btn-default btn-sm m-r-sm "
+            *ngIf="selectedmigrationRecords[0].Status=='Employee Transition Completed'|| selectedmigrationRecords[0].Status=='AL Regenerated' || selectedmigrationRecords[0].Status=='QC Rejected AL Regen Request'"
+            (click)="ReGenerate(selectedmigrationRecords)">
+            <i class="mdi mdi-recycle m-r-xs" style="font-size: 14px !important;"></i> Re-Generate AL
+          </button>
+
+          <button class="btn btn-default btn-sm m-r-sm" (click)="ViewDocuments(selectedmigrationRecords)"
+            [disabled]="selectedmigrationRecords.length > 1 || selectedmigrationRecords.length < 0">
+            <i class="mdi mdi-file-document-outline m-r-xs" style="font-size: 14px !important;"></i>View Documents
+          </button>
+
+          <button class="btn btn-default btn-sm m-r-sm" (click)="viewTransaction(selectedmigrationRecords)"
+            [disabled]="selectedmigrationRecords.length > 1 || selectedmigrationRecords.length < 0">
+            <i class="mdi mdi-file-eye-outline m-r-xs" style="font-size: 14px !important;"></i>View Transaction
+          </button>
+
+          <!-- <button type="button" class="btn btn-danger" id="btn_qc_reject" [disabled]="selectedmigrationRecords.length == 0 || selectedmigrationRecords.length > 1"
+            (click)="fetchBlacklistReasons()"> <i class="mdi mdi-close-circle  m-r-xs"></i> Mark as
+            Blacklisted &nbsp;
+            <span *ngIf="btnBlacklistspinner" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true">
+            </span>
+          </button> -->
+
+
+
+          <!-- <button  type="button" 
+                            class="btn btn-default btn-sm m-r-sm" 
+                            (click)="doExtendingDOJ(selectedmigrationRecords)"><i class="mdi mdi-focus-field m-r-xs"></i> Request New DOJ
+                        </button>
+                     -->
+
+
+
+        </div>
+
+
+      </div>
+      <!--end col-->
+    </div>
+
+    <!-- end row  -->
+
+    <br>
+
+    <div class="docs-page" *ngIf="spinner">
+      <div class="Error full-screen">
+        <div><img src="assets/Images/folder.svg" style="height: 6rem;"> </div>
+        <h1><span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true">
+          </span>
+        </h1>
+        <p>Please wait while we set things up for you</p>
+      </div>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner && searchDataset?.length > 0">
+      <angular-slickgrid gridId="grdSearchAll" [columnDefinitions]="searchColumnDefinitions"
+        [gridOptions]="searchGridOptions" [dataset]="searchDataset" (onAngularGridCreated)="searchGridReady($event)"
+        gridWidth="100%" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+      </angular-slickgrid>
+
+    </div>
+    <div class="docs-page" *ngIf="searchDataset?.length == 0 && !spinner">
+      <div class="Error full-screen">
+        <div><img src="assets/Images/antenna.svg" style="height: 6rem;"> </div>
+        <h1>Uh ho
+        </h1>
+        <p>No data found. Something went wrong</p>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+</div>
+
+<div id="popup_release_AL" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_release_AL"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fixed-left fade show">
+    <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside" style="max-width: 700px !important">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="col-xs-11">
+            <h6 *ngIf="ReleaseAlTyp == 'M'" class="modal-title" id="popup_release_AL">Employment Letter Release
+            </h6>
+            <h6 *ngIf="ReleaseAlTyp == 'S'" class="modal-title" id="popup_release_AL">Edit Offer Terms</h6>
+          </div>
+
+        </div>
+        <div class="modal-body" style="overflow-y: scroll !important;">
+          <div id="overlay">
+            <div class="w-100 d-flex justify-content-center align-items-center">
+              <div class="spinner"></div>
+            </div>
+          </div>
+
+          <span class="help-text" *ngIf="isCCMailError"
+            style="text-align: center;display: block;color: #f8a01c;font-size: 14px">
+            <i class="mdi mdi-information-outline"></i> <b> Note : </b>Please type your e-mail address in
+            the format "example@domain.com" </span>
+          <br>
+
+          <!-- <div class="row">  -->
+          <div *ngFor="let item of selectedmigrationRecords; let i = index" class="al-list">
+
+            <div class="row">
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <h6 class="small lable_name" style="font-size: 93%;">Candidate Name </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.CandidateName}} ({{item.ClientName}}) </span>
+                <span class="badge badge-success" style="width: 15%;" *ngIf="item.Status == 1">
+                  Success</span>
+                <span class="badge badge-danger" style="width: 15%;" *ngIf="item.Status == 0 || item.Status == 2">
+                  Failed
+                </span>
+
+              </div>
+
+              <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <h6 class="small lable_name" style="font-size: 93%;">Primary Mobile </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.PrimaryMobile}} </span>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <h6 class="small lable_name" style="font-size: 93%;">Primary Email </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.PrimaryEmail}} </span>
+              </div> -->
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <h6 class="small lable_name" style="font-size: 93%;">Designation </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.Designation}} </span>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <h6 class="small lable_name" style="font-size: 93%;"> Date of Joining </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.ActualDateOfJoining | date}} </span>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <h6 class="small lable_name" style="font-size: 93%;">Department </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.Department}} </span>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <h6 class="small lable_name" style="font-size: 93%;">Employment Type </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.SubEmploymentType}} </span>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <h6 class="small lable_name" style="font-size: 93%;"> Employment Category </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.SubEmploymentCategory}} </span>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <h6 class="small lable_name" style="font-size: 93%;">City </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.CityName}} </span>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <h6 class="small lable_name" style="font-size: 93%;">Location </h6>
+                <span style="font-size: 13px;font-weight: 600;"> {{item.WorkLocation}} </span>
+              </div>
+            </div>
+
+            <!-- <div class="media al-list">
+              <div class="media-body align-self-center">
+                <h4 class="font-14 m-0"><b>{{item.CandidateName | uppercase}}</b> [ {{item.ClientName}}
+                  ]</h4><small class="text-muted">{{item.PrimaryEmail}} -
+                  {{item.PrimaryMobile}} </small> <small *ngIf="ReleaseAlTyp == 'M'" class="text-muted">- Actual DOJ :
+                  {{item.ActualDateOfJoining |
+                  date:'dd-MM-yyyy'}} - Designation : {{item.Designation}}</small>
+              </div>
+
+              <span class="badge badge-success" style="width: 15%;" *ngIf="item.Status == 1">
+                Success</span>
+              <span class="badge badge-danger" style="width: 15%;" *ngIf="item.Status == 0 || item.Status == 2"> Failed
+              </span>
+
+            </div>
+             -->
+            <div class="row">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <h6 class="small lable_name" style="font-size: 93%;">CC E-mail's <i class="mdi mdi-information-outline"
+                    placement="right" style="cursor: pointer;"
+                    ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, seperated by comma or space."></i>
+                  <span class="help-text m-l-5">(Please separate email ids using comma)</span>
+                </h6>
+                <div class="editor-tag">
+                  <span class="tag-item" *ngFor="let tag of item.ccmailtags; let i = index">
+                    {{tag}}
+                    <span class="remove-tag" (click)="removeTag(tag, item)">×</span>
+                  </span>
+                  <input class="input-tag input_border"
+                    pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" id="{{item.Id}}"
+                    type="text" placeholder="example@domain.com" autocomplete="none|false|no"
+                    (keyup)="onKeyUp($event,item, $event)" (change)="onchangeCC($event, item)">
+                </div>
+              </div>
+
+              <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-12" style="padding: 0px;padding-left: 10px;">
+                <label class="form-label">CC E-mail's <i class="mdi mdi-information-outline" placement="right"
+                    style="cursor: pointer;"
+                    ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, seperated by comma or space."></i>
+                  <span class="help-text m-l-5">(Please separate email ids using comma)</span>
+                </label>
+
+                <div class="editor-tag">
+                  <span class="tag-item" *ngFor="let tag of item.ccmailtags; let i = index">
+                    {{tag}}
+                    <span class="remove-tag" (click)="removeTag(tag, item)">×</span>
+                  </span>
+                  <input class="input-tag input_border"
+                    pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" id="{{item.Id}}"
+                    type="text" placeholder="example@domain.com" autocomplete="none|false|no"
+                    (keyup)="onKeyUp($event,item, $event)" (change)="onchangeCC($event, item)">
+                </div>
+
+              </div> -->
+            </div>
+            <ng-container *ngIf="doShowAdditionalFieldsForEmployeeConfirmation(item)"> 
+            <div class="row" *ngIf="ReleaseAlTyp == 'S' || BusinessType == 1">
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                <label class="form-label"> Designation <span class="required">*</span> </label>
+                <ng-select [items]="LstEmployeeDesignation" placeholder="-- select an option --"
+                  [(ngModel)]="item.DesignationId" bindLabel="Name" bindValue="Id"
+                  (change)="onChangeCommon($event, item, 'Designation')"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                </ng-select>
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                <label class="form-label"> DoJ <span class="required">*</span> </label>
+                <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom"
+                  [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }"
+                  placeholder="12-12-1970" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                  autocomplete="off" [(ngModel)]="item.ActualDateOfJoining" [maxDate]="MaxDate" [minDate]="MinDate">
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                <label class="form-label"> Department <span class="required">*</span> </label>
+                <ng-select [items]="LstEmployeeDepartment" placeholder="-- select an option --"
+                  [(ngModel)]="item.DepartmentId" bindLabel="Name" bindValue="Id"
+                  (change)="onChangeCommon($event, item, 'Department')"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                </ng-select>
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                <label class="form-label"> Team <span class="required">*</span> </label>
+                <ng-select [items]="TeamList" placeholder="-- select an option --" (change)="onChangeTeam($event)"
+                  [(ngModel)]="item.TeamId" bindLabel="code" bindValue="Id"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                </ng-select>
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                <label class="form-label"> Effective Pay Period <span class="required">*</span> </label>
+                <ng-select [items]="EffectivePayPeriodList" placeholder="-- select on option --"
+                  [(ngModel)]="item.EffectivePayPeriodId" bindLabel="PayCyclePeriodName" bindValue="Id"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                </ng-select>
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                *ngIf="item.TenureType == 1">
+                <label class="form-label"> Contract Enddate <span class="required">*</span> </label>
+                <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom"
+                  [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }"
+                  placeholder="12-12-1970" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                  autocomplete="off" [(ngModel)]="item.EndDate" [minDate]="EndDateMinDate">
+              </div>
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                *ngIf="item.TenureType == 2">
+                <label class="form-label"> Tenure Month <small>(Enter > 0)</small> <span class="required">*</span>
+                </label>
+                <input class="form-control" type="text" name="tenureMonth" maxlength="2"
+                  onkeypress="return /^[0-9]+$/i.test(event.key)" [(ngModel)]="item.TenureInterval"
+                  [ngClass]="{'is-invalid': submitted && g.tenureMonth.errors }" placeholder="12"
+                  autocomplete="none|false|no">
+              </div>
+
+            </div>
+          </ng-container>
+
+
+            <!-- <div class="row" *ngIf="ReleaseAlTyp == 'S'">
+              <div class="form-group form-group-vertical col-xs-3 col-sm-3" style="padding: 0px;margin-left: 10px;">
+                <label class="form-label">Designation <span class="required">*</span> </label>
+                <input class="form-control" type="text" name="Designation" [(ngModel)]="item.Designation"
+                  placeholder="Designation">
+              </div>
+              <div class="form-group form-group-vertical col-xs-3  col-sm-3" style="padding: 0px;margin-left: 20px;">
+                <label class="form-label">Actual DOJ </label>
+                <div>
+                  <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom"
+                    [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }"
+                    placeholder="12-12-1970" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                    autocomplete="off" [(ngModel)]="item.ActualDateOfJoining" [maxDate]="MaxDate" [minDate]="MinDate">
+                </div>
+              </div>
+              <div class="form-group form-group-vertical col-xs-3 col-sm-3" style="padding: 0px;margin-left: 20px;">
+                <label class="form-label">Department <span class="required">*</span> </label>
+                <input class="form-control" type="text" name="Department" [(ngModel)]="item.Department"
+                  placeholder="Department">
+              </div>
+            </div> -->
+
+            <!-- <div class="row" *ngIf="ReleaseAlTyp == 'S'"> -->
+            <!-- <div *ngIf="item.TenureType == 1" class="form-group form-group-vertical col-xs-3  col-sm-3"
+                style="padding: 0px;margin-left: 10px;width: 194px;">
+                <label class="form-label">End Date <span class="required">*</span></label>
+                <div>
+                  <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom"
+                    [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }"
+                    placeholder="12-12-1970" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                    autocomplete="off" [(ngModel)]="item.EndDate" [minDate]="EndDateMinDate">
+                </div>
+              </div>
+
+              <div *ngIf="item.TenureType == 2" class="form-group form-group-vertical col-xs-3  col-sm-3"
+                style="padding: 0px;margin-left: 10px;width: 194px;">
+                <label class="form-label">Tenure Month <small>(Enter > 0)</small><span class="required">*</span></label>
+                <input class="form-control" type="text" name="tenureMonth" maxlength="2"
+                  onkeypress="return /^[0-9]+$/i.test(event.key)" [(ngModel)]="item.TenureInterval"
+                  [ngClass]="{'is-invalid': submitted && g.tenureMonth.errors }" placeholder="12"
+                  autocomplete="none|false|no">
+              </div> -->
+
+            <!-- <div
+                [ngClass]="item.TenureType == 0 ? 'form-group form-group-vertical col-xs-3  col-sm-3 paddinglefttenunill' : 'form-group form-group-vertical col-xs-3  col-sm-3 paddinglefttenuyes'">
+                <label class="form-label">Team</label>
+                <div>
+                  <ng-select [items]="TeamList" placeholder="-- select on option --" (change)="onChangeTeam($event)"
+                    [(ngModel)]="item.TeamId" bindLabel="code" bindValue="Id"
+                    style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="form-group form-group-vertical col-xs-3  col-sm-3"
+                style="padding: 0px;margin-left: 20px;width: 194px;">
+                <label class="form-label">Effective Pay Period </label>
+                <div>
+                  <ng-select [items]="EffectivePayPeriodList" placeholder="-- select on option --"
+                    [(ngModel)]="item.EffectivePayPeriodId" bindLabel="PayCyclePeriodName" bindValue="Id"
+                    style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  </ng-select>
+                </div>
+              </div> -->
+            <!-- <div class="form-group form-group-vertical col-xs-3  col-sm-3"
+                                style="padding: 0px;margin-left: 20px;width: 194px;">
+                                <label class="form-label">Salary Remarks</label>
+                                <div class="input-group" style="margin-top: 0px !important;width: 212%;">
+                                    <textarea class="form-control" rows="2" spellcheck="false" style="height: 37px;"
+                                        [(ngModel)]="item.SalaryRemarks" id="SalaryRemarks"></textarea>
+                                </div>
+                            </div> -->
+
+            <!-- </div> -->
+            <div class="row" *ngIf="ReleaseAlTyp == 'S'">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label" style="padding-bottom: 5px;">Salary Remarks </label>
+                <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="item.SalaryRemarks"
+                  id="SalaryRemarks"></textarea>
+              </div>
+            </div>
+            <!-- <div class="help-block" *ngIf="CCemailMismatch && item.Id">Please type your e-mail address in the format example@domain.com
+                            </div> -->
+
+            <p style="text-align: center;color: #1ecab8;font-style: italic;" class="help-text"
+              *ngIf="item.Message && item.Status == 1">( {{item.Message}} ) </p>
+            <p style="text-align: center;color: #f1646c;font-style: italic;" class="help-text"
+              *ngIf="item.Message && item.Status == 0 || item.Status == 2">( {{item.Message}} ) </p>
+
+
+          </div>
+
+          <div class="row" *ngIf="ReleaseAlTyp == 'M' && !isSuccessMigration">
+            <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+              <label class="form-label">Remarks <span class="required">*</span> </label>
+              <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="ALRemarks"
+                id="ALRemarks"></textarea>
+            </div>
+          </div>
+          <!-- 
+                        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                            <label style="padding-bottom: 5px;">AL Release <span class="required"> *</span> </label>
+                            <label class="container" style="padding-left: 0px;">
+                                <input type="checkbox" class="form-control" [(ngModel)]="isALRelease">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div> -->
+
+
+          <!-- </div> -->
+        </div>
+        <div class="modal-footer" style="border-radius: 0;
+        bottom:0px;
+        position:absolute;
+        width:100%;">
+          <div *ngIf="!isSuccessMigration">
+            <div class="pull-right">
+              <button *ngIf="ReleaseAlTyp == 'M'" class="btn btn-primary" (click)="confirmRelease()"> <i
+                  class="mdi mdi-clipboard-check" style="cursor:pointer"></i> Confirm</button> &nbsp;
+              <button class="btn btn-default pull-right" type="button" (click)="modal_dismiss()"> <i class="fa fa-ban"
+                  aria-hidden="true"></i> &nbsp; Cancel</button> &nbsp;
+              <button *ngIf="ReleaseAlTyp == 'S'" class="btn btn-primary"
+                [disabled]="savechangesdisFn(selectedmigrationRecords[0])"
+                (click)="confirmReleaseSingle(selectedmigrationRecords)"> <i class="mdi mdi-clipboard-check"
+                  style="cursor:pointer"></i> &nbsp;Save Changes</button>&nbsp;
+
+            </div>
+          </div>
+
+          <div *ngIf="isSuccessMigration">
+            <div class="pull-right">
+
+              <button class="btn btn-primary" (click)="Continue()"> <i class="mdi mdi-checkbox-multiple-marked-circle"
+                  style="cursor:pointer"></i> Ok,
+                Continue</button> &nbsp;
+            </div>
+          </div>
+
+          <!-- <div class="d-flex align-items-center pull-right" *ngIf="isLoading">
+                        <strong class="text-right"> Processing... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div> -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_previewLetter" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_previewLetter" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- <div class="modal-body"> -->
+        <div class="wrapper">
+          <h6 class="h6-c"> Preview Letter
+
+            <a class="icon btn-icon pull-right m-l-n-xxxl chrome-back-btn m-t-n-sm" data-dismiss="modal"
+              (click)="modal_dismiss()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+          </h6>
+          <!-- <p>Resize me in your browser or pull me up in different size screen to see the magic of the <a href="https://benmarshall.me/resize-videos-proportionally-intrinsic-ratios/">intrinsic ratio technique</a>.</p> -->
+          <div class="iframe-container" *ngIf="iframeContent == null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <img src="assets/Images/clientlogo/{{clientminiLogoLink}}" class="imgc">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+
+          <div class="iframe-container" *ngIf="iframeContent != null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+            <iframe [src]="iframeContent" frameborder="0" scrolling="no"></iframe>
+          </div>
+        </div>
+        <!-- </div> -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<nz-drawer [nzVisible]="showCandidateLetterTransaction" [nzWidth]="650" nzTitle="Candidate Documents"
+  (nzOnClose)="closeCandidateLetterTransaction()">
+
+  <h5 style="font-size: 16px; font-weight: bold;" *ngIf="selectedmigrationRecords && selectedmigrationRecords.length>0">
+    Candidate Name :
+    {{selectedmigrationRecords[0].CandidateName}}</h5>
+  <h5 style="font-size: 16px; font-weight: bold;" *ngIf="selectedmigrationRecords && selectedmigrationRecords.length>0">
+    Joining Date :
+    {{selectedmigrationRecords[0].ActualDateOfJoining | date}}</h5>
+
+  <div *ngIf="selectedmigrationRecords && selectedmigrationRecords.length > 0">
+    <h6 style="margin-bottom: 0px;
+    margin-top: 25px;">Personal/Official Document(s)</h6>
+    <br />
+    <div class="table-responsive"
+      *ngIf="selectedmigrationRecords[0].ClientApprovals != null && selectedmigrationRecords[0].ClientApprovals.length > 0">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th style="font-weight: bold; font-size: 12px;">Approval For</th>
+            <th style="font-weight: bold; font-size: 12px;">Document Name</th>
+            <th style="font-weight: bold; font-size: 12px;">Attachment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of selectedmigrationRecords[0].ClientApprovals">
+            <td style="font-size: 12px;">{{ approvalForLabels[i.ApprovalFor] }}</td>
+            <td style="font-size: 12px;">{{ i.DocumentName }}</td>
+            <td style="font-size: 12px;"> <span (click)="viewAttachments(i, 'ClientApprovals')"
+                style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="view attachment"
+                title="view attachment">
+                <i class="mdi mdi-file-document-outline"
+                  style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+              </span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <br />
+    <div class="table-responsive"
+      *ngIf="selectedmigrationRecords[0].LstBankDetails != null && selectedmigrationRecords[0].LstBankDetails.length > 0">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th style="font-weight: bold; font-size: 12px;">Details</th>
+            <th style="font-weight: bold; font-size: 12px;">Document Name</th>
+            <th style="font-weight: bold; font-size: 12px;">Attachment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of selectedmigrationRecords[0].LstBankDetails">
+            <td style="font-size: 12px;">{{ i.Details }}</td>
+            <td style="font-size: 12px;">{{ i.DocumentName }}</td>
+            <td style="font-size: 12px;"> <span (click)="viewAttachments(i, 'ClientApprovals')"
+                style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="view attachment"
+                title="view attachment">
+                <i class="mdi mdi-file-document-outline"
+                  style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+              </span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <br />
+    <div class="table-responsive" *ngIf="selectedmigrationRecords[0].LstGeneral != null && selectedmigrationRecords[0].LstGeneral
+.length > 0">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th style="font-weight: bold; font-size: 12px;">Details</th>
+            <th style="font-weight: bold; font-size: 12px;">Document Name</th>
+            <th style="font-weight: bold; font-size: 12px;">Attachment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of selectedmigrationRecords[0].LstGeneral">
+            <td style="font-size: 12px;">{{i.Details}} </td>
+            <td style="font-size: 12px;">{{ i.DocumentName }}</td>
+            <td style="font-size: 12px;" *ngIf="i.CandidateDocumentId > 0"> <span
+                (click)="viewAttachments(i, 'ClientApprovals')"
+                style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="view attachment"
+                title="view attachment">
+                <i class="mdi mdi-file-document-outline"
+                  style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+              </span></td>
+            <td *ngIf="i.CandidateDocumentId == 0"> ---</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <br />
+    <div class="table-responsive"
+      *ngIf="selectedmigrationRecords[0].LstFamilyDetails != null && selectedmigrationRecords[0].LstFamilyDetails.length > 0">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th style="font-weight: bold; font-size: 12px;">Name</th>
+            <th style="font-weight: bold; font-size: 12px;">Document Name</th>
+            <th style="font-weight: bold; font-size: 12px;">Attachment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of selectedmigrationRecords[0].LstFamilyDetails">
+            <td style="font-size: 12px;">{{i.Name}} ({{ relationshipLabels[i.RelationShipId] }})</td>
+            <td style="font-size: 12px;">{{ i.DocumentName }}</td>
+            <td style="font-size: 12px;" *ngIf="i.CandidateDocumentId > 0"> <span (click)="viewAttachments(i, 'Family')"
+                style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="view attachment"
+                title="view attachment">
+                <i class="mdi mdi-file-document-outline"
+                  style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+              </span></td>
+            <td *ngIf="i.CandidateDocumentId == 0"> ---</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+
+
+  </div>
+
+
+</nz-drawer>
+
+
+
+<div id="documentviewer2" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="documentviewer2" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="box-shadow: #00000096 1px 14px 15px !important;">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left; width: 100%;"><b
+                style="float: left;">Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview</h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="close_documentviewer2()" style="margin-top: -22px;">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+            <div style="margin-top: -8px;float: right;margin-right: 33px">
+              <app-filedownload [documentId]="contentmodalDocumentId">
+              </app-filedownload>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+          <div class="iframe-container" *ngIf="contentmodalurl == null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <div class="iframe-container" *ngIf="contentmodalurl != null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+            <iframe [src]="contentmodalurl" frameborder="0" scrolling="yes" style="width: 100%;height: 100%;"
+              width="100%" height="600px"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="documentviewer" cdkDrag class="modal fade grabbable" cdkDragRootElement="grabbable" tabindex="-1" role="dialog"
+  aria-labelledby="documentviewer" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 1030px;">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-md-8">
+          <small class="header-pretitle" style="float: left; width: 100%;"><b style="float: left;">Documents</b></small>
+          <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview</h6>
+        </div>
+        <div class="col-md-4" style="top: 13px;">
+          <div class="modal-close" (click)="close_documentviewer3()" style="margin-top: -22px;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+          <div style="margin-top: -8px;float: right;margin-right: 33px">
+            <app-filedownload [documentId]="contentmodalDocumentId">
+            </app-filedownload>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body" style="overflow: auto !important;">
+
+        <div class="iframe-container" *ngIf="docList?.length == 0"
+          style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+          <span>
+            <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+              &nbsp; Please wait...</i>
+            <span class="sr-only">Please wait...</span>
+          </span>
+        </div>
+        <ng-container *ngIf="docList?.length > 0">
+          <div class="iframe-container" *ngFor="let item of docList"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;margin-bottom: 10px">
+            <iframe [src]="item.ImageURL" frameborder="0" scrolling="yes" width="100%" height="600px"></iframe>
+            <div><span style="top: 0 !important;
+                          left: 0px !important;
+                          position: absolute !important;
+                          z-index: 5;
+                          height: 25px !important;
+                          vertical-align: top;
+                          opacity: inherit;
+                          bottom: unset !important;
+                          right: unset !important;
+                          background: #c9c9c7;
+                          width: 30%;
+                          padding-left: 5px;
+                          opacity: 0.9;">{{item.name}} </span></div>
+
+
+
+          </div>
+        </ng-container>
+
+      </div>
+
+    </div>
+  </div>
+</div>

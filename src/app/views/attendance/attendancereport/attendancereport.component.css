@@ -1,0 +1,82 @@
+@media all and (max-width: 768px) {
+    .deskContent {
+        display: none;
+    }
+    .phoneContent {
+        display: block;
+    }
+}
+
+@media all and (min-width: 768px) {
+    .deskContent {
+        display: block;
+    }
+    .phoneContent {
+        display: none;
+    }
+}
+
+.mobile-text {
+    text-align: left !important;
+}
+
+@media (max-device-width: 600px) {
+    .mobile-text {
+        text-align: center !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-md-2 {
+        flex: 0 0 19.666667%;
+        max-width: 19.666667%;
+    }
+}
+
+.border-left-card {
+    margin: 10px;
+    padding: 5px;
+    border-left-color: coral;
+    border-left-width: 6px;
+    color: black;
+}
+
+.action-edit {
+    background: #f5f5f5;
+    min-width: 25px;
+    min-height: 25px;
+    padding: 0px;
+    border-radius: 0%;
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 100%;
+    opacity: 0.5;
+    text-align: center;
+}
+
+.present_bg {
+    display: inline-block;
+    padding: .55em .8em;
+    font-size: 90%;
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .375rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    color: #00d97e;
+    background-color: #e5f7ef;
+    margin: 0.15rem;
+}
+
+.spanlabel {
+    font-size: 12px;
+    color: #606d8a !important;
+}

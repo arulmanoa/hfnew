@@ -1,0 +1,579 @@
+<div class="page-wrapper">
+  <div class="page-content" (scroll)="onWindowScroll($event)">
+      <div class="">
+          <app-loading-screen></app-loading-screen>
+
+          <div class="row m-t-b-10" id="navbar">
+
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+                  <ul class="list-inline">
+                      <li class="list-inline-item">
+                          <h1 class=" ">QC Request </h1>
+                      </li>
+                  </ul>
+              </div>
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                  <div class="text-right">
+                      <ul class="list-inline">
+
+                          <li class="list-inline-item">
+                              <button type="button" class="btn btn-primary" (click)="updateCandidateQCInfo(false,false)">
+                                  <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                              </button></li>
+
+                          <!-- <li class="list-inline-item">
+                              <button type="button" class="btn upgrade-btn" id="btn_qc_submit" (click)="updateCandidateQCInfo(true)"> <i
+                                      class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Submit
+                              </button>
+                          </li> -->
+                          <li class="list-inline-item">
+                              <button type="button" class="btn upgrade-btn" id="btn_qc_approve" (click)="updateCandidateQCInfo(true, true)"> <i
+                                      class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+                              </button>
+                          </li>
+                          <li class="list-inline-item">
+                              <button type="button" class="btn btn-danger" id="btn_qc_reject" (click)="updateCandidateQCInfo(true, false)"> <i
+                                      class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Reject
+                              </button>
+                          </li>
+
+                          <li class="list-inline-item">
+                              <button class="btn btn-sm btn-default" type="button" (click)="confirmExit()" tooltip="Close" tooltip-placement="bottom">
+                                  <i class="mdi mdi-close font-size-md"></i>
+                              </button>
+                          </li>
+
+                      </ul>
+                  </div>
+              </div>
+
+          </div>
+
+          <br>
+
+
+          <div class="content m-b report-content">
+
+              <div id="overlay">
+                  <div class="w-100 d-flex justify-content-center align-items-center">
+                      <div class="spinner"></div>
+                  </div>
+              </div>
+
+
+
+
+
+
+
+              <span class="qcheader"> Request Summary <span>(<span
+                          *ngIf="objCandidateQualityCheckModel?.OnBoardingType==1">
+                          Flash
+                      </span>
+              <span *ngIf="objCandidateQualityCheckModel?.OnBoardingType==2">
+                          Proxy
+                      </span>)</span>
+              </span>
+              <div class="row">
+
+                  <div class="col-md-6">
+                      <span class="qcsummarylabel form-text">
+                          Submitted By - {{objCandidateQualityCheckModel?.SubmittedDetails}}
+                      </span>
+                  </div>
+                  <div class="col-md-6" style="text-align: right">
+                      <span class="qcsummarylabel form-text">
+                          Initiated By - {{objCandidateQualityCheckModel?.InitiatedDetails}}
+                      </span>
+                  </div>
+              </div>
+              <hr />
+
+
+              <div style="margin-top:1em;" class="row">
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <small class="form-text text-muted">Client Name </small>
+                          <label class="qcsummarylabel form-text text-muted">
+                              {{objCandidateQualityCheckModel?.ClientName}}
+                          </label>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <small>Client SPOC </small>
+                          <label class="qcsummarylabel form-text text-muted">
+                              {{objCandidateQualityCheckModel?.ClientSpocDetails}}</label>
+
+                      </div>
+                  </div>
+                  <!-- <div class="col-md-4">
+                          <div class="form-group">
+                              <small>Initiated By </small>
+                              <label class="qcsummarylabel form-text text-muted">
+                                  {{objCandidateQualityCheckModel?.InitiatedDetails}}
+                              </label>
+  
+                          </div>
+                      </div> -->
+                  <!-- <div class="col-md-4">
+                              <div class="form-group">
+                                  <small>Onboarding Type </small>
+                                  <label class="qcsummarylabel form-text text-muted">
+                                      <span *ngIf="objCandidateQualityCheckModel?.OnBoardingType==1">
+                                          Flash
+                                      </span>
+                                      <span *ngIf="objCandidateQualityCheckModel?.OnBoardingType==2">
+                                          Proxy
+                                      </span>
+                                  </label>
+      
+                              </div>
+                          </div> -->
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <small>Vendor </small>
+                          <label class="qcsummarylabel form-text text-muted">
+                              {{objCandidateQualityCheckModel?.CandidateDetails}}
+                          </label>
+
+                      </div>
+                  </div>
+
+                  <!-- <div class="col-md-4">
+                          <div class="form-group">
+                              <small>Submitted By </small>
+                              <label class="qcsummarylabel form-text text-muted">
+                                  {{objCandidateQualityCheckModel?.SubmittedDetails}}</label>
+                          </div>
+                      </div> -->
+
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <small>Statutory </small>
+                          <label class="qcsummarylabel form-text text-muted">
+                              {{this.statutoryLabel}}
+                          </label>
+                      </div>
+                  </div>
+
+                  <!-- <div class="col-md-4">
+                          <div class="form-group">
+                              <small>UAN </small>
+                              <label class="qcsummarylabel form-text text-muted">
+                                  {{objCandidateQualityCheckModel?.LstCandidateStatutoryDtls[0]?.UAN}}</label>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="form-group">
+                              <small>ESIC </small>
+                              <label class="qcsummarylabel form-text text-muted">
+                                  {{objCandidateQualityCheckModel?.LstCandidateStatutoryDtls[0]?.ESICNumber}}</label>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="form-group">
+                              <small>PAN </small>
+                              <label class="qcsummarylabel form-text text-muted">
+                                  {{objCandidateQualityCheckModel?.LstCandidateStatutoryDtls[0]?.PAN}}</label>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="form-group">
+                              <small>PFN </small>
+                              <label class="qcsummarylabel form-text text-muted">
+                                  {{objCandidateQualityCheckModel?.LstCandidateStatutoryDtls[0]?.PFNumber}}</label>
+                          </div> tooltip="<p><span class='qcsummarylabel form-text'>Preview ctc as per</span></p>" theme="light"
+                      </div> -->
+
+              </div>
+
+
+              <div class="row text-right">
+                  <div class="col-sm-12 float-right">
+                      <button prevent-double-submit class="btn btn-default btn-sm m-r-sm" (click)="previewCTC()">
+                          <i class="mdi mdi-eye m-r-xs"></i>
+                          Preview CTC
+                      </button>
+                      <button prevent-double-submit class="btn btn-default btn-sm m-r-sm" *ngIf="_NewCandidateDetails.LstCandidateOfferDetails?.length > 0 && _NewCandidateDetails.LstCandidateOfferDetails[0].LetterTemplateId != 0" (click)="PreviewALOLLetter('OL')">
+                          <i class="mdi mdi-file-image m-r-xs"></i>
+                          Preview OL Letter
+                      </button>
+                      <button prevent-double-submit class="btn btn-default btn-sm m-r-sm" *ngIf="_NewCandidateDetails.LstCandidateOfferDetails?.length > 0 && _NewCandidateDetails.LstCandidateOfferDetails[0].AppointmentLetterTemplateId != 0" (click)="PreviewALOLLetter('AL')">
+                          <i class="mdi mdi-file-image m-r-xs"></i>
+                          Preview AL Letter
+                      </button>
+                  </div>
+              </div>
+              <br/>
+              <br/>
+
+
+              <div class="row">
+                
+
+
+                  <div class="col-sm-12">
+
+
+                      <div class="qccard">
+                          <div class="qccontainer">
+                              <span class="qcheader"> General</span>
+
+
+                              <table class="qcTable table table-bordered table-condensed ">
+                                  <thead>
+                                      <tr>
+                                          <th>Type</th>
+                                          <th>Document number (Document Type)</th>
+                                          <th class="fitToContent">View</th>
+                                          <th class="fitToContent">Status</th>
+                                          <th class="qcRemarks">Remarks</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr *ngFor="let item of this.objCandidateQualityCheckModel.LstGeneral ; let i = index;">
+                                          <td>
+                                              {{item.Name}}</td>
+                                          <td>
+                                              <!-- <span *ngIf="item.ObjectStorageId>0"
+                                                  (click)="openmodalpopupdocument('General',item)"> -->
+                                              {{item.Details}}
+                                              <!-- </span> -->
+                                          </td>
+                                          <td class="centerAlignLink"><i *ngIf="item.ObjectStorageId" tooltip="Preview" (click)="openmodalpopupdocument('General',item,'Document Details')" class="fa fa-external-link"></i></td>
+                                          <td class="centerAlign" class="font-col">
+                                              <!-- {{item.ApprovalStatus }} -->
+                                              <span class="badge badge-warning" *ngIf="item.ApprovalStatus == 0">
+                                                  {{ApprovalStatusEnumValues[item.ApprovalStatus]}}</span>
+                                              <span class="badge badge-danger" *ngIf="item.ApprovalStatus == 2">
+                                                  {{ApprovalStatusEnumValues[item.ApprovalStatus]}}</span>
+                                              <span class="badge badge-success" *ngIf="item.ApprovalStatus == 1">
+                                                  {{ApprovalStatusEnumValues[item.ApprovalStatus]}}</span>
+
+                                              <!-- <label class="switch">
+                                                                  <input formcontrolname="chkMyReqOnly" type="checkbox"
+                                                                      (input)="onChangeGeneralApprovalStatus(i,'ApprovalStatus',$event )"
+                                                                      value="{{item.ApprovalStatus}}">
+                                                                  <span class="slider round"></span>
+                                                              </label> -->
+                                          </td>
+                                          <td>
+                                              {{item.Remarks}}
+                                              <!-- <input id="Remarks" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" class="form-control" maxlength="100" placeholder="Remarks" (input)="onChangeGeneralRemarks(i,'Remarks',$event.target.value)" value="{{item.Remarks}}"> -->
+                                          </td>
+                                      </tr>
+
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+
+
+
+                  </div>
+              </div>
+
+              <div class="row">
+
+                  <div class="col-sm-12">
+
+
+                      <div class="qccard">
+                          <div class="qccontainer">
+                              <span class="qcheader">Bank Details</span>
+
+
+
+                              <table class="qcTable table table-bordered table-condensed ">
+                                  <thead>
+                                      <tr>
+                                          <th>Account Holder</th>
+                                          <th>Account Number | Bank Name | IFSC</th>
+                                          <th class="fitToContent">View</th>
+                                          <th class="fitToContent">Status</th>
+                                          <th class="qcRemarks">Remarks</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr *ngFor="let item of this.objCandidateQualityCheckModel.LstBankDetails ; let i = index;">
+                                          <td>
+                                              {{item.Name}}</td>
+                                          <td>
+                                              <!-- <span *ngIf="item.ObjectStorageId>0"
+                                                  (click)="openmodalpopupdocument('Bank Account Details', item)"> -->
+                                              {{item.Details}}
+                                              <!-- </span> -->
+                                          </td>
+                                          <td class="centerAlignLink"><i *ngIf="item.ObjectStorageId" tooltip="Preview" (click)="openmodalpopupdocument('Bank Account Details', item,'Account Number | Bank Name | IFSC')" class="fa fa-external-link"></i></td>
+
+                                          <td class="centerAlign" class="font-col">
+                                              <!-- {{item.ApprovalStatus}} -->
+                                              <span class="badge badge-warning" *ngIf="item.ApprovalStatus == 0">
+                                                  {{ApprovalStatusEnumValues[item.ApprovalStatus]}}</span>
+                                              <span class="badge badge-danger" *ngIf="item.ApprovalStatus == 2">
+                                                  {{ApprovalStatusEnumValues[item.ApprovalStatus]}}</span>
+                                              <span class="badge badge-success" *ngIf="item.ApprovalStatus == 1">
+                                                  {{ApprovalStatusEnumValues[item.ApprovalStatus]}}</span>
+
+                                              <!-- <label class="switch">
+                                                                  <input formcontrolname="chkMyReqOnly" type="checkbox"
+                                                                      (input)="onChangeBankDetailsApprovalStatus(i,'ApprovalStatus',$event )"
+                                                                      value="{{item.ApprovalStatus}}">
+                                                                  <span class="slider round"></span>
+                                                              </label> -->
+                                          </td>
+                                          <td>
+                                              {{item.Remarks}}
+                                              <!-- <input id="Remarks" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" class="form-control" maxlength="100" placeholder="Remarks" (input)="onChangeBankDetailsRemarks(i,'Remarks',$event.target.value)" value="{{item.Remarks}}"> -->
+                                          </td>
+                                      </tr>
+
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+
+
+                  </div>
+              </div>
+
+              <div class="row">
+
+                
+                  <div class="col-sm-12">
+
+
+                      <div *ngIf="objCandidateQualityCheckModel" class="qccard">
+                          <div class="qccontainer">
+                              <span class="qcheader"> Overall Remarks
+
+                                  <!-- <label class="switch" style="margin-top: 6px">
+                                      <input formcontrolname="chkApproved"
+                                          [(ngModel)]="objCandidateQualityCheckModel.OverallApprovalStatus"
+                                          type="checkbox">
+                                      <span class="slider round"></span>
+                              </label> Approve Request -->
+                              </span>
+
+
+                              <textarea style="margin-top: 1rem; margin-bottom:1rem;" class="form-control" rows="5" spellcheck="true" name="OverallRemarks" [(ngModel)]="objCandidateQualityCheckModel.OverallRemarks" placeholder="Overall Remarks" autocomplete="off">
+                                          </textarea>
+                              <!-- onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" -->
+                          </div>
+                      </div>
+
+                  </div>
+
+              </div>
+
+
+
+
+          </div>
+      </div>
+
+  </div>
+</div>
+
+<div id="modaldocumentviewer" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modaldocumentviewer" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+
+              <div class="col-md-8">
+                  <h4 class="modal-title" id="modaldocumentviewer">{{currentModalHeading}} - {{ApprovalStatusEnumValues[currentModalItem?.ApprovalStatus]}}
+                  </h4>
+                  <div class="form-group">
+                      <small class="form-text text-muted">
+                          {{currentModalDetailsFormat}}
+                      </small>
+                      <label class="form-text text-muted">
+                          {{currentModalItem?.Details}}
+                      </label>
+                  </div>
+              </div>
+              <div class="col-md-4" style="top: 13px;">
+                  <a class="icon btn-icon pull-right m-l-n-xxxl chrome-back-btn m-t-n-sm" data-dismiss="modal" (click)="clearUrl()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+                  <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                      <app-filedownload [documentId]="currentModalItem?.ObjectStorageId">
+                      </app-filedownload>
+                  </div>
+
+                  <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearUrl()"><span aria-hidden="true">&times;</span></button> -->
+              </div>
+
+
+
+          </div>
+          <div class="modal-body">
+              <!--  <div class="row">
+                 
+                 <div class="col-md-12">
+                      <div class="form-group">
+                          <label>Remarks </label>
+                          <small class="form-text text-muted">
+                              {{objCandidateQualityCheckModel?.ClientName}}
+                          </small>
+                      </div>
+                  </div> 
+                  
+              </div>-->
+
+              <!-- <div class="row">
+                  <iframe style="width: 100%;min-height: 400px" src='../../../../assets/Images/fileloader.gif'
+                      [src]="contentmodalurl"></iframe></div> -->
+
+              <!-- <div class="wrapper"> -->
+              <div class="iframe-container" *ngIf="contentmodalurl == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                  <img src="assets/Images/clientlogo/{{clientminiLogoLink}}">
+                  <span>
+                      <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                          &nbsp; Please wait...</i>
+                      <span class="sr-only">Please wait...</span>
+                  </span>
+              </div>
+
+              <div class="iframe-container" *ngIf="contentmodalurl != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+                  <iframe [src]="contentmodalurl" frameborder="0" scrolling="yes"></iframe>
+                  <img style="top: 0 !important;
+                  right: 0px !important;
+                  position: absolute !important;
+                  z-index: 9;
+                  height: 55px !important;
+                  vertical-align: top;
+                  opacity: inherit;
+                  bottom: unset !important;
+                  left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientLogoLink}}">
+              </div>
+          </div>
+          <!-- </div> -->
+
+
+
+
+          <div class="modal-footer">
+              <div class="col-md-9">
+                  <div *ngIf="currentModalItem" class="form-group">
+                      <small class="form-text text-muted">Remarks</small>
+                      <div *ngIf="currentModalItem.RejectionRemarks != undefined">
+                          <label>{{currentModalItem.Remarks}}</label>
+                          <textarea rows="2" style="width: 100%; border-radius: 3px;" [(ngModel)]="currentModalItem.RejectionRemarks"></textarea>
+                      </div>
+                      <div *ngIf="currentModalItem.RejectionRemarks == undefined">
+                          <textarea rows="2" style="width: 100%; border-radius: 3px;" [(ngModel)]="currentModalItem.Remarks"></textarea>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-3" style="padding-left:0px;padding-right:0px;">
+                  <!-- <button type="button" class="btn upgrade-btn" [disabled]="!disableBtn"
+                      (click)="doSaveOrSubmit('Approve')"> <i
+                          class="mdi mdi-checkbox-marked-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i> Approve
+                  </button>
+                  <button type="button" class="btn btn-danger" [disabled]="!disableBtn"
+                  (click)="doSaveOrSubmit('Reject')"> <i
+                      class="mdi mdi-checkbox-marked-circle  m-r-xs" style="margin-top:3rem;"></i> Reject
+              </button> -->
+                  <button class="btn btn-default btn-sm" (click)="validateDocument(true)">
+                      <i class="mdi mdi-checkbox-marked-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+                      Approve</button> &nbsp;
+                  <button class="btn btn-default btn-sm" (click)="validateDocument(false)">
+                      <i class="mdi mdi-close-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+                      Reject&nbsp;</button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+<div id="popup_preview_ctc" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_preview_ctc" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+      <div class="modal-dialog modal-sm modal-dialog-centered" style="max-width: 800px !important">
+          <div class="modal-content">
+              <div class="modal-header" style="padding: 15px !important;">
+                  <h4 class="modal-title pull-left">Preview CTC</h4>
+
+                  <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="modal_dismiss()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+              </div>
+
+
+              <div class="modal-body" style="overflow-y: scroll !important;">
+                  <div class="row">
+
+
+                      <div class="col-12">
+                          <table class="table table-bordered table-container">
+                              <thead>
+                                  <tr class="document_table_tr">
+                                      <th scope="col" style="width: 40%; text-align: left!important">Product Code</th>
+                                      <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+                                      <th scope="col" style="width: 20%;text-align: center">Annually</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr *ngFor="let item of this.objCandidateQualityCheckModel.LstRateSet" [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                                      <td>
+                                          {{item.DisplayName}}
+                                      </td>
+
+                                      <td style="text-align:right">
+                                          {{item.Value}}
+                                      </td>
+
+                                      <td style="text-align:right">
+                                          {{getAnnualValue(item.Value)}}
+                                      </td>
+
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<div id="popup_previewLetter" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_previewLetter" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+
+              <!-- <div class="modal-body"> -->
+              <div class="wrapper">
+                  <h6 class="h6-c"> Preview Letter
+
+                      <a class="icon btn-icon pull-right m-l-n-xxxl chrome-back-btn m-t-n-sm" data-dismiss="modal" (click)="modal_dismiss_letter()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+                  </h6>
+                  <!-- <p>Resize me in your browser or pull me up in different size screen to see the magic of the <a href="https://benmarshall.me/resize-videos-proportionally-intrinsic-ratios/">intrinsic ratio technique</a>.</p> -->
+                  <div class="iframe-container" *ngIf="iframeContent == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                      <img src="assets/Images/clientlogo/{{clientminiLogoLink}}" class="imgc">
+                      <span>
+                              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                                  &nbsp; Please wait...</i>
+                              <span class="sr-only">Please wait...</span>
+                      </span>
+                  </div>
+
+                  <div class="iframe-container" *ngIf="iframeContent != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+                      <iframe [src]="iframeContent" frameborder="0" scrolling="no"></iframe>
+                  </div>
+              </div>
+              <!-- </div> -->
+
+          </div>
+      </div>
+  </div>
+</div>

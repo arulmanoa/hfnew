@@ -1,0 +1,558 @@
+/* Arrow & Hover Animation */
+
+.GridViewScrollHeader TH,
+.GridViewScrollHeader TD {
+  padding: 10px;
+  font-weight: normal;
+  white-space: nowrap;
+  border-right: 1px solid #d3d3d3;
+  border-bottom: 1px solid #d3d3d3;
+  border-top: 1px solid #d3d3d3;
+  border-left: 1px solid #d3d3d3;
+
+  background-color: #f4f4f4;
+  color: #000;
+  text-align: left;
+  vertical-align: bottom;
+  font-family: verdana, sans-serif;
+}
+
+.GridViewScrollItem TD {
+  padding: 10px;
+  white-space: nowrap;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  background-color: #ffffff;
+  font-family: verdana, sans-serif;
+  color: #000;
+}
+
+.GridViewScrollItemFreeze TD {
+  padding: 10px;
+  white-space: nowrap;
+  border-right: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  background-color: #fafafa;
+  border-bottom: 1px solid #d3d3d3;
+  border-left: 1px solid #d3d3d3;
+  color: #000;
+  font-family: verdana, sans-serif;
+}
+
+.GridViewScrollFooterFreeze TD {
+  padding: 10px;
+  white-space: nowrap;
+  border-right: 1px solid #e6e6e6;
+  border-top: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  background-color: #f4f4f4;
+  font-family: verdana, sans-serif;
+
+  color: #000;
+}
+
+.help-text {
+  font-style: italic;
+  color: #afb0b3;
+  letter-spacing: 0.2px;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.m-l-5 {
+  margin-left: 5px !important;
+}
+
+// ::ng-deep .gvMain_Header {
+//   width: 100% !important;
+// }
+// ::ng-deep .gvMain_Header_Fixed {
+//   width: 100% !important;
+// }
+// ::ng-deep  .gvMain_Content_Fixed {
+//   width: 100% !important;
+// }
+// ::ng-deep .gridViewScrollHelper {
+
+// width: 100px;
+//     // text-align: center;
+// }
+
+// th {
+//   border: 1px solid #000;
+//   width: 100px;
+// }
+// th {background-color:white;}
+
+// table {
+//   table-layout: fixed;
+//   width:100%;
+// }
+// tr th {
+//   background-color: #42A5F5;
+// }
+// td:first-child, th:first-child {
+//   position:sticky;
+//   left:0;
+//   z-index:1;
+//   background-color:grey;
+// }
+// // td:last-child, th:last-child {
+// //   position:sticky;
+// //   right:0;
+// //   z-index:1;
+// //   background-color:white;
+// // }
+// thead tr th {
+//   position:sticky;
+//   top:0;
+// }
+// th:first-child  {z-index:2;background-color:white;}
+
+// th:last-child
+// --- RADIO BUTTON ACTIONS --
+.cursor-pointer {
+  cursor: pointer;
+  color: #42a5f5;
+}
+
+.pic {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.card-block {
+  width: 75px;
+  border: 1px solid lightgrey;
+  border-radius: 5px !important;
+  background-color: #fafafa;
+  // margin-bottom: 30px
+}
+
+// .card-body.show {
+//   display: block
+// }
+
+// .card {
+//   padding-bottom: 20px;
+//   box-shadow: 2px 2px 6px 0px rgb(200, 167, 216)
+// }
+
+.radio {
+  display: inline-block;
+  border-radius: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  color: #000;
+  font-weight: 500;
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
+.radio:hover {
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.radio.selected {
+  box-shadow: 0px 8px 16px 0px #eeeeee;
+  -webkit-filter: grayscale(0%);
+  -moz-filter: grayscale(0%);
+  -o-filter: grayscale(0%);
+  -ms-filter: grayscale(0%);
+  filter: grayscale(0%);
+  border-color: #75a5ce;
+}
+
+.selected {
+  background-color: #e0f2f1;
+}
+
+.a {
+  justify-content: center !important;
+}
+.p-0 {
+  padding: 0px;
+}
+
+// @media screen and (max-width: 600px) {
+//   .divider {
+//     margin-left: 5px;
+//     padding-left: 5px;
+//     border-left: none !important;
+//   }
+// }
+.divider {
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 1px solid #cdd4e0; 
+}
+
+div#stripes {
+  $color1: #ccc;
+  $color2: #eee;
+  $stripeWidth: 8px;
+  $stripeDutyCycle: 0.4;
+  $stripeDiagonal: 1.414 * $stripeWidth;
+  background-size: 2 * $stripeDiagonal 2 * $stripeDiagonal;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    $color1,
+    $color1 2 * $stripeWidth * $stripeDutyCycle,
+    $color2 2 * $stripeWidth * $stripeDutyCycle,
+    $color2 2 * $stripeWidth
+  );
+  padding: 10px;
+  // margin: 0;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.tab_name {
+  font-size: 12px;
+  padding-left: 10px;
+}
+.btn {
+  font-size: 12px;
+  font-weight: 800 !important;
+}
+.btn i {
+  font-size: 14px;
+}
+
+.label_ct {
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+.fontsz75 {
+  font-size: 0.75rem;
+}
+
+// ATTENDANCE CYLE LIST - CARD CUSTOM DESIGNS
+.card-w {
+  // width: 12rem;
+  margin-left: 8px;
+  margin-right: 8px;
+  border-radius: 0px;
+  cursor: pointer;
+}
+
+.card-head {
+  background: transparent;
+  padding: 5px;
+  border: none;
+  font-size: 12px;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.card-bdy {
+  padding: 0px;
+}
+.card-bdy-h6 {
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+}
+.card-bdy-p {
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+// DEEP STYLE UP IN OWL CAROUSEL
+::ng-deep .owl-stage-outer {
+  margin-right: -1px;
+}
+::ng-deep .owl-nav {
+  margin-top: -55px;
+  margin-bottom: 35px;
+}
+::ng-deep .owl-prev {
+  display: block;
+  margin-left: -10px;
+  float: left;
+}
+::ng-deep .owl-next {
+  display: block;
+  float: right;
+  margin-right: -12px;
+}
+
+// ::ng-deep .owl-item  {
+//   width: 298.667px !important;
+// }
+
+.txt {
+
+}
+.txt:hover {
+  text-decoration: underline;
+}
+
+
+.table {
+  font-size: 12px;
+}
+
+.table tr td {
+  height: 10px;
+  width: 10px;
+}
+
+tr {
+  line-height: 19px;
+  min-height: 20px;
+  height: 20px;
+  // font-weight: 600;
+}
+
+.left-margin-btn {
+  margin: 0 auto;
+  margin-left: 0px;
+}
+
+.table td {
+  padding: .25rem;
+}
+
+.table-td-center {
+  vertical-align: middle !important;
+}
+
+.cal-header  {
+  font-weight: 400 !important;
+}
+
+
+
+.rtable {
+  /*!
+  // IE needs inline-block to position scrolling shadows otherwise use:
+  // display: block;
+  // max-width: min-content;
+  */
+  display: inline-block;
+  vertical-align: top;
+  max-width: 100%;
+  
+  overflow-x: auto;
+  
+  // optional - looks better for small cell values
+  white-space: nowrap;
+
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.rtable,
+.rtable--flip tbody {
+  // optional - enable iOS momentum scrolling
+  -webkit-overflow-scrolling: touch;
+  
+  // scrolling shadows
+  background: radial-gradient(left, ellipse, rgba(0,0,0, .2) 0%, rgba(0,0,0, 0) 75%) 0 center,
+              radial-gradient(right, ellipse, rgba(0,0,0, .2) 0%, rgba(0,0,0, 0) 75%) 100% center;
+  background-size: 10px 100%, 10px 100%;
+  background-attachment: scroll, scroll;
+  background-repeat: no-repeat;
+}
+
+// change these gradients from white to your background colour if it differs
+// gradient on the first cells to hide the left shadow
+.rtable td:first-child,
+.rtable--flip tbody tr:first-child {
+  // background-image: linear-gradient(to right, rgba(255,255,255, 1) 50%, rgba(255,255,255, 0) 100%);
+  background-repeat: no-repeat;
+  background-size: 20px 100%;
+  background: #f0efef;
+}
+
+// gradient on the last cells to hide the right shadow
+.rtable td:last-child,
+.rtable--flip tbody tr:last-child {
+  background-image: linear-gradient(to left, rgba(255,255,255, 1) 50%, rgba(255,255,255, 0) 100%);
+  background-repeat: no-repeat;
+  background-position: 100% 0;
+  background-size: 20px 100%;
+}
+
+.rtable th {
+  font-size: 11px;
+  text-align: left;
+  // text-transform: uppercase;
+  background: #f2f0e6;
+}
+
+.rtable th,
+.rtable td {
+  padding: 5px 12px;
+  border: 1px solid #d9d7ce;
+}
+
+.rtable--flip {
+  display: flex;
+  overflow: hidden;
+  background: none;
+}
+
+.rtable--flip thead {
+  display: flex;
+  flex-shrink: 0;
+  min-width: min-content;
+}
+
+.rtable--flip tbody {
+  display: flex;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.rtable--flip tr {
+  display: flex;
+  flex-direction: column;
+  min-width: min-content;
+  flex-shrink: 0;
+}
+
+.rtable--flip td,
+.rtable--flip th {
+  display: block;
+}
+
+.rtable--flip td {
+  background-image: none !important;
+  // border-collapse is no longer active
+  border-left: 0;
+}
+
+// border-collapse is no longer active
+.rtable--flip th:not(:last-child),
+.rtable--flip td:not(:last-child) {
+  border-bottom: 0;
+}
+
+/*!
+// CodePen house keeping
+*/
+
+body {
+  margin: 0;
+  padding: 25px;
+  // color: #494b4d;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+// h1, h2, h3 {
+//   margin: 0 0 10px 0;
+//   color: #1d97bf;
+// }
+
+// h1 {
+//   font-size: 25px;
+//   line-height: 30px;
+// }
+
+// h2 {
+//   font-size: 20px;
+//   line-height: 25px;
+// }
+
+// h3 {
+//   font-size: 16px;
+//   line-height: 20px;
+// }
+
+table {
+  margin-bottom: 30px;
+}
+
+a {
+  color: #3d75ee;
+}
+
+code {
+  background: #fffbcc;
+  font-size: 12px;
+}
+.table th,
+.table td {
+  padding: 10px 10px;
+ 
+  vertical-align: top;
+}
+
+
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+.intro {
+  max-width: 100% !important;
+  margin: 1em auto;
+}
+.table-scroll {
+  position: relative;
+  width:100%;
+  z-index: 1;
+  margin: auto;
+  overflow: auto;
+  height: 350px;
+  overflow-x: hidden;
+}
+.table-scroll table {
+  width: 100%;
+  min-width: 100% !important;
+  margin: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.table-wrap {
+  position: relative;
+}
+.table-scroll th,
+.table-scroll td {
+  padding: 10px 10px;
+ 
+  vertical-align: top;
+}
+.table-scroll thead th {
+ 
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+/* safari and ios need the tfoot itself to be position:sticky also */
+.table-scroll tfoot,
+.table-scroll tfoot th,
+.table-scroll tfoot td {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+ 
+  z-index:4;
+}
+
+// thead, tr {
+//   display:table;
+//   width:100%; 
+//   table-layout:fixed;
+// }
+// thead {
+//   // width: calc( 100% - 1em )
+// }
+// table.tableBodyScroll tbody {
+// display: block;
+// max-height: 350px;
+// overflow-y: scroll;
+// }
+
+// table.tableBodyScroll thead, table.tableBodyScroll tbody tr {
+// display: table;
+// width: 100%;
+// table-layout: fixed;
+// }

@@ -1,0 +1,298 @@
+<div class="tableWrapper backgroundsvg">
+  <!-- <button class="btn btn-primary" (click)="saveTEMP()">Save Temp</button> -->
+
+  <div class="row" *ngIf="beforeSkeleton">
+    <div class="col-lg-6">
+      <br>
+      <div class="loading">
+        <div class="bar" style="width: 30%;"></div>
+      </div>
+      <br>
+    </div>
+    <div class="col-lg-6">
+      <!-- <div class="loading">
+        <div class="bar" style="width: 40%;float: right;"></div>
+      </div> -->
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!beforeSkeleton">
+    <div class="col-lg-6">
+      <br>
+      <h5><b>Product Billing Configuration</b></h5>
+      <br>
+    </div>
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-3">
+      <label class="form-label">Search : </label>
+      <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+        placeholder=" Start searching for a products">
+
+      <!-- <div class="loading">
+        <div class="bar" style="width: 40%;float: right;"></div>
+      </div> -->
+    </div>
+  </div>
+
+  <table class="table tableBodyScroll">
+    <thead>
+      <tr>
+        <th style="width: 15%;">Product</th>
+        <th style="width: 8%;">Is Billable</th>
+        <th style="width: 12%;">Is Bill. On Actual</th>
+        <th style="width: 15%;">Billing Product</th>
+        <th style="width: 12%;">Is MarkUp App.</th>
+        <th style="width: 14%;">Is Product Wise M.</th>
+        <th style="width: 12%;">Markup Type</th>
+        <th style="width: 10%;">Markup Value</th>
+        <th style="Width: 12%">Bill Type</th>
+        <th style="Width: 12%">Markup Bill Type</th>
+        <th style="Width: 14%">Service Tax Bill Type</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="beforeSkeleton">
+
+      <tr *ngFor="let number of [0,1,2,3]">
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar_checkbox"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar_checkbox"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar_checkbox"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar_checkbox"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+      </tr>
+
+    </tbody>
+
+    <tbody *ngIf="!beforeSkeleton">
+      <tr *ngFor="let item of productList | filter_custom:searchText;trackBy: trackByFn; let i = index "
+        (change)="onChangeProducts(item, i)">
+        <td class="p-t-14" style="width: 15%;font-weight: 600;
+        font-size: 13px;">
+          {{item.Name}}
+
+        </td>
+        <td class="p-t-14 cenr" style="width: 8%;">
+          <div class="custom-control custom-checkbox chkbox_custom">
+            <input type="checkbox" class="custom-control-input" id="isbillable_{{item.Name}}"
+              [(ngModel)]="item.isBillable" [ngModelOptions]="{standalone:
+            true}">
+            <label class="custom-control-label" for="isbillable_{{item.Name}}"></label>
+          </div>
+        </td>
+        <td class="p-t-14 cenr" style="width: 12%;">
+          <div class="custom-control custom-checkbox chkbox_custom" *ngIf="item.isBillable">
+            <input type="checkbox" class="custom-control-input" id="isbillableActual_{{item.Name}}"
+              [(ngModel)]="item.isBillableOnActual" [ngModelOptions]="{standalone:true}">
+            <label class="custom-control-label" for="isbillableActual_{{item.Name}}"></label>
+          </div>
+          <div class="cenr" *ngIf="!item.isBillable"> --- </div>
+        </td>
+        <td style="width: 15%;">
+          <div class="column-body responsible-user-block" *ngIf="item.isBillable">
+            <ng-select [items]="item.billableProductList" (change)="onChangeBillableProduct(item, $event, i)"
+              placeholder="select an option" bindLabel="Name" bindValue="ProductId"
+              [(ngModel)]="item.billableProductName == 0 ? null : item.billableProductName ">
+            </ng-select>
+
+          </div>
+          <div class="p-t-14 cenr" *ngIf="!item.isBillable"> --- </div>
+        </td>
+        <td class="p-t-14 cenr" style="width: 12%;">
+          <div class="custom-control custom-checkbox chkbox_custom" *ngIf="item.isBillable">
+            <input type="checkbox" class="custom-control-input" id="ismarkup_{{item.Name}}"
+              [(ngModel)]="item.isMarkupApplicable" [ngModelOptions]="{standalone:true}">
+            <label class="custom-control-label" for="ismarkup_{{item.Name}}"></label>
+          </div>
+          <div class="cenr" *ngIf="!item.isBillable"> --- </div>
+        </td>
+        <td class="p-t-14 cenr" style="width: 14%;">
+          <div class="custom-control custom-checkbox chkbox_custom" *ngIf="item.isMarkupApplicable && item.isBillable">
+            <input type="checkbox" class="custom-control-input" id="isproductwise_{{item.Name}}"
+              [(ngModel)]="item.isProductWiseMarkup" [ngModelOptions]="{standalone:true}">
+            <label class="custom-control-label" for="isproductwise_{{item.Name}}"></label>
+          </div>
+          <div class="cenr" *ngIf="!item.isMarkupApplicable"> --- </div>
+        </td>
+        <td style="width: 12%;">
+          <div class="column-body responsible-user-block"
+            *ngIf="item.isProductWiseMarkup && item.isBillable && item.isMarkupApplicable">
+            <ng-select [items]="Lstmarkuptype" [(ngModel)]=item.markupType placeholder="select an option"
+              bindLabel="name" bindValue="id" (change)="onChangeProducts(item, i)">
+            </ng-select>
+          </div>
+          <div class="p-t-14 cenr" *ngIf="!item.isProductWiseMarkup"> --- </div>
+        </td>
+        <td style="width: 10%;">
+          <div *ngIf="item.isProductWiseMarkup && item.isBillable && item.isMarkupApplicable">
+            <input class="form-control" [(ngModel)]=item.markupValue name="scoringValue" placeholder="Markup Value"
+              type="text" autocomplete="off">
+          </div>
+          <div class="cenr" *ngIf="!item.isProductWiseMarkup"> --- </div>
+        </td>
+        <td style="width: 12%">
+          <div class="column-body responsible-user-block" *ngIf="item.isBillable">
+            <ng-select [items]="billList" (change)="onChangeBillType(item, $event, i)" placeholder="select an option"
+              bindLabel="name" bindValue="id" [(ngModel)]="item.billType">
+            </ng-select>
+          </div>
+        </td>
+        <td style="width: 12%">
+          <div class="column-body responsible-user-block" *ngIf="item.isBillable">
+            <ng-select [items]="markupBillList" (change)="onChangeMarkType(item, $event, i)"
+              placeholder="select an option" bindLabel="name" bindValue="id" [(ngModel)]="item.markupBillType">
+            </ng-select>
+          </div>
+        </td>
+        <td style="width: 12%">
+          <div class="column-body responsible-user-block" *ngIf="item.isBillable">
+            <ng-select [items]="serviceTaxBillList" (change)="onChangeServiceTax(item, $event, i)"
+              placeholder="select an option" bindLabel="name" bindValue="id" [(ngModel)]="item.serviceTaxBillType">
+            </ng-select>
+          </div>
+        </td>
+      </tr>
+
+
+    </tbody>
+  </table>
+</div>
+
+<!-- 
+
+<table class="table table-condensed" style="border-collapse:collapse;">
+
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>Field Set</th>
+      <th>Field Type</th>
+      <th>Operator</th>
+      <th>Value</th>
+      <th>Grouping</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-toggle="collapse" data-target="#demo1" class="accordion-toggle">
+      <td><span class="fa fa-plus-square-o"></span></td>
+      <td>Team</td>
+      <td>Sting</td>
+      <td>3</td>
+      <td>[1,2,4]</td>
+      <td>1</td>
+
+    </tr>
+    <tr>
+      <td colspan="12" class="hiddenRow">
+        <div class="accordian-body collapse" id="demo1">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <td><a href="WorkloadURL">Workload link</a></td>
+                <td>Bandwidth: Dandwidth Details</td>
+                <td>OBS Endpoint: end point</td>
+              </tr>
+              <tr>
+                <th>Access Key</th>
+                <th>Secret Key</th>
+                <th>Status </th>
+                <th> Created</th>
+                <th> Expires</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>access-key-1</td>
+                <td>secretKey-1</td>
+                <td>Status</td>
+                <td>some date</td>
+                <td>some date</td>
+                <td><a href="#" class="btn btn-default btn-sm">
+                    <i class="glyphicon glyphicon-cog"></i></a></td>
+              </tr>
+
+
+
+            </tbody>
+          </table>
+
+        </div>
+      </td>
+    </tr>
+
+    <tr data-toggle="collapse" data-target="#demo2" class="accordion-toggle">
+      <td><span class="fa fa-plus-square-o"></span></td>
+      <td>Employee</td>
+      <td>Number</td>
+      <td>2</td>
+      <td>[1,2,4]</td>
+      <td>2</td>
+
+    </tr>
+    <tr>
+      <td colspan="12" class="hiddenRow">
+        <div class="accordian-body collapse" id="demo2">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <td><a href="WorkloadURL">Workload link</a></td>
+                <td>Bandwidth: Dandwidth Details</td>
+                <td>OBS Endpoint: end point</td>
+              </tr>
+              <tr>
+                <th>Access Key</th>
+                <th>Secret Key</th>
+                <th>Status </th>
+                <th> Created</th>
+                <th> Expires</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>access-key-1</td>
+                <td>secretKey-1</td>
+                <td>Status</td>
+                <td>some date</td>
+                <td>some date</td>
+                <td><a href="#" class="btn btn-default btn-sm">
+                    <i class="glyphicon glyphicon-cog"></i></a></td>
+              </tr>
+
+
+
+            </tbody>
+          </table>
+
+        </div>
+      </td>
+    </tr>
+  </tbody> -->

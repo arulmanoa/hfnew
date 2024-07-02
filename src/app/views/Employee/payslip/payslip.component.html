@@ -1,0 +1,161 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="row" style="margin-bottom: 10px;margin-top: -15px;">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left">
+          <h1 class="vss-HubTitle">
+            <div class="vss-HubTitle--titleText" style="margin-top: 20px;">Pay Slip</div>
+          </h1>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+         
+        </div>
+      </div>
+
+    </div>
+    <div class="content m-b report-content int-header-content-panel">
+
+      <div class="row">
+
+        <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-3 col-md-3">
+          <label class="form-label searchbar-label">Employee Code *</label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <input type="text" placeholder="Employee Code"  class="form-control"
+                [(ngModel)]="empCode" style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div style="float: right;  margin-top: -3rem;">
+        <button class="btn btn-primary btn-sm" (click)="onSearch()" style="margin-top: -5px;margin-right: 10px;">
+          <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+        </button>
+
+        <button class="btn btn-default btn-bold" style="margin-top: -5px;" (click)="onClear()" data-original-title=""
+          title="">
+          <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+        </button>
+      </div>
+
+
+
+      <div class="row" *ngIf="!spinner && LstPaymentHistory.length > 0">
+        <!-- <div class="col-lg-12"> -->
+
+
+
+        <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-3 col-md-3">
+          <label class="form-label searchbar-label">Payment Type</label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <ng-select [items]="processCategoryList" placeholder="-- select an option --"
+                [(ngModel)]="selctedProcesscategoryId" [ngModelOptions]="{standalone: true}" bindLabel="name"
+                bindValue="id" (change)="onChangeProcessCategory($event)"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+              </ng-select>
+
+
+            </div>
+          </div>
+        </div>
+        <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-3 col-md-3">
+          <label class="form-label searchbar-label">Year</label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <ng-select [items]="yearrangeList" [searchable]="true" [(ngModel)]="selectedyear"
+                [ngModelOptions]="{standalone: true}" placeholder="Year" bindLabel="label" bindValue="value"
+                (change)="onChangeYearOfPayment($event)"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+              </ng-select>
+            </div>
+          </div>
+
+        </div>
+        <!-- </div> -->
+        <!-- <div class="col-lg-6"> -->
+        <!-- <button class="btn btn-default p-l-30 p-r-30 text-right"  type="button" style="font-size:14px" (click)="downloadAllPayslip()">
+                <span class="mdi mdi-arrow-collapse-down primary-color" role="status" aria-hidden="true"></span>
+               Download All
+             </button> -->
+
+
+
+        <!-- </div> -->
+      </div>
+      <br />
+
+
+      <div class="row" *ngIf="!spinner && paginateData_PaymentHistory.length == 0">
+        <div class="col-lg-12 text-center"><b class="text-center">No records found!</b></div>
+      </div>
+      <div class="row" *ngIf="!spinner && paginateData_PaymentHistory.length > 0">
+        <div class="col-lg-6" *ngFor="let item of paginateData_PaymentHistory">
+          <div class="card card2" style="padding: 10px;">
+
+            <div class="row">
+
+              <div class="col-md-12" style="padding-left: 30px; margin-bottom: 10px;">
+                <!-- <div class="row" *ngIf="employeedetails.LstemploymentDetails.length == 0"><div class="col-12"><b class="center">No records found!</b></div></div> -->
+                <h6 class="city"
+                  style="    font-weight: 700;letter-spacing: 1px;margin-bottom: 0px !important;display: inline-block;">
+                  {{item.PayPeriodName}} </h6>
+
+                <br>
+                <span class="description" style="font-size: 12px; font-weight: 600;letter-spacing: 1px;">
+                  ₹ {{item.NetPay | number : '1.2-2'}} &nbsp; - &nbsp; Payment Date : {{item.PaymentDate}} </span>
+                <!-- <span *ngIf="item.TransactionRemarks">| {{item.TransactionRemarks}} </span> -->
+
+                <button (click)="downloadPaySlip(item)" type="button" *ngIf="item.ProcessCategoryId == 1"
+                  class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                  style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;float: right;margin-top: -22px !important;"><span><i
+                      class="fa fa-download" aria-hidden="true" style="padding-right: 5px;"></i>Download
+                    Payslip</span></button>
+              </div>
+
+            </div>
+            <div class="row">
+
+
+              <div class="col-md-4">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label">Bank Name<span class="required"></span></label>
+                  <p class="date">{{item.BankName }}</p>
+
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label">IFSC Code<span class="required"></span></label>
+                  <p class="date">{{item.IFSCcode}}</p>
+
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label">Account Number<span class="required"></span></label>
+                  <p class="date">{{item.AccountNumber}}</p>
+
+                </div>
+              </div>
+
+              <hr>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <br/>
+      <ngb-pagination *ngIf="!spinner && paginateData_PaymentHistory.length > 0" [collectionSize]="collectionSize"
+        [(page)]="page" [pageSize]="pageSize" (pageChange)="getPremiumData();">
+      </ngb-pagination>
+    </div>
+  </div>
+
+</div>

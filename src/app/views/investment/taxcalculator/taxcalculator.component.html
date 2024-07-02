@@ -1,0 +1,552 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;">
+        <div *ngIf="RedirectPage == 'FBP'">
+          <app-loading-screen></app-loading-screen>
+        </div>
+
+        <div class="" style="font-family: 'Roboto';
+font-style: normal;">
+          <div class="">
+
+            <!-- <app-loading-screen></app-loading-screen> -->
+
+
+            <div class="d-flex align-items-center" *ngIf="spinner" style=" margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);">
+              <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+
+
+            <div class="" style="margin-top: -20px;
+    padding: 0px !important;
+    margin-left: -10px;" *ngIf="!spinner && employeedetails">
+
+              <div class="row">
+
+                <!-- --- left side container ----  -->
+
+                <div class="col-lg-7" style="padding-top: 1rem;padding-left: 2rem;">
+
+                  <!-- ---------- header text and close  -------------  -->
+                  <div class="row">
+                    <div class="col-md-12" style="padding: 3px;">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <h3 class="header_lable">Tax Calculator</h3>
+
+                          <h6 class="small" style="
+                  font-size: 12px;
+                  font-weight: 500;
+                  color: #000;margin-top: 10px;margin-left: 3px;
+                  margin-top: 16px; text-overflow: ellipsis;
+  overflow: hidden; 
+  width: 160px; 
+
+  white-space: nowrap;">{{employeedetails.FirstName}}</h6>
+                          <h6 class="small" style="line-height: 2px;
+ font-size: 12px;
+ font-weight: 500;
+ color: #000;margin-top: 10px;margin-left: 3px;
+ margin-top: 16px;"> ( {{employeedetails.Code}} )</h6>
+
+                        </div>
+
+                        <div class="col-md-3 text-center">
+                          <h6 class="small" style="line-height: 2px;
+                      font-size: 12px;
+                      font-weight: 500;
+                      color: #b7b5b5;
+                      margin-top: 16px;">Financial Year</h6>
+                          <h3
+                            style="font-size: 12px;font-weight: 500;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;margin-top: 10px;">
+                            {{FinancialYearDescription}}</h3>
+
+                        </div>
+                        <div class="col-md-3 text-center">
+                          <h6 class="small" style="line-height: 2px;
+                      font-size: 12px;
+                      font-weight: 500;
+                      color: #b7b5b5;
+                      margin-top: 16px;">Chosen Regime</h6>
+                          <h3
+                            style="font-size: 12px;font-weight: 500;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;margin-top: 10px;">
+                            {{TaxRegimeName}}</h3>
+
+                        </div>
+                        <div class="col-md-3 text-center">
+                          <h6 class="small" style="line-height: 2px;
+                      font-size: 12px;
+                      font-weight: 500;
+                      color: #b7b5b5;
+                      margin-top: 16px;">City</h6>
+                          <h3
+                            style="font-size: 12px;font-weight: 500;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;margin-top: 10px;">
+                            {{CityName}} </h3>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <hr style="margin-top: 16px;margin-bottom: 16px;" />
+                  <div class="row">
+
+
+                    <div class="col-md-3 text-center">
+                      <h6 class="small" style="line-height: 2px;
+                      font-size: 12px;
+                      font-weight: 500;
+                      color: #b7b5b5;
+                      margin-top: 16px;">Gross Salary</h6>
+                      <h3
+                        style="font-size: 12px;font-weight: 500;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;margin-top: 10px;">
+                        {{TotalGrossSalary |
+                        currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+
+                    </div>
+                    <div class="col-md-3 text-center">
+                      <h6 class="small" style="line-height: 2px;
+                      font-size: 12px;
+                      font-weight: 500;
+                      color: #b7b5b5;
+                      margin-top: 16px;">Total Exemptions</h6>
+                      <h3
+                        style="font-size: 12px;font-weight: 500;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;margin-top: 10px;">
+                        {{TotalExemptions |
+                        currency:'INR':'symbol-narrow':'1.2-2'}} &nbsp; <i *ngIf="exemptionTaxItems.length > 0"
+                          class="fa fa-info-circle" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+                          placement="bottom" triggers="mouseenter:mouseleave"></i>
+                      </h3>
+
+                      <ng-template #popContent let-greeting="greeting">
+                        <ul>
+                          <li style="list-style-type: none;font-size: 12px;
+                margin-bottom: 15px;color: black;
+                display: flex;" *ngFor="let exe of exemptionTaxItems; let i = index">
+                            {{i+1}}. {{exe.ProductCode}} : {{exe.Amount | currency:'INR':'symbol-narrow':'1.2-2'}}
+                          </li>
+
+                        </ul>
+                      </ng-template>
+                      <ng-template #popTitle let-language="language">
+                        <small class="small-content tab-item__subheading">Consolidated Exemption Particulars</small>
+                      </ng-template>
+
+                    </div>
+                    <div class="col-md-3 text-center">
+                      <h6 class="small" style="line-height: 2px;
+                      font-size: 12px;
+                      font-weight: 500;
+                      color: #b7b5b5;
+                      margin-top: 16px;">Total Deductions - Sec 16</h6>
+                      <h3
+                        style="font-size: 12px;font-weight: 500;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;margin-top: 10px;">
+                        {{TotalDeductions |
+                        currency:'INR':'symbol-narrow':'1.2-2'}} </h3>
+
+                    </div>
+                    <div class="col-md-3 text-center">
+                      <h6 class="small" style="line-height: 2px;
+                      font-size: 12px;
+                      font-weight: 500;
+                      color: #b7b5b5;
+                      margin-top: 16px;">Age</h6>
+
+                      <select class="form-select" [(ngModel)]="selectedAgeSlabs" style="font-size: 12px;
+                  color: black;
+                  font-weight: 500;margin-top: 16px;" (change)="onChangeAgeSlabs($event.target.value)">
+                        <option *ngFor="let age of AgeSlabs" disabled [value]="age.Id"
+                          [selected]="age.Id == selectedAgeSlabs">
+                          {{age.Name}}</option>
+                      </select>
+
+                    </div>
+
+                  </div>
+                  <hr style="margin-top: 16px;margin-bottom: 16px;" />
+
+                  <ng-container *ngFor="let item of IncomeDetailsParticulars">
+                  <div class="row"  *ngIf="item.Heads != 'Exemptions'">
+
+                    <div class="col-lg-12" style="padding-top: 5px;
+            padding-bottom: 5px;">
+                      <h3
+                        style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                        {{item.Heads}}</h3>
+                    </div>
+                    <div class="col-lg-12" *ngFor="let j of item.Child" style="margin-bottom: 5px;">
+                      <div class="row">
+                        <div class="col-lg-6" style="padding-top: 5px;
+                padding-bottom: 5px;">
+                          <h6 class="h6-content tab-item__subheading" style="margin-bottom: 0px;"> {{j.Name}} </h6>
+                          <small class="small-content tab-item__subheading">{{j.SectionDescription}}</small>
+                        </div>
+                        <div class="col-lg-6" style="padding-top: 5px;
+                padding-bottom: 5px;margin-top: -6px;">
+                          <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)"
+                            [(ngModel)]="j.Amount" name="amount" placeholder="{{j.Placeholder}}" autocomplete="off">
+                        </div>
+                        <div *ngIf="j.Limit > 0 && j.Limit > j.Amount" class="invalid-feedback">
+                          Please enter an amount equal to or less than the allowed amount. [{{j.Placeholder}}]
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+
+
+
+
+
+                </div>
+
+                <!-- ---- right side container ----  -->
+
+                <div class="col-lg-5"
+                  style="background: #FBFBFB;box-shadow: 0px 2px 6px rgb(0 0 0 / 15%);padding: 30px;">
+                  <!-- final resul of tax calculation  -->
+
+                  <div class="row">
+                    <div class="col-lg-12 text-right">
+                      <button class="btn btn-blank" matTooltip="Close" title="Close" (click)="close()">
+                        <i class="mdi mdi-close"></i></button>
+                    </div>
+                  </div> 
+
+
+                  <ng-container *ngIf="isCalculated">
+                    <div class="">
+                      <div class="row">
+
+
+                        <div class="col-lg-4 col-md-6 mb-3">
+                          <div class="">
+                            <div class="row">
+                              <div class="col-lg-12" style="padding-bottom: 5px;padding-top: 5px;padding-bottom: 10px;">
+                                <h3
+                                  style="font-size: 16px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                                  Results
+                                </h3>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card" style="visibility: hidden;">
+                            <div class="row">
+                              <div class="col-lg-12" style="padding: 5px;text-align: center;padding-bottom: 10px;">
+                                <small class="small-content tab-item__subheading c-black" style="font-weight: 700;
+                        font-size: 13px;">.</small>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" *ngFor="let prod of PayGroupResult">
+                            <div class="col-lg-12" style="padding: 5px;padding-bottom: 10px;">
+                              <small class="small-content tab-item__subheading c-black" style="font-size: 13px;"
+                                [ngClass]="prod.Prop == 'TDS' ? 'colorBlue' : 'colorBlack'">{{prod.Name}}
+                              </small>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="col-lg-4 col-md-6 mb-3">
+                          <div class="card"
+                            [ngClass]="!isRecommendedBoxRequired ? 'card_wto_shadow' :  isRecommendedOld ? 'card_wt_shadow' : 'card_wto_shadow'"
+                            [ngStyle]="{'visibility': !isRecommendedBoxRequired ? 'hidden' : isRecommendedOld  ? 'visible' : 'hidden'}">
+                            <div class="row">
+                              <div class="col-lg-12" style="padding: 5px;padding-bottom: 10px;text-align: center;">
+                                <small class="small-content tab-item__subheading c-black" style="font-weight: 700;
+                      font-size: 12px;
+                      color: white;
+                      text-transform: uppercase;">Recommended</small>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card"
+                            [ngClass]="!isRecommendedBoxRequired ? 'card_wto_shadow' : isRecommendedOld ? '' : 'card_wto_shadow'">
+                            <div class="row">
+                              <div class="col-lg-12" style="padding: 5px;padding-bottom: 10px;text-align: center;">
+                                <small class="small-content tab-item__subheading c-black" style="font-weight: 700;
+                      font-size: 13px;">Old Regime </small>
+                              </div>
+                            </div>
+                            <div class="row" *ngFor="let prod of PayGroupResult">
+                              <div class="col-lg-12" style="padding: 5px;padding-bottom: 10px;margin-left: 3rem;">
+                                <small class="small-content tab-item__subheading c-black" style="font-size: 13px;color: #4B4B4B;
+                      font-weight: 600;" [ngClass]="prod.Prop == 'TDS' ? 'colorBlue' : 'colorBlack'">{{prod.Old|
+                                  currency:'INR':'symbol-narrow':'1.2-2'}} </small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 mb-3">
+
+                          <div class="card"
+                            [ngClass]="!isRecommendedBoxRequired ? 'card_wto_shadow' :  !isRecommendedOld ? 'card_wt_shadow' : 'card_wto_shadow'"
+                            [ngStyle]="{'visibility': !isRecommendedBoxRequired ? 'hidden' : isRecommendedOld  ? 'hidden' :  'visible'}">
+                            <div class="row">
+                              <div class="col-lg-12" style="padding: 5px;padding-bottom: 10px;text-align: center;">
+                                <small class="small-content tab-item__subheading c-black" style="font-weight: 700;
+                      font-size: 12px;
+                      color: white;
+                      text-transform: uppercase;"> Recommended </small>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card"
+                            [ngClass]="!isRecommendedBoxRequired ? 'card_wto_shadow' : !isRecommendedOld ? '' : 'card_wto_shadow'">
+                            <div class="row">
+                              <div class="col-lg-12" style="padding: 5px;padding-bottom: 10px;text-align: center;">
+                                <small class="small-content tab-item__subheading c-black" style="font-weight: 700;
+                      font-size: 13px;">New Regime </small>
+                              </div>
+                            </div>
+                            <div class="row" *ngFor="let prod of PayGroupResult">
+                              <div class="col-lg-12" style="padding: 5px;padding-bottom: 10px;margin-left: 3rem;">
+                                <small class="small-content tab-item__subheading c-black" style="font-size: 13px;color: #4B4B4B;
+                      font-weight: 600;" [ngClass]="prod.Prop == 'TDS' ? 'colorBlue' : 'colorBlack'">{{prod.New|
+                                  currency:'INR':'symbol-narrow':'1.2-2'}} </small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <br />
+
+
+                    <div class="card" style="padding: 12px;" *ngIf="isRecommendedBoxRequired && AmountDifferenece > 0 ">
+                      <div class="row">
+                        <div class="col-lg-8">
+                          <h3 class="h3-ct" style="color: #146BA2;">
+                            Hooray!
+                          </h3>
+                          <h6 style="margin-bottom: 0px;">You can save <b class="f-21"> {{AmountDifferenece |
+                              currency:'INR':'symbol-narrow':'1.2-2'}} </b> tax</h6>
+                          <small class="small-content tab-item__subheading" *ngIf="isRecommendedOld">(if you choose old
+                            regime)
+                          </small>
+                          <small class="small-content tab-item__subheading" *ngIf="!isRecommendedOld">(if you choose new
+                            regime)
+                          </small>
+                        </div>
+                        <div class="col-lg-4">
+                          <img src="assets/Images/confetti.png"
+                            style="height: 60%; margin: auto;position: relative;top: 50%; transform: translateY(-50%);"
+                            alt="">
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <br />
+
+
+                    <div class="card bulbcard"
+                      *ngIf="isRecommendedOld && isRecommendedBoxRequired && LstAdditionalInvestOptions.length > 0 && toShowYellowBox()">
+                      <div class="row">
+                        <div class="col-lg-2">
+                          <img src="assets/Images/lightbulb.png"
+                            style="height: 60%; margin: auto;position: relative;top: 50%; transform: translateY(-50%);"
+                            alt="">
+                        </div>
+                        <div class="col-lg-8" style="margin-top: 12px;">
+
+                          <h6 style="font-size: 13px;">You can save more tax if you use below options</h6>
+
+                        </div>
+                        <div class="col-lg-2" (click)="toggle()" style="margin-top: 14px;">
+                          <i *ngIf="hideRuleContent" class="fa fa-caret-up" style="display: block;
+                margin: 0 auto;
+                top: -3px;
+                position: relative;
+                color: #5d5f5e;
+                font-size: 18px;padding-right: 5px;">
+                          </i>
+                          <i *ngIf="!hideRuleContent" class="fa fa-caret-down" style="display: block;
+                margin: 0 auto;
+                top: -3px;
+                position: relative;
+                color: #5d5f5e;
+                font-size: 18px;padding-right: 5px;">
+                          </i>
+
+                        </div>
+
+                        <div class="col-lg-12" *ngIf="hideRuleContent &&  LstAdditionalInvestOptions.length > 0">
+                          <hr />
+                          <ul>
+                            <li style="list-style-type: none;font-size: 12px;
+                  margin-bottom: 15px;color: black;
+                  display: flex;" *ngFor="let addit of LstAdditionalInvestOptions; let i = index">
+                              {{i+1}}. You can additionally invest {{addit.ExtraAmount |
+                              currency:'INR':'symbol-narrow':'1.2-2'}} in
+                              Sec {{addit.SectionName}} and
+                              save {{addit.TaxAmount | currency:'INR':'symbol-narrow':'1.2-2'}} tax
+                            </li>
+
+
+                          </ul>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <br />
+
+                    <div class="row" *ngIf="RoleCode =='Employee'">
+                      <div class="col-lg-12 text-center">
+                        <button class="btn btn-blank" (click)="goToInvestment()">
+                          Go to Tax Investments &nbsp; <i class="mdi mdi-arrow-right"></i></button>
+                      </div>
+                    </div>
+                  </ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  <ng-container *ngIf="!isCalculated">
+                    <!-- tax calculation slabs and description  -->
+                    <h3
+                      style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                      How Tax Calculator Works?
+                    </h3>
+                    <h6 class="h6-content tab-item__subheading" style="color: #696969;
+            margin-top: 5px;"> Follow the below-given steps to use the tax calculator: </h6>
+
+                    <ul style="margin-top: 2rem;">
+                      <li style="list-style-type: none;font-size: 12px;
+            margin-bottom: 15px;color: black;
+            display: flex;"><i class="fa fa-bookmark" style="margin-top: 5px;margin-right: 10px;color: #146CA4;"></i>
+                        Enter the details of various deductions, viz. basic deductions u/s under Section 87A, 80C,
+                        80CCD (1B), 80D, 80G, 80E, 80TTA, 80TTB, 80GG. Also, provide the details of interest on an
+                        educational
+                        loan and on deposits to the savings account.</li>
+                      <li style="list-style-type: none;font-size: 12px;
+            margin-bottom: 15px;color: black;
+            display: flex;">
+                        <i class="fa fa-bookmark" style="margin-top: 5px; margin-right: 10px;color: #146CA4;"></i> Enter
+                        the
+                        details of various deductions, viz. basic
+                        deductions u/s under Section 87A, 80C, 80CCD (1B), 80D, 80G, 80E, 80TTA, 80TTB, 80GG. Also,
+                        provide the
+                        details of interest on an educational loan and on deposits to the savings account.
+                      </li>
+
+                    </ul>
+
+                    <br />
+
+                    <h3
+                      style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                      Income Tax Slabs - FY {{FinancialYearDescription}}
+                    </h3>
+
+                    <div class="radio_container">
+                      <input type="radio" name="radio" disabled value="1" id="one" [checked]="selectedAgeSlabs =='1'"
+                        (change)="onChangeAgeSlabs($event.target.value)">
+                      <label for="one">Age < 60</label>
+                          <input type="radio" name="radio" disabled value="2" id="two"
+                            [checked]="selectedAgeSlabs =='2'" (change)="onChangeAgeSlabs($event.target.value)">
+                          <label for="two">Age 60+</label>
+                          <input type="radio" name="radio" disabled value="3" id="three"
+                            [checked]="selectedAgeSlabs =='3'" (change)="onChangeAgeSlabs($event.target.value)">
+                          <label for="three">Age 80+</label>
+                    </div>
+
+
+                    <div class="row" style="margin: 4px;">
+                      <div class="col-lg-6">
+                        <small class="small-content tab-item__subheading c-black">Net Taxable Income</small>
+                      </div>
+                      <div class="col-lg-3">
+                        <small class="small-content tab-item__subheading c-black">Old Regime</small>
+                      </div>
+                      <div class="col-lg-3">
+                        <small class="small-content tab-item__subheading c-black">New Regime</small>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="card">
+                          <ng-container *ngFor="let i of FYTaxSlabs;odd as isOdd; even as isEven;">
+                            <div class="row" *ngIf="i.AgeGroup == selectedAgeSlabs"
+                              [ngClass]="{ 'odd': isOdd, 'even': isEven }"
+                              style="margin: 4px;border-radius: 5px;padding: 3px;">
+                              <div class="col-lg-6">
+                                <small class="small-content tab-item__subheading c-black">{{i.NetTaxIncomeName}}</small>
+                              </div>
+                              <div class="col-lg-3">
+                                <small class="small-content tab-item__subheading c-black">{{i.OldRegime}}</small>
+                              </div>
+                              <div class="col-lg-3">
+                                <small class="small-content tab-item__subheading c-black">{{i.NewRegime}}</small>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <img src="assets/Images/taxcalculator.png"
+                          style="margin: auto;position: relative;top: 75%; transform: translateY(-50%);" alt="">
+                      </div>
+                    </div>
+                  </ng-container>
+
+                </div>
+
+              </div>
+              <!-- -- row -- -->
+
+              <div class="row">
+                <div class="col-md-12 text-right" style=" position: fixed;
+        height: 50px;
+        background-color: white;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        margin-bottom: 0px;box-shadow: 0px -3px 5px #f1f1f1;">
+                  <button class="btn btn-link" type="button"
+                    style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;"
+                    (click)="cancel_taxCalculation()"> &nbsp; &nbsp; Cancel &nbsp; &nbsp; </button>
+                  <button class="btn btn-primary" (click)="doCalculateTax()"
+                    style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                      class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Calculate &nbsp; &nbsp;
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>

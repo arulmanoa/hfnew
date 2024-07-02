@@ -1,0 +1,59 @@
+/* @media screen and (max-width: 600px) {
+  #title_message {
+    visibility: hidden;
+    clear: both;
+    float: left;
+    margin: 10px auto 5px 20px;
+    width: 28%;
+    display: none;
+  }
+}
+
+@media all and (min-width: 480px) {
+  .deskContent {
+    display: block;
+  }
+  .phoneContent {
+    display: none;
+  }
+} */
+
+@media all and (max-width: 768px) {
+    .deskContent {
+      display: none;
+    }
+    .phoneContent {
+      display: block;
+    }
+  }
+  
+  @media all and (min-width: 768px) {
+      .deskContent {
+        display: block;
+      }
+      .phoneContent {
+        display: none;
+      }
+    }
+  
+  
+  
+  .mobile-text {
+      text-align: left !important;
+    }
+    
+    @media (max-device-width: 600px) {
+      .mobile-text {
+        text-align: center !important;
+      }
+    }
+    
+  
+    .my-drawer {
+      width: 50%;
+  }
+  @media only screen and (max-width: 768px) {
+      .my-drawer {
+          width: 70%;
+      }
+  }

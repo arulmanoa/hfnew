@@ -1,0 +1,156 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="dfc100 overflow-y-auto">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="!onEdit">Add Additional Products</h4>
+                    <h4 class="modal-title pull-left" *ngIf="onEdit">Edit Additional Products</h4>
+                    <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()"><i
+                            class="mdi mdi-close font-size-md icon-close"></i></a>
+                </div>
+                <div class="modal-body no-padder builtin-calling-wrapper">
+                    <div class="flex-column">
+                        <form [formGroup]="additionalProductForm">
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="clearfix">
+                                    <div class="row">
+                                        <!-- product ID -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Product</label>
+                                            <ng-select [items]="productList" placeholder="-- select type --"
+                                                formControlName="productId" [ngClass]="{
+                                            'ng-invalid': submitted && f.productId.invalid
+                                          }" bindLabel="Name" bindValue="ProductId" (change)="onProductChange($event)">
+                                            </ng-select>
+                                            <div *ngIf="submitted && f.productId.invalid" class="help-block">
+                                                <div *ngIf="f.productId.errors.required">
+                                                    Product is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- product code -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Product Code <span class="required"> *
+                                                </span></label>
+                                            <input type="text" class="form-control" placeholder="Product code"
+                                                formControlName="productCode" [ngClass]="{
+                                                'is-invalid': submitted && f.productCode.invalid
+                                              }" autocomplte="off" disabled />
+                                            <div *ngIf="submitted && f.productCode.invalid" class="help-block">
+                                                <div *ngIf="f.productCode.errors.required">
+                                                    Product Code is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Payment Type -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Payment Type</label>
+                                            <ng-select [items]="paymentTypeList" placeholder="-- select type --"
+                                                formControlName="paymentType" [ngClass]="{
+                                            'ng-touched': submitted && f.paymentType.invalid
+                                          }" bindLabel="name" bindValue="id">
+                                            </ng-select>
+                                            <div *ngIf="submitted && f.paymentType.invalid" class="help-block">
+                                                <div *ngIf="f.paymentType.errors.required">
+                                                    Payment Type is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- payment rate -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Payable Rate <span class="required"> *
+                                                </span></label>
+                                            <input type="number" class="form-control" placeholder="Payable Rate"
+                                                formControlName="payableRate" [ngClass]="{
+                                                'is-invalid': submitted && f.payableRate.invalid
+                                              }" autocomplte="off" />
+                                            <div *ngIf="submitted && f.payableRate.invalid" class="help-block">
+                                                <div *ngIf="f.payableRate.errors.required">
+                                                    Product Rate is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Billing Type -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Billing Type</label>
+                                            <ng-select [items]="billingTypeList" placeholder="-- select type --"
+                                                formControlName="billingType" [ngClass]="{
+                                                                                    'ng-touched': submitted && f.billingType.invalid
+                                                                                  }" bindLabel="name" bindValue="id">
+                                            </ng-select>
+                                            <div *ngIf="submitted && f.billingType.invalid" class="help-block">
+                                                <div *ngIf="f.billingType.errors.required">
+                                                    Billing Type is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Billing rate -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Billable Rate <span class="required"> *
+                                                </span></label>
+                                            <input type="number" class="form-control" placeholder="Billable Rate"
+                                                formControlName="billableRate" [ngClass]="{
+                                                                                        'is-invalid': submitted && f.billableRate.invalid
+                                                                                      }" autocomplte="off" />
+                                            <div *ngIf="submitted && f.billableRate.invalid" class="help-block">
+                                                <div *ngIf="f.billableRate.errors.required">
+                                                    Billing Rate is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Custom Data 1</label>
+                                            <input type="text" class="form-control" placeholder="Custom Data 1"
+                                                formControlName="customData1" [ngClass]="{
+                                                    'is-invalid': submitted && f.customData1.invalid
+                                                }" autocomplte="off" />
+                                            <div *ngIf="submitted && f.customData1.invalid" class="help-block">
+                                                <div *ngIf="f.customData1.errors.required">
+                                                    Custom Data 1 is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Custom Data 2</label>
+                                            <input type="text" class="form-control" placeholder="Custom Data 2"
+                                                formControlName="customData2" [ngClass]="{
+                                                    'is-invalid': submitted && f.customData2.invalid
+                                                }" autocomplte="off" />
+                                            <div *ngIf="submitted && f.customData2.invalid" class="help-block">
+                                                <div *ngIf="f.customData2.errors.required">
+                                                    Custom Data 2 is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default pull-right" type="button" data-dismiss="modal"
+                        (click)="closeModal()">Cancel</button>
+
+
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                                    (click)="saveButton()">
+                                    <div class="pos-rlt sm-btn-component"> <span> Save </span></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,423 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <!-- Button actions and title of the page  -->
+    <div class="row" style="margin-bottom: 15px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="padding-top: 10px;">
+          <h6 class="h6_c" style="font-size: 16px; 
+          font-weight: 700;"> Claim Requests </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <!-- 
+         <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onClose()">
+            <i class="mdi mdi-close  m-r-xs"></i>Close
+          </button>
+        </li> -->
+            <li class="list-inline-item">
+              <button type="button" class="btn upgrade-btn" id="btn_qc_approve"
+                [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="tiggerApiCall_expenseBatch(true)"> <i
+                  class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+                Approve
+              </button>
+            </li>
+            <li class="list-inline-item">
+              <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="tiggerApiCall_expenseBatch(false)">
+                <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+              </button>
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- -- content --  -->
+    <div class="content m-b report-content" style="margin-top: 10px;" *ngIf="!spinner">
+
+      <ngb-tabset (tabChange)="beforeTabChange($event)" [(activeId)]="activeTabName">
+        <ngb-tab id="newRequest">
+          <ng-template ngbTabTitle><i class="fa fa-hourglass-end" aria-hidden="true"></i>&nbsp;&nbsp;New Request
+          </ng-template>
+          <ng-template ngbTabContent>
+            <div class="text-center ma-5" *ngIf="spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+
+
+            <div class="row hidden-sm">
+              <div class="col-lg-12">
+                <angular-slickgrid gridId="grdinEmployeesInitiate"
+                  [columnDefinitions]="inEmployeesInitiateColumnDefinitions"
+                  [gridOptions]="inEmployeesInitiateGridOptions" [dataset]="LstExpenseUnClaimedRequest"
+                  (onAngularGridCreated)="inEmployeesInitiateGridReady($event)" gridWidth="100%"
+                  (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+                </angular-slickgrid>
+              </div>
+            </div>
+
+
+
+
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab id="history">
+          <ng-template ngbTabTitle><i class="fa fa-history" aria-hidden="true"></i>&nbsp;&nbsp;History</ng-template>
+          <ng-template ngbTabContent>
+            <div class="text-center ma-5" *ngIf="spinner1">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+            <!-- Search Bar -->
+            <div style="margin: 10px 0px 20px 0px; padding: 0px 0px 0px 0px; z-index: 100; ">
+              <div class="accordion" id="accordionSearch" style="margin-top: 10px;">
+                <div class="card-header" id="headingTwo">
+                  <h5 class="my-0" style="height:1.5rem;">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                      data-target="#CanCollapse" aria-expanded="false" aria-controls="clientCollapse"
+                      style="padding-top: 0px;text-decoration: none;">
+                      <p class="card-header-title"> <i class="fa fa-search p-r-10 search-icon" aria-hidden="true"></i>
+                        Search
+                        Criteria</p>
+                    </button>
+                  </h5>
+                </div>
+
+                <div id="CanCollapse" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionSearch">
+                  <div class="card-body" style="padding-top: 10px; padding-bottom: 15px;">
+                    <app-searchbar-view [searchConfiguration]="searchConfigurationForHistroy" Content="General"
+                      (searchButtonClicked)="onClickingHistorySearchButton($event)">
+                    </app-searchbar-view>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div *ngIf="!spinner1">
+              <angular-slickgrid gridId="output" [columnDefinitions]="historyColumnDefinition"
+                [gridOptions]="historyGridOptions" [dataset]="historyDataset" gridWidth="100%"
+                (sgOnSelectedRowsChanged)="onHistorySelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                (sgOnClick)="onHistoryCellClicked($event.detail.eventData, $event.detail.args)"
+                (onAngularGridCreated)="historyAngularGridReady($event)">
+              </angular-slickgrid>
+            </div>
+
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+
+
+
+
+
+
+
+    </div>
+  </div>
+
+
+
+
+  <nz-drawer [nzVisible]="invoiceSliderVisible" [nzWidth]="740" nzTitle="Batch : Claim Request "
+    (nzOnClose)="close_invoiceSliderVisible()">
+    <nz-descriptions [nzColumn]="2" *ngIf="rowData">
+      <nz-descriptions-item nzTitle="Employee Code" [nzSpan]="0.5"><b> {{rowData.EmployeeCode}} </b>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Employee Name" [nzSpan]="0.5">
+        <b> {{rowData.EmployeeName}} </b>
+      </nz-descriptions-item>
+
+
+    </nz-descriptions>
+    <nz-descriptions [nzColumn]="2" *ngIf="rowData">
+
+      <nz-descriptions-item nzTitle="Batch Name" [nzSpan]="0.5"><b> {{rowData.Name}} </b>
+      </nz-descriptions-item>
+
+      <nz-descriptions-item nzTitle="Total Requested Amount" [nzSpan]="0.5"><b> {{TotalRequestedAmount | number
+          : '1.2-2'}} </b>
+      </nz-descriptions-item>
+
+
+    </nz-descriptions>
+    <!-- <nz-divider></nz-divider> -->
+
+
+    <div class="row" *ngIf="rowData">
+
+      <div class="col-lg-6">
+
+        <div class="pretty p-icon p-curve p-bigger">
+          <input type="checkbox" [(ngModel)]="selectAll" (click)="selectAllClaimRequest($event)" />
+          <div class="state p-primary">
+            <i class="icon mdi mdi-check"></i>
+            <label style="font-weight: 600 !important;
+            padding-left: 4px;">Select All</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6" style="text-align: right;
+      font-weight: 600;">
+        <p> No of Claims : {{NoOfClaims}} </p>
+      </div>
+
+      <ng-container *ngIf="ExpenseClaimRequestList.length > 0">
+
+        <ng-container *ngFor="let item of ExpenseClaimRequestList;let i = index"> 
+        <div class="col-md-12 col-sm-12 col-xs-12" 
+          style="padding: 5px;">
+
+          <div class="card" style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+            <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+              <div class="row align-items-center">
+                <div class="col">
+                  <div class="row">
+                    <div class="col-lg-6">
+
+                      <span>
+
+                        <input type="checkbox" [(ngModel)]="item.isSelected" (click)="selectClaimRequest(item)"
+                          style="cursor: pointer;padding-right: 6px;" />
+
+                        <!-- <div class="pretty p-icon p-curve p-bigger" style="padding-top: 14px;">
+                          <input type="checkbox" [(ngModel)]="item.isSelected" (click)="selectClaimRequest(item)"
+                            style="cursor: pointer;" />
+                          <div class="state p-primary">
+                            <i class="icon mdi mdi-check"></i>
+                            <label></label>
+                          </div>
+                        </div> -->
+
+                      </span>
+
+
+                      <span style="font-size: 18px;
+                font-weight: 600;
+                color: black;"> {{item.ProductName}} &nbsp; ₹{{item.RequestedAmount | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="col-lg-2">
+                      <span style="font-size: 13px;font-weight: 600;">
+                        <span class="badge badge-soft-warning" *ngIf="item.Status == '100' || item.Status == '200'"
+                          style="display: inline;"> {{getStatusName(item.Status)}} </span>
+                        <span class="badge badge-soft-danger" *ngIf="item.Status == '300'" style="display: inline;">
+                          {{getStatusName(item.Status)}} </span>
+                        <span class="badge badge-soft-success" *ngIf="item.Status == '400'" style="display: inline;">
+                          {{getStatusName(item.Status)}} </span>
+
+                      </span>
+                    </div>
+                    <div class="col-lg-4 text-right">
+                      <!-- <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> </span> -->
+
+                      <a href="javascript:;" *ngIf="item.DocumentId > 0" class="btn action-edit"
+                        style="margin-right: 5px" matTooltip="View Documents" (click)="do_viewDocuments(item)">
+                        <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                      </a>
+
+
+                    </div>
+                  </div>
+                  <!-- <span style="font-size: 12px;"> <b> REFERENCE NO </b> : {{item.TravelRequestReferenceId}} </span> -->
+                </div>
+              </div>
+            </div>
+            <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+      /* margin-bottom: 0px; */
+      padding-left: 0px;
+      padding-top: 12px !important;">
+
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">EXPENSE
+                      DATE <span class="required"></span></label>
+                    <p class="date" style="font-size: 13px;"> {{item.ExpenseIncurredDate | date :'dd-MM-yyyy'}} </p>
+
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">APPROVED
+                      AMT.
+                      <span class="required"></span></label>
+                    <p class="date" style="font-size: 13px;"> {{item.ApprovedAmount | number : '1.2-2'}} </p>
+
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">REMARKS
+                      <span class="required"></span></label>
+                    <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                      overflow: hidden; cursor: pointer;
+                      width: 125px; 
+                      height: 1.2em; 
+                      white-space: nowrap" matTooltip="{{item.Remarks}}"> {{item.Remarks}}</p>
+                  </div>
+
+                  <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                      ON<span class="required"></span></label>
+                    <p class="date" style="font-size: 13px;">{{item.DocumentDate | date :'dd-MM-yyyy'}}</p>
+
+                  </div>  -->
+                </div>
+
+                <div class="col-md-3" style="text-align: right;">
+
+                  <button (click)="approveorReject(true, item)" type="button"
+                    class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                    style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-thumbs-o-up"
+                        aria-hidden="true" style="padding-right: 5px;"></i>Approve</span></button>
+
+                  <button (click)="approveorReject(false, item)" type="button"
+                    class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                    style="font-size: 10px;color: #f44336;border-color: #f44336;"><span><i class="fa fa-ban"
+                        aria-hidden="true" style="padding-right: 5px;"></i>Reject </span></button>
+                  <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit Request"
+                    (click)="do_editAppliedRequest(item)">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                  </a> -->
+                  <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="View Documents"
+                    (click)="do_viewDocuments(item)">
+                    <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                  </a> -->
+                </div>
+
+              </div>
+
+
+            </div>
+          </div>
+
+        </div>
+      </ng-container>
+      </ng-container>
+    </div>
+
+    <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+
+      <div style="float: right;" class="ng-star-inserted" style="width:98%;text-align: right !important;">
+        <button nz-button="" style="margin-right: 8px;" (click)="close_invoiceSliderVisible()" class="ant-btn">
+          <span class="ng-star-inserted">Cancel</span>
+        </button>
+        <button nz-button="" nztype="primary" (click)="submitExpenseRequest('false')" class="ant-btn ant-btn-primary">
+          <span class="ng-star-inserted">Submit</span>
+        </button>
+
+      </div>
+
+    </div>
+
+
+  </nz-drawer>
+
+
+
+
+
+  <div id="expense_batch" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="expense_batch"
+    aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+      <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+
+
+          <div class="content">
+
+            <section>
+              <div class="row" style="height: 50px; margin-top: -25px;">
+                <div class="col-lg-12 pull-right">
+                  <div class="modal-close" (click)="close_expensebatch_popup()"><span
+                      class="mdi mdi-close pull-left"></span>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="inEmployeesInitiateSelectedItems.length > 0">
+                <div class="row" *ngFor="let item of inEmployeesInitiateSelectedItems">
+                  <div class="col-xs-12  col-sm-12  p-r-50">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                      <label class="form-label"> Expense Name </label>
+                      <span> {{item.Name}}</span>
+                    </div>
+                  </div>
+
+
+                  <div class="col-xs-6  col-sm-6  p-r-50">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                      <label class="form-label"> Total Requested Amount </label>
+                      <input type="text" [(ngModel)]="item.TotalRequestedAmount" disabled
+                        placeholder="Expense Batch name" class="form-control">
+                    </div>
+
+
+                  </div>
+                  <div class="col-xs-6  col-sm-6  p-r-50">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                      <label class="form-label"> Total Approved Amount </label>
+                      <input type="text" [(ngModel)]="item.TotalApprovedAmount" placeholder="Expense Batch name"
+                        class="form-control">
+                    </div>
+                  </div>
+                  <nz-divider></nz-divider>
+                </div>
+              </div>
+              <br>
+              <br>
+
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="text-right">
+                    <ul class="list-inline">
+                      <li class="list-inline-item"> <button class="btn btn-default" type="button"
+                          (click)="close_expensebatch_popup()">
+                          <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                          Cancel</button>
+                      </li>
+                      <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit"
+                          id="btnSubmit" (click)="submit_Approval()">
+                          <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i>
+                              &nbsp;
+                              Confirm
+                            </span></div>
+                        </button></li>
+
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>

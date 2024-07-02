@@ -1,0 +1,852 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px; margin-top: -15px" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left"></div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh m-r-xs"></i>Refresh
+              </button>
+            </li>
+            <li class="list-inline-item">
+              <button type="button" class="btn btn-default" (click)="onClose()">
+                <i class="mdi mdi-close m-r-xs"></i>Close
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center ma-5" *ngIf=" !spinner && !refreshing_table_spinner && IsEmptyEmployeeList" >
+      <span>No records found!</span>
+    </div>
+
+    <div class="content m-b report-content" style="margin-top: -5px" *ngIf="!spinner" >
+      <!-- ATTENDANCE CYCLE SLIDER  -->
+      <div *ngIf="toShown" style="margin-bottom: -15px">
+        <div class="row" style="margin-bottom: 10px">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left"></div>
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="col-lg-6" style="float: right">
+              <label class="form-label" style="text-align: left">
+                Start searching for an emp. by code or name
+              </label>
+              <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+                placeholder=" Start searching for an employee by code or name"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 10px">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+            <div class="text-left">
+              <ul class="list-inline"></ul>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="text-right">
+              <ul class="list-inline"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 10px" *ngIf="isweekBased && IsMusterroll">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right"></div>
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="row">
+              <div class="col-lg-5">
+                <a href="javascript:;" tooltip="Previous Week" tooltip-placement="bottom" class="btn action-edit pull-left" 
+                  style="margin-right: 5px; margin-left: 5px" >
+                  <i class="fa fa-angle-left" aria-hidden="true" style=" font-size: 20px; color: #000; margin-top: 2px;margin-left: -2px; " ></i>
+                </a>
+              </div>
+              <div class="col-lg-3" style="text-align: center">  {{ selectedWeek_period }}  </div>
+              <div class="col-lg-4">
+                <a class="btn action-edit pull-left" tooltip="Next Week" tooltip-placement="bottom" style="float: right" >
+                  <i class="fa fa-angle-right" aria-hidden="true"
+                    style=" font-size: 20px;color: #000; margin-top: 2px; margin-left: -2px; " >
+                  </i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center ma-5" *ngIf="render_spinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+
+        <div class="row" style="padding-bottom: 10px; margin-top: 5px" *ngIf="!refreshing_table_spinner" >
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+            <ul class="list-inline">
+              <li class="list-inline-item" *ngIf="!IsEmptyEmployeeList">
+                <button type="button" class="btn btn-primary-custom"
+                  (click)="export()" style="margin-bottom: 3px">
+                  <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <style>
+          .table-sticky > thead > tr > th,
+          .table-sticky > thead > tr > td {
+            top: 0px;
+            position: sticky;
+            z-index: 1;
+          }
+
+          .table-height {
+            display: block;
+            overflow: auto;
+            width: 100%;
+          }
+
+          .tbl-table th {
+            font-size: 11px;
+            text-align: left;
+            background: #eef5fa;
+            white-space: nowrap;
+          }
+
+          .tbl-table th,
+          .tbl-table td {
+            padding: 5px 12px;
+            border: 1px solid #eae7e7;
+          }
+
+          .sticky-col {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+          }
+
+          th.sticky-col {
+            background-color: #eef5fa;
+            z-index: 9 !important;
+            /* border-left: 2px solid rgb(235, 13, 13) !important; */
+          }
+
+          td.sticky-col {
+            background-color: #fff;
+            z-index: 5 !important;
+            /* border-left: 2px solid rgb(235, 13, 13) !important; */
+          }
+
+          .tbl-firstcol {
+            width: 70px;
+            min-width: 70px;
+            max-width: 70px;
+            left: 0px;
+          }
+
+          .tbl-secondcol {
+            width: 80px;
+            min-width: 80px;
+            max-width: 80px;
+            left: 45px;
+          }
+
+          .tbl-thirdcol {
+            width: 200px;
+            min-width: 200px;
+            max-width: 200px;
+            left: 108px;
+          }
+
+          .tbl-forthcol {
+            width: 100px;
+            min-width: 100px;
+            max-width: 100px;
+            left: 308px;
+          }
+
+          .tbl-fifthcol {
+            width: 150px;
+            min-width: 150px;
+            max-width: 150px;
+            left: 408px;
+          }
+
+          .tbl-sixthcol {
+            width: 100px;
+            min-width: 100px;
+            max-width: 100px;
+            left: 558px;
+          }
+        </style>
+        <div class="table-scroll table-height">
+          <div class="text-center ma-5" *ngIf="refreshing_table_spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled >
+              <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true" ></span>
+              Please wait...
+            </button>
+          </div>
+
+          <div class="text-center ma-5" *ngIf="IsEmptyEmployeeList">
+            <span>No records found!</span>
+          </div>
+
+          <table class="tableBodyScroll table-sticky tbl-table"  id="myTableIdElementId1"
+            style="width: 100%; border-collapse: collapse" *ngIf="!refreshing_table_spinner && !IsEmptyEmployeeList" >
+            <thead>
+              <tr>
+                <th class="sticky-col tbl-firstcol">
+                  <span style="font-size: 12px"> Code</span>
+                </th>
+                <th class="sticky-col tbl-secondcol">
+                  <span style="font-size: 12px"> Name </span>
+                </th>
+                <th class="sticky-col tbl-thirdcol">
+                  <span style="font-size: 12px">DOJ</span>
+                </th>
+                <th class="sticky-col tbl-forthcol">
+                  <span style="font-size: 12px">LWD</span>
+                </th>
+                <th class="sticky-col tbl-forthcol">
+                  <span style="font-size: 12px"> Location </span>
+                </th>
+                <th class="sticky-col tbl-fifthcol" *ngIf="!isOnlyPanasonic">
+                  <span style="font-size: 12px"> Department </span>
+                </th>
+                <th class="sticky-col tbl-fifthcol" *ngIf="isOnlyPanasonic">
+                  <span style="font-size: 12px"> Dealer Name </span>
+                </th>
+                <th class="sticky-col tbl-forthcol">
+                  <span style="font-size: 12px"> Designation </span>
+                </th>
+                <th class="sticky-col tbl-sixthcol">
+                  <span style="font-size: 12px"> Reporting To</span>
+                </th>
+                <th class="verticalTableHeader" >
+                  <span style="font-size: 12px"> Present </span>
+                </th>
+                <th class="verticalTableHeader" >
+                  <span style="font-size: 12px">Week Off</span>
+                </th>
+                <th class="verticalTableHeader" >
+                  <span style="font-size: 12px">Holiday</span>
+                </th>
+                <th class="verticalTableHeader" >
+                  <span style="font-size: 12px">  Approved Leave </span>
+                </th>
+                <th class="verticalTableHeader" >
+                  <span style="font-size: 12px">  LOP </span>
+                </th>
+                <th class="verticalTableHeader" >
+                  <span style="font-size: 12px">  Total Days </span>
+                </th>
+                <th class="verticalTableHeader" >
+                  <span style="font-size: 12px"> Payable Days </span>
+                </th>
+
+                <th class="verticalTableHeader" >
+                  <span style="font-size: 12px"> Addl. Payable Days </span>
+                </th>
+
+                <th *ngFor="let date of attendance_header" class="verticalTableHeader" >
+                  <span style="font-size: 12px; text-align: center; display: block" >
+                    {{ date.date | date: "MMM d" }}
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor=" let attendance of attendance_actualData | filter: searchText; let i = index">
+                <td class="sticky-col tbl-firstcol">
+                  <span id="btnSideToggle" style="font-size: 12px">
+                    {{ attendance.EmployeeCode }}
+                  </span>
+                </td>
+                <td class="sticky-col tbl-secondcol">
+                  <span style="font-size: 12px">{{ attendance.EmployeeName }}
+                    <i *ngIf="attendance.IsApproved" class="fa fa-check-circle" style="color: limegreen" aria-hidden="true"></i>
+                  </span>
+                </td>
+                <td class="sticky-col tbl-thirdcol">
+                  <span style="font-size: 12px">{{ attendance.DOJ }}</span>
+                </td>
+                <td class="sticky-col tbl-forthcol">
+                  <span style="font-size: 12px">{{ attendance.LWD }}</span>
+                </td>
+                <td class="sticky-col tbl-forthcol">
+                  <span style="font-size: 12px">{{ attendance.LocationName }}</span>
+                </td>
+                <td class="sticky-col tbl-fifthcol">
+                  <span style="font-size: 12px">{{ attendance.Department }}</span>
+                </td>
+                <td class="sticky-col tbl-forthcol">
+                  <span style="font-size: 12px">{{ attendance.Designation }}</span>
+                </td>
+                <td class="sticky-col tbl-sixthcol">
+                  <span style="font-size: 12px">
+                    {{ attendance.ManagerName }}
+                  </span>
+                </td>
+                <td >
+                  <span id="btnSideToggle" style="font-size: 12px">
+                    {{ attendance.Present }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span style="font-size: 12px">{{ attendance.WeeklyOff }} </span>
+                </td>
+                <td class="text-center">
+                  <span style="font-size: 12px">{{ attendance.Holiday }}</span>
+                </td>
+                <td class="text-center">
+                  <span style="font-size: 12px">{{ attendance.ApprovedLeave }}</span>
+                </td>
+                <td class="text-center">
+                  <span style="font-size: 12px">{{ attendance.LOP }}</span>
+                </td>
+                <td class="text-center">
+                  <span style="font-size: 12px">
+                    {{ attendance.TotalDays }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span style="font-size: 12px">
+                    {{ attendance.PayableDays }}
+                  </span>
+                </td>
+
+                <td class="text-center">
+                  <span style="font-size: 12px">
+                    {{ attendance.AdditionalPayableDays }}
+                  </span>
+                </td>
+
+                <td  *ngFor="let item of attendance.Attendance"
+                  style=" padding-left: 3px !important; padding-right: 1px !important; ">
+                  <div class="row" style="cursor: pointer; text-align: center">
+                    <div class="col-lg-12">
+                      <span style="font-size: 12px">
+
+                        <div *ngIf="item.IsHoliday">
+                          <span class="badge badge-self" style="display: inline">
+                            H
+                          </span>
+                        </div>
+
+                        <div *ngIf="item.IsHoliday && (item.FirstHalf && item.SecondHalf) 
+                        && (item.FirstHalf == item.SecondHalf)">
+                          <span class="badge badge-success" *ngIf="item.FirstHalf == 'P'" 
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{ item.FirstHalf }}
+                          </span>
+                          <span class="badge badge-danger" *ngIf="item.FirstHalf != 'P'" 
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.FirstHalf}} 
+                          </span>   
+                        </div>
+
+                        <div *ngIf=" !item.IsHoliday && !item.IsWeekOff &&
+                            item.FirstHalfApplied == 'EMPTY' && item.SecondHalfApplied == 'EMPTY' &&
+                            item.FirstHalfApplied == 'EMPTY' && item.FirstHalfApplied == item.SecondHalfApplied">
+                          <span class="badge" style=" display: inline; padding: 0px 6px 0px;
+                              border-radius: 10px; background-color: #f2ebd7 !important;
+                              color: #f2ebd7 !important; ">
+                          </span>
+                        </div>
+
+                        <div *ngIf="item.IsWeekOff">
+                          <span class="badge"
+                            style=" display: inline; padding: 0px 6px 0px; border-radius: 10px;
+                              background-color: #c9c3b2 !important;
+                              color: #c9c3b2 !important;" >
+                          </span>
+                        </div>
+
+                        <div *ngIf="item.IsWeekOff && !item.IsHoliday && (item.FirstHalf  && item.SecondHalf) 
+                          && (item.FirstHalf == item.SecondHalf)">
+                          <span  class="badge badge-success"  *ngIf="item.FirstHalf == 'P'" 
+                          style=" display: inline; padding: 0px 6px 0px; border-radius: 10px;">
+                          {{ item.FirstHalf }}
+                          </span>
+                          <span class="badge badge-danger" *ngIf="item.FirstHalf != 'P'" 
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{item.FirstHalf}} 
+                          </span>   
+                        </div>
+
+                        <div *ngIf=" !item.IsHoliday && !item.IsWeekOff &&
+                            item.FirstHalfApplied != 'EMPTY' &&  item.SecondHalfApplied != 'EMPTY' &&
+                            item.FirstHalfApplied != 'null' &&  item.SecondHalfApplied != 'null' &&
+                            item.FirstHalfApplied == item.SecondHalfApplied">
+                          <span class="badge badge-warning" style=" display: inline; padding: 0px 6px 0px; border-radius: 10px; ">
+                            {{ item.FirstHalfApplied }}
+                          </span>
+                        </div>
+                        <div *ngIf=" !item.IsHoliday && !item.IsWeekOff && item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied != 'null' &&
+                            item.SecondHalfApplied != 'null' && item.FirstHalfApplied != item.SecondHalfApplied" >
+                          <span class="badge badge-warning" style="display: inline;padding: 0px 6px 0px;border-radius: 10px; ">
+                            {{ item.FirstHalfApplied }}
+                          </span>
+                          |
+                          <span class="badge badge-warning" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{ item.SecondHalfApplied }}
+                          </span>
+                        </div>
+
+                        <div *ngIf=" !item.IsHoliday && !item.IsWeekOff &&
+                            item.FirstHalfApplied != 'EMPTY' && item.SecondHalfApplied != 'EMPTY' &&
+                            item.FirstHalfApplied != 'null' && item.SecondHalfApplied == 'null'">
+                          <span class="badge badge-warning" style=" display: inline; padding: 0px 6px 0px; border-radius: 10px;">
+                            {{ item.FirstHalfApplied }}
+                          </span>
+                          |
+                          <span class="badge badge-danger" *ngIf="item.SecondHalf != 'P'"
+                            style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                            {{ item.SecondHalf }}
+                          </span>
+                          <span class="badge badge-success" *ngIf="item.SecondHalf == 'P'"
+                            style=" display: inline; padding: 0px 6px 0px; border-radius: 10px; ">
+                            {{ item.SecondHalf }}
+                          </span>
+                        </div>
+
+                        <div *ngIf="  !item.IsHoliday && !item.IsWeekOff &&  item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' &&
+                            item.SecondHalfApplied != 'null'">
+                          <span  class="badge badge-danger"  *ngIf="item.FirstHalf != 'P'"
+                            style="display: inline; padding: 0px 6px 0px; border-radius: 10px; " >
+                            {{ item.FirstHalf }}
+                          </span>
+                          <span  class="badge badge-success" *ngIf="item.FirstHalf == 'P'"
+                            style=" display: inline; padding: 0px 6px 0px; border-radius: 10px;">
+                            {{ item.FirstHalf }}
+                          </span>
+                          |
+                          <span class="badge badge-warning" style="display: inline; padding: 0px 6px 0px;border-radius: 10px;">
+                            {{ item.SecondHalfApplied }}
+                          </span>
+                        </div>
+
+                        <div  *ngIf=" !item.IsHoliday && !item.IsWeekOff && !item.IsPresentMarkedByEmployee &&
+                            !item.IsAutoPunchedOut &&  item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' && item.FirstHalfApplied == 'null' &&
+                            item.SecondHalfApplied == 'null' && item.FirstHalf == item.SecondHalf &&
+                            item.SecondHalf == 'P' ">
+                          <span class="badge badge-success"
+                            style=" display: inline; padding: 0px 6px 0px; border-radius: 10px;">
+                            {{ item.FirstHalf }}
+                          </span>
+                        </div>
+
+                        <div
+                          *ngIf="
+                            !item.IsHoliday &&
+                            !item.IsWeekOff &&
+                            !item.IsPresentMarkedByEmployee &&
+                            item.IsAutoPunchedOut &&
+                            item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' &&
+                            item.FirstHalfApplied == 'null' &&
+                            item.SecondHalfApplied == 'null' &&
+                            item.FirstHalf == item.SecondHalf &&
+                            item.SecondHalf == 'P'
+                          "
+                        >
+                          <span
+                            class="badge badge-success"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                              background-image: linear-gradient(
+                                to top left,
+                                #8dd6a6 50%,
+                                #28a745 50%
+                              );
+                            "
+                          >
+                            {{ item.FirstHalf }}
+                          </span>
+                        </div>
+
+                        <div
+                          *ngIf="
+                            !item.IsHoliday &&
+                            !item.IsWeekOff &&
+                            item.IsPresentMarkedByEmployee &&
+                            !item.IsAutoPunchedOut &&
+                            item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' &&
+                            item.FirstHalfApplied == 'null' &&
+                            item.SecondHalfApplied == 'null' &&
+                            item.FirstHalf == item.SecondHalf &&
+                            item.SecondHalf == 'P'
+                          "
+                        >
+                          <span
+                            class="badge badge-success"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                              background: repeating-linear-gradient(
+                                45deg,
+                                #95daa4,
+                                #95daa4 2px,
+                                #28a745 2px,
+                                #28a745 4px
+                              );
+                            "
+                          >
+                            {{ item.FirstHalf }}
+                          </span>
+                        </div>
+
+                        <div
+                          *ngIf="
+                            !item.IsHoliday &&
+                            !item.IsWeekOff &&
+                            item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' &&
+                            item.FirstHalfApplied == 'null' &&
+                            item.SecondHalfApplied == 'null' &&
+                            !HasFirstHalfProp(item)
+                          "
+                        >
+                          <span
+                            class="badge"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                              background-color: #f2ebd7 !important;
+                              color: #f2ebd7 !important;
+                            "
+                          >
+                          </span>
+                        </div>
+
+                        <div
+                          *ngIf="
+                            !item.IsHoliday &&
+                            !item.IsWeekOff &&
+                            item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' &&
+                            item.FirstHalfApplied == 'null' &&
+                            item.SecondHalfApplied == 'null' &&
+                            HasFirstHalfProp(item) &&
+                            item.FirstHalf == item.SecondHalf &&
+                            item.SecondHalf != 'P'
+                          "
+                        >
+                          <span
+                            class="badge badge-danger"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                            "
+                          >
+                            {{ item.FirstHalf }}
+                          </span>
+                        </div>
+
+                        <div
+                          *ngIf="
+                            !item.IsWeekOff &&
+                            item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' &&
+                            item.FirstHalfApplied == 'null' &&
+                            item.SecondHalfApplied == 'null' &&
+                            item.FirstHalf != item.SecondHalf &&
+                            item.FirstHalf == 'P' &&
+                            item.SecondHalf != 'P'
+                          "
+                        >
+                          <span
+                            class="badge badge-success"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                            "
+                          >
+                            {{ item.FirstHalf }}
+                          </span>
+                          |
+                          <span
+                            class="badge badge-danger"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                            "
+                          >
+                            {{ item.SecondHalf }}
+                          </span>
+                        </div>
+                        <div
+                          *ngIf="
+                            !item.IsHoliday &&
+                            !item.IsWeekOff &&
+                            item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' &&
+                            item.FirstHalfApplied == 'null' &&
+                            item.SecondHalfApplied == 'null' &&
+                            item.FirstHalf != item.SecondHalf &&
+                            item.FirstHalf != 'P' &&
+                            item.SecondHalf == 'P'
+                          "
+                        >
+                          <span
+                            class="badge badge-danger"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                            "
+                          >
+                            {{ item.FirstHalf }}
+                          </span>
+                          |
+                          <span
+                            class="badge badge-success"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                            "
+                          >
+                            {{ item.SecondHalf }}
+                          </span>
+                        </div>
+                        <div
+                          *ngIf="
+                            !item.IsHoliday &&
+                            !item.IsWeekOff &&
+                            item.FirstHalfApplied != 'EMPTY' &&
+                            item.SecondHalfApplied != 'EMPTY' &&
+                            item.FirstHalfApplied == 'null' &&
+                            item.SecondHalfApplied == 'null' &&
+                            item.FirstHalf != item.SecondHalf &&
+                            item.FirstHalf != 'P' &&
+                            item.SecondHalf != 'P'
+                          "
+                        >
+                          <span
+                            class="badge badge-danger"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                            "
+                          >
+                            {{ item.FirstHalf }}
+                          </span>
+                          |
+                          <span
+                            class="badge badge-danger"
+                            style="
+                              display: inline;
+                              padding: 0px 6px 0px;
+                              border-radius: 10px;
+                            "
+                          >
+                            {{ item.SecondHalf }}
+                          </span>
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot></tfoot>
+          </table>
+        </div>
+
+        <br />
+        <div class="row">
+          <div class="col-lg-8">
+            <!-- ! : 16.2 for panasonic -->
+
+            <p
+              class="small mb-0"
+              style="font-size: 12px; float: left; margin-right: 10px"
+            >
+              <span
+                class="badge badge-warning"
+                style="
+                  font-size: 12px;
+                  line-height: 5px;
+                  width: 10%;
+                  color: transparent;
+                "
+                >●</span
+              >
+              Applied Leave
+            </p>
+            <p
+              class="small mb-0"
+              style="font-size: 12px; float: left; margin-right: 10px"
+            >
+              <span
+                class="badge badge-danger"
+                style="
+                  font-size: 12px;
+                  line-height: 5px;
+                  width: 15%;
+                  color: transparent;
+                "
+                >●</span
+              >
+              Absent
+            </p>
+            <p
+              class="small mb-0"
+              style="font-size: 12px; float: left; margin-right: 10px"
+            >
+              <span
+                class="badge badge-success"
+                style="
+                  font-size: 12px;
+                  background-color: #c9c3b2 !important;
+                  line-height: 5px;
+                  width: 10%;
+                  color: transparent;
+                "
+                >●</span
+              >
+              Week Off
+            </p>
+            <p
+              class="small mb-0"
+              style="font-size: 12px; float: left; margin-right: 10px"
+            >
+              <span
+                class="badge badge-success"
+                style="
+                  font-size: 12px;
+                  line-height: 5px;
+                  width: 7%;
+                  color: transparent;
+                  background-image: linear-gradient(
+                    to top left,
+                    #8dd6a6 50%,
+                    #28a745 50%
+                  ) !important;
+                "
+                >●</span
+              >
+              Present w/ Auto Punched Out
+            </p>
+            <p
+              class="small mb-0"
+              style="font-size: 12px; float: left; margin-right: 10px"
+            >
+              <span
+                class="badge badge-success"
+                style="
+                  font-size: 12px;
+                  line-height: 5px;
+                  width: 9%;
+                  color: transparent;
+                  background: repeating-linear-gradient(
+                    45deg,
+                    #95daa4,
+                    #95daa4 2px,
+                    #28a745 2px,
+                    #28a745 4px
+                  ) !important;
+                "
+                >●</span
+              >
+              Present By Employee
+            </p>
+            <p class="small mb-0" style="font-size: 12px; float: left">
+              <span
+                class="badge badge-success"
+                style="
+                  font-size: 12px;
+                  line-height: 5px;
+                  width: 15%;
+                  color: transparent;
+                "
+                >●</span
+              >
+              Present &nbsp;
+            </p>
+            <p
+              class="small mb-0"
+              style="font-size: 12px; float: left; margin-right: 10px"
+            >
+              <span
+                class="badge badge-success"
+                style="
+                  font-size: 12px;
+                  background-color: #f2ebd7 !important;
+                  line-height: 5px;
+                  width: 10%;
+                  color: transparent;
+                "
+                >●</span
+              >
+              No data
+            </p>
+            <p
+              class="small mb-0"
+              style="font-size: 12px; float: left; margin-right: 10px"
+            >
+              <span
+                class="badge badge-self"
+                style="
+                  font-size: 12px;
+                  line-height: 5px;
+                  width: 10%;
+                  color: transparent;
+                "
+                >●</span
+              >
+              Holiday
+            </p>
+          </div>
+          <div class="col-lg-4" style="text-align: right">
+            <label>
+              <b class="label_ct" *ngIf="!_IsPayrollSubmitted">
+                Last saved on :
+                {{
+                  _payrollInputSubmission.LastUpdatedOn
+                    | date: "dd-MM-yyyy hh:mm:ss"
+                }}
+              </b>
+              <b class="label_ct" *ngIf="_IsPayrollSubmitted">
+                Last submitted on :
+                {{
+                  _payrollInputSubmission.LastUpdatedOn
+                    | date: "dd-MM-yyyy hh:mm:ss"
+                }}
+              </b>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+</div>

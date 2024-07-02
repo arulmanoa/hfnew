@@ -1,0 +1,113 @@
+<div class="row content-center-aligned" *ngIf="!isEnableTFAForWeb">
+  <div class="col-lg-12">
+    <div class="logo">
+      <h3 class="text-center">Redirecting...</h3>
+      <!-- <img class="logo-size" style="display: block; margin: 0 auto;" src="assets/Images/securityrisk.png" alt=""> -->
+    </div>
+  </div>
+  <div class="col-lg-12 message">
+    <p>Please wait while you are being redirected.</p>
+  </div>
+</div>
+
+<div class="row" *ngIf="isEnableTFAForWeb" style="    position: fixed !important;
+margin-left: 0;
+margin-right: 0;
+height: 100%;
+min-height: 100% !important;
+min-width: 100% !important;">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="assets/Images/graphic3.svg" alt="">
+            </div>
+        </div>
+        <div class="form-holder">
+            <div class="form-content">
+
+                <div class="form-items" *ngIf="isEnableTFAForWeb">
+
+                    <div class="card" style="border: none;padding: 20px;">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <a href="javascript:;">
+                                    <img class="logo-size" src='assets/Images/antivirus_lock.png' alt="logo"
+                                        style="height: 50px;text-align: center;margin: 0 auto;    padding-top: 8px;display: block;">
+                                </a>
+                            </div>
+                            <div class="col-lg-12">
+                                <h6 class="h5s text-center">Authenticate Your Account</h6>
+                                <p class="p1 text-center"> Please confirm your account by using the Authenticator
+                                    Assistance app and entering the six-digit security code. </p>
+                            </div>
+
+                            <!-- <div class="col-lg-12">
+                        
+      
+                        <input class="form-control" id="otp1" #otp1 required placeholder="#" maxLength="1" [(ngModel)]="TFACode"
+                          (keyup)="otpController($event,'otp2','')">
+      
+                        <input id="otp2" class="form-control" #otp2 required  placeholder="#" maxLength="1" [(ngModel)]="TFACode1"
+                          (keyup)="otpController($event,'otp3','otp1')">
+      
+                        <input id="otp3" class="form-control" #otp3 required placeholder="#" maxLength="1"[(ngModel)]="TFACode2"
+                          (keyup)="otpController($event,'otp5','otp2')">
+      
+                        <input id="otp5" class="form-control" #otp5 required placeholder="#" maxLength="1"[(ngModel)]="TFACode3"
+                          (keyup)="otpController($event,'otp6','otp3')">
+      
+                        <input id="otp6" class="form-control" #otp6 required placeholder="#" maxLength="1" [(ngModel)]="TFACode4"
+                          (keyup)="otpController($event,'otp4','otp5')">
+      
+                        <input id="otp4" class="form-control" #otp4 required placeholder="#" maxLength="1" [(ngModel)]="TFACode5"
+                          (keyup)="otpController($event,'','otp6')">
+      
+      
+                       
+                      </div> -->
+
+                            <div class="col-lg-12">
+                                <input type="tel" [(ngModel)]="TFACode" (input)="doCheckMax($event)"
+                                    onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
+                                    class="form-control" maxlength="6" autocomplete="off" placeholder="### - ###" />
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="row" *ngIf="hasErrorOccurred">
+                            <div class="col-lg-12 text-center" style="color: red;">
+                                <!-- <ngb-alert [dismissible]="false"> -->
+                                <strong>{{FailerMessage}}</strong>
+                                <!-- </ngb-alert> -->
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4 text-left">
+                                <!-- <a href="javascript:;" [disabled]="SpinnerShouldhide"
+                                    style="margin-top: 10rem !important;float: right;" (click)="backtoLogin()">Go to
+                                    Login</a> -->
+                            </div>
+
+
+                            <div class="col-lg-8 text-right">
+                                <div class="form-button ">
+                                    <button id="submit" (click)="doVerifyTFACode()" type="submit" class="ibtn"
+                                        [disabled]="SpinnerShouldhide"
+                                        style="background-color: #0a609eeb;color: white">Verify &nbsp; <span
+                                            *ngIf="SpinnerShouldhide" class="spinner-border spinner-border-sm"
+                                            role="status" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>

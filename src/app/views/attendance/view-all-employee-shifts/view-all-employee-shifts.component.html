@@ -1,0 +1,204 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="content m-b report-content" style="margin-top: -5px" *ngIf="!spinner">
+      <div style="margin-bottom: -15px">
+        <div class="row" style="margin-bottom: 10px">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+            <div class="text-left">
+              <ul class="list-inline"></ul>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="text-right">
+              <ul class="list-inline"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="row ml-1 w-100" *ngIf="this.roleCode != 'Manager'">
+          <div class="form-row w-100">
+            <div class="form-group-vertical col-md-3" *ngIf="clientList.length > 1">
+              <label class="form-label searchbar-label">Client Name </label>
+              <div class="form-group m-t-m5" style="margin-left: -10px">
+                <div class="input-group">
+                  <ng-select [items]="clientList" [clearable]="false" (change)="OnChangeClientFn($event)"
+                    [(ngModel)]="clientId" placeholder="Ciel HR" bindLabel="Name" bindValue="Id"
+                    style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group-vertical col-md-3 ml-2" *ngIf="managerList.length > 0">
+              <label class="form-label searchbar-label">Manager Name </label>
+              <div class="form-group m-t-m5" style="margin-left: -10px">
+                <div class="input-group">
+                  <ng-select [items]="managerList" [clearable]="false" (change)="OnChangeManagerFn($event)"
+                    [(ngModel)]="managerId" placeholder="Manager" bindLabel="Name" bindValue="Id"
+                    style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group-vertical" [ngClass]="clientList.length > 1 ? 'col-md-2' : 'col-md-4'">
+              <label class="form-label">Period From <span class="required"> *</span></label>
+              <input type="text" class="form-control" bsDatepicker placement="bottom"
+                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" name="PeriodFromDate"
+                [(ngModel)]="selectedPeriodFrom" autocomplete="off" placeholder="01-01-2000"
+                (ngModelChange)="onChangePeriodFromDate($event)" [maxDate]="maxDate" />
+            </div>
+            <div class="form-group-vertical" [ngClass]="clientList.length > 1 ? 'col-md-2' : 'col-md-4'">
+              <label class="form-label">Period To<span class="required"> *</span></label>
+              <input class="form-control" type="text" name="PeriodToDate" [minDate]="selectedPeriodFrom" bsDatepicker
+                [maxDate]="maxDate" placement="bottom" (ngModelChange)="onChangePeriodToDate($event)"
+                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="01-01-2000"
+                [(ngModel)]="selectedPeriodTo" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+        <div class="row ml-1 w-100" *ngIf="this.roleCode === 'Manager'">
+          <div class="form-row w-100">
+            <div class="form-group-vertical col-md-6">
+              <label class="form-label">Period From <span class="required"> *</span></label>
+              <input type="text" class="form-control" bsDatepicker placement="bottom"
+                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" name="PeriodFromDate"
+                [(ngModel)]="selectedPeriodFrom" autocomplete="off" placeholder="01-01-2000"
+                (ngModelChange)="onChangePeriodFromDate($event)" />
+            </div>
+            <div class="form-group-vertical col-md-6">
+              <label class="form-label">Period To<span class="required"> *</span></label>
+              <input class="form-control" type="text" name="PeriodToDate" [minDate]="selectedPeriodFrom" bsDatepicker
+                [maxDate]="maxDate" placement="bottom" (ngModelChange)="onChangePeriodToDate($event)"
+                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="01-01-2000"
+                [(ngModel)]="selectedPeriodTo" autocomplete="off" [maxDate]="maxDate" />
+            </div>
+          </div>
+        </div>
+        <div class="row ml-1 w-100">
+          <div class="col-12 float-right">
+            <div class="col-xs-6 col-md-6 float-right">
+              <div class="input-group">
+                <button type="button" (click)="doSearch()" class="btn btn-primary mr-2 float-right"
+                  style="display: inline;margin: 0 auto;">
+                  <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="padding-bottom: 10px; margin-top: 5px" *ngIf="!refreshing_table_spinner && shiftDetailsView.length > 0">
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+            <!-- <ul class="list-inline">
+              <li class="list-inline-item" *ngIf="!noData">
+                <button type="button" class="btn btn-primary-custom" (click)="export()" style="margin-bottom: 3px">
+                  <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                </button>
+              </li>
+            </ul> -->
+          </div>
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right">
+            <!-- <ul class="list-inline ">
+              <li class="list-inline-item">
+                <div class="row">
+                  <div class="isHolidayLegend">
+                    <span style="color: #808080;font-weight: 400;font-size: 13px;">
+                      Holiday
+                    </span>
+                  </div>
+                </div>
+              </li>
+              <li class="list-inline-item">
+                <div class="row">
+                  <div class="isWeekOffLegend">
+                    <span style="color: #808080;font-weight: 400;font-size: 13px;">
+                      Week Off
+                    </span>
+                  </div>
+                </div>
+              </li>
+            </ul> -->
+          </div>
+        </div>
+        <div class="row mb-3" *ngIf="!refreshing_table_spinner && !noData && shiftDetailsView.length > 0">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 text-left">
+            <ul class="list-inline">
+              <li class="list-inline-item" *ngIf="!noData">
+                <button type="button" class="btn btn-primary-custom" (click)="exportShiftsInExcel()" style="margin-top: 20px;">
+                  <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 text-right">
+            <div class="col-lg-6 pull-right">
+              <label class="form-label text-left"> Start searching for an emp. by code or name</label>
+              <input class="form-control" type="text" name="search" [(ngModel)]="searchText" 
+                autocomplete="none|false|no" placeholder="Search for an emp. by code or name" />
+            </div>
+          </div>
+        </div>
+        <div class="row w-100">
+          <div class="mx-auto text-center ma-5" *ngIf="refreshing_table_spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+              <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+              Please wait...
+            </button>
+          </div>
+
+          <div class="mx-auto text-center ma-5" *ngIf="noData">
+            <span>No records found !</span>
+          </div>
+          <div class="tableFixHead ml-2" *ngIf="!refreshing_table_spinner && !noData && shiftDetailsView.length > 0">
+            <table class="table table-bordered table-bordered-custom">
+              <thead>
+                <th style="min-width: 100px;"><span class="tableHeader text-bold"> Emp. Code</span></th>
+                <th style="min-width: 115px;"><span class="tableHeader text-bold"> Emp. Name </span></th>
+                <th style="min-width: 100px;"><span class="tableHeader text-bold">DOJ</span></th>
+                <th style="min-width: 100px;"> <span class="tableHeader text-bold">LWD</span></th>
+                <th style="min-width: 155px;" *ngFor="let date of shiftView_header" class="">
+                  <div class="display-inline-grid">
+                    <div class="row mx-auto text-center">
+                      <!-- <span class="isHolidayRect"></span>
+                    <span class="isWeekOffRect"></span> -->
+                      <span class="tableHeader text-bold pb-1">{{ date.day | uppercase }}</span>
+                    </div>
+                    <span class="tableHeader">{{ date.date | date: "dd MMM yyyy" }}</span>
+                  </div>
+                </th>
+              </thead>
+              <tbody>
+                <tr *ngFor=" let item of shiftView_actualData | filter: searchText; let i = index">
+                  <td><span class="table-col">{{ item.EmployeeCode }}</span></td>
+                  <td>
+                    <span class="table-col">{{ item.EmployeeName }}</span>
+                  </td>
+                  <td><span class="table-col">{{ item.formattedDOJ }}</span></td>
+                  <td><span class="table-col">{{ item.formattedLWD }}</span></td>
+                  <td *ngFor="let s of item.S">
+                    <button class="btn btn-primary shift-text-btn">{{s.Shift }} </button>
+                    <!-- <button class="btn btn-primary shift-text-btn" ngbPopover="You see, I show up on hover!"
+                      placement="right" container="body" triggers="mouseenter:mouseleave" popoverTitle="Pop title">
+                      {{item.Name}}
+                    </button> -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <br />
+        <div class="row"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,239 @@
+
+<!-- <div >
+<div  *ngFor="let grp of businessSystem.FunctionGroupList" 
+(click)="ele.class = ele.class == 'showChildren' ? '' :  'showChildren'"
+[ngClass]="{ hideChildren : ele.class !== 'showChildren' }"
+[title]="grp.Name" #ele>
+  {{grp.Name}} 
+  <div style="padding-left:15px" (click)="stopPropagation($event)" *ngFor="let fn of grp.FunctionList">{{fn.Name}}</div>
+  
+</div>  
+</div> -->
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="dfc100 overflow-y-auto">
+
+<div class="modal-header" style="font-size: 17px;
+
+ background-color: aliceblue;
+ color: #073952;">
+    <span><i class="fa fa-file-text">&nbsp;</i>{{ modalHeader }}</span>
+    <button class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" style="padding-top:0px;padding-bottom:0px;padding-left:1rem;padding-right:1rem">
+ 
+
+<div class="row">
+<div class="accordion">Rule Details ---- 
+
+        
+        <button style="float:right;" (click)="undoRuleChanges($event)" title="Discard All Changes" class="btn btn-xs btn-warning"><i class="fa fa-undo"></i></button>
+
+        <button title="Save Rule" (click)="saveRule($event)" style="float:right;" class="btn btn-xs btn-success"><i class="fa fa-check"></i></button>&nbsp;&nbsp;
+        <nb-checkbox style="float:right;color:white;margin-top: 0.5rem;">Is Active</nb-checkbox>
+
+</div>
+<div class="panel">
+    <div class="row" style="width:100%">
+        <div class="col-md-5">
+        <div class="input-group input-group-sm" style="float:left;display:block;">
+            <label for="code"  style="margin-top: 0rem;margin-bottom: 0.1rem;">Code</label>
+            <input type="text"  [(ngModel)]="currentRule.Code" [ngModelOptions]="{standalone: true}" id="code" style="width:90%;border-width: thin" placeholder="Code" class="form-control"/>
+            <label for="name" style="margin-top: 0.5rem;margin-bottom: 0.1rem;">Name</label>
+            <input type="text" [(ngModel)]="currentRule.Name" [ngModelOptions]="{standalone: true}" id="name" style="width:90%;border-width: thin" placeholder="Name" class="form-control"/>
+
+        </div></div>
+        <div class="col-md-7">
+                    <div class="input-group" style="float:left;display:block;">
+            <label for="desc" style="margin-top: 0rem;margin-bottom: 0.1rem;">Description</label>
+            <textarea rows="3" [(ngModel)]="currentRule.Description" [ngModelOptions]="{standalone: true}" id="desc" style="width:100%;border-width: thin;" placeholder="Description" class="form-control"></textarea>
+    </div></div>
+
+</div>
+</div>
+</div>
+ <div class="row" style="height:80%; width:100%;color: darkslategrey;background-color: transparent">
+
+    <ul style="width:100%; display: flex;min-height: 100%;max-height: 100%;margin: 0;padding: 0;overflow: hidden;list-style-type: none;">
+        <li (click)="toggleAccordion($event)">
+            <div class="section-title" style="width: 30px">
+                <div class="section-title" style="transform: rotate(-90deg);">Functions</div>
+                <!-- <div style="margin-left: -15px;
+                transform: rotate(-90deg);">Functions</div> -->
+            </div>
+            <div class="section-content">
+                    <div style="height:100%;margin:0;">
+                            <ngx-tabset style="background-color: white;">
+                              <ngx-tab tabTitle="Business" class="active">
+                                    <div *ngIf="businessSystem" class="col-md-12" style="max-width:300px;overflow-x: initial; background-color: white; height:100%;border-style: solid;border-width: thin; border-color: lightgrey;padding-top: 0.5rem;    overflow-y: overlay;
+                                    background-color: white;padding-bottom: 2.5rem; height: 600px;">
+                                            <div  *ngFor="let grp of businessSystem.FunctionGroupList" 
+                                                (click)="ele.class = ele.class == 'showChildren' ? '' :  'showChildren'"
+                                                [ngClass]="{ hideChildren : ele.class !== 'showChildren' }"
+                                                [title]="grp.Name" #ele>
+                                              <i class="nb-chevron-right"></i>{{grp.Name}} 
+                                              <div class="divDropper" (dragstart)="drag($event)" style="float:left;position:relative" 
+                                              style="padding-left:2rem"  (click)="$event.stopPropagation()"
+                                              *ngFor="let fn of grp.FunctionList" data-type = "Method" [attr.data-fullName] = "getFullMethodName(fn)"
+                                              title ={{fn.ReturnTypeDisplayName}}-{{fn.DisplayName}}{{fn.DisplayParamString}} >
+                                                {{fn.Name}}
+                                            
+                                                <div  style="display:none">
+                                                    (
+                                                   
+                                                        <div *ngFor="let p of fn.ParameterList;let isLast=last" 
+                                                        title={{p.TypeDisplayName}}-{{p.DisplayName}}  data-type="Parameter" class="param" 
+                                                        style="display:inline-block;">
+                                                            <span data-type="ParameterNameHolder">{{p.DisplayName}}</span>
+                                                            <input data-type="ParameterInputHolder" type="text" [hidden]="hideMe" >
+                                                            <span>{{isLast ? '' : ',&nbsp;'}}</span>   
+                                                        </div>
+                                                           
+                                                        )
+                                                    </div>
+
+                                            </div>
+                                            </div> 
+                                        <!-- <div class="divDropper"  (dragstart)="drag($event)" style="float:left;position:relative">
+                                                AddAandB
+                                                <div style="display:none">(
+                                                    <div  data-event='{"title":"my event"}' class="param" style="display:inline-block;">empCode</div>
+                                                    <input type="text" [hidden]="hideMe" >
+                                                    )</div>
+                                            </div>
+                                            <br>
+                                            <div class="divDropper"  (dragstart)="drag($event)" style="float:left;position:relative">
+                                                DivideAandBDivideAandB</div>
+                                            <br> -->
+                                        </div>
+                              </ngx-tab>
+                              <ngx-tab tabTitle="Utilities" >
+                                    <div class="col-md-12" style="background-color: white; height:100%;border-style: solid;border-width: thin; border-color: lightgrey;padding-top: 0.5rem;    overflow-y: overlay;
+                                    background-color: white;padding-bottom: 2.5rem;">
+                                            <div class="divDropper"  (dragstart)="drag($event)" style="float:left;position:relative">
+                                                ConvertToString
+                                               
+                                            </div>
+                                            <br>
+                                            <div class="divDropper"  (dragstart)="drag($event)" style="float:left;position:relative">
+                                                    ConvertToDecimal</div>
+                                            <br>
+                                        </div>
+                              </ngx-tab>
+                             
+                            </ngx-tabset>
+                        </div>
+
+
+               
+            </div>
+        </li>
+        <li (click)="preventDefault($event)" style="display:flex;flex:5;align-items: stretch; background: transparent;">
+            <div class="col-md-12" style="height:90%;    min-width: 100%;">
+                <div class="row" style="background-image: -webkit-repeating-radial-gradient(center center, #7659ff, #f1eeef 1px, #e39c5d 1px, transparent 100%);margin: 3px;width:100%;border-style: solid;border-width:thin;border-color: darkgrey;padding:2px;">
+                    <div class="col-md-4">
+                        <div id="divArthHead" class="divOperatorHeads">Arithmetic &nbsp;</div>
+                        <div id="divPlus" (dragstart)="drag($event)" data-type="Operator" class="divOperators">+</div>
+                        <div id="divMinus" (dragstart)="drag($event)" data-type="Operator" class="divOperators">-</div>
+                        <div id="divMultiply" (dragstart)="drag($event)" data-type="Operator" class="divOperators">*</div>
+                        <div id="divDivide" (dragstart)="drag($event)" data-type="Operator" class="divOperators">/</div>
+                    </div>
+                    <div class="col-md-5">
+                        <div id="divBoolHead" (dragstart)="drag($event)" class="divOperatorHeads">Boolean &nbsp;</div>
+                        <div id="divEqual" (dragstart)="drag($event)" data-type="Operator" class="divOperators">==</div>
+                        <div id="divNotEqual" (dragstart)="drag($event)" data-type="Operator" class="divOperators">!=</div>
+                        <div id="divGreater" (dragstart)="drag($event)" data-type="Operator" class="divOperators">></div>
+                        <div id="divGreaterEqual" (dragstart)="drag($event)" data-type="Operator" class="divOperators">>=</div>
+                         <div id="divLess" (dragstart)="drag($event)" data-type="Operator" class="divOperators">
+                    <</div> <div id="divLessEqual" (dragstart)="drag($event)" data-type="Operator" class="divOperators">
+                        <=</div>  
+
+                        <div id="divAnd" (dragstart)="drag($event)" data-type="Operator" class="divOperators">&&
+                        </div>
+                        <div id="divOr" (dragstart)="drag($event)" data-type="Operator" class="divOperators">||</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div id="divHeadOther" (dragstart)="drag($event)" class="divOperatorHeads">Others &nbsp;</div>
+                        <!-- <div id="divInsert" (dragstart)="drag($event)" data-type="Operator" class="divOperators" style="width: 50px;">Insert</div> -->
+
+                        <div id="divInsert" (dragstart)="drag($event)" data-identifier="insert" data-type="Operator" class="divOperatorInsert" style="width: 50px;">
+                                Insert
+                            <!-- <input data-type="ParameterInputHolder" type="text" [hidden]="hideMe" > -->
+                        </div>
+
+                        <div id="divOpenBrace" (dragstart)="drag($event)" data-type="Operator" class="divOperators">(</div>
+                        <div id="divCloseBrace" (dragstart)="drag($event)" data-type="Operator" class="divOperators">)</div>
+                    </div>
+                </div>
+
+               
+
+                <div class="row" style="margin-left: 3px; margin-right: 1px; height:25%">
+                    <div style="float: right;width: 94%;padding-top:0.75em">
+                    <label for = "condition" style=""> 
+                        Condition</label>
+                        
+                        
+                        <a  style="float:right;color:steelblue" (click)="clearDiv('Action: If False')">&nbsp;| Clear Else-Action</a> 
+                        <a style="float:right;color:steelblue" (click)="clearDiv('Action: If True')" >&nbsp;| Clear Action</a>
+                        <a  style="float:right;color:steelblue" (click)="clearDiv('Condition')">&nbsp;| Clear Condition</a>
+                        <a style="float:right;color:steelblue" (click)="deleteItem()" >Delete Selected</a> 
+                        
+                        <!-- <button title="Clear Condition" (click)="clearDiv('Condition')" style="float:right;" class="btn btn-xs btn-danger"><i class="fas fa-eraser"></i></button>
+                        <button title="Delete Item" (click)="deleteItem()" style="float:right;" class="btn btn-xs btn-warning"><i class="fas fa-trash-alt"></i></button> -->
+                    </div>
+                        <div id="condition" #conditionDiv class="divCondition" style="background-color: white;border-style: solid;border-width:thin;border-color: darkgrey" title="didid">
+                        </div>
+                    
+                </div>
+
+                <div class="row" style="margin-left: 3px; margin-right: 1px;margin-top: 2em;height:25%">
+                    <div style="float: right;width: 94%;">
+                    <label for="trueaction" style="margin-top: 0.75em">Action: If True</label>
+                       
+                            <!-- <button title="Clear Condition" (click)="clearDiv('Action: If True')" style="float:right;" class="btn btn-xs btn-danger"><i class="fas fa-eraser"></i></button>
+                            <button title="Delete Item" (click)="deleteItem()" style="float:right;" class="btn btn-xs btn-warning"><i class="fas fa-trash-alt"></i></button> -->
+                        </div>
+                        <div id="trueaction" #trueActionDiv class="divTrue" style="background-color: white;border-style: solid;border-width:thin;border-color: darkgrey" title="didid">
+
+                        </div>
+                </div>
+
+                <div class="row" style="margin-left: 3px; margin-right: 1px;margin-top: 2em;height:25%">
+                    <div style="float: right;width: 94%;">
+                    <label for="falseaction" style="margin-top: 0.75em">Action: If False</label>
+                    
+                        <!-- <button title="Clear Condition" (click)="clearDiv('Action: If False')" style="float:right;" class="btn btn-xs btn-danger"><i class="fas fa-eraser"></i></button>
+                        <button title="Delete Item" (click)="deleteItem()" style="float:right;" class="btn btn-xs btn-warning"><i class="fas fa-trash-alt"></i></button> -->
+                    </div>
+                        <div id="falseaction" #falseActionDiv class="divFalse" style="background-color: white;border-style: solid;border-width:thin;border-color: darkgrey" title="didid">
+
+                        </div>
+                </div>
+
+
+            </div>
+        </li>
+    </ul>
+
+
+  
+</div>   
+
+</div>
+<div class="modal-footer">
+
+        <button class="btn btn-default btnOk" (click)="saveAndClose()"><i class="fa fa-check"> &nbsp;</i>Save</button>
+    
+        <button class="btn btn-default btnWarning" (click)="closeModal()"><i class="fa fa-times"> &nbsp;</i>Cancel</button>
+    
+    </div>
+
+
+</div>
+</div>
+</div>
+</div>

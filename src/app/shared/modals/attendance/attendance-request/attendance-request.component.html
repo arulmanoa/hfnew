@@ -1,0 +1,548 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px !important;">
+                <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                    <small class="header-pretitle"><b style="font-weight: 500 !important;">Employee
+                            Attendance</b></small>
+                    <h6 class="modal-title subheader_h6" style="font-size: 10px;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;"> Preview and Entries </h6>
+                </div>
+                <div class="modal-close" (click)="close()" style="margin-top: 5px;"><span
+                        class="mdi mdi-close pull-left"></span>
+                </div>
+            </div>
+
+            <div class="modal-body no-padder">
+
+                <div class="d-flex align-items-center" *ngIf="isrendering_spinner">
+                    <strong class="text-center"> Loading... &nbsp;&nbsp;&nbsp;</strong>
+                    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                </div>
+
+                <div *ngIf="!isrendering_spinner">
+
+                <div class="flex-column"
+                    style="padding-top: 5px !important;padding-left: 10px !important;padding-right: 10px !important;">
+
+                    <div class="row" *ngIf="EmployeeObject != null">
+                        <div class="col-lg-8" style="margin-top: 0.7rem;">
+                            <div class="row">
+                                <div class="col-lg-1 col-sm-1 col-md-1 col-xs-1">
+                                    <img src="assets/Images/user.png" style="width: 35px;margin-top: 8px;">
+                                </div>
+                                <div class="col-lg-11 col-sm-11 col-md-11 col-xs-11" style="padding-left: 1.5rem;">
+                                    <!-- <div class="row">
+                                        <div class="col-lg-4"> -->
+                                    <p class="m-b-2" style="font-weight: 600;
+                                            font-size: 14px;"> {{EmployeeObject.EmployeeName}} </p>
+                                    <span class="f-s-12"> Employee Code : {{EmployeeObject.EmployeeCode}} </span>
+
+                                    <!-- </div>
+                                       
+                                    </div> -->
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-lg-4 col-sm-12" style="text-align: right;">
+                            <div style="font-size: 20px;
+                            margin-top: 1rem;" *ngIf="!isCheckCurrentDate"> {{preferredDate | date :'MMM d, y'}} </div>
+                            <div class="f-s-12" *ngIf="isCheckCurrentDate">  {{preferredDate | date :'MMM d, y'}}  </div>                            
+                            <div style="font-size: 2rem;" *ngIf="isCheckCurrentDate"> {{ time | date: 'HH:mm:ss' }}</div>
+                        </div>
+                    </div>
+                    <br>
+                    <!-- Simple Clock:
+                    <div></div>
+                    RxJS Clock:
+                    <div>{{ rxTime | date: 'hh:mm:ss a' }}</div> -->
+
+
+                    <!-- <span 
+                        class="dayoff" style="color: red;"> </span> -->
+                    <p *ngIf="JObject.CalendarObject != null && JObject.CalendarObject.isLeaveRequested">
+                        <ngb-alert [dismissible]="false">
+                            <strong>Warning!</strong> The <span *ngIf="JObject.CalendarObject.isFirstHalf"> first half
+                            </span> <span *ngIf="JObject.CalendarObject.isSecondHalf"> second half </span> has already
+                            been marked as a leave.
+                        </ngb-alert>
+                    </p>
+
+                    <div class="row" *ngIf="isCheckCurrentDate && isInvalidGeoFenceCoordinates">
+                        <div class="col-lg-12 text-center">
+                            <ngb-alert [dismissible]="false">
+                                <strong>Your location is not valid for use in the Punch In/Out. You must switch to the right location before punching.</strong>
+                            </ngb-alert>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="col-12 col-md-12 col-sm-12">
+                        <div class="clearfix">
+
+                            <!-- <div class="row" *ngIf="!tobeHidden && isMultiplePunchesAllowed"
+                                    style="padding-bottom: 10px;">
+                                    <div class="col-lg-12 text-right">
+                                        <button (click)="toggleTimer()"
+                                            class="iTvYZO fdnWHc kind-primary-default size-large" loading="false"
+                                            type="button" kind="primary">
+                                            <div color="primary" class="ant-spin-nested-loading">
+                                                <div class="ant-spin-container"><i
+                                                        type="mdi mdi-arrow-right-bold-circle-outline"
+                                                        font-size="20px !important"
+                                                        class="Icon-s3zgp6-0 jZVCwM uil-stopwatch"></i> <span
+                                                        *ngIf="!punchInSpinner"> {{PunchInOutText}}
+                                                    </span>
+
+                                                    <span *ngIf="punchInSpinner"
+                                                        class="spinner-border spinner-border-sm m-r-10 primary-color text-center"
+                                                        style="color: white;margin-right: -10px;" role="status"
+                                                        aria-hidden="true"></span>
+
+
+
+                                                    &nbsp; <div id="datetime"></div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div> -->
+
+                            <div class="row">
+                                <table class="table table-bordered" style="font-size: 12px;">
+                                    <thead>
+                                        <tr style="background-color: #eef5fa;">
+                                            <th scope="col" style="width: 20%;text-align: center;">ATTENDANCE DATE
+                                            </th>
+                                            <th scope="col" style="width: 20%;text-align: center;">PUNCH IN</th>
+                                            <th scope="col" style="width: 20%;text-align: center;"> PUNCH OUT</th>
+                                            <th scope="col" style="width: 20%;text-align: center;"> Building Name
+                                            </th>
+                                            <th scope="col" style="width: 20%;text-align: center;"> SUBMITTED HRS
+                                            </th>
+                                            <th scope="col" style="width: 20%;text-align: center;"> ACTION
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="!punchInSpinner">
+                                        <ng-container *ngFor="let item of LstPunchInDetails; let i = index">
+                                            <tr>
+                                                <td scope="row" style="width: 20%;"> <span style="padding-top: 5px;text-align: center;
+                                              display: block;"> {{item.AttendanceDate | date:'dd-MM-yyyy'}}</span></td>
+                                                <td style="width: 20%;">
+                                                    <input type=time class="form-control" [(ngModel)]="item.StartTime"
+                                                        step="1" [readonly]="isPunchInTimeAllowEdit"
+                                                        style="cursor: pointer;height: 30px;font-size: 12px !important;"
+                                                        (change)="OnChangePunchInTime($event,item, i)">
+                                                </td>
+                                                <td style="width: 20%;">
+                                                    <input type=time class="form-control" [(ngModel)]="item.EndTime"
+                                                        step="1" [readonly]="isPunchOutTimeAllowEdit"
+                                                        style="cursor: pointer;height: 30px;font-size: 12px !important;"
+                                                        (change)="OnChangePunchOutTime($event,item, i)">
+                                                </td>
+                                                <td>
+                                                    <ng-select [items]="dropDownData" placeholder="select an option" 
+                                                        bindLabel="name" bindValue="id" [(ngModel)]="item.buildingName">
+                                                    </ng-select>
+                                                </td>
+                                                <td style="width: 20%;"> <span style="padding-top: 5px;text-align: center;
+                                              display: block;" *ngIf="item.TotalHours == 'NaN'"> 0
+                                                        hrs
+                                                    </span>
+                                                    <span style="padding-top: 5px;text-align: center;
+                                            display: block;" *ngIf="item.TotalHours != 'NaN'">
+                                                        {{item.TotalHours}} hrs </span>
+                                                </td>
+                                                <!-- isCheckCurrentDate &&  !isInvalidGeoFenceCoordinates && -->
+                                                <td style="width: 20%;"> 
+                                                    <div *ngIf="ShouldShowPunchInBtn">
+                                                        <button (click)="toggleTimer(item,i)"
+                                                            class="iTvYZO fdnWHc kind-primary-default size-large"
+                                                            loading="false" type="button" kind="primary">
+                                                            <div color="primary" class="ant-spin-nested-loading">
+                                                                <div class="ant-spin-container"><i
+                                                                        type="mdi mdi-arrow-right-bold-circle-outline"
+                                                                        font-size="20px !important"
+                                                                        class="Icon-s3zgp6-0 jZVCwM uil-stopwatch"></i>
+                                                                    <span *ngIf="!punchInSpinner"> {{PunchInOutText}}
+                                                                    </span>
+
+                                                                    <span *ngIf="punchInSpinner"
+                                                                        class="spinner-border spinner-border-sm m-r-10 primary-color text-center"
+                                                                        style="color: white;margin-right: -10px;"
+                                                                        role="status" aria-hidden="true"></span>
+
+
+
+                                                                    &nbsp; <div id="datetime"></div>
+                                                                </div>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                </td>
+
+
+
+                                            </tr>
+
+                                            <tr *ngIf="item.Iserror">
+                                                <td colspan="12">
+                                                    <div class="text-center invalid-formcontrolvalue">
+                                                        Please specified punch in/out time is invalid or the time is
+                                                        out of valid range
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+
+                                    </tbody>
+
+
+                                </table>
+
+                            </div>
+
+                            <div class="row" *ngIf="LstPunchInDetails.length == 0">
+                                <div class="col-lg-12">
+                                    <div style="text-align: center;">There is no attendance in/out log</div>
+                                </div>
+                                <br>
+                                <br>
+                            </div>
+                            <form [formGroup]="attendanceForm">
+                                <div class="row">
+
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-12"
+                                        style="padding: 0px;">
+                                        <label class="form-label">  Comments <span class="required"></span><span
+                                                class="help-text m-l-5"> (a few comments to assist your approver )
+                                            </span> </label>
+                                        <textarea class="form-control" rows="3" formControlName="remarks"
+                                            spellcheck="false" id="Remarks"></textarea>
+                                    </div>
+
+
+
+
+                                    <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                    <label class="form-label">From Date <span class="required">*</span></label>
+                                    <input class="form-control" name="educationDegree" type="text" autocomplete="off">
+
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">To Date <span class="required">*</span></label>
+                                    <input class="form-control" name="educationDegree" type="text" autocomplete="off">
+
+                                </div> -->
+
+                                    <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                    <label class="form-label">Start Time <span class="required">*</span></label>
+                                    <ng-template #popTemplate_startTime>
+                                        <ngb-timepicker  [(ngModel)]="starttime"  [meridian]="true" formControlName="starttime"></ngb-timepicker>
+                                    </ng-template>
+                                    <input class="form-control" [ngModel]="getMyProperty()"  [autoClose]="'outside'" (keyup)="onKeyUp($event)" name="educationDegree" type="text" autocomplete="off" [ngbPopover]="popTemplate_startTime" 
+                                    placement="bottom">
+
+                                </div> -->
+
+                                    <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                        <label class="form-label">Start Time <span class="required">*</span></label>
+
+                                        <ngb-timepicker [(ngModel)]="formatted_startTime" [meridian]="true"
+                                            formControlName="starttime"></ngb-timepicker>
+
+
+                                    </div>
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                        <label class="form-label">End Time <span class="required">*</span></label>
+                                        <ngb-timepicker [(ngModel)]="formatted_endTime" [meridian]="true"
+                                            formControlName="endtime"></ngb-timepicker>
+                                    </div> -->
+                                    <!-- 
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                        <label class="form-label">Punch In Time </label>
+                                        <input class="form-control" name="starttime" type="time" step="1"
+                                            [readonly]="isPunchInTimeAllowEdit" autocomplete="off"
+                                            formControlName="starttime" placement="bottom">
+
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                        <label class="form-label">Punch Out Time </label>
+                                        <input class="form-control" name="endtime" type="time" step="1"
+                                            [readonly]="isPunchOutTimeAllowEdit" autocomplete="off"
+                                            formControlName="endtime" placement="bottom"
+                                            (change)="onChangePunchOutTime_form($event)">
+                                        <div *ngIf="isInvalidPunchOutTime" class="invalid-formcontrolvalue">
+                                            Please specified punch out time is invalid or the time is out of valid range
+                                        </div>
+                                    </div> -->
+
+
+
+
+                                    <!-- <p class="alert alert-info">Time is: {{ attendanceForm.get('starttime').value }}</p> -->
+
+                                    <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                    <label class="form-label">Start Time <span class="required">*</span></label>
+                                    <ng-template #popTemplate_startTime>
+                                        <ngb-timepicker [(ngModel)]="time" [meridian]="meridian"></ngb-timepicker>
+                                    </ng-template>
+                                    <input class="form-control" name="educationDegree" type="text" autocomplete="off" [popover]="popTemplate_startTime" [outsideClick]="true"
+                                    placement="bottom">
+
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">End Time <span class="required">*</span></label>
+                                    <ng-template #popTemplate_endTime>
+                                        <ngb-timepicker [(ngModel)]="time" [meridian]="meridian"></ngb-timepicker>
+                                    </ng-template>
+                                    <input class="form-control" name="educationDegree" type="text" autocomplete="off" [popover]="popTemplate_endTime" [outsideClick]="true"
+                                    placement="bottom">
+                                </div> -->
+
+                                    <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                    <label class="form-label">Leave Type <span class="required">*</span> <span
+                                            class="help-text m-l-5">(Balance : 11)</span> </label>
+
+
+                                    <ng-select [items]="leaveType" placeholder="-- select on option --" bindLabel="name"
+                                        bindValue="id">
+                                    </ng-select>
+
+
+
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">No of days </label>
+                                    <input class="form-control" name="institutaion" type="text" autocomplete="off">
+
+                                </div>
+
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Request Type </label>
+
+                                    <div class="custom-control custom-checkbox chkbox_custom">
+                                        <input type="checkbox" class="custom-control-input" id="isaddress_1">
+                                        <label class="custom-control-label" for="isaddress_1"
+                                            style="padding: 12px;">IsFirst Half</label>
+                                    </div>
+
+                                    <div class="custom-control custom-checkbox chkbox_custom">
+                                        <input type="checkbox" class="custom-control-input" id="isaddress_2">
+                                        <label class="custom-control-label" for="isaddress_2"
+                                            style="padding: 12px;">IsSecond Half</label>
+                                    </div>
+
+                                </div> -->
+
+
+
+
+
+
+
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <!-- <div class="row" *ngIf="!_attendanceConfiguration.IsAllowMultiplePunches">
+                        <div class="col-lg-12" style="text-align: right; padding-right: 25px;padding-bottom: 11px;">
+                            <button class="btn btn-primary" (click)="addNewPunchIn()"> add new </button>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="row additional_row_header">
+                        <div class="col-lg-4">
+                            ATTEND. DATE
+                        </div>
+                        <div class="col-lg-3">
+                            PUNCH IN
+                        </div>
+                        <div class="col-lg-3">
+                            PUNCH OUT
+                        </div>
+                        <div class="col-lg-2">
+                            NO OF HRS
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <span *ngIf="punchInSpinner"
+                                class="spinner-border spinner-border-sm m-r-10 primary-color text-center"
+                                style="color: #2ad25f;" role="status" aria-hidden="true"></span>
+                        </div>
+                    </div> -->
+
+
+                    <!-- <ng-container *ngIf="!punchInSpinner">
+
+                        <div class="card additional_card" *ngFor="let item of LstPunchInDetails; let i = index">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <span style="padding-top: 5px;padding-left:2rem"></span> {{item.AttendanceDate |
+                                    date:'dd-MM-yyyy'}}
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type=time class="form-control" [(ngModel)]="item.StartTime" step="1"
+                                        [readonly]="isPunchInTimeAllowEdit" style="cursor: pointer;height: 30px;"
+                                        (change)="OnChangePunchInTime($event,item, i)">
+                                </div>
+                                <div class="col-lg-3">
+                                    <input type=time class="form-control" [(ngModel)]="item.EndTime" step="1"
+                                        [readonly]="isPunchOutTimeAllowEdit" style="cursor: pointer;height: 30px;"
+                                        (change)="OnChangePunchOutTime($event,item, i)">
+                                </div>
+                                <div class="col-lg-2">
+                                    <span style="padding-top: 5px;" *ngIf="item.TotalHours == 'NaN'"> 0
+                                        hrs
+                                    </span>
+                                    <span style="padding-top: 5px;" *ngIf="item.TotalHours != 'NaN'">
+                                        {{item.TotalHours}} hrs </span>
+
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div *ngIf="isInvalidTablePunchInOutTime"
+                                        class="text-center invalid-formcontrolvalue">
+                                        Please specified punch in/out time is invalid or the time is out of valid range
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container> -->
+
+
+                    <!-- <div class="row" style="width: 100%;" *ngIf="!_attendanceConfiguration.IsAllowMultiplePunches">
+                        <div class="col-lg-12">
+                            <table class="table table-bordered table-container">
+                                <thead>
+                                    <tr class="document_table_tr">
+                                        <th scope="col" style="width: 25%;">Attendance Date</th>
+
+                                        <th scope="col" style="width: 15%;text-align: center">Start Time</th>
+                                        <th scope="col" style="width: 15%;text-align: center">End Time</th>
+                                        <th scope="col" style="width: 15%;">No of Hrs</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of LstPunchInDetails; let i = index">
+                                        <td class="table-td-center" style="font-size: 14px;
+                                            font-weight: 500;">
+                                            <span style="text-align: center !important;display: block;">
+                                                {{item.AttendanceDate | date:'dd-MM-yyyy'}} </span>
+                                        </td>
+
+                                        <td class="txt-align document_table_validFrom table-td-center">
+
+                                            <input type=time class="form-control" [(ngModel)]="item.StartTime"
+                                                [readonly]="!_attendanceConfiguration.IsAllowEmployeeToInputWorkingHours"
+                                                style="cursor: pointer;" (change)="OnChangePunchInTime($event,item, i)">
+                                        </td>
+                                        <td class="txt-align document_table_validFrom table-td-center">
+                                            <input type=time class="form-control" [(ngModel)]="item.EndTime"
+                                                [readonly]="!_attendanceConfiguration.IsAllowEmployeeToInputWorkingHours"
+                                                style="cursor: pointer;"
+                                                (change)="OnChangePunchOutTime($event,item, i)">
+
+                                        </td>
+                                        <td class="table-td-center" style="font-size: 14px;
+                                    font-weight: 500;text-align: center !important;">
+                                            <span
+                                                style="text-align: center !important;display: block;">{{item.TotalHours}}
+                                            </span>
+                                        </td>
+
+                                      
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div> -->
+
+                </div>
+                </div>
+            </div>
+
+
+            <div class="modal-footer" style="background: #337ab7;" *ngIf="!isrendering_spinner">
+                <div class="row" style="width: 100%;color :#FFF;" *ngIf="!punchInSpinner">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <span class="f-s-12"> FIRST CHECK IN </span>
+                                <p class="m-b-2" style="font-weight: 600;
+                                font-size: 14px;"> {{FCI}} </p>
+                            </div>
+                            <div class="col-lg-4">
+                                <span class="f-s-12"> LAST CHECK OUT </span>
+                                <p class="m-b-2" style="font-weight: 600;
+                                font-size: 14px;"> {{LCO}} </p>
+                            </div>
+                            <div class="col-lg-4">
+                                <span class="f-s-12"> TOTAL HOURS </span>
+                                <p class="m-b-2" style="font-weight: 600;
+                                font-size: 14px;"> {{TOTALHOURS}} </p>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div>
+                            <button class="btn btn-default pull-right" type="button" (click)="close()"> <i
+                                    class="fa fa-ban" aria-hidden="true"></i> &nbsp; Close</button>
+                            <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched"
+                                *ngIf="(!isPunchInTimeAllowEdit || !isPunchOutTimeAllowEdit)">
+                                <div>
+                                    <div>
+                                        <button class="btn  btn-default " type="Submit" name="btnSubmit" id="btnSubmit"
+                                            (click)="savebutton()">
+                                            <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o"
+                                                        aria-hidden="true"></i> &nbsp; Save Changes</span></div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row" *ngIf="punchInSpinner">
+                    <div class="col-lg-12">
+                        <div class="d-flex align-items-center">
+                            <strong class="text-right" style="color: white;"> Collecting... &nbsp;&nbsp;&nbsp;</strong>
+                            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>

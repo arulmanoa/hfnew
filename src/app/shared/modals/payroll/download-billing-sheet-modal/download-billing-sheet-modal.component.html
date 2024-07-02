@@ -1,0 +1,129 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Download Billing Sheet</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL"> {{ClientName}} - {{PayPeriod}} </h6>
+        </div>
+
+        <div class="modal-close" (click)="modal_dismiss()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+
+
+      </div>
+
+
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-12">
+            <p><b>Billable Structure :: </b> </p>
+
+            <div class="pretty p-icon p-round" style="margin-bottom: 10px;">
+              <input type="radio" name="icon_solid" value="1"  (change)="onProfitSelectionChange(1)" />
+              <div class="state p-success">
+                <i class="icon mdi mdi-check"></i>
+                <label>One Billing Sheet per Sale Oder</label>
+              </div>
+            </div>
+            <br>
+            <div class="pretty p-icon p-round">
+              <input type="radio" name="icon_solid" value="2" (change)="onProfitSelectionChange(2)" />
+              <div class="state p-success">
+                <i class="icon mdi mdi-check"></i>
+                <label>One Consolidated Billing Sheet for selected Sale
+                  Orders</label>
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+
+        <br>
+        <br>
+
+
+
+
+
+        <div class="row">
+
+          <br> <br> <br>
+        
+          <div class="col-12">
+            <p><b>Transaction Details :: </b> </p>
+            <table class="table table-bordered table-container">
+              <thead>
+                <tr class="document_table_tr">
+                  <th scope="col" style="width: 8%">SO #</th>
+                  <th scope="col" style="width: 17%;text-align: center">Team Name</th>
+                  <th scope="col" style="width: 15%;text-align: center">Employee Count</th>
+                  <th scope="col" style="width: 15%;text-align: center">Billable Amount</th>
+                  <th scope="col" style="width: 10%;text-align: center">Status</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of LstSaleOrders">
+                 
+                  <td  class="table-td-center" style="text-align: center">
+                    {{item.Number}}
+                  </td>
+                  <td class="table-td-center">
+                   {{item.Team}}</td>
+
+                  <td class="table-td-center">
+                    {{item.EmployeeCount}} </td>
+                  <td class="table-td-center">
+                    {{item.TotalBillAmount | number : '1.2-2' }} </td>
+                  <td class="table-td-center">
+                    {{item.Status}} </td>
+                 
+
+                </tr>
+               
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <br>
+
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+        <div class="pull-left left-margin-btn">
+
+         
+        </div>
+        <div class="pull-right m-r-sm">
+          <div>
+            <div>
+              <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="modal_dismiss()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+              </button>
+              <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="_DownloadBillingSheet()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-download"></i> Download Billing Sheet
+                  </span>
+                </div>
+              </button>
+              <!-- <button class="btn upgrade-btn pull-right" type="button" disabled (click)="do_generate()"> <i
+                  class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Generate</button> -->
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

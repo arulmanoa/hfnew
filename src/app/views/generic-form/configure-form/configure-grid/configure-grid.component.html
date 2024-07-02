@@ -1,0 +1,177 @@
+<div class="page-wrapper">
+  <div class="page-content">
+
+
+
+    <div class="row " style="text-align: right;">
+      <div class="col-12">
+        <div class="pull-right">
+         <button class="btn btn-primary" (click)="onClickingConfirmButton()" style="margin-right: 10px;">Confirm</button>
+         <button class="btn btn-sm btn-default" tooltip="Close" (click)="Exit()" tooltip-placement="bottom">
+          <i class="mdi mdi-close font-size-md"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <br>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    
+    <div class="content m-b report-content" *ngIf="node && !spinner">
+
+
+      
+      <!-- <ngb-accordion  class="panel">
+        <ngb-panel  class="panel" title="Grid Options">
+
+        </ngb-panel>
+      </ngb-accordion> -->
+
+      <div *ngIf="columnNamesForColumnDefinition !== null && columnNamesForColumnDefinition.length > 0">
+        <div class="radio-tile-group">
+          <div class="input-container" *ngFor="let column of columnNamesForColumnDefinition; let i = index">
+             
+            <input class="c-card" type="checkbox" 
+            class="radio-button" 
+            [checked]="column.value"  tabindex="0" (click)="onClickingColumnSelectCheckBox(i , $event)"> 
+                             
+            <div class="radio-tile">
+                                    
+              <div class="card-state-icon"></div>
+              
+              <label>
+              
+                <div class="image"> 
+                  <div class="icon walk-icon">
+                    <i class="mdi mdi-checkbox-marked-circle" style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                  </div>
+                </div>
+              
+                <label class="radio-tile-label">{{column.name}}</label>
+              
+              </label>
+        
+            </div>
+          </div> 
+        </div>
+
+      </div>
+
+      <button class="btn btn-primary m-b" (click)="onClickingAddNewColumnButton()" tooltip="Custom Column"><i class="mdi mdi-plus m-r-xs"></i>Custom</button>
+      
+      <ngb-accordion  class="panel" [closeOthers]="true">
+        <ngb-panel  class="panel" [title]="columnDefinition.value.Type===1? columnDefinition.value.Id :columnDefinition.value.FieldName"
+        *ngFor = "let columnDefinition of tempColumnDefinitionObject | keyvalue ">
+          <ng-template ngbPanelContent>
+
+            <div class="row">
+              <div class="col-12" style="text-align: right;">
+                <a type="button" tooltip="Delete Column" (click)="onClickingColumnSelectCheckBox(columnDefinition.key , $event)">
+                <i class="material-icons" style="font-size: 24px;">delete </i></a>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <label  class="form-label"> Display Name : </label>  
+                <input class="form-control" type="text" [(ngModel)]="columnDefinition.value.DisplayName"><br>
+              </div>
+              <div class="col-4" *ngIf="columnDefinition.value.Type === 1">
+                <label  for="id">ID:</label>
+                <input class="form-control" type="text"  [(ngModel)]="columnDefinition.value.Id">
+              </div>
+              <div class="col-4" *ngIf="columnDefinition.value.Type === 1">
+                <label class="form-label" >Field:</label>
+                <ng-select  [items]="columnNamesForColumnDefinition" bindLabel="name" bindValue="name" [(ngModel)]="columnDefinition.value.FieldName">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+
+                <div class="row" style="margin-bottom: 10px;">
+                  <span class="col" style="text-align: right;">
+                    <label class="form-label" >Display Name in Header?: </label>
+                  </span>
+                  <span class="col" style="text-align: right;">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" [(ngModel)]="columnDefinition.value.ShowInHeader"/>
+                      <span class="el-switch-style" ></span>
+                    </label>
+                  </span>
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;">
+                  <span class="col" style="text-align: right;">
+                    <label class="form-label" >Sortable?: </label>
+                  </span>
+                  <span class="col" style="text-align: right;">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" [(ngModel)]="columnDefinition.value.IsSortable"/>
+                      <span class="el-switch-style" ></span>
+                    </label>
+                  </span>
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;">
+                  <span class="col" style="text-align: right;">
+                    <label class="form-label" >Filterable?: </label>
+                  </span>
+                  <span class="col" style="text-align: right;">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" [(ngModel)]="columnDefinition.value.IsFilterable"/>
+                      <span class="el-switch-style" ></span>
+                    </label>
+                  </span>
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;" >
+                  <span class="col" style="text-align: right;">
+                    <label class="form-label" >Clickable?: </label>
+                  </span>
+                  <span class="col" style="text-align: right;">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" [(ngModel)]="columnDefinition.value.Clickable"/>
+                      <span class="el-switch-style" ></span>
+                    </label>
+                  </span>
+                </div>
+
+              </div>
+              <div class="col">
+                <div class="row">
+
+                  <div class="col-12">
+                    <label class = "form-label" for="DisplayOrder" > Display Order : </label>
+                    <ng-select  id="DisplayOrder"  [(ngModel)]="columnDefinition.value.DisplayOrder">
+                     <ng-option *ngFor = "let column of tempColumnDefinitionObject | keyvalue; let i = index" [value]="i+1">{{i+1}}</ng-option>
+                    </ng-select>
+                  </div>
+
+                  <div class="col-12">
+                    <label class = "form-label" for="Width">Width :</label>
+                    <input  type="number"  id="Width" class="form-control" [(ngModel)]="columnDefinition.value.Width"> 
+                  </div>  
+                
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="columnDefinition.value.Clickable">
+              
+            </div>
+          </ng-template>
+        </ngb-panel>
+        
+    </ngb-accordion>
+    </div>
+
+  </div>
+</div>

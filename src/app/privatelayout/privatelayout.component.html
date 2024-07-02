@@ -1,0 +1,194 @@
+<!-- <div class='page-topbar '>
+    <div class='logo-area'>
+        <a routerLink="/Dashboard1">
+            <img src="assets\images\logo.png" alt="Logo" height="40" />
+        </a>
+    </div>
+    <div class='quick-area'>
+        <div class='pull-left'>
+            <ul class="info-menu left-links list-inline list-unstyled">
+                <li class="sidebar-toggle-wrap  ">
+                    <a data-toggle="#sidebar" class="sidebar_toggle">
+                        <i class="fa fa-bars pointer"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="search-base">
+            <div class="topnav">
+                <div class="search-container">
+                    <form (ngSubmit)="SearchData()">
+                        <input class='top-search' type="text" [(ngModel)]="SearchBy"
+                            placeholder="Tell me what you want to do" name="search" maxlength="50">
+                        <button type="submit" prevent-double-submit>
+                            <i class="fa fa-search pointer"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class='pull-right'>
+            <ul class="info-menu right-links list-inline list-unstyled">
+                <li>
+                    <ngx-spinner bdOpacity=0.9 size="medium" color="#ce295e" type="ball-fussion" [fullScreen]="true">
+                        <p style="color: #000000"> Fetching for you ... </p>
+                    </ngx-spinner>
+                </li> 
+                <li class="profile1 pfof1styl" style="padding-top:5px">
+                    <a href="#" data-toggle="dropdown" class="toggl1e">
+                        <i class="fa fa-user-circle-o"></i>
+                        {{fullName}}
+                    </a>
+                    <ul class="dropdown-menu profile animated fadeIn">
+                        <li>
+                            <a routerLinkActive="active" routerLink="/ChangePassword">
+                                <i class="fa fa-fw fa-pencil"></i>
+                                Change Password
+                            </a>
+                        </li>
+                        <li>
+                            <a routerLinkActive="active" routerLink="/Profile">
+                                <i class="fa fa-user"></i>
+                                Profile Update
+                            </a>
+                        </li> 
+                        <li>
+                            <a routerLinkActive="active" (click)="logout()">
+                                <i class="fa fa-fw fa-power-off"></i>
+                                Sign Out</a>
+                        </li> 
+                    </ul>
+                </li>
+
+                <li style="padding-top:5px">
+                    <a routerLinkActive="active" routerLink="/Help">
+                        <i class="fa fa-question-circle"></i> <span> Help</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<div class="page-container row-fluid container-fluid">
+    <div class="page-sidebar pagescroll">
+        <div class="page-sidebar-wrapper" id="main-menu-wrapper">
+
+            
+        </div>
+    </div>
+
+    <section id="main-content" class=" ">
+        <section class="wrapper main-wrapper row">
+            <div class="col-xs-12">
+                <alert></alert> 
+                <router-outlet></router-outlet>
+            </div>
+            <div id="spinner" style="display: none;">
+                <i class="fa fa-spinner fa-spin"></i>
+            </div>
+
+        </section>
+    </section>
+</div>
+
+<div id="modalunauthoriseduser" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalunauthoriseduser"
+    aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header paddingTopBottom-5 ">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalunauthoriseduser">Unauthorized Access</h4>
+            </div>
+            <div class="modal-body alert-danger">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-warning fa-3x "></i>
+                    </div>
+                    <div class="col-xs-10">
+                        <div>
+                            <h5>
+                                Please contact Jennifer Support team for any other queries
+                            </h5>
+                            <p>You do not have permission to access this resource.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-sm" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalsessionexpired" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalsessionexpired"
+    aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header paddingTopBottom-5 ">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalsessionexpired">Information!</h4>
+            </div>
+            <div class="modal-body alert-info">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-warning fa-3x "></i>
+                    </div>
+                    <div class="col-xs-10">
+                        <div>
+                            <h5>
+                                Your session expired.!
+                            </h5>
+                            <p>
+                                Any confirmed transaction are saved.but you will need to restart any searches or
+                                unfinished transactions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer padding0">
+                <button class="btn btn-default btn-block" data-dismiss="modal" routerLink="/Signin" title="Signin">
+                    Back to Signin
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalbadrequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalbadrequest"
+    aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header paddingTopBottom-5 ">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalbadrequest">Information!</h4>
+            </div>
+            <div class="modal-body alert-danger">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-info fa-3x "></i>
+                    </div>
+                    <div class="col-xs-10">
+                        <div>
+                            <h5>
+                                Something went wrong. Please try again after somettimes.!
+                            </h5>
+                            <p id="modalbadrequestcontent">
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer padding0">
+                <button class="btn btn-default btn-sm" data-dismiss="modal">Ok</button> 
+            </div>
+        </div>
+    </div>
+</div>
+  -->

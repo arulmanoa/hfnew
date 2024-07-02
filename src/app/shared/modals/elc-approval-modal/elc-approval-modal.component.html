@@ -1,0 +1,155 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="">
+
+
+              <div class="modal-header">
+                  <h4 class="modal-title pull-left">Client Approval</h4>
+
+                  <!-- <a *ngIf="isLoading" class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="confirmExit()"><i
+            class="mdi mdi-close font-size-md icon-close"></i></a> -->
+
+              </div>
+
+
+              <div class="modal-body no-padder">
+
+                  <div id="overlay">
+                      <div class="w-100 d-flex justify-content-center align-items-center">
+                          <div class="spinner"></div>
+                      </div>
+                  </div>
+
+
+                  <div class="flex-column">
+
+                      <form [formGroup]="approvalForm">
+
+                          <div class="col-12 col-md-12 col-sm-12">
+                              <div class="clearfix">
+
+                                  <!-- <span class="help-text"> <span class="badge badge--inline badge--pill badge--danger badge--rounded">NOTE</span> CTC breakup will be based on the below mentioned fields. Changing any existing value of these fields would
+                                  void your calculated breakup, and hence you must re-calculate the breakup by clicking on 'Preview CTC' button </span>
+                                  <br> -->
+
+                                  <div class="row">
+
+                                      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                          <label class="form-label ">Approval For<span class="required"> *</span></label>
+                                          <ng-select [items]="approvalForList" placeholder="-- select on option --"
+                                           formControlName="DocumentApprovalFor" 
+                                            bindLabel="label" bindValue="value">
+                                          </ng-select>
+                                          <!-- <span class="form__length" *ngIf="this.approvalForm.controls.ApprovalFor.value == '4'">
+                                                  (Note : Choosing 'CandidateJoiningConfirmation' means, the flow for AL will be initiated)</span> -->
+                                          <div *ngIf="submitted && g.DocumentApprovalFor.invalid" class="help-block">
+                                              <div *ngIf="g.DocumentApprovalFor.errors.required">Approval For is required
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                          <label class="form-label ">Approval Type <span class="required"> *</span> </label>
+                                          <ng-select [items]="approvalTypeList" placeholder="-- select on option --" 
+                                          formControlName="DocumentApprovalType" 
+                                          bindLabel="label" bindValue="value">
+                                          </ng-select>
+                                          <div *ngIf="submitted && g.DocumentApprovalType.invalid" class="help-block">
+                                              <div *ngIf="g.DocumentApprovalType.errors.required">Approval Type is required
+                                              </div>
+                                          </div>
+                                      </div>
+
+                                      <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                          <label class="form-label"> Remarks  </label>
+                                          <textarea class="form-control" rows="3" spellcheck="false" id="Remarks" formControlName="Remarks" ></textarea>
+                                          <!-- <div *ngIf="submitted && g.Remarks.invalid" class="help-block">
+                                              <div *ngIf="g.Remarks.errors.required">Remarks is required</div>
+                                          </div> -->
+                                      </div>
+
+                                      <!-- Attachment -->
+                                      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                                            <label class="form-label">Attachment <span class="required"> *</span> <span class="help-text m-l-5">(Max file size 2MB)</span></label>
+                                            <label class="upload control" style="width: 50%; float: left;" *ngIf="!FileName">
+                                            <div class="upload-draggable is-primary">
+                                                <section class="section">
+                                                <div class="has-text-centered"> 
+                                                    <span class="icon is-large">
+                                                    <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                                        style="color: #9ba7ca;"></i> Upload </span>
+                                                    </span>
+
+                                                </div>
+                                                </section>
+                                            </div>
+                                            <input type="file" accept=
+                                            "application/msword,  application/pdf, image/*" (change)="onFileUpload($event)"
+                                                id="sTest-uploadFile-candidateAddResume">
+
+                                            </label>
+                                            <div *ngIf="submitted && g.ObjectStorageId.invalid || !FileName" class="help-block">
+                                                <div>Attachment is required
+                                                </div>
+                                            </div>
+
+                                            <!-- FileName  -->
+                                            <p class="control" *ngIf="FileName">
+                                                <span class="file-name">
+                                                    <!-- <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a ngbTooltip="Delete Photo"
+                                                        id="sTest-deleteFile-candidateAddResume"
+                                                        style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                                                                display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"
+                                                        ></i></a> </button> -->
+
+
+                                                    <a target="blank" class="ahref" style="padding: 2px;">
+                                                    {{FileName}}
+                                                    </a>
+                                                </span>
+                                            </p>
+                                      </div>
+
+
+
+
+
+
+                                  </div>
+                              </div>
+
+                          </div>
+
+
+                      </form>
+
+                  </div>
+
+              </div>
+
+
+              <div class="modal-footer">
+                  <div *ngIf="!isLoading">
+                      <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban"
+                        aria-hidden="true"></i> &nbsp; Cancel</button>
+                      <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                        (click)="savebutton()">
+                            <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                            Save </span></div>
+                        </button>
+                      </div>
+                  </div>
+
+
+                  <div class="d-flex align-items-center" *ngIf="isLoading">
+                      <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                      <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                  </div>
+
+
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

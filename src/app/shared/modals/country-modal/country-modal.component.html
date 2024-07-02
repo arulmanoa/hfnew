@@ -1,0 +1,116 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="">
+
+
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">Add New Country</h4>
+                    <!-- <button type="button" class="close" (click)="closeModal()"><i class="mdi mdi-close"></i></button> -->
+
+
+                    <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+                </div>
+
+
+                <div class="modal-body no-padder">
+
+                    <div id="overlay">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex-column">
+
+                        <form [formGroup]="countryForm">
+
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="clearfix">
+                                    <div class="row">
+
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label>Abbrevation <span class="required">*</span> </label>
+                                            <input type="text" placeholder="Abbrevation" onkeypress="return /[a-z]/i.test(event.key)" oninput="this.value = this.value.toUpperCase()" maxlength="10" autocomplete="off" class="form-control" formControlName="CountryAbbr" [ngClass]="{ 'is-invalid': submitted && f.CountryAbbr.errors }">
+
+                                            <div *ngIf="submitted && f.CountryAbbr.errors" class="invalid-feedback">
+                                                <div *ngIf="f.CountryAbbr.errors.required">The Abbrevation field is required</div>
+                                                <div *ngIf="f.CountryAbbr.errors.minlength">Abbrevation must be at least 2 characters</div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label> Name <span class="required">*</span> </label>
+                                            <input autocomplete="off" type="text" placeholder="Country Name" maxlength="20" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" class="form-control" formControlName="Name" [ngClass]="{ 'is-invalid': submitted && f.Name.errors }">
+                                            <div *ngIf="submitted && f.Name.errors" class="invalid-feedback">
+                                                <div *ngIf="f.Name.errors.required">Country Name is required</div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col-md-12 p-15">
+                                            <label> Description  </label>
+                                            <textarea class="form-control" rows="5" spellcheck="false" id="Description" formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+                                            <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                                                <div *ngIf="f.description.errors.required">The Description field is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- <div class="col-12 col-md-8 col-sm-6">
+                                        <div class="row">
+                                            <div class="col-md-12 p-15">
+                                                <label> Abbrevation <span class="required">*</span> </label>
+                                                <textarea class="form-control" rows="5" spellcheck="false" id="CountryAbbr" formControlName="CountryAbbr" [ngClass]="{ 'is-invalid': submitted && f.CountryAbbr.errors }"></textarea>
+                                                <div *ngIf="submitted && f.CountryAbbr.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.CountryAbbr.errors.required">The Abbrevation field is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default pull-right" type="button" (click)="closeModal()">Cancel</button>
+
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSaveAndNewSubmit" id="btnSaveAndNewSubmit" [disabled]="!disableBtn" (click)="savebutton()">
+                                    <div class="pos-rlt sm-btn-component"> <span> Save and add other </span> </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" [disabled]="!disableBtn" (click)="savebutton()">
+                                    <div class="pos-rlt sm-btn-component"> <span> Save </span></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

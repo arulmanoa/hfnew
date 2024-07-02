@@ -1,0 +1,573 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="headerbar">
+          <h2 class="header_title">Employee Documents</h2>
+          <p class="subheader_title"></p>
+        </div>
+      </div>
+      <div class="col-lg-6 text-right">
+        <div class="text-right">
+          <ul class="list-inline" *ngIf="!spinner">
+
+            <li class="list-inline-item" *ngIf="shouldShowActionButtons('btn_saveempdocuments')"><button type="button" class="btn btn-primary"
+                (click)="doSaveEmployeeDocuments()"> <i class="mdi mdi-content-save  m-r-xs"></i> Save
+              </button>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="content m-b report-content int-header-content-panel" *ngIf="!spinner">
+      <div class="row" style="margin-top: -3px;
+      margin-bottom: -21px;">
+        <div class="col-12 text-right">
+          <p class="secondary-text m-b-lg" *ngIf="shouldShowActionButtons('btn_downloadstatutoryforms')"><a (click)="download_template()" href="javascript:;"
+              style="color: #1f62ff;cursor: pointer;font: weight 600px;">Click here</a> to download the statutory forms
+          </p>
+
+        </div>
+      </div>
+      <ngb-tabset (tabChange)="loadData_slider($event)" [(activeId)]="_slider_activeTabName" style="width: 100%;">
+        <ngb-tab id="personalDocs">
+          <ng-template ngbTabTitle><i class="fa fa-book" aria-hidden="true"></i>&nbsp;&nbsp;Personal Documents
+          </ng-template>
+          <ng-template ngbTabContent>
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="shouldShowActionButtons('btn_uploaddocuments')">
+                <div class="text-right">
+                  <button class="btn btn-default btn-sm m-r-sm"
+                    style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="uploadDocs()">
+                    Upload Docs
+                  </button>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="candidateDocuments.length == 0" style="width: 100%;">
+                <div class="col-lg-12">
+                  <p class="text-center">No document transactions found!</p>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <br />
+                <div *ngFor="let item of candidateDocuments">
+                  <div *ngIf="item.Modetype != 2 && item.Status != 2">
+                    <h6 class="header-pretitle" style="font-size: .625rem;margin-bottom: 10px;margin-top: 10px;">
+                      {{item.CreatedOn | date:'dd MMM, yyyy'}}
+                    </h6>
+                    <div class="list-group-item list-group_shadow m-b-05">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                          <a href="javascript:;" class="avatar">
+                            <img [src]="getFileNameExts(item.FileName)" alt="..." class="avatar-img rounded"
+                              style="width:40px">
+                          </a>
+                        </div>
+                        <div class="col ml-n2">
+                          <h4 class="font-h4 mb-1">{{item.DocumentTypeName}} ~ {{item.FileName}} <span
+                              class="badge badge-self" style="display: inline;" *ngIf="item.IsSelfDocument">Self</span>
+                            <span class="badge badge-warning" style="display: inline;"
+                              *ngIf="!item.IsSelfDocument">Others</span>
+                          </h4>
+                          <small class="text-muted" *ngIf="item.IsSelfDocument"> {{item.DocumentNumber}} </small>
+                        </div>
+                        <div class="col-auto">
+                          <div class="media-right">
+                            <button class="btn btn-default btn-sm m-r-sm"
+                              style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                              (click)="downloadDocs(item)"> Download </button>
+                            <button class="btn btn-default btn-sm m-r-sm" *ngIf="checkIsZipFile(item) == false"
+                              style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                              (click)="viewDocs(item, 'personal')"> View </button>
+
+                            <button class="btn btn-default btn-sm m-r-sm" *ngIf="checkIsZipFile(item) == true"
+                              style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                              (click)="getFileList('Education - ' + item.Name, item,'University | Completion | CourseType | Scoring')">
+                              View </button>
+
+
+
+                            <button class="btn btn-default btn-sm m-r-sm"
+                              *ngIf="item.IsSelfDocument && item.Status != '1'"
+                              style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                              (click)="deleteDocs(item)"> Delete </button>
+                          </div>
+
+                          <!-- <div class="vertical-align-middle link-to-details" style="margin-top: 2.5rem;">
+                        <span class="text-pending"> <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"
+                            class="org-setup-status-icon pending">
+                            <rect class="legend-rect" y="2" width="100" height="100" rx="50" fill="inherit" stroke="inherit"
+                              transform="translate(0 90)">
+                            </rect>
+                          </svg> APPROVED
+                        </span>
+                      </div> -->
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngFor="let item of newDocumentList">
+                  <div *ngIf="item.Modetype != 2">
+                    <h6 class="header-pretitle" style="font-size: .625rem;margin-bottom: 10px;margin-top: 10px;">
+                      {{item.CreatedOn | date:'dd MMM, yyyy'}}
+                    </h6>
+                    <div class="list-group-item list-group_shadow m-b-05">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                          <a href="javascript:;" class="avatar">
+                            <img [src]="getFileNameExts(item.FileName)" alt="..." class="avatar-img rounded"
+                              style="width:40px">
+                          </a>
+                        </div>
+                        <div class="col ml-n2">
+                          <h4 class="font-h4 mb-1">{{item.DocumentCategoryName}} ~ {{item.FileName}} <span
+                              class="badge badge-self" style="display: inline;" *ngIf="item.IsSelfDocument">Self</span>
+                            <span class="badge badge-warning" style="display: inline;"
+                              *ngIf="!item.IsSelfDocument">Others</span>
+                          </h4>
+                          <small class="text-muted" *ngIf="item.IsSelfDocument"> {{item.DocumentNumber}} </small>
+                        </div>
+                        <div class="col-auto">
+                          <div class="media-right">
+                            <button class="btn btn-default btn-sm m-r-sm"
+                              style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                              (click)="downloadDocs(item)"> Download </button>
+                            <button class="btn btn-default btn-sm m-r-sm"
+                              style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                              (click)="viewDocs(item, 'personal')"> View </button>
+                            <button class="btn btn-default btn-sm m-r-sm" *ngIf="item.IsSelfDocument"
+                              style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                              (click)="deleteDocs(item)"> Delete </button>
+                          </div>
+
+                          <!-- <div class="vertical-align-middle link-to-details" style="margin-top: 2.5rem;">
+                        <span class="text-pending"> <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"
+                            class="org-setup-status-icon pending">
+                            <rect class="legend-rect" y="2" width="100" height="100" rx="50" fill="inherit" stroke="inherit"
+                              transform="translate(0 90)">
+                            </rect>
+                          </svg> APPROVED
+                        </span>
+                      </div> -->
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab id="officialDocs">
+          <ng-template ngbTabTitle><i class="fa fa-book" aria-hidden="true"></i>&nbsp;&nbsp;Official Documents
+          </ng-template>
+          <ng-template ngbTabContent>
+
+            <app-searchbar-view *ngIf="searchConfiguration" [Content]="'General'"
+              [searchConfiguration]="searchConfiguration" (searchButtonClicked)="onClickingSearchButton($event)"
+              (searchElementValueChange)="onSearchElementValueChange($event)"></app-searchbar-view>
+
+            <div class="row" *ngIf="employeeLetterTransactions.length == 0">
+              <div class="col-lg-12">
+                <p class="text-center">No letter transactions found!</p>
+              </div>
+            </div>
+
+
+
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                <br />
+                <div *ngFor="let item of employeeLetterTransactions">
+                  <div *ngIf="item.Status == 1">
+                    <h6 class="header-pretitle" style="font-size: .625rem;margin-bottom: 10px;margin-top: 10px;">
+                      {{item.DisplayDate}}
+                    </h6>
+                    <div class="list-group-item list-group_shadow m-b-05">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                          <a href="javascript:;" class="avatar">
+                            <img src="assets/Images/clientlogo/{{clientLogoLink}}" alt="..." class="avatar-img rounded"
+                              style="width:40px">
+                          </a>
+                        </div>
+                        <div class="col ml-n2">
+                          <h4 class="font-h4 mb-1">{{item.TemplateCategroyCode}} </h4>
+                          <small class="text-muted"> {{item.TemplateCategroyDescription}} </small>
+                        </div>
+                        <div class="col-auto">
+                          <div class="media-right">
+                            <button class="btn btn-default btn-sm m-r-sm"
+                              style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                              (click)="downloadDocs(item)"> Download </button>
+                            <button class="btn btn-default btn-sm m-r-sm"
+                              style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                              (click)="viewDocs(item, 'official')"> View </button>
+                            <!-- <button class="btn btn-default btn-sm m-r-sm"
+                          style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="deleteDocs(item)">
+                          Delete </button> -->
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<div id="popup_viewDocs" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_viewDocs" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" *ngIf="employeeDetails">
+
+        <div class="modal-header" style="padding: 15px !important;">
+
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b> {{employeeDetails.FirstName}} ~ {{employeeDetails.Code}} </b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL">
+              {{employeeDetails.EmploymentContracts[0].StartDate | date:'dd-MM-yyyy'}} |
+              {{employeeDetails.EmploymentContracts[0].Designation}}
+            </h6>
+          </div>
+
+          <div class="modal-close" *ngIf="!shouldRendering" (click)="modal_dismiss()" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+          <div class="iframe-container" *ngIf="documentURL == null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <!-- <img src="assets/Images/Ciel.png" style="opacity: .5;"> -->
+            <img src="assets/Images/clientlogo/{{clientminiLogoLink}}" style="opacity: .5;">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <div class="iframe-container" *ngIf="documentURL != null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+            <iframe [src]="documentURL" frameborder="0" scrolling="yes" style="width: 100%;"></iframe>
+            <img style="top: 0 !important;
+                right: 0px !important;
+                position: absolute !important;
+                z-index: 9;
+                height: 55px !important;
+                vertical-align: top;
+                opacity: inherit;
+                bottom: unset !important;
+                left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientminiLogoLink}}">
+          </div>
+        </div>
+        <!-- <div class="modal-footer" >   src="../../../../assets/Images/cielhr.png"      
+          <div>
+            <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+              (click)="modal_dismiss()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Close </span></div>
+            </button>
+
+          </div>
+
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<nz-drawer [nzVisible]="visible_documentUpload" [nzWidth]="740" nzIcon="user" nzTitle="Document Details"
+  (nzOnClose)="close_documentUpload()">
+
+  <div class="headerbar norecord" *ngIf="filteredDocs.length == 0">
+
+    <h2 class="header_title">No Document records found!</h2>
+    <p class="subheader_title">
+      Please try again...
+    </p>
+
+  </div>
+  <div>
+    <form [formGroup]="documentForm">
+      <div class="row">
+        <div class="col-12 col-md-12 col-sm-12">
+          <div class="clearfix">
+            <div class="row" *ngIf="filteredDocs.length > 0">
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 text-center" *ngIf="isESIC">
+                Note : Employees are exempt from filling out ESIC Form if their gross monthly wage exceeds ₹ 21,000
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <label class="form-label ">Document Name<span class="required"> *</span></label>
+                <ng-select [items]="filteredDocs" (change)="onChangeDocumentName($event)"
+                  placeholder="-- select an option --" formControlName="DocumentName"
+                  [ngClass]="{ 'ng-touched': submitted && g.DocumentName.errors }" bindLabel="DocumentName"
+                  bindValue="DocumentTypeId">
+
+                </ng-select>
+                <div *ngIf="submitted && g.DocumentName.invalid" class="help-block">
+                  <div *ngIf="g.DocumentName.errors.required">Document Name is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label ">Document Number <span class="required" *ngIf="IsDocumentNumberRequired"> *</span> </label>
+                <input class="form-control" name="DocumentNumber" formControlName="DocumentNumber"
+                  placeholder="1234567890" onkeypress="return /^[0-9A-Z]+$/i.test(event.key)"
+                  [ngClass]="{ 'is-invalid': submitted && g.DocumentNumber.errors }" type="text" autocomplete="off">
+                <div *ngIf="submitted && g.DocumentNumber.invalid" class="help-block">
+                  <div *ngIf="g.DocumentNumber.errors.required">Document Number is required
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="IsDateRequired">
+                <label class="form-label ">Document Valid From <span class="required"> *</span> </label>
+                <input type="text" class="form-control" bsDatepicker readonly (bsValueChange)="onChangetblDate($event)"
+                  placement="bottom"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                  name="ValidFrom" formControlName="ValidFrom"
+                  [ngClass]="{'is-invalid': submitted && g.ValidFrom.errors }" placeholder="12-12-2020"
+                  autocomplete="off">
+                <div *ngIf="submitted && g.ValidFrom.invalid" class="help-block">
+                  <div *ngIf="g.ValidFrom.errors.required">Valid From is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="IsDateRequired">
+                <label class="form-label ">Document Valid Till <span class="required"> *</span> </label>
+                <input type="text" class="form-control" readonly [minDate]="doctblminDate" bsDatepicker
+                  placement="bottom"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                  name="ValidTill" formControlName="ValidTill"
+                  [ngClass]="{'is-invalid': submitted && g.ValidTill.errors }" placeholder="12-12-2020"
+                  autocomplete="off">
+                <div *ngIf="submitted && g.ValidTill.invalid" class="help-block">
+                  <div *ngIf="g.ValidTill.errors.required">Valid From is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="documentCategoryType.length > 0">
+                <label class="form-label">Category Type <span class="required"> *</span>
+                </label>
+                <div class="page-links" *ngFor="let item of documentCategoryType" style="padding: 5px;">
+                  <div class="custom-control custom-checkbox chkbox_custom">
+                    <input type="checkbox" class="custom-control-input" id="isaddress_{{item.Name}}"
+                      [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone:
+                                  true}" [checked]="item.isChecked">
+                    <label class="custom-control-label" for="isaddress_{{item.Name}}"
+                      style="padding-top: 12px;">{{item.Code}}</label>
+                  </div>
+                </div>
+                <div *ngIf="submitted && isValidCategoryType == false" class="help-block">
+                  Category Type is required
+                </div>
+              </div>
+              <div *ngIf="selectedDocument"
+                class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                <label class="form-label">Attachment <span class="required"> *</span> <span class="help-text m-l-5">(Max
+                    file size <span>{{selectedDocument.MaxSize/1024}}</span>MB)</span></label>
+                <label class="upload control" style="width: 50%; float: left;" *ngIf="!documentFileName">
+                  <div class="upload-draggable is-primary">
+                    <section class="section">
+                      <div class="has-text-centered">
+                        <span class="icon is-large">
+                          <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                              style="color: #9ba7ca;"></i> Upload </span>
+                        </span>
+                      </div>
+                    </section>
+                  </div>
+                  <input type="file" *ngIf="!acceptOnlyImageFile" accept="application/msword,  application/pdf, image/*"
+                    (change)="onFileUpload($event)" id="sTest-uploadFile-candidateAddResume">
+                  <input type="file" *ngIf="acceptOnlyImageFile" accept="image/*" (change)="onFileUpload($event)"
+                    id="sTest-uploadFile-candidateAddResume">
+                </label>
+                <div *ngIf="submitted && !documentFileName" class="help-block">
+                  Attachment is required
+                </div>
+                <p class="control" *ngIf="documentFileName">
+                  <span class="file-name">
+                    <button class="btn btn-danger c-btn" [disabled]="!isLoading" (click)="doDeleteFile()"><a
+                        ngbTooltip="Delete Photo" id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                   display: block   ;margin-top: -5px;">
+                        <i class="fa fa-trash-o"></i></a> </button>
+                    <a target="blank" class="ahref" style="padding: 2px;">
+                      {{documentFileName}}
+                    </a>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <div class="row" style="position: absolute;bottom: 10px;width: 100%;" *ngIf="filteredDocs.length > 0">
+    <div class="col-lg-6">
+      <ul class="list-inline">
+        <button class="btn btn-blank" (click)="downloadTemplateForm()" style="color:  #146BA2 !important;font-weight: 600 !important;
+              font-size: 13px;" *ngIf="DownloadDocumentId > 0"> <i class="mdi mdi-download"></i> &nbsp;Download Sample Form
+        </button>
+      </ul>
+    </div>
+    <div class="col-lg-6 text-right">
+      <div class="text-right">
+        <ul class="list-inline" *ngIf="isLoading">
+          <li class="list-inline-item">
+            <button class="btn btn-default" type="button" [disabled]=!isLoading (click)="close_documentUpload()">
+              <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+              Cancel</button>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn  btn-primary" [disabled]=!isLoading type="Submit" name="btnSubmit" id="btnSubmit"
+              (click)="saveDocumentDetails()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                </span></div>
+            </button>
+          </li>
+
+        </ul>
+        <div class="d-flex align-items-center" *ngIf="!isLoading">
+          <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-drawer>
+
+
+
+
+<div id="documentviewer" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_viewDocs" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+            </h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="close_documentviewer()" style="margin-top: -15px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+            <!-- #region Old code before JSZip  -->
+            <!-- <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                          <app-filedownload [documentId]="documentURLId">
+                          </app-filedownload>
+                      </div> -->
+            <!-- #endregion -->
+
+            <!-- #region New code after Jszip  -->
+            <!-- JSZIP -->
+            <a style="float: right;margin-right: 45px;margin-top: -3px;"
+              class="btn btn-label-success btn-upper btn-sm btn-bold btn-custom_preview m-r-xs"
+              [download]="downLoadFileName" [href]="documentURL">Download</a>
+            <!-- JSZIP -->
+
+            <!-- #endregion -->
+          </div>
+
+        </div>
+
+
+        <div class="modal-body" style="overflow: auto !important;">
+
+          <div class="iframe-container" *ngIf="docList?.length == 0"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <img src="assets/Images/clientlogo/{{clientminiLogoLink}}">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <ng-container *ngIf="docList?.length > 0">
+            <div class="iframe-container" *ngFor="let item of docList"
+              style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;margin-bottom: 10px">
+              <iframe [src]="item.ImageURL" frameborder="0" scrolling="yes"></iframe>
+              <div><span style="top: 0 !important;
+                              left: 0px !important;
+                              position: absolute !important;
+                              z-index: 5;
+                              height: 25px !important;
+                              vertical-align: top;
+                              opacity: inherit;
+                              bottom: unset !important;
+                              right: unset !important;
+                              background: #c9c9c7;
+                              width: 45%;
+                              padding-left: 5px;
+                              opacity: 0.9;">{{item.name}} </span></div>
+
+              <img style="top: 0 !important;
+                      right: 0px !important;
+                      position: absolute !important;
+                      z-index: 9;
+                      height: 55px !important;
+                      vertical-align: top;
+                      opacity: inherit;
+                      bottom: unset !important;
+                      left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientLogoLink}}">
+
+            </div>
+          </ng-container>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,592 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="text-center ma-5" *ngIf="spinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 15px;margin-top: -15px;">
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="padding-top: 10px;">
+          <h6 class="h6_c" *ngIf="isEnabled == 1" style="font-size: 16px;
+          font-weight: 700;"> Compensation </h6>
+          <h6 class="h6_c" *ngIf="isEnabled == 2" style="font-size: 16px;
+           font-weight: 700;"> Week-Off Request </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <!-- <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid sm:grid-cols-4 gap-6">
+      <label for="plan-hobby" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;text-transform: capitalize !important;">Compensation</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{tableArray.length}} <span style="font-size: 12px;
+            color: black !important;"> Compensation(s) </span> </span>
+        </span>
+
+        <input type="radio" name="plan" id="plan-hobby" value="hobby" class="absolute h-0 w-0 appearance-none"
+          (click)="claimEnabled('1')" [checked]="isEnabled == 1" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+      <!-- <label for="plan-hobby1" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;text-transform: capitalize !important;">Week-Off
+          Request</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{tableArrayWOW.length}} <span style="font-size: 12px;
+            color: black !important;"> Week-Off Request(s) </span></span>
+        </span>
+
+        <input type="radio" name="plan" id="plan-hobby1" value="hobby1" class="absolute h-0 w-0 appearance-none"
+          (click)="claimEnabled('2')" [checked]="isEnabled == 2" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label> -->
+    </div>
+
+
+    <div class="content m-b report-content" *ngIf="isEnabled == 1">
+      <div class="row" style="margin-left: 0px !important;">
+        <!-- <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+          <label class="form-label searchbar-label">Month </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <ng-select [items]="Months" [(ngModel)]="MonthId" placeholder="Month" bindLabel="monthName" bindValue="id"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+              </ng-select>
+            </div>
+          </div>
+        </div> -->
+        <div class="form-group-vertical col-xs-12 col-sm-3">
+          <label class="form-label searchbar-label">Date Range </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <div class="position-relative">
+                <input class="form-control" style="height: 36px;border-color: rgb(204 204 204); width: 110%;"
+                  placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="DateId"
+                  (bsValueChange)="onChange_DateSearch($event,DateId)"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                <span *ngIf="DateId" (click)="DateId = null" class="ng-clear-wrapper ng-star-inserted"
+                  title="Clear all"><span
+                    style="color:#99999c;font-size: 18px;position: absolute; right: -2px;transform: translate(-50%, -50%);top: 45%; cursor: pointer;"
+                    aria-hidden="true" class="ng-clear">×</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+          <label class="form-label searchbar-label">Date</label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <input class="form-control" style="height: 36px;border-color: rgb(204 204 204);" type="text"
+                name="AppliedFrom" bsDatepicker placement="bottom"
+                [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                [daysDisabled]="weekOffs" placeholder="12-12-1970"
+                [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off" [(ngModel)]="DateId"
+                (bsValueChange)="onChange_SearchDate($event)">
+            </div>
+          </div>
+        </div> -->
+        <!-- <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+          <label class="form-label searchbar-label">Status</label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <input type="text" style="height: 36px;border-color: rgb(204 204 204);" class="form-control"
+                placeholder="Status" [(ngModel)]="SearchId">
+            </div>
+          </div>
+        </div> -->
+        <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+          <label class="form-label">Status</label>
+            <input type="text" class="form-control" maxlength="50" [(ngModel)] = "SearchId"  placeholder="Status"/>
+          
+        </div> -->
+        <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+          <label class="form-label searchbar-label">Status </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <ng-select [items]="StatusList" [(ngModel)]="StatusId" placeholder="Status" bindLabel="Name"
+                bindValue="id" style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+          <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+            <div class="input-group">
+              <button type="button" (click)="SearchSubFn()" class="btn btn-primary mr-2 float-right"
+                style="display: inline;margin: 0 auto;">
+                <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+          <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+            <div class="input-group">
+              <button type="button" class="btn btn-default" (click)="ReFreshFn()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="row">
+        <div class="form-group-vertical col-xs-12 col-sm-2 col-md-12 text-right">
+          <div class="form-group m-t-m5">
+            <div class="input-group" style="margin-top:-16px">
+              <button type="button" class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;"
+                [disabled]="AvailDisableFn()" (click)="submitFn('A')">
+                <i class="mdi mdi-lead-pencil"></i> Avail
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ngb-tab>
+            <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+              <div class="table-responsive table-height" style="height: 300px;">
+                <table class="table-sticky table-bordered tble-row-height table mb-0">
+                  <thead class="tbl-freezhead">
+                    <tr>
+                      <th style="background: #f3f3f3; width: 30px;">
+                        <input #checkAll type="checkbox" id="checkAll" [checked]="checked" [(ngModel)]="CheckdVal"
+                          (change)="CheckAllFn(checkAll.checked)"
+                          style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                      </th>
+                      <th style="background: #f3f3f3;width: 100px;">
+                        Emp ID
+                      </th>
+                      <th style="background: #f3f3f3;width: 100px;">
+                        Date
+                      </th>
+                      <th style="background: #f3f3f3;width: 100px;">
+                        Expire On
+                      </th>
+                      <th style="background: #f3f3f3;width: 100px;">
+                        Status
+                      </th>
+                      <!-- <th style="background: #f3f3f3;width: 150px;">
+                        Remarks
+                      </th> -->
+                      <th style="background: #f3f3f3;width: 100px;">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <tbody class="tbl-scrollbody">
+                    <tr *ngFor="let item of tableArray">
+                      <td style="padding-top: 8px !important;width: 30px;">
+                        <input type="checkbox" [(ngModel)]="item.Select_Val" [checked]="item.Select_Val==true"
+                          id="check" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+
+                      </td>
+                      <td style="padding-top: 8px !important;width: 100px;">
+                        {{item.EmployeeId}}
+                      </td>
+                      <td style="padding-top: 8px !important;width: 100px;">
+                        {{item.EarnedDate}}
+                      </td>
+                      <td style="padding-top: 8px !important;width: 100px;">
+                        {{item.ExpireOn}}
+                      </td>
+                      <td style="padding-top: 8px !important;width: 100px;">
+                        {{item.Status == 100 ? 'Available' :(item.Status == 200 ? 'Blocked' : (item.Status == 300 ?
+                        'Expired' :(item.Status == 400 ? 'Availment Requested' :'Availed')))}}
+                      </td>
+                      <!-- <td style="padding-top: 8px !important;width: 150px;">
+                        <p matTooltip="{{item.EmployeeRemarks}}"
+                          style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;cursor: pointer;width: 90px;height: 20px;margin-bottom: 0px;">
+                          {{item.EmployeeRemarks}}
+                        </p>
+
+                      </td> -->
+                      <td style="padding-top: 8px !important;width: 100px;">
+                        <i class="fa fa-pencil-square-o btn" aria-hidden="true"
+                          style="font-size: 20px; cursor: pointer;" (click)="submitFn('I',item)"></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div *ngIf="tableArray.length == 0" style="text-align: center; padding-top: 35px;">No Records Found
+                </div>
+              </div>
+            </div>
+          </ngb-tab>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content" *ngIf="isEnabled == 2">
+      <div class="row" style="margin-left: 0px !important;">
+
+        <div class="form-group-vertical col-xs-12 col-sm-3">
+          <label class="form-label searchbar-label">Date Range </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <div class="position-relative">
+                <input class="form-control" style="height: 36px;border-color: rgb(204 204 204); width: 110%;"
+                  placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="DateIdWOW"
+                  (bsValueChange)="onChange_DateSearchWOW($event,DateIdWOW)"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                <span *ngIf="DateIdWOW" (click)="DateIdWOW = null" class="ng-clear-wrapper ng-star-inserted"
+                  title="Clear all"><span
+                    style="color:#99999c;font-size: 18px;position: absolute; right: -2px;transform: translate(-50%, -50%);top: 45%; cursor: pointer;"
+                    aria-hidden="true" class="ng-clear">×</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+          <label class="form-label searchbar-label">Status </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <ng-select [items]="StatusListWOW" [(ngModel)]="StatusIdWOW" placeholder="Status" bindLabel="Name"
+                bindValue="id" style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+          <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+            <div class="input-group">
+              <button type="button" (click)="SearchSubFnWOW()" class="btn btn-primary mr-2 float-right"
+                style="display: inline;margin: 0 auto;">
+                <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+          <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+            <div class="input-group">
+              <button type="button" class="btn btn-default" (click)="ReFreshFnWOW()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="row">
+        <div class="form-group-vertical col-xs-12 col-sm-2 col-md-12 text-right">
+          <div class="form-group m-t-m5">
+            <div class="input-group" style="margin-top:-16px">
+              <button type="button" class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;"
+                [disabled]="SubmitDisableFn()" (click)="submitWOWFn('A')">
+                <i class="mdi mdi-lead-pencil"></i> Submit
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ngb-tab>
+            <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+              <div class="table-responsive table-height" style="height: 300px;">
+                <table class="table-sticky table-bordered tble-row-height table mb-0">
+                  <thead class="tbl-freezhead">
+                    <tr>
+                      <th style="background: #f3f3f3; width: 30px;">
+                        <input #checkAllWOW type="checkbox" id="checkAllWOW" [checked]="checked"
+                          [(ngModel)]="CheckdValWOW" (change)="CheckAllFnWOW(checkAllWOW.checked)"
+                          style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                      </th>
+                      <th style="background: #f3f3f3;padding-top: 10px !important;width: 100px;">
+                        Emp ID
+                      </th>
+                      <th style="background: #f3f3f3;padding-top: 10px !important;width: 200px !important;">
+                        Date
+                      </th>
+                      <th style="background: #f3f3f3;width:130px;">
+                        Claim Type
+                      </th>
+                      <th style="background: #f3f3f3;padding-top: 8px !important;width: 150px;">
+                        Remarks
+                      </th>
+                      <th style="background: #f3f3f3;padding-top: 8px !important;width: 150px;">
+                        Manager Remarks
+                      </th>
+                      <th style="background: #f3f3f3;padding-top: 8px !important;width: 100px;">
+                        Status
+                      </th>
+                      <!-- <th>
+                      Action
+                    </th> -->
+                    </tr>
+                  </thead>
+                  <tbody class="tbl-scrollbody">
+                    <tr *ngFor="let item of tableArrayWOW">
+                      <td style="padding-top: 10px !important;">
+                        <input type="checkbox" [(ngModel)]="item.Select_Val" [checked]="item.Select_Val==true"
+                          id="check" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+
+                      </td>
+                      <td style="padding-top: 10px !important;">
+                        {{item.EmployeeId}}
+                      </td>
+
+                      <td style="padding-top: 0px !important;padding-bottom: 2px !important;">
+                        <!-- {{item.Date}} -->
+                        <div class="input-group" style="margin-top: 2px !important;">
+                          <div class="input-group-prepend">
+                            <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                            </label>
+                          </div>
+                          <input class="form-control" style="width: 130px;" type="text" name="AppliedFrom" bsDatepicker
+                            placement="bottom" [minDate]="_from_minDate" readonly
+                            [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }"
+                            [daysDisabled]="weekOffs" placeholder="12-12-1970"
+                            [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off"
+                            [(ngModel)]="item.Date">
+                        </div>
+                      </td>
+                      <!-- <td style="width:130px;padding-top: 2px !important;">
+                        
+                        <label style="margin: 2px !important;">
+                          <input style="height: 28px !important;padding-top: 3px !important;"
+                            class="form-control timepicker" min="00:00" max="23:00" name="endTime" placeholder="00:00"
+                            [(ngModel)]="item.StartTime" type="time" id="endTime" required />
+                        </label>
+                      </td> -->
+                      <!-- <td style="width:130px;padding-top: 2px !important;">
+                        <label style="margin: 2px !important;">
+                          <input style="height: 28px !important;padding-top: 3px !important;"
+                            class="form-control timepicker" min="00:00" max="23:00" name="endTime" placeholder="00:00"
+                            [(ngModel)]="item.EndTime" type="time" id="endTime" required />
+                        </label>
+                      </td> -->
+                      <td style="padding-top: 10px !important;">
+                        {{item.RequestedClaimType == 0 ? 'None' : (item.RequestedClaimType == 100 ? 'Decide Later' :
+                        (item.RequestedClaimType == 200 ? 'Encash' : 'Leave'))}}
+                      </td>
+                      <td style="padding-top: 8px !important;width: 150px;">
+                        <p matTooltip="{{item.EmployeeRemarks}}"
+                          style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;cursor: pointer;width: 90px;height: 20px;margin-bottom: 0px;">
+                          {{item.EmployeeRemarks || '---'}}
+                        </p>
+                      </td>
+                      <td style="padding-top: 8px !important;width: 150px;">
+                        <p matTooltip="{{item.ApproverRemarks}}"
+                          style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;cursor: pointer;width: 90px;height: 20px;margin-bottom: 0px;">
+                          {{item.ApproverRemarks || '---'}}
+                        </p>
+                      </td>
+                      <td style="padding-top: 8px !important;width: 100px;">
+                        {{item.Status == 300 ? 'Approved' : (item.Status == 200 ? 'Rejected' :'Applied')}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div *ngIf="tableArrayWOW.length == 0" style="text-align: center; padding-top: 35px;">No Records Found
+                </div>
+              </div>
+            </div>
+          </ngb-tab>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div id="popup_Comp" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_donext" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>Employee Compensation Claims</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> --
+            </h6>
+          </div>
+          <div class="modal-close" (click)="modal_dismiss()" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="modal-body no-padder">
+            <!-- <div class="d-flex align-items-center" *ngIf="isrendering_spinner">
+              <strong class="text-center"> Loading... &nbsp;&nbsp;&nbsp;</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div> -->
+
+            <div class="row" style="margin-bottom: -13px;">
+              <div class="col-lg-8">
+                <div class="row">
+                  <div class="col-xs-12  col-sm-12  p-r-50">
+                    <div class="row form-group form-group-vertical">
+                      <label class="form-label col-md-3" style="max-width: 105px;">Leave Type :</label>
+                      <label class="form-label  col-md-7">Comp Off Leave </label>
+                    </div>
+                    <div class="form-group form-group-vertical row" *ngIf="!_IndividualDateShow">
+                      <div class="col-md-5" style="max-width: 130px;">
+                        <label class="form-label">Individual Leaves</label>
+                      </div>
+                      <div class="col-md-7">
+                        <div class="form-check-inline">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" name="leaveType" [(ngModel)]="LeaveTypSliderVal"
+                              (click)="SliderChngFn(LeaveTypSliderVal)" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="!LeaveTypSliderVal && !_IndividualDateShow">
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label"> From - To Date <span class="required"> *</span></label>
+                        <div class="input-group" style="width: 240px;">
+                          <div class="input-group-prepend">
+                            <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                            </label>
+                          </div>
+                          <div class="position-relative">
+                            <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker
+                              [(ngModel)]="_dateRange" (bsValueChange)="onChange_DateRange($event,_dateRange)"
+                              placement="auto"
+                              [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                            <span *ngIf="_dateRange" (click)="_dateRange = null"
+                              class="ng-clear-wrapper ng-star-inserted" title="Clear all"><span
+                                style="color:#99999c;font-size: 18px;position: absolute; right: -2px;transform: translate(-50%, -50%);top: 45%; cursor: pointer;"
+                                aria-hidden="true" class="ng-clear">×</span></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="LeaveTypSliderVal && !_IndividualDateShow">
+                      <div class="row">
+
+                        <ng-container *ngFor="let obj of tableArray">
+                          <div class="col-lg-6 mb-4" *ngIf="obj.Select_Val == true">
+                            <div class="card">
+                              <div class="card-body p-2">
+                                <h6 class="card-title">Date :<label> {{obj.EarnedDate}}</label></h6>
+                                <div class="row">
+                                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                    <label class="form-label ">Avail Date <span class="required"> *</span></label>
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                                        </label>
+                                      </div>
+                                      <input class="form-control" style="width: 130px;" type="text" name="AppliedFrom"
+                                        bsDatepicker placement="auto" [minDate]="_from_minDate" readonly
+                                        [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                        [daysDisabled]="weekOffs" placeholder="12-12-1970"
+                                        [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                                        autocomplete="off" [(ngModel)]="obj.Select_Date"
+                                        (bsValueChange)="onChange_SelDate($event)">
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="_IndividualDateShow">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label ">Select Date <span class="required"> *</span></label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                            </label>
+                          </div>
+                          <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom"
+                            [minDate]="_from_minDate" readonly
+                            [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            [daysDisabled]="weekOffs" placeholder="12-12-1970"
+                            [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off"
+                            [(ngModel)]="_IndividualDate" (bsValueChange)="onChange_SelDate($event)">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                        <label class="form-label "> Remarks</label>
+                        <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                          id="Remarks" [(ngModel)]="CompensationRemarks" name="Remarks"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4"
+                style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px; min-height: 260px;">
+
+                <img src="assets/Images/leaverequest.svg">
+
+                <div style="position: absolute;bottom: -3px;width: 90%;">
+                  <div></div>
+                  <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                    <div class="tw-w-full tw-px-3">
+                      <button type="submit" (click)="saveEntitlementRequest()" class="btn btn-primary"
+                        style="width:100%;border-radius: 25px;"> Submit Request
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,946 @@
+<div class="form-body" *ngIf="isAuthorized" style="margin-top: -30px;">
+  <app-loading-screen></app-loading-screen>
+    <!-- <div id="overlay">
+        <div class="w-100 d-flex justify-content-center align-items-center">
+            <div class="spinner"></div>
+        </div>
+    </div> -->
+    <div class="form-content" style="margin-top: 10px;">
+        <div class="container">
+            <div class="form-fullcontent">
+
+                <!--  RESIGNATION : INDEX  BEGINS-->
+                <div [ngClass]="{'blurcontent': !isVerified}" *ngIf="encodedRequestType == 'Resignation'">
+                    <div class="form_bg">
+                        <div class="form_bg_box">
+                            <div class="form_bg_box1">
+                                <h1 class="form_box_content_h1" style="color: white;">Resignation Request</h1>
+                                <span class="form_box_content_span"
+                                    *ngIf="isVerified">{{masterData.ResignationDate}}</span>
+                                <span class="form_box_content_span" *ngIf="!isVerified">** ** ****</span>
+                            </div>
+                            <div class="form_bg_box2">
+                                <img class="form_box_content_img"
+                                    src="https://ci4.googleusercontent.com/proxy/zE3RTft5eLN3pjBb2d6_RVsOO8PDzSRRKzvnKwqLgTwmKRlL-EjgoqzrxPQ6eDJhUf0o-j1fdMgnqUJ5SZqYK4bztggbOZ4G2LSukIYbjERKVifDHnf8BIsLMfeDaQWO-3zSOdfmXGpQFpllCbPYFyUgUkwJytmlnI1ob4ukCYmLGaorJtzmORvPjE9qZ4KJijTrXLp1w8bUM3KaIuGysl0E8nhxTnbMm5YlADEf2mydHlzSK0POtkzHxrxac-Gp5LOZdtilSejk4setwnGOUzIPsDQ5KwZC3d7WbT29lYbxDbBJ5-rKvBcGrkwj6oLrL3-vUTgcJVeiHJHU796PzWH9XJwTAp98n6ePuhwnSr2UU95481s4B7xdMjl2iCmli1DTc0Suf1tkoyMGJuiouL9nYeNgFzU2NwckbqiJe5X9cBPodHCX8kMzMS1t2wBW3n8xMmk4jDeTNb2H-T1uY_CYDYfD6fdlgaUUUG2aeSG1Y1ddKqx8wL9TSq6JBwrfSldLYzUl=s0-d-e1-ft#https://img.cielhr.co.in/im/2372411/c4266b1e3af9deb739086aa6959f1be01244032053362126326fd4e714d2fbe5.png?e=RKAi1ZvzGbfHqyuuVuOh9eUyf4waj5cw3c_XIlDiGUoagaQSwUAogDCkGJz8lJQLmDCaLMvVyQnpFBZTsWgmOHCc-52wEZbQhH1YzB9nG4tHJC9qOEBaxuISUgjc0-RXC1r3n8C0OI3lLl3zJXL2PDesSAz3W8J4acSt8VPoUzQtS8_0tldgry1lzJe6K039RyzHLeHWvz9PJqPkJ_ksOMkYW9Ap78isJbPV79nWdV4evu4VlKVvQ8NDjFy7KA98rj_U2Hg"
+                                    class="CToWUd a6T" data-bit="iit" tabindex="0">
+                                <div class="a6S" dir="ltr" style="opacity: 0.01; left: 744.444px; top: 388.5px;">
+                                    <div id=":630" class="T-I J-J5-Ji aQv T-I-ax7 L3 a5q" role="button" tabindex="0"
+                                        aria-label="Download attachment " data-tooltip-class="a1V"
+                                        data-tooltip="Download">
+                                        <div class="akn">
+                                            <div class="aSK J-J5-Ji aYr"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form_body_content">
+
+                        <div class="form_body_content_set">
+                            <div class="form_body_content_set_left">
+                                <p class="form_body_content_p">Employee Code</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeCode}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">***00</h6>
+                            </div>
+                            <div class="form_body_content_set_left">
+                                <p class="form_body_content_p">Employee Name</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeName}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">L**** *****i</h6>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form_body_content_set">
+                            <div class="form_body_content_set_left">
+                                <p class="form_body_content_p">Notice Period</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.NoticePeriodDays}}
+                                    Days</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">**.00 Days</h6>
+
+                            </div>
+                            <div class="form_body_content_set_left">
+                                <p class="form_body_content_p">Resignation Date</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.ResignationDate}}
+                                </h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** ** ****</h6>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form_body_content_set">
+                            <div class="form_body_content_set_left">
+                                <p class="form_body_content_p">Relieving Date as per Notice Period<br>
+                                    <!-- <small style="margin-left: -10px;">&nbsp;&nbsp;(Based on notice period)</small> -->
+                                </p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{calculateNoticePeriodDay(masterData)}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** ** ****</h6>
+
+                            </div>
+                            <div class="form_body_content_set_left">
+                                <p class="form_body_content_p">Requested Relieving Date<br>
+                                    <!-- <small style="margin-left: -10px;">&nbsp;&nbsp;(Requested by Employee)</small> -->
+                                </p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{masterData.AppliedRelievingDate}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** ** ****</h6>
+
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form_body_content_set">
+                            <div class="width:90%;float:left;margin-bottom:25px">
+                                <p class="form_body_content_p" *ngIf="!isVerified">Reason - ********</p>
+                                <p class="form_body_content_p" *ngIf="isVerified">Reason -
+                                    {{getResignationReasonName(masterData.ResignationReason)}}</p>
+
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.EmployeeRemarks}}
+                                </h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">********</h6>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="form_body_content_set" style="border-bottom:3px solid #f4f4f4;"> </div>
+
+
+                    <div class="form_footer_content" *ngIf="isVerified">
+                        <form style="float:left;width:100%">
+
+                            <label class="form_label">Approved Relieving Date <small style="color:red">*</small></label>
+                            <input name="RelievingDate " [(ngModel)]="ResignationRelievingDate" type="date"
+                                class="form_inp" (change)="validateDate()"
+                                [attr.min]="resignationminDate" 
+                                [attr.max]="calculateNoticePeriodDay(masterData)">
+
+                                <div *ngIf="dateError" class="error">
+                                  {{ dateError }}
+                                </div>
+                                
+
+                            <label class="form_label">Approving/Rejection Comments<small>(Mandatory, if
+                                    rejected.)</small></label>
+
+                            <textarea name="Comments" [(ngModel)]="ResignationComments" class="form_inp" cols="30"
+                                rows="10"></textarea>
+
+                                <div *ngIf="errormessaga" class="error">
+                                  {{ errormessaga }}
+                                </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="submit" class="form_reject_btn" [disabled]="shouldHide"
+                                        (click)="ValidateResignation('REJECT')"  value="REJECT"
+                                        style="width: 100%;" name="Button">Reject &nbsp; &nbsp;
+                                        <span *ngIf="shouldHide_Reject" class="spinner-border spinner-border-sm"
+                                            role="status" aria-hidden="true"></span></button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="submit" class="form_approve_btn"
+                                        (click)="ValidateResignation('APPROVE')" [disabled]="shouldHide" value="APPROVE"
+                                        style="width: 100%;" name="Button">Approve &nbsp; &nbsp;
+                                        <span *ngIf="shouldHide_Approve" class="spinner-border spinner-border-sm"
+                                            role="status" aria-hidden="true"></span> </button>
+                                </div>
+                            </div>
+
+                        </form>
+                        <br>
+                    </div>
+                </div>
+                <!-- RESIGNATION : INDEX END -->
+
+
+                <!--  REGULARIZATION : INDEX  BEGINS-->
+                <div [ngClass]="{'blurcontent': !isVerified}" *ngIf="encodedRequestType == 'Regularization'">
+                    <div class="form_bg">
+                        <div class="form_bg_box">
+                            <div class="form_bg_box1">
+                                <h1 class="form_box_content_h1" style="color: white;">Regularization</h1>
+                                <!-- <span class="form_box_content_span" *ngIf="isVerified">{{masterData.AppliedRelievingDate}}</span> -->
+                                <span class="form_box_content_span" *ngIf="!isVerified">** ** ****</span>
+                            </div>
+                            <div class="form_bg_box2">
+                                <img class="form_box_content_img"
+                                    src="https://ci4.googleusercontent.com/proxy/Zjbx728wuxUmkj1klFXymf1gMIbrYUOfGurbPCO51uCNn1huT-2seLRuIsOTfciuWB8DE_0sYpS5pCUR3yK1Ki-S4LFrUnMKU5thDBdEcYQVuecWQRaNSTk4CG8zIgJLNDv_zM_abz6Dpfs-0I-WEJcp6nTJG2FsA156I94FbzNrC3AUZ4FRYW6MEvALM-L4I6BeFA8BoLMXVr0lBK7J5uInODPNxl5Dr9fVXdmZBvEDX7FFwIEebvPi2Io6cw2E48aiIe7aMbUhL2kRaGhVrdNSoEQSUYXP-sOaZEbtZize3Eo8aSXeoIukBpZ9P-UmPlYHYScybRTzaVgxdISVCth9BqSAt9z51fwZvcMOrPWoy2JWf0ZytZYty5X1K2SmwGYJVWGFnrIZQ6NtoHpzXr-I1uZzj8xh9nUWCujPsJcEIm50D9IgDkEQkqLQiM4emgqYk56kTjXsLGtjR3b57ZX20cqZQpUuMVYe2ijeobqEiOsx3xmHr_fwvfM6tUWh3tKSvmQ31IXBiw6riA=s0-d-e1-ft#https://img.cielhr.co.in/im/2372411/79858d4abbf25f83d95766f09f75b831001b8f5d9a3933cf5d124419c15efc28.png?e=_ug0hqaICicrl8B2LvNTJUg_LmAoIf9gHhWKu9sBGmxcwwHbZwQSrCMibDUZJJ977nQWklHn5cZR789_FwZhzZWtFeM3H-THhyldKX_NNUTOj8SrJ6Js6OBY8z26wMsXXz_T_Li-Eba3ZRzZqO0zxhHd4qf0M9l8Nwz43cdMYWI2eLDoyspsQXZ1q-nDtFZ1naMwi9YrLZ7EnMkSxPM6gtr46D307ETbg5O2g_I1vdAU87ifCy-jQ9nZbBFzg0oSXuHY5j2TBNVADA"
+                                    class="CToWUd a6T" data-bit="iit" tabindex="0">
+                                <div class="a6S" dir="ltr" style="opacity: 0.01; left: 744.444px; top: 388.5px;">
+                                    <div id=":630" class="T-I J-J5-Ji aQv T-I-ax7 L3 a5q" role="button" tabindex="0"
+                                        aria-label="Download attachment " data-tooltip-class="a1V"
+                                        data-tooltip="Download">
+                                        <div class="akn">
+                                            <div class="aSK J-J5-Ji aYr"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form_body_content">
+
+                        <div class="row">
+                            <div class="form-group form-group-vertical col-lg-12 col-xs-12">
+                                <p
+                                    style="width:100%;float:left;font-weight:400;font-size:14px;line-height:18px;margin:0;color:#262626;margin-top: 16px !important;">
+                                    The following team member has regularized attendance for the mentioned day(s).
+                                    Please review and approve or reject the request(s).</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Employee Code</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeCode}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">***00</h6>
+
+                            </div>
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Employee Name</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeName}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">L**** *****i</h6>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group form-group-vertical col-lg-12 col-xs-12">
+                                <p class="form_body_content_p">Attendance Day(s)</p>
+                                <div *ngIf="isVerified">
+                                    <ng-container *ngFor="let data of masterData; last as isLast">
+                                        <h6 class="form_body_content_span"> {{ data.AttendanceDate |
+                                            date:'dd-MMM-yyyy'}} {{isLast ?'':', '}} </h6>
+                                    </ng-container>
+                                </div>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">**.00 Days</h6>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="form_body_content_set" style="border-bottom:3px solid #f4f4f4;"> </div>
+
+
+                    <div class="form_footer_content" *ngIf="isVerified">
+
+                        <div class="row">
+                            <div class="col-lg-12 col-xs-12">
+
+                                <form style="float:left;width:100%">
+
+                                    <label class="form_label">Approving/Rejection Comments<small> (Mandatory, if
+                                            rejected.)</small></label>
+
+                                    <textarea name="Comments" [(ngModel)]="RegularizationComments" class="form_inp"
+                                        cols="30" rows="10"></textarea>
+
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                            <button type="submit" class="form_reject_btn"
+                                                (click)="ValidateRegularization('REJECT')" value="REJECT"
+                                                style="width: 100%;" name="Button" [disabled]="shouldHide">Reject &nbsp;
+                                                &nbsp; <span *ngIf="shouldHide_Reject"
+                                                    class="spinner-border spinner-border-sm" role="status"
+                                                    aria-hidden="true"></span></button>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                            <button type="submit" class="form_approve_btn"
+                                                (click)="ValidateRegularization('APPROVE')" value="APPROVE"
+                                                style="width: 100%;" name="Button" [disabled]="shouldHide">Approve
+                                                &nbsp; &nbsp;
+                                                <span *ngIf="shouldHide_Approve"
+                                                    class="spinner-border spinner-border-sm" role="status"
+                                                    aria-hidden="true"></span> </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <!-- REGULARIZATION : INDEX END -->
+
+                 <!--  REGULARIZATION DETAIL TYPE: INDEX  BEGINS-->
+                 <div [ngClass]="{'blurcontent': !isVerified}" *ngIf="encodedRequestType == 'Regularization_Detail'">
+                    <div class="form_bg">
+                        <div class="form_bg_box">
+                            <div class="form_bg_box1">
+                                <h1 class="form_box_content_h1" style="color: white;">Regularization</h1>
+                                <!-- <span class="form_box_content_span" *ngIf="isVerified">{{masterData.AppliedRelievingDate}}</span> -->
+                                <span class="form_box_content_span" *ngIf="!isVerified">** ** ****</span>
+                            </div>
+                            <div class="form_bg_box2">
+                                <img class="form_box_content_img"
+                                    src="https://ci4.googleusercontent.com/proxy/Zjbx728wuxUmkj1klFXymf1gMIbrYUOfGurbPCO51uCNn1huT-2seLRuIsOTfciuWB8DE_0sYpS5pCUR3yK1Ki-S4LFrUnMKU5thDBdEcYQVuecWQRaNSTk4CG8zIgJLNDv_zM_abz6Dpfs-0I-WEJcp6nTJG2FsA156I94FbzNrC3AUZ4FRYW6MEvALM-L4I6BeFA8BoLMXVr0lBK7J5uInODPNxl5Dr9fVXdmZBvEDX7FFwIEebvPi2Io6cw2E48aiIe7aMbUhL2kRaGhVrdNSoEQSUYXP-sOaZEbtZize3Eo8aSXeoIukBpZ9P-UmPlYHYScybRTzaVgxdISVCth9BqSAt9z51fwZvcMOrPWoy2JWf0ZytZYty5X1K2SmwGYJVWGFnrIZQ6NtoHpzXr-I1uZzj8xh9nUWCujPsJcEIm50D9IgDkEQkqLQiM4emgqYk56kTjXsLGtjR3b57ZX20cqZQpUuMVYe2ijeobqEiOsx3xmHr_fwvfM6tUWh3tKSvmQ31IXBiw6riA=s0-d-e1-ft#https://img.cielhr.co.in/im/2372411/79858d4abbf25f83d95766f09f75b831001b8f5d9a3933cf5d124419c15efc28.png?e=_ug0hqaICicrl8B2LvNTJUg_LmAoIf9gHhWKu9sBGmxcwwHbZwQSrCMibDUZJJ977nQWklHn5cZR789_FwZhzZWtFeM3H-THhyldKX_NNUTOj8SrJ6Js6OBY8z26wMsXXz_T_Li-Eba3ZRzZqO0zxhHd4qf0M9l8Nwz43cdMYWI2eLDoyspsQXZ1q-nDtFZ1naMwi9YrLZ7EnMkSxPM6gtr46D307ETbg5O2g_I1vdAU87ifCy-jQ9nZbBFzg0oSXuHY5j2TBNVADA"
+                                    class="CToWUd a6T" data-bit="iit" tabindex="0">
+                                <div class="a6S" dir="ltr" style="opacity: 0.01; left: 744.444px; top: 388.5px;">
+                                    <div id=":630" class="T-I J-J5-Ji aQv T-I-ax7 L3 a5q" role="button" tabindex="0"
+                                        aria-label="Download attachment " data-tooltip-class="a1V"
+                                        data-tooltip="Download">
+                                        <div class="akn">
+                                            <div class="aSK J-J5-Ji aYr"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form_body_content">
+
+                        <div class="row">
+                            <div class="form-group form-group-vertical col-lg-12 col-xs-12">
+                                <p
+                                    style="width:100%;float:left;font-weight:400;font-size:14px;line-height:18px;margin:0;color:#262626;margin-top: 16px !important;">
+                                    The following team member has regularized attendance for the mentioned day(s).
+                                    Please review and approve or reject the request(s).</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Employee Code</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeCode}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">***00</h6>
+
+                            </div>
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Employee Name</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeName}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">L**** *****i</h6>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Attendance Day</p>
+                                <div *ngIf="isVerified">
+                                    <ng-container *ngFor="let data of masterData; last as isLast">
+                                        <h6 class="form_body_content_span"> {{ data.AttendanceDate |
+                                            date:'dd-MMM-yyyy'}} </h6>
+                                    </ng-container>
+                                </div>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">**.00 Days</h6>
+
+                            </div>
+
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Requested On</p>
+                                <div *ngIf="isVerified">
+                                    <ng-container *ngFor="let data of masterData; last as isLast">
+                                        <h6 class="form_body_content_span"> {{ data.RequestedOn |
+                                            date:'dd-MMM-yyyy'}} </h6>
+                                    </ng-container>
+                                </div>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">**.00 Days</h6>
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Existing Attendance Code</p>
+                                <div *ngIf="isVerified">
+                                    <ng-container *ngFor="let data of masterData; last as isLast">
+                                        <h6 class="form_body_content_span"> {{ data.AttendanceCode_Existing}} </h6>
+                                    </ng-container>
+                                </div>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">***</h6>
+
+                            </div>
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Existing Total Working Hours</p>
+                                <div *ngIf="isVerified">
+                                    <ng-container *ngFor="let data of masterData; last as isLast">
+                                        <h6 class="form_body_content_span"> {{ data.DayHoursConsidered_Existing}} </h6>
+                                    </ng-container>
+                                </div>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">*** Hours</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Regularized Attendance Code</p>
+                                <div *ngIf="isVerified">
+                                    <ng-container *ngFor="let data of masterData; last as isLast">
+                                        <h6 class="form_body_content_span"> {{ data.AttendanceCode_Current}} </h6>
+                                    </ng-container>
+                                </div>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">***</h6>
+                            </div>
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Regularized Total Working Hours</p>
+                                <div *ngIf="isVerified">
+                                    <ng-container *ngFor="let data of masterData; last as isLast">
+                                        <h6 class="form_body_content_span"> {{ data.DayHoursConsidered_Current}} </h6>
+                                    </ng-container>
+                                </div>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">*** Hours</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form_body_content_set" style="border-bottom:3px solid #f4f4f4;"> </div>
+
+
+                    <div class="form_footer_content" *ngIf="isVerified">
+
+                        <div class="row">
+                            <div class="col-lg-12 col-xs-12">
+
+                                <form style="float:left;width:100%">
+
+                                    <label class="form_label">Approving/Rejection Comments<small> (Mandatory, if
+                                            rejected.)</small></label>
+
+                                    <textarea name="Comments" [(ngModel)]="RegularizationComments" class="form_inp"
+                                        cols="30" rows="10"></textarea>
+
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                            <button type="submit" class="form_reject_btn"
+                                                (click)="validateRegularizationDetailType('REJECT')" value="REJECT"
+                                                style="width: 100%;" name="Button" [disabled]="shouldHide">Reject &nbsp;
+                                                &nbsp; <span *ngIf="shouldHide_Reject"
+                                                    class="spinner-border spinner-border-sm" role="status"
+                                                    aria-hidden="true"></span></button>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                            <button type="submit" class="form_approve_btn"
+                                                (click)="validateRegularizationDetailType('APPROVE')" value="APPROVE"
+                                                style="width: 100%;" name="Button" [disabled]="shouldHide">Approve
+                                                &nbsp; &nbsp;
+                                                <span *ngIf="shouldHide_Approve"
+                                                    class="spinner-border spinner-border-sm" role="status"
+                                                    aria-hidden="true"></span> </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <!-- REGULARIZATION DETAIL TYPE: INDEX END -->
+
+
+                <!--  LEAVE REQUEST : INDEX  BEGINS-->
+                <div [ngClass]="{'blurcontent': !isVerified}" *ngIf="encodedRequestType == 'Leave'">
+                    <div class="form_bg">
+                        <div class="form_bg_box">
+                            <div class="form_bg_box1">
+                                <h1 class="form_box_content_h1" style="color: white;" *ngIf="masterData==null">Leave
+                                    Request</h1>
+                                <h1 class="form_box_content_h1" style="color: white;" *ngIf="masterData.Status != 100 && masterData.Status != 600">Leave
+                                        Request</h1>
+
+                                <h1 class="form_box_content_h1" style="color: white;" *ngIf="masterData.Status == 100">
+                                    Leave Request</h1>
+                                <h1 class="form_box_content_h1" style="color: white;" *ngIf="masterData.Status == 600">
+                                    Leave Cancellation</h1>
+
+                                <span class="form_box_content_span" *ngIf="!isVerified">Applied On : ** ** ****</span>
+                                <span class="form_box_content_span" *ngIf="isVerified">Applied On :
+                                    {{masterData.AppliedOn | date}}</span>
+                            </div>
+                            <div class="form_bg_box2">
+                                <img class="form_box_content_img" src="assets/Images/leaveRequest_dynamicpost.png"
+                                    class="CToWUd a6T" data-bit="iit" tabindex="0">
+                                <div class="a6S" dir="ltr" style="opacity: 0.01; left: 744.444px; top: 388.5px;">
+                                    <div id=":630" class="T-I J-J5-Ji aQv T-I-ax7 L3 a5q" role="button" tabindex="0"
+                                        aria-label="Download attachment " data-tooltip-class="a1V"
+                                        data-tooltip="Download">
+                                        <div class="akn">
+                                            <div class="aSK J-J5-Ji aYr"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form_body_content">
+                        <br />
+
+                        <div class="row" *ngIf="isAlreadyVerified" style="margin-top: -15px;">
+                            <div class="col-lg-12 col-xs-12 text-center">
+                                <ngb-alert [dismissible]="false" style="color: #856404 !important;
+                                background: #fff8e1 !important;
+                                border-color: #f1cb4b !important;">
+                                <strong *ngIf="masterData.Status == 200"> Information : The entitlement request
+                                    already has a cancelled status.</strong>
+                                    <strong *ngIf="masterData.Status == 400"> Information : The entitlement request
+                                        already has a status of approval. </strong>
+                                    <strong *ngIf="masterData.Status == 300"> Information : The entitlement request
+                                        already has a status of rejection. </strong>
+
+                                </ngb-alert>
+                            </div>
+                        </div>
+
+
+                        <div class="row" style="padding: 5px;">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Employee Code</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeCode}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">***00</h6>
+
+                            </div>
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Employee Name</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeName}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">L**** *****i</h6>
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding: 5px;">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Leave Type</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.DisplayName}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">***</h6>
+                            </div>
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">No. of Days</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.CalculatedAppliedUnits}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** day(s)</h6>
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding: 5px;">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">From</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.AppliedFrom | date}}
+                                </h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** *** ****</h6>
+                            </div>
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Till</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.AppliedTill | date}}
+                                </h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** ** ****</h6>
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding: 5px;" *ngIf="isAllowedToViewDocument && masterData.DocumentId > 0">
+                          <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                              <p class="form_body_content_p">Attachment</p>
+                              <h6 class="form_body_content_span" *ngIf="isVerified">
+                               {{masterData.DocumentName}} <span *ngIf="!isZipFile()" (click)="viewAttachments()"
+                                style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                                matTooltip="view attachment" title="view attachment">
+                                <i class="mdi mdi-file-document-outline"
+                                  style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                              </span>
+
+                              <span *ngIf="isZipFile()" (click)="downloadAttachments()"
+                                style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                                matTooltip="download attachment" title="download attachment">
+                                <i class="mdi mdi-download"
+                                  style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                              </span>
+
+                              </h6>
+                              <h6 class="form_body_content_span" *ngIf="!isVerified">** *** ****</h6>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-lg-6 col-xs-12" *ngIf="masterData.AdditionalDateLabelName != null && masterData.AdditionalDateLabelName != '' &&  masterData.AdditionalDate != ''">
+                            <p class="form_body_content_p">{{masterData.AdditionalDateLabelName}}</p>
+                            <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.AdditionalDate  | date}}</h6>
+                            <h6 class="form_body_content_span" *ngIf="!isVerified">** *** ****</h6>
+                        </div>
+
+                      </div>
+
+
+                        <div class="row" style="padding: 5px;">
+                            <div class="form-group form-group-vertical col-lg-12 col-xs-12">
+                                <p class="form_body_content_p">Reason</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.ApplierRemarks}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** *** ****</h6>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row" style="padding: 5px;" *ngIf="isAlreadyVerified">
+                            <div class="form-group form-group-vertical col-lg-12 col-xs-12">
+                                <p class="form_body_content_p">Approver Remarks</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.ValidatorRemarks}}
+                                </h6>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form_body_content_set" style="border-bottom:3px solid #f4f4f4;"> </div>
+
+
+                    <div class="form_footer_content" *ngIf="isVerified && !isAlreadyVerified">
+
+                        <div class="row">
+                            <div class="col-lg-12 col-xs-12">
+
+                                <form style="float:left;width:100%">
+
+                                    <label class="form_label">Approving/Rejection Comments<small> (Mandatory, if
+                                            rejected.)</small></label>
+
+                                    <textarea name="Comments" [(ngModel)]="leaveRejectionComments" class="form_inp"
+                                        cols="30" rows="10"></textarea>
+
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                            <button type="submit" class="form_reject_btn"
+                                                (click)="validateEAR('REJECT')" value="REJECT" style="width: 100%;"
+                                                name="Button" [disabled]="shouldHide">Reject &nbsp; &nbsp; <span
+                                                    *ngIf="shouldHide_Reject" class="spinner-border spinner-border-sm"
+                                                    role="status" aria-hidden="true"></span></button>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                            <button type="submit" class="form_approve_btn"
+                                                (click)="validateEAR('APPROVE')" value="APPROVE" style="width: 100%;"
+                                                name="Button" [disabled]="shouldHide">Approve &nbsp; &nbsp;
+                                                <span *ngIf="shouldHide_Approve"
+                                                    class="spinner-border spinner-border-sm" role="status"
+                                                    aria-hidden="true"></span> </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <!-- LEAVE REQUEST : INDEX END -->
+
+                 <!--  OD REQUEST : INDEX  BEGINS-->
+                 <div [ngClass]="{'blurcontent': !isVerified}" *ngIf="encodedRequestType == 'OnDuty'">
+                    <div class="form_bg">
+                        <div class="form_bg_box">
+                            <div class="form_bg_box1">
+                                <h1 class="form_box_content_h1" style="color: white;" *ngIf="masterData==null">On duty
+                                    Request</h1>
+                                <h1 class="form_box_content_h1" style="color: white;" *ngIf="masterData.Status != 100 && masterData.Status != 600">On duty
+                                        Request</h1>
+
+                                <h1 class="form_box_content_h1" style="color: white;" *ngIf="masterData.Status == 100">
+                                    On duty Request</h1>
+                                <h1 class="form_box_content_h1" style="color: white;" *ngIf="masterData.Status == 600">
+                                    On duty Cancellation</h1>
+
+                                <span class="form_box_content_span" *ngIf="!isVerified">Applied On : ** ** ****</span>
+                                <span class="form_box_content_span" *ngIf="isVerified">Applied On :
+                                    {{masterData.AppliedOn | date}}</span>
+                            </div>
+                            <div class="form_bg_box2">
+                                <img class="form_box_content_img" src="assets/Images/leaveRequest_dynamicpost.png"
+                                    class="CToWUd a6T" data-bit="iit" tabindex="0">
+                                <div class="a6S" dir="ltr" style="opacity: 0.01; left: 744.444px; top: 388.5px;">
+                                    <div id=":630" class="T-I J-J5-Ji aQv T-I-ax7 L3 a5q" role="button" tabindex="0"
+                                        aria-label="Download attachment " data-tooltip-class="a1V"
+                                        data-tooltip="Download">
+                                        <div class="akn">
+                                            <div class="aSK J-J5-Ji aYr"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form_body_content">
+                        <br />
+
+                        <div class="row" *ngIf="isAlreadyVerified" style="margin-top: -15px;">
+                            <div class="col-lg-12 col-xs-12 text-center">
+                                <ngb-alert [dismissible]="false" style="color: #856404 !important;
+                                background: #fff8e1 !important;
+                                border-color: #f1cb4b !important;">
+                                <strong *ngIf="masterData.Status == 200"> Information : The On duty request
+                                    already has a cancelled status.</strong>
+                                    <strong *ngIf="masterData.Status == 400"> Information : The On duty request
+                                        already has a status of approval. </strong>
+                                    <strong *ngIf="masterData.Status == 300"> Information : The On duty request
+                                        already has a status of rejection. </strong>
+
+                                </ngb-alert>
+                            </div>
+                        </div>
+
+
+                        <div class="row" style="padding: 5px;">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Employee Code</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeCode}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">***00</h6>
+
+                            </div>
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Employee Name</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">
+                                    {{verifiedRequestLog.EmployeeName}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">L**** *****i</h6>
+                            </div>
+                        </div>
+                        
+                        <div class="row" style="padding: 5px;">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">From</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.AppliedFrom | date}}
+                                </h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** *** ****</h6>
+                            </div>
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">Till</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.AppliedTill | date}}
+                                </h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** ** ****</h6>
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding: 5px;">
+                            <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                <p class="form_body_content_p">No. of Days</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.CalculatedAppliedUnits}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** day(s)</h6>
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding: 5px;">
+                            <div class="form-group form-group-vertical col-lg-12 col-xs-12">
+                                <p class="form_body_content_p">Reason</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.ApplierRemarks}}</h6>
+                                <h6 class="form_body_content_span" *ngIf="!isVerified">** *** ****</h6>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row" style="padding: 5px;" *ngIf="isAlreadyVerified">
+                            <div class="form-group form-group-vertical col-lg-12 col-xs-12">
+                                <p class="form_body_content_p">Approver Remarks</p>
+                                <h6 class="form_body_content_span" *ngIf="isVerified">{{masterData.ValidatorRemarks}}
+                                </h6>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form_body_content_set" style="border-bottom:3px solid #f4f4f4;"> </div>
+
+
+                    <div class="form_footer_content" *ngIf="isVerified && !isAlreadyVerified">
+
+                        <div class="row">
+                            <div class="col-lg-12 col-xs-12">
+
+                                <form style="float:left;width:100%">
+
+                                    <label class="form_label">Approving/Rejection Comments<small> (Mandatory, if
+                                            rejected.)</small></label>
+
+                                    <textarea name="Comments" [(ngModel)]="leaveRejectionComments" class="form_inp"
+                                        cols="30" rows="10"></textarea>
+
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                            <button type="submit" class="form_reject_btn"
+                                                (click)="validateEAR('REJECT')" value="REJECT" style="width: 100%;"
+                                                name="Button" [disabled]="shouldHide">Reject &nbsp; &nbsp; <span
+                                                    *ngIf="shouldHide_Reject" class="spinner-border spinner-border-sm"
+                                                    role="status" aria-hidden="true"></span></button>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-lg-6 col-xs-12">
+                                            <button type="submit" class="form_approve_btn"
+                                                (click)="validateEAR('APPROVE')" value="APPROVE" style="width: 100%;"
+                                                name="Button" [disabled]="shouldHide">Approve &nbsp; &nbsp;
+                                                <span *ngIf="shouldHide_Approve"
+                                                    class="spinner-border spinner-border-sm" role="status"
+                                                    aria-hidden="true"></span> </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <!-- OD REQUEST : INDEX END -->
+
+
+            </div>
+
+            <div class="centered-element" [ngStyle]="{'display': isVerified ? 'none' : 'block'}">
+                <div class="form-holder">
+                    <div class="log-in-htm">
+                        <h5 class="text-center">One Time Password (OTP)</h5>
+                        <br>
+                        <p class="text-center">One Time Password(OTP) has been sent to your mobile and email. Please
+                            enter the same here to continue.</p>
+
+                        <div class="form-group">
+                            <input type="text" [(ngModel)]="OTP" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                                class="form-control" autocomplete="off" placeholder="OTP" />
+                        </div>
+                        <div class="form-button">
+                            <button id="submit" type="submit" class="ibtn" [disabled]="SpinnerShouldhide"
+                                (click)="VerifyOTP()">Validate to Unlock
+                                &nbsp; &nbsp; <span *ngIf="SpinnerShouldhide" class="spinner-border spinner-border-sm"
+                                    role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+</div>
+
+
+<div class="alert alert-danger" role="alert" style="margin: 10rem;" *ngIf="!isAuthorized">
+    We are sorry, you are not authorized user
+</div>
+
+
+
+
+<div id="documentviewer2" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+aria-labelledby="documentviewer2" aria-hidden="true">
+<div style="display: block;" class="modal fade show ">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="box-shadow: #00000096 1px 14px 15px !important;">
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-md-8">
+          <small class="header-pretitle" style="float: left; width: 100%;"><b
+              style="float: left;">Documents</b></small>
+          <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview</h6>
+        </div>
+        <div class="col-md-4" style="top: 13px;">
+          <div class="modal-close" (click)="close_documentviewer2()" style="margin-top: -22px;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+          <div style="margin-top: -8px;float: right;margin-right: 33px" *ngIf="masterData != null && masterData.DocumentId > 0">
+            <app-filedownload [documentId]="masterData.DocumentId">
+            </app-filedownload>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal-body">
+        <div class="iframe-container" *ngIf="contentmodalurl == null"
+          style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+          <span>
+            <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+              &nbsp; Please wait...</i>
+            <span class="sr-only">Please wait...</span>
+          </span>
+        </div>
+        <div class="iframe-container" *ngIf="contentmodalurl != null"
+          style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+          <iframe [src]="contentmodalurl" frameborder="0" scrolling="yes"
+            style="width: 100%;height: 100%;"  width="100%" height="600px"></iframe>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<div id="documentviewer" cdkDrag class="modal fade grabbable" cdkDragRootElement="grabbable" tabindex="-1" role="dialog" aria-labelledby="documentviewer" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 1030px;">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left; width: 100%;"><b
+                style="float: left;">Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview</h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="close_documentviewer3()" style="margin-top: -22px;">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+            <div style="margin-top: -8px;float: right;margin-right: 33px" *ngIf="masterData != null && masterData.DocumentId > 0">
+              <app-filedownload [documentId]="masterData.DocumentId">
+              </app-filedownload>
+            </div>
+          </div>
+        </div>
+
+          <div class="modal-body" style="overflow: auto !important;">
+
+              <div class="iframe-container" *ngIf="docList?.length == 0" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                  <span>
+                      <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                          &nbsp; Please wait...</i>
+                      <span class="sr-only">Please wait...</span>
+                  </span>
+              </div>
+              <ng-container *ngIf="docList?.length > 0">
+                  <div class="iframe-container" *ngFor="let item of docList" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;margin-bottom: 10px">
+                      <iframe [src]="item.ImageURL" frameborder="0" scrolling="yes"  width="100%" height="600px"></iframe>
+                      <div><span style="top: 0 !important;
+                          left: 0px !important;
+                          position: absolute !important;
+                          z-index: 5;
+                          height: 25px !important;
+                          vertical-align: top;
+                          opacity: inherit;
+                          bottom: unset !important;
+                          right: unset !important;
+                          background: #c9c9c7;
+                          width: 30%;
+                          padding-left: 5px;
+                          opacity: 0.9;">{{item.name}}  </span></div>
+                     
+                  </div>
+              </ng-container>                   
+
+          </div>
+          
+      </div>
+  </div>
+</div>

@@ -1,0 +1,189 @@
+.p-l-10rem {
+    padding-left: 10rem;
+}
+
+.p-r-10rem{
+    padding-right: 10rem;
+}
+.p-10rem{
+    padding: 1rem 2rem 4rem 2rem;
+    margin: 0rem 3rem;
+}
+
+
+.content {
+  background: #fff;
+  color: #606d8a;
+  // padding: 20px;
+  border-radius: 10px;
+  // box-shadow: 0 5px 5px 0 rgba(6, 21, 56, 0.15);
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/* .back-white{
+    background-color: white
+} */
+
+
+$primary-color: #0a609eeb;
+
+
+.radio-tile-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+
+  //set dimensions for invisible container
+  .input-container {
+    position: relative;
+    height:  4rem;
+    width:  6.5rem;
+    margin: 0.5rem;
+
+    //make actual radio input invisible
+    // + stretch to fill container
+    .radio-button {
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100% !important;
+      width: 100% !important;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    //default tile styles
+    .radio-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100% !important;
+      height: 100% !important;
+      border: 2px solid $primary-color;
+      border-radius: 5px;
+      padding: 1rem;
+      transition: transform 300ms ease;
+    }
+    .icon svg {
+      fill: $primary-color;
+      width: 3rem;
+      height: 3rem;
+    }
+    .radio-tile-label {
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: $primary-color;
+    }
+
+   
+
+    .radio-tile-label  + .radio-tile label + .mdi {
+        color: white !important;
+    }
+    //active tile styles
+    .radio-button:checked{
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100% !important;
+      width: 100% !important;
+      margin: 0;
+      cursor: pointer;
+      
+    } 
+     
+    .radio-button:checked +  .radio-tile{
+
+      .radio-button{
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100% !important;
+        width: 100% !important;
+        margin: 0;
+        cursor: pointer;
+        
+      } 
+
+
+      background-color: $primary-color;
+      border: 2px solid $primary-color;
+      color: white !important;
+      transform: scale(1.1, 1.1);
+      transition: transform 300ms ease;
+
+      .mdi {
+        fill: white;
+        color: white !important;
+        background-color: $primary-color;
+        
+      }
+      .radio-tile-label {
+        color: white !important;
+        background-color: $primary-color;
+        
+      }
+    }
+    
+   
+  }
+   
+}
+
+@media (max-width: 576px){
+     
+  .p-10rem{
+    padding: 1rem 1rem 3rem 1rem;
+    margin: 0rem;
+}
+}
+
+
+
+ngb-accordion {
+  .card {
+    border: none;
+  }
+
+  .card-header {
+    margin-bottom: 0;
+    color: $primary-color;
+    background-color: white;
+  }
+
+  .card-body{
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
+.panel {
+background-color: white;
+}
+
+fieldset.border {
+  border: 5px solid #dee2e6 !important;
+  padding: 0 1.4em 0 1.4em !important;
+  margin: 0 0 1.5em 0 !important;
+  // -webkit-box-shadow:  0px 0px 0px 0px #000;
+  //         box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend.border {
+  
+  font-size: 1em !important;
+  text-align: left !important;
+  width:inherit; /* Or auto */
+  padding:0 3px; /* To give a bit of padding on the left and right */
+  //border-bottom:none;
+  border: none !important;
+}
+

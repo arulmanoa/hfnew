@@ -1,0 +1,273 @@
+<div style="display: block;" class="modal fade show" data-keyboard="false" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #fcfcfc !important;">
+        <div class="row" style="width: 100%;">
+          <div class="col-lg-8">
+            <small class="header-pretitle hed"><b>Summary Report</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> Details of Salary Breakup Structure
+            </h6>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" (click)="closeModal()"><span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+        <!-- <h4 class="modal-title pull-left">Salary Breakup</h4>
+                <button class="btn btn-default pull-right" type="button" (click)="exportAsXLSX()"> <i
+                        class="mdi mdi-file-excel"></i> &nbsp; Export </button> -->
+
+        <!-- <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()"><i class="mdi mdi-close font-size-md icon-close"></i></a> -->
+      </div>
+      <div class="modal-body no-padder">
+
+        <span class="error_span" *ngIf="IsMinimumwageAdhere == false || IsRateSetValue == false">
+          <i class="mdi mdi-information-outline"> </i> {{CalculationRemarks}}
+        </span>
+
+        <div class="row">
+          <div class="col-lg-12">
+
+
+
+            <!-- <span class="error_span" *ngIf="IsMinimumwageAdhere == false || IsRateSetValue == false"><a
+                class="mdi mdi-information-outline"></a> &nbsp; {{CalculationRemarks}}</span> -->
+
+
+            <div class="flex-column" style="padding-top: 0 !important;padding-bottom: 0.5em !important;">
+              <div class="custom-control custom-checkbox" *ngIf="!isloading && baseDaysForAddlApplicableProduct > 0">
+                <input type="checkbox" class="custom-control-input" id="isDailyOrHourlyWagesId"
+                  [(ngModel)]="isDailyOrHourlyWages" (change)="onWageTypeChangeFn($event)">
+                <label class="custom-control-label" for="isDailyOrHourlyWagesId">Is {{wageTypeString}} wages applicable
+                  ?</label>
+
+                <p class="ml-3 text-warning" *ngIf="isDailyOrHourlyWages">
+                  ( working days is {{baseDaysForAddlApplicableProduct}} days )
+                </p>
+              </div>
+
+            </div>
+            <div class="flex-column" style="padding-top: 0 !important;padding-bottom: 0.5em !important;">
+
+              <div class="custom-control custom-checkbox" *ngIf="!isloading && isDailyOrHourlyWages">
+                <input type="checkbox" class="custom-control-input" id="isOverrideMonthly"
+                  [(ngModel)]="isOverrideMonthlyValue">
+                <label class="custom-control-label" for="isOverrideMonthly">Would you like to override monthly
+                  value ?</label>
+              </div>
+            </div>
+
+            <div class="flex-column">
+
+              <div class="d-flex align-items-center" *ngIf="isloading">
+                <strong class="text-center"> Calculating... &nbsp;&nbsp;&nbsp;</strong>
+                <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+              </div>
+
+
+
+              <div class="row">
+                <div class="col-12">
+                  <table class="table table-bordered table-container salary-breakup-table-header-fixed"
+                    *ngIf="!isloading && !isDailyOrHourlyWages"
+                    style="box-shadow: 0 2px 2px rgba(0,0,0,0.16), 0 0px 0px rgba(0,0,0,0.23);">
+                    <thead>
+                      <tr class="document_table_tr">
+                        <th scope="col" style="width: 45%">
+                          <div class="row">
+                            <div class="col-lg-12" style="font-size: 14px;font-weight: 600;">
+                              Pay Components
+
+                            </div>
+                            <!-- <div class="col-lg-6">
+                                                Is Product Overidable
+                                            </div> -->
+                          </div>
+                        </th>
+                        <th scope="col" style="width: 15%;text-align: center;font-size: 14px;font-weight: 600;">Is
+                          Overidable</th>
+                        <th scope="col" style="width: 20%;text-align: center;font-size: 14px;font-weight: 600;">Monthly
+                        </th>
+                        <th scope="col" style="width: 20%;text-align: center;font-size: 14px;font-weight: 600;">Annually
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of jsonObj; let i = index"
+                        [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                        <td class="table-td-center">
+                          <div class="row">
+                            <!-- <div class="col-lg-6" [ngStyle]="{'padding-top': item.IsOverridableProductGroup == 'true' ? 0 : 10 }" >
+                                                {{item.DisplayName}}
+                                            </div> -->
+                            <div class="col-lg-12" *ngIf="!item.IsOverridableProductGroup">
+                              {{item.DisplayName}}</div>
+                            <div class="col-lg-6" *ngIf="item.IsOverridableProductGroup" style="padding-top: 10px;">
+                              {{item.DisplayName}}</div>
+
+
+                            <div class="col-lg-6" *ngIf="item.IsOverridableProductGroup">
+                              <ng-select [items]="item.lstOfProducts" [(ngModel)]="item.defaultValue"
+                                placeholder="select an option" bindLabel="Description" bindValue="Id"
+                                (change)="onChangePayGroup($event, item)">
+                              </ng-select>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="table-td-center text-center" style="text-align: center !important;">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="isoveridable{{i}}"
+                              [(ngModel)]="item.IsOveridable" [disabled]="true">
+                            <label class="custom-control-label" for="isoveridable{{i}}"></label>
+                          </div>
+                        </td>
+                        <td class="txt-align document_table_validFrom table-td-center">
+                          <input type="number" max="33333" style="text-align:right" maxlength="12"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)" disabled="{{!item.IsOveridable}}"
+                            (change)="onChangeAmount($event.target.value, item)" [(ngModel)]="item.Value"
+                            class="form-control">
+                        </td>
+
+                        <td class="txt-align document_table_validFrom table-td-center">
+                          <input type="text" style="text-align:right" maxlength="12"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value * 12}}"
+                            class="form-control">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <table class="table table-bordered table-container salary-breakup-table-header-fixed"
+                    *ngIf="!isloading && isDailyOrHourlyWages">
+                    <thead>
+                      <tr class="document_table_tr">
+                        <th rowspan=2 scope="col" style="width: 30%">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              Product Code
+
+                            </div>
+                            <!-- <div class="col-lg-6">
+                                                Is Product Overidable
+                                            </div> -->
+                          </div>
+                        </th>
+                        <th rowspan=2 scope="col" style="width: 12%;text-align: center">Is
+                          Overidable</th>
+                        <th rowspan=2 scope="col" style="width: 12%;text-align: center">Monthly</th>
+                        <th rowspan=2 scope="col" style="width: 12%;text-align: center">Annually
+                        </th>
+                        <th colspan=3 scope="col" style="width: 20%;text-align: center">{{wageTypeString}}</th>
+                      </tr>
+                      <tr class="document_table_tr text-end">
+                        <th valign="top" style="width: 20%;">Pay Rate</th>
+                        <th valign="top" style="width: 20%;" *ngIf="BusinessType == 3">Bill Rate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of jsonObj; let i = index"
+                        [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                        <td class="table-td-center">
+                          <div class="row">
+                            <!-- <div class="col-lg-6" [ngStyle]="{'padding-top': item.IsOverridableProductGroup == 'true' ? 0 : 10 }" >
+                                                {{item.DisplayName}}
+                                            </div> -->
+                            <div class="col-lg-12" *ngIf="!item.IsOverridableProductGroup">
+                              {{item.DisplayName}}</div>
+                            <div class="col-lg-4" *ngIf="item.IsOverridableProductGroup" style="padding-top: 10px;">
+                              {{item.DisplayName}}</div>
+
+
+                            <div class="col-lg-8" *ngIf="item.IsOverridableProductGroup">
+                              <ng-select [items]="item.lstOfProducts" [(ngModel)]="item.defaultValue"
+                                placeholder="select an option" bindLabel="Description" bindValue="Id"
+                                (change)="onChangePayGroup($event, item)">
+                              </ng-select>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="table-td-center text-center" style="text-align: center !important;">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="isoveridable{{i}}"
+                              [(ngModel)]="item.IsOveridable" [disabled]="true">
+                            <label class="custom-control-label" for="isoveridable{{i}}"></label>
+                          </div>
+                        </td>
+                        <td class="txt-align document_table_validFrom table-td-center">
+                          <input type="text" style="text-align:right" maxlength="12"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)"
+                            [disabled]="!item.IsOveridable || !isOverrideMonthlyValue" value="{{item.Value}}"
+                            [(ngModel)]="item.Value" class="form-control"
+                            (input)="onChangeAmount($event.target.value, item)">
+                        </td>
+
+                        <td class="txt-align document_table_validFrom table-td-center">
+                          <input type="text" style="text-align:right" maxlength="10"
+                            onkeypress="return /^[0-9 .]+$/i.test(event.key)" disabled value="{{item.Value * 12}}"
+                            class="form-control">
+                        </td>
+                        <td class="txt-align document_table_validFrom table-td-center">
+                          <input type="text" style="text-align:right" maxlength="10" [(ngModel)]="item.PayableRate"
+                            value="{{item.PayableRate}}" onkeypress="return /^[0-9 .]+$/i.test(event.key)"
+                            disabled="{{!item.IsOveridable}}" (input)="onChangePayRateAmount($event.target.value, item)"
+                            class="form-control">
+                        </td>
+                        <td class="txt-align document_table_validFrom table-td-center" *ngIf="BusinessType == 3">
+                          <input type="text" style="text-align:right" maxlength="10" [(ngModel)]="item.BillableRate"
+                            value="{{item.BillableRate}}" (change)="onChangeBillRateAmount($event.target.value, item)"
+                            onkeypress="return /^[0-9 .]+$/i.test(event.key)" class="form-control"
+                            [disabled]="!item.IsOveridable">
+                        </td>
+
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- <div class="col-lg-3">
+            <img src="assets/Images/kycvector.jpg">
+          </div> -->
+
+        </div>
+
+
+      </div>
+
+
+      <div class="modal-footer">
+        <div class="pull-left left-margin-btn text-left">
+          <button class="btn btn-default pull-right" type="button" *ngIf="fromComponent == 'SalaryCalculator'"
+            (click)="exportAsXLSX()"> <i class="mdi mdi-file-excel"></i> &nbsp; Export </button>
+
+          <button class="btn  btn-primary" *ngIf="fromComponent != 'SalaryCalculator'" type="Submit" name="btnSubmit"
+            id="btnSubmit" prevent-double-submit (click)="reviewLater()">
+            <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-av-timer"></i> Cancel, I will
+                review later </span></div>
+          </button>
+        </div>
+        <div class="pull-right m-r-sm">
+          <div>
+            <div>
+              <button class="btn  btn-primary m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+                prevent-double-submit (click)="doCalculateCTC()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-file-restore"></i>
+                    Re-Calculate </span></div>
+              </button>
+
+              <button class="btn upgrade-btn pull-right" type="button" (click)="closeModal()"> <i
+                  class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; <span
+                  *ngIf="fromComponent != 'SalaryCalculator'"> Confirm </span> <span
+                  *ngIf="fromComponent == 'SalaryCalculator'"> Close </span>
+              </button>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

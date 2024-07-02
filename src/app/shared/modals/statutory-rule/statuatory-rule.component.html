@@ -1,0 +1,251 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="dfc100 overflow-y-auto">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="!onEdit">Add Statuatory Rule Details</h4>
+                    <h4 class="modal-title pull-left" *ngIf="onEdit">Edit Statuatory Rule Details</h4>
+                    <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()"><i
+                            class="mdi mdi-close font-size-md icon-close"></i></a>
+                </div>
+                <div class="modal-body no-padder builtin-calling-wrapper">
+                    <div class="flex-column">
+                        <form [formGroup]="statutoryForm">
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="clearfix">
+                                    <div class="row">
+                                        <!-- Statuatory Type -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label> Statuatory Type <span class="required">*</span> </label>
+                                            <ng-select [items]="statutoryTypes" placeholder="-- select type --"
+                                                formControlName="statutoryType" [ngClass]="{
+                                            'is-invalid': f.statutoryType.invalid && f.statutoryType.touched
+                                          }" bindLabel="name" bindValue="id">
+                                            </ng-select>
+                                            <div *ngIf="f.statutoryType.invalid && f.statutoryType.touched"
+                                                class="help-block">
+                                                <div *ngIf="f.statutoryType.errors.required">
+                                                    Statuatory Type is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Effective Date -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label>Effective Date <span class="required">*</span> </label>
+                                            <input type="text" class="form-control" onpaste="return false;" bsDatepicker
+                                                placement="bottom" [bsConfig]="{
+                                                  isAnimated: true,
+                                                  dateInputFormat: 'DD-MM-YYYY',
+                                                  containerClass: 'theme-default'
+                                                }" name="effectiveDate" formControlName="effectiveDate" [ngClass]="{
+                                                  'is-invalid': f.effectiveDate.invalid && f.effectiveDate.touched
+                                                }" placeholder="Effective Date" autocomplte="off"
+                                                (bsValueChange)="getEffectiveDate($event)" />
+
+                                            <div *ngIf="f.effectiveDate.invalid && f.effectiveDate.touched"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f.effectiveDate.errors.required">Effective Date is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- product ID -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Product</label>
+                                            <ng-select [items]="productList" placeholder="-- select type --"
+                                                formControlName="productId" [ngClass]="{
+                                            'is-invalid': f.productId.invalid && f.productId.touched 
+                                          }" bindLabel="Name" bindValue="ProductId" (change)="onProductChange($event)">
+                                            </ng-select>
+                                            <div *ngIf="f.productId.invalid && f.productId.touched" class="help-block">
+                                                <div *ngIf="f.productId.errors.required">
+                                                    Product is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- product Applicability code -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Product Code <span class="required"> *
+                                                </span></label>
+                                            <input type="text" class="form-control" placeholder="Product code"
+                                                formControlName="productApplicabilityCode" autocomplte="off" disabled />
+                                            <div *ngIf="f.productApplicabilityCode.invalid" class="help-block">
+                                                <div
+                                                    *ngIf="f.productApplicabilityCode.invalid && f.productApplicabilityCode.touched ">
+                                                    Product Code is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Is Applicable -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Is Applicable
+                                            </label>
+                                            <label class="el-switch el-switch-green">
+                                                <input type="checkbox" name="switch" formControlName="isApplicable"
+                                                    [ngClass]="{ 'is-invalid': f.isApplicable.errors }" />
+                                                <span class="el-switch-style"></span>
+                                            </label>
+                                        </div>
+
+                                        <!-- Is Previous Payment Exclusion -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Is Previous Payment Exclusion</label>
+                                            <label class="el-switch el-switch-green">
+                                                <input type="checkbox" name="switch"
+                                                    formControlName="isPreviousPaymentExclusion"
+                                                    [ngClass]="{ 'is-invalid': f.isPreviousPaymentExclusion.errors }" />
+                                                <span class="el-switch-style"></span>
+                                            </label>
+                                        </div>
+
+                                        <!-- Is Half Yearly Applicable -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Is Half yearly Applicable</label>
+                                            <label class="el-switch el-switch-green">
+                                                <input type="checkbox" name="switch"
+                                                    formControlName="isHalfYearlyApplicable" #isHalfYearlyApplicable
+                                                    (change)="onHalfYearChange(isHalfYearlyApplicable)"
+                                                    [ngClass]="{ 'is-invalid': f.isHalfYearlyApplicable.errors }" />
+                                                <span class="el-switch-style"></span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-md-6 col-sm-6 p-15"></div>
+
+                                        <div *ngIf="statutoryForm.get('isHalfYearlyApplicable').value"
+                                            formArrayName="scaleLocationMappings">
+                                            <div class="card col mb-2"
+                                                *ngFor="let scale of statutoryForm.get('scaleLocationMappings')['controls']; let i=index">
+                                                <div class="row" [formGroupName]="i">
+                                                    <!-- product Id -->
+                                                    <div class="col-md-3 col-sm-3 p-15">
+                                                        <label class="form-label">Product<span class="required"> *
+                                                            </span></label>
+                                                        <input type="text" class="form-control" placeholder="Product"
+                                                            formControlName="productId" autocomplte="off" disabled />
+                                                    </div>
+                                                    <!-- effective date -->
+                                                    <div class="col-md-3 col-sm-3 p-15">
+                                                        <label class="form-label">Effective Date<span class="required">
+                                                                *
+                                                            </span></label>
+                                                        <input type="text" class="form-control" onpaste="return false;"
+                                                            readonly bsDatepicker placement="bottom" [bsConfig]="{
+                                                              isAnimated: true,
+                                                              dateInputFormat: 'DD-MM-YYYY',
+                                                              containerClass: 'theme-default'
+                                                            }" name="effectiveDate" formControlName="effectiveDate"
+                                                            [ngClass]="{
+                                                              'is-invalid': f.effectiveDate.invalid
+                                                            }" placeholder="Effective Date" />
+                                                    </div>
+                                                    <!-- State -->
+                                                    <div class="col-md-3 col-sm-3 p-15">
+                                                        <label>State<span class="required">*</span> </label>
+                                                        <ng-select [items]="stateList" placeholder="-- select state --"
+                                                            formControlName="stateId" bindValue="Id"
+                                                            (change)="onChangeState($event)" bindLabel="Name" [ngClass]="{
+                                                                'is-invalid':  scale.controls['stateId'].invalid && scale.controls['stateId'].touched || scale.controls['stateId'].invalid && submitted 
+                                                              }">
+                                                        </ng-select>
+                                                        <div *ngIf="scale.controls['stateId'].invalid && scale.controls['stateId'].touched || scale.controls['stateId'].invalid && submitted"
+                                                            class="help-block">
+                                                            <div *ngIf="scale.controls['stateId'].errors.required">
+                                                                State is required
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- City -->
+                                                    <div class="col-md-3 col-sm-3 p-15">
+                                                        <label>City<span class="required">*</span> </label>
+                                                        <ng-select [items]="cityList" placeholder="Select city"
+                                                            formControlName="cityId" bindValue="Id" bindLabel="Name"
+                                                            [ngClass]="{
+                                                                'is-invalid': scale.controls['cityId'].invalid && scale.controls['cityId'].touched || scale.controls['cityId'].invalid && submitted
+                                                              }">
+                                                        </ng-select>
+                                                        <div *ngIf="scale.controls['cityId'].invalid && scale.controls['cityId'].touched || scale.controls['cityId'].invalid && submitted"
+                                                            class="help-block">
+                                                            <div *ngIf="scale.controls['cityId'].errors.required">
+                                                                City is required
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Scale id -->
+                                                    <div class="col-md-3 col-sm-3 p-15">
+                                                        <label>Scale<span class="required">*</span> </label>
+                                                        <ng-select [items]="scaleList" placeholder="Select scale"
+                                                            formControlName="scaleId" bindValue="Id" bindLabel="Name"
+                                                            (change)="onScaleChange($event, i)" [ngClass]="{
+                                                                'is-invalid': scale.controls['scaleId'].invalid && scale.controls['scaleId'].touched || scale.controls['scaleId'].invalid && submitted
+                                                              }">
+                                                        </ng-select>
+                                                        <div *ngIf="scale.controls['scaleId'].invalid && scale.controls['scaleId'].touched || scale.controls['scaleId'].invalid && submitted"
+                                                            class="help-block">
+                                                            <div *ngIf="scale.controls['scaleId'].errors.required">
+                                                                Scale is required
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- scale code -->
+                                                    <div class="col-md-3 col-sm-3 p-15">
+                                                        <label>Scale Code<span class="required">*</span> </label>
+                                                        <input type="text" class="form-control" placeholder="Scale code"
+                                                            formControlName="scaleCode" disabled />
+                                                    </div>
+                                                    <!--Applicable Months-->
+                                                    <div class="col-3 col-md-3 col-sm-3 p-15">
+                                                        <label> Applicable Months <span
+                                                                class="required">*</span></label>
+                                                        <ng-select [multiple]="true" [items]="monthList"
+                                                            placeholder="Select Months"
+                                                            formControlName="applicableMonths" bindValue="id"
+                                                            bindLabel="name"
+                                                            [ngClass]="{ 'is-invalid' : scale.controls['applicableMonths'].invalid && scale.controls['applicableMonths'].touched || scale.controls['applicableMonths'].invalid && submitted }">
+                                                        </ng-select>
+                                                        <div *ngIf="scale.controls['applicableMonths'].invalid && scale.controls['applicableMonths'].touched || scale.controls['applicableMonths'].invalid && submitted"
+                                                            class="help-block">
+                                                            <div
+                                                                *ngIf="scale.controls['applicableMonths'].errors.required">
+                                                                Applicable Month is required
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-sm mt-4 p-3"
+                                                        *ngIf="statutoryForm.get('scaleLocationMappings').controls.length == i+1"
+                                                        (click)="addScaleLocationMap(scale)">Add</div>
+                                                    <div class="text-sm mt-4 p-3" style="color:red"
+                                                        (click)="removeScaleLocation(i)">Close</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default pull-right" type="button" data-dismiss="modal"
+                        (click)="closeModal()">Cancel</button>
+
+
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                                    (click)="savebutton()">
+                                    <div class="pos-rlt sm-btn-component"> <span> Save </span></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

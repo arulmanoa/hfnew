@@ -1,0 +1,97 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <!-- LOADER -->
+    <app-loading-screen></app-loading-screen>
+    <!-- LOADER -->
+    <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+            Please wait...
+        </button>
+    </div>
+    <!-- EDIT DRAWER -->
+    <div class="m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="action == 'edit'">
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex ">
+          <div class="col-6 col-md-6">
+            <label class="text-label text-uppercase">Client</label>
+            <label class="header">{{rowData.ClientName}}</label>
+          </div>
+          <div class="col-6 col-md-6">
+             <label class="text-label text-uppercase">Client Contract</label>
+             <label class="header">{{rowData.ClientContractName}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex ">
+          <div class="col-6 col-md-6">
+            <label class="text-label text-uppercase">Team</label>
+            <label class="header">{{rowData.TeamName}}</label>
+         </div>
+          <div class="col-6 col-md-6">
+            <label class="text-label text-uppercase">Employee</label>
+            <label class="header">{{rowData.EmployeeName}}</label>
+         </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex ">
+          <div class="col-6 col-md-6">
+             <label class="text-label text-uppercase">Start Date</label>
+             <input class="form-control" type="text" name="startDate" bsDatepicker placement="bottom"
+             (bsValueChange)="onChangeStartDate($event)" placeholder="01-01-2020" [minDate]="minDate"
+             [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+             [(ngModel)]="startDate" autocomplete="off" readonly required>
+          </div>
+          <div class="col-6 col-md-6">
+             <label class="text-label text-uppercase">End Date</label>
+             <input class="form-control" type="text" name="endDate" [(ngModel)]="endDate" 
+             bsDatepicker placement="bottom" [minDate]="minDate" (bsValueChange)="onChangeEndDate($event)"
+             [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+             placeholder="12-12-2020" autocomplete="off"  readonly required>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+    <!-- DELETE DRAWER -->
+    <div class="mx-auto text-center" *ngIf="action == 'delete'">
+      <div class="row mx-auto text-center">
+        <div class="col-md-12" style="margin-left: 42%;margin-top: 35%;">
+          <img src="assets/Images/warning-outline.png" alt="warning">
+        </div>
+        <div class="row mx-auto text-center">
+          <div class="col-md-12 text-big">
+            Are you sure ?
+          </div>
+          <div class="col-md-12 mb-4 text-small">
+            Do you want to <b>delete</b> this slot 
+          </div>
+        </div>
+      </div>
+    </div>
+     <!-- INACTIVE DRAWER -->
+     <div class="mx-auto text-center" *ngIf="action == 'inactive'">
+      <div class="row mx-auto text-center">
+        <div class="col-md-12" style="margin-left: 42%;margin-top: 35%;">
+          <img src="assets/Images/warning-outline.png" alt="warning">
+        </div>
+        <div class="row mx-auto text-center">
+          <div class="col-md-12 text-big">
+            Are you sure ?
+          </div>
+          <div class="col-md-12 mb-4 text-small">
+            Do you want to <b>inactive</b> this slot 
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- BUTTONS -->
+    <div style="float: right" *ngIf="!spinner">
+      <button nz-button style="margin-right: 8px;" (click)="closeFBPDrawer()">Cancel</button>
+      <button nz-button nzType="primary" (click)="clickedSubmitFBPSlotFn()">Submit</button>
+    </div>
+  </div>
+</div>

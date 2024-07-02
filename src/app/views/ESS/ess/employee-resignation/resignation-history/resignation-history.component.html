@@ -1,0 +1,97 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document"
+    style="width: fit-content;">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;">
+
+        <br />
+        <div class="d-flex px-3 mb-3" style="justify-content: space-between;">
+          <h5>Resignation History</h5>
+          <Button style="font-size: large;"><span (click)="closeModal()" class="mdi mdi-close"></span></Button>
+        </div>
+        <ng-container *ngIf="data">
+          <div *ngFor="let item of data.ExitTransactionHistoryLog; let i = index" class="card-body">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-item">
+                  <p>Resigned on</p>
+                  <p class="date">{{formateDate(item.RequestedDate)}}</p>
+                </div>
+                <div class="card-item">
+                  <p>Requested Relieving Date</p>
+                  <p class="date">{{formateDate(item.RelievingDate)}}</p>
+                </div>
+                <div class="card-item status" [ngClass]="{
+                  'pending':item.Status === 'Pending',
+                  'rejected':item.Status === 'Rejected',
+                  'approved':item.Status === 'Approved',
+                  'revoked':item.Status === 'Revoked'
+                }" style="height: 29px;">
+                  <p>{{item.Status}}</p>
+                </div>
+                <div class="card-item toggle-details">
+                  <button class="btn" type="button" [attr.data-target]="'#collapseExample' + i"
+                    [attr.aria-controls]="'collapseExample' + i" (click)="toggleIcon(i)">
+                    <span class="mdi"
+                      [ngClass]="{'mdi-chevron-up-circle-outline': isCollapsed[i],'mdi-chevron-down-circle-outline': !isCollapsed[i]}"
+                      style="
+                    font-size: 20px;
+                    color: grey;"></span>
+                  </button>
+                </div>
+              </div>
+              <div class="collapse" [attr.id]="'collapseExample' + i" [ngClass]="{'show': isCollapsed[i]}">
+                <div class="card-body">
+                  <div class="d-flex mb-4" style="justify-content: space-between;">
+                    <p><span class="text-muted">Reason</span><br><strong>{{item.Reason}}</strong></p>
+                    <p *ngIf="item.Status === 'Approved'"><span class="text-muted" style="margin-right: 110px;">Approved
+                        Relieving Date</span><br><strong>{{item.ApprovedDate | date
+                        }}</strong></p>
+
+                  </div>
+                  <p class="m-b-16" *ngIf="item.Status === 'Rejected'"><span class="text-muted" style="margin-right: 110px;">Rejected
+                      On</span><br><strong>{{item.ValidatedOn | date}}</strong></p>
+                  <p class="m-b-16" *ngIf="item.Status === 'Rejected'"><span class="text-muted" style="margin-right: 110px;">Rejected
+                      By</span><br><strong>{{item.ValidatedByName
+                      }}</strong></p>
+                  <p class="m-b-16" *ngIf="item.Status === 'Revoked'"><span class="text-muted" style="margin-right: 110px;">Revoked
+                      On</span><br><strong>{{item.RevokedOn | date}}</strong></p>
+                  <p  class="m-b-16" *ngIf="item.Status === 'Revoked'"><span class="text-muted" style="margin-right: 110px;">Revoked
+                      By</span><br><strong>{{item.RevokedByName
+                      }}</strong></p>
+                  <p class="m-b-16" *ngIf="item.Status === 'Approved'"><span class="text-muted" style="margin-right: 110px;">Approved
+                      On</span><br><strong>{{item.ValidatedOn | date}}</strong></p>
+                  <p  class="m-b-16" *ngIf="item.Status === 'Approved'"><span class="text-muted" style="margin-right: 110px;">Approved
+                      By</span><br><strong>{{item.ValidatedByName
+                      }}</strong></p>
+
+                  <p class="mb-4"><span class="text-muted">Reason/Remarks</span><br> {{item.Remarks}}</p>
+
+                  <div *ngIf="item.Status !== 'Pending'">
+                    <div *ngIf="item.Status === 'Approved'">
+                      <p class="mb-1 txt-g">Approval Remark</p>
+                      <p>{{item.ApproverRemarks}}</p>
+                    </div>
+                    <div *ngIf="item.Status === 'Rejected'">
+                      <p class="mb-1 txt-r">Rejection Remark</p>
+                      <p>{{item.RejectionRemarks}}</p>
+                    </div>
+                    <div *ngIf="item.Status === 'Revoked'">
+                      <p class="mb-1 txt-p">Revoke Remark</p>
+                      <p>{{item.RevokedRemarks}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div *ngIf="data == undefined" class="card-body">
+          No history was found!
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

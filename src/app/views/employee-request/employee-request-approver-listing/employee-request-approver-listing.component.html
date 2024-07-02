@@ -1,0 +1,1708 @@
+<div class="page-wrapper ">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+        <!-- Button actions and title of the page  -->
+        <div class="row" style="margin-bottom: 20px;margin-top: -15px;">
+            <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left" style="padding-top: 10px;">
+                    <span *ngFor="let obj of cardsArr">
+            <h6 class="h6_c" *ngIf="obj.CardValue == isEnabled" style="font-size: 16px;
+          font-weight: 700;">{{obj.DisplayName}}</h6>
+          </span>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-right">
+                <div class="text-right">
+                    <ul class="list-inline">
+                        <li class="list-inline-item" *ngIf="isEnabled == 1">
+                            <button type="button" class="btn upgrade-btn" id="btn_qc_approve" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(true)">
+                <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="isEnabled == 1">
+                            <button type="button" class="btn btn-danger" id="btn_qc_reject" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(false)">
+                <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="isEnabled == 2">
+                            <button type="button" class="btn upgrade-btn" id="btn_qc_approve_per" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(true,'Permission')">
+                <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="isEnabled == 2">
+                            <button type="button" class="btn btn-danger" id="btn_qc_reject_per" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(false,'Permission')">
+                <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="isEnabled == 3">
+                            <button type="button" class="btn upgrade-btn" id="btn_qc_approve_wow" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(true,'WeakOff')">
+                <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="isEnabled == 3">
+                            <button type="button" class="btn btn-danger" id="btn_qc_reject_wow" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(false,'WeakOff')">
+                <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+              </button>
+                        </li>
+
+                        <li class="list-inline-item" *ngIf="isEnabled == 4">
+                            <button type="button" class="btn upgrade-btn" id="btn_qc_approve_wow" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(true,'Od')">
+                <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="isEnabled == 4">
+                            <button type="button" class="btn btn-danger" id="btn_qc_reject_wow" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(false,'Od')">
+                <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="isEnabled == 5">
+                            <button type="button" class="btn upgrade-btn" id="btn_qc_approve_wow" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(true,'Wfh')">
+                <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="isEnabled == 5">
+                            <button type="button" class="btn btn-danger" id="btn_qc_reject_wow" [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(false,'Wfh')">
+                <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="isEnabled == 1">
+                            <button type="button" style="background-color: #f1ebeb;" class="btn btn-default" [routerLink]="['/app/listing/ui/leaveRequestHistory']">
+                View History
+              </button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="(isEnabled == '2') || (isEnabled == '3') || (isEnabled == '4') || (isEnabled == '5')">
+                            <button type="button" style="background-color: #f1ebeb;" class="btn btn-default" [routerLink]="['/app/listing/ui/employeeRequestHistory']">
+                View History
+              </button>
+                        </li>
+                        <!-- <li class="list-inline-item" *ngIf="isEnabled == '3'">
+              <button type="button" style="background-color: #f1ebeb;" class="btn btn-default"
+                [routerLink]="['/app/listing/ui/employeeRequestHistory']">
+                View History
+              </button>
+            </li> -->
+                        <!-- <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()"></button> -->
+                        <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="RefreshSepFn(isEnabled, 'R')">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="grid sm:grid-cols-3 gap-6"> -->
+        <div [ngClass]="[cardslenght]" style="height: 85px !important;margin-right: 5px;margin-left: 7px;" *ngIf="!isMobileResolution">
+            <label for="{{item.Id}}" style="height: 82px;" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer" *ngFor="let item of cardsArr">
+        <span class="custombadge translate-middle border rounded-circle" [style.background-color]="item.Color">
+          {{item.Count}}
+        </span>
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;text-transform: capitalize !important;">{{item.DisplayName}}</span>
+        <span><i [ngClass]="item.IconName" [style.color]="item.Color" aria-hidden="true"
+            style="margin-top: -10px !important;"></i></span>
+        <!-- <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{item.Count}} <span style="font-size: 12px;
+            color: black !important;"> {{item.LabelName}} </span> </span>
+        </span> -->
+
+        <input type="radio" name="plan" id="{{item.Id}}" value="{{item.CardValue}}"
+          class="absolute h-0 w-0 appearance-none" (click)="RefreshSepFn(item.CardValue)"
+          [checked]="isEnabled == item.CardValue" />
+        <span aria-hidden="true"
+          class="active-arrow hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+        </div>
+
+        <div class="row" *ngIf="!spinner && isMobileResolution">
+            <div class="col-lg-10 p-0">
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-4 col-md-4 col-sm-4 displayinlineblock">
+                    <label class="form-label" style="text-align: left;"> Request Option </label>
+                    <ng-select [items]="cardsArr" placeholder="-- Select an option --" bindLabel="CombiledDisplayNameCount" bindValue="Id" [(ngModel)]="selectedAttributes" [clearable]="false" (change)="onChangeRequestType($event,isEnabled)">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-12 col-lg-2">
+
+            </div>
+        </div>
+
+
+
+        <!-- <br> -->
+        <div *ngIf="isEnabled" class="content m-b report-content" style="margin-top: 0px !important;margin-right: 7px; margin-left: 7px;">
+            <div class="row" *ngIf="isEnabled == 1 && !isMobileResolution">
+                <!--inEmployeesInitiateList (leaves)-->
+                <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                    <div class="table-responsive table-height" style="height: 300px;">
+                        <table class="table-sticky table-bordered tble-row-height table mb-0" *ngIf="!spinner">
+                            <!-- style="text-align: center;" -->
+                            <thead class="tbl-freezhead">
+                                <tr>
+                                    <th style="background: #f3f3f3; width: 30px;">
+                                        <input #checkAll type="checkbox" id="checkAll" [checked]="CheckdVal" (change)="onSelectedEmployeeChange('M',inEmployeesInitiateList,checkAll.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                                    </th>
+                                    <th style="background: #f3f3f3; width: 100px;">
+                                        Emp Code
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 150px;">
+                                        Emp Name
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px;">
+                                        Leave Type
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 120px;">
+                                        Applied From
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px;">
+                                        Applied Till
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px;">
+                                        No Of Days
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px;">
+                                        Applied On
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 130px;">
+                                        Status
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 150px;">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbl-scrollbody" *ngIf="!spinner && inEmployeesInitiateList.length>0">
+                                <tr *ngFor="let obj of inEmployeesInitiateList">
+                                    <td style="width: 30px; padding-top: 5px !important;">
+                                        <input #check type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="check" (change)="onSelectedEmployeeChange('S',inEmployeesInitiateList,check.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+                                    </td>
+                                    <td style="width: 100px; padding-top: 5px !important;">
+                                        {{obj.EmployeeCode}}
+                                    </td>
+                                    <td style="width: 150px;padding-top: 5px !important;">
+                                        <p matTooltip="{{obj.EmployeeName}}" style="text-overflow: ellipsis; overflow: hidden; width: 110px;  height: 1.2em; white-space: nowrap;cursor: pointer;">
+                                            {{obj.EmployeeName}}</p>
+                                    </td>
+                                    <td style="width: 100px;padding-top: 5px !important;">
+                                        {{obj.EntitlementCode}}
+                                    </td>
+                                    <td style="width: 120px;padding-top: 5px !important;">
+                                        {{obj.AppliedFrom | date :'dd-MM-yyyy'}}
+                                    </td>
+                                    <td style="width: 100px;padding-top: 5px !important;">
+                                        {{obj.AppliedTill | date :'dd-MM-yyyy'}}
+                                    </td>
+                                    <td style="width: 100px;padding-top: 5px !important;">
+                                        {{obj.CalculatedAppliedUnits}}
+                                    </td>
+                                    <td style="width: 100px;padding-top: 5px !important;">
+                                        {{obj.AppliedOn | date :'dd-MM-yyyy'}}
+                                    </td>
+
+                                    <td [ngClass]="obj.Status == 400 ? 'Approved' :(obj.Status == 300 ? 'Rejected' : 'Normal')" style="width: 130px;padding-top: 5px !important;">
+                                        {{obj.StatusName}}
+                                    </td>
+                                    <td [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100 || obj.Status == 600) ? '' : 'HideDisable'" style="width: 150px;">
+                                        <a href="javascript:;" class="btn action-edit" id="View1" style="margin-right: 5px" matTooltip="View" (click)="onCellClicked(obj,'regularize_req','Leave','')">
+                                            <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Approve1" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','Leave','')">
+                                            <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Decline1" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','Leave','')">
+                                            <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isEnabled == 1">
+                <div style="text-align: center;padding: 60px;" class="tbl-scrollbody" *ngIf="inEmployeesInitiateList.length==0 && !spinner">
+                    <label style="font-weight: 700;padding-top: 35px;">No Records Found...</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center ma-5" style="padding-top: 15px;" *ngIf="spinner">
+                            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+          aria-hidden="true"></span>
+        Please wait...
+      </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" *ngIf="isEnabled == 1 && isMobileResolution">
+                <div class="col-md-4 col-sm-4 col-xs-6" *ngFor="let obj of inEmployeesInitiateList">
+
+                    <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7;">
+                        <div class="card-header" style="background-color: white;border: none;padding: 10px;">
+
+                            <input #check type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="check" (change)="onSelectedEmployeeChange('S',inEmployeesInitiateList,check.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;margin-right: 10px;">
+
+                            <span *ngIf="obj.Status == 100" class="badge badge-soft-warning" style="display: inline;">{{obj.StatusName}} </span>
+                            <span *ngIf="obj.Status == 400" class="badge badge-soft-success" style="display: inline;">{{obj.StatusName}} </span>
+                            <span *ngIf="obj.Status == 300 || obj.Status == 200" class="badge badge-soft-danger" style="display: inline;"> {{obj.StatusName}} </span>
+
+                        </div>
+                        <div class="card-body" style="background-color: #f3f8ff;padding: 10px;">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <span style="font-size: 13px;font-weight: 600;"> {{obj.EmployeeCode}} - {{obj.EmployeeName}}</span> <br />
+                                    <span style="font-size: 11px;">{{obj.AppliedFrom | date :'MMMM d'}} - {{obj.AppliedTill | date
+                    :'MMMM d y'}} </span>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <span style="font-size: 13px; color: #1890ff; font-weight: 600;">{{obj.CalculatedAppliedUnits}} day(s) :  {{obj.EntitlementCode}}</span>
+                                    <br />
+                                    <span style="font-size: 11px;" title="{{obj.ApplierRemarks}}"> Comments : {{obj.ApplierRemarks}}
+                  </span>
+                                </div>
+                                <div class="col-lg-6" style="text-align: right;" [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100) ? '' : 'HideDisable'">
+                                    <a href="javascript:;" class="btn action-edit" id="View1" style="margin-right: 5px" matTooltip="View" (click)="onCellClicked(obj,'regularize_req','Leave','')">
+                                        <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Approve1" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','Leave','')">
+                                        <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Decline1" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','Leave','')">
+                                        <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row" *ngIf="isEnabled == 2 && !isMobileResolution">
+                <!--PermissionArr-->
+                <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                    <div class="table-responsive table-height" style="height: 300px;">
+                        <table class="table table-sticky table-bordered tble-row-height mb-0" *ngIf="!spinner">
+                            <!-- style="text-align: center;" -->
+                            <thead class="tbl-freezhead">
+                                <tr>
+                                    <th style="background: #f3f3f3; width: 30px;">
+                                        <input #checkAllPer1 type="checkbox" id="checkAllPer1" [checked]="CheckdVal" (change)="onSelectedEmployeeChange('M',PermissionArr,checkAllPer1.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                                    </th>
+                                    <th style="background: #f3f3f3;width:90px;">
+                                        Emp Code
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 90px;">
+                                        Emp Name
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 90px;">
+                                        Date
+                                    </th>
+                                    <th style="background: #f3f3f3;width:130px;width: 100px;">
+                                        Start Time
+                                    </th>
+                                    <th style="background: #f3f3f3;width:130px;width: 100px;">
+                                        End Time
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px;">
+                                        No Of Hours
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 90px;">
+                                        Emp Remarks
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 120px;">
+                                        Status
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 135px;">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbl-scrollbody" *ngIf="PermissionArr.length>0">
+                                <tr *ngFor="let obj of PermissionArr">
+                                    <td style="padding-top: 8px !important;width: 30px;">
+                                        <input #checkPer2 type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="checkPer2" (change)="onSelectedEmployeeChange('S',PermissionArr,checkPer2.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+
+                                    </td>
+                                    <td style="padding-top: 8px !important;width: 90px;">
+                                        {{obj.EmployeeCode}}
+                                    </td>
+                                    <td style="padding-top: 8px !important;width: 90px;">
+                                        <p matTooltip="{{obj.EmployeeName}}" style="text-overflow: ellipsis; overflow: hidden; width: 85px;  height: 1.2em; white-space: nowrap;cursor: pointer;">
+                                            {{obj.EmployeeName}}
+                                        </p>
+                                    </td>
+                                    <td style="padding-top: 8px !important;width: 90px;">
+                                        {{obj.Date | date :'dd-MM-yyyy'}}
+                                    </td>
+                                    <!-- <td (click)="obj.StartTimeEdit = true" style="width:130px"> -->
+                                    <td style="width:130px;padding-top: 2px !important;width: 100px;">
+                                        <!-- <label style="padding: 6px 0px 0px 20px;" *ngIf="!obj.StartTimeEdit"> {{obj.StartTime}}</label> -->
+                                        <label style="margin: 2px !important;">
+                      <input style="height: 28px !important;padding-top: 3px !important;"
+                        class="form-control timepicker" min="00:00" max="23:00" name="ApprovedStartTime"
+                        placeholder="00:00" [(ngModel)]="obj.ApprovedStartTime" type="time" id="ApprovedStartTime"
+                        required />
+                    </label>
+                                    </td>
+                                    <!-- <td (click)="obj.EndTimeEdit = true" style="width:130px"> -->
+                                    <td style="width:130px;padding-top: 2px !important;width: 100px;">
+                                        <!-- <label style="padding: 6px 0px 0px 20px;" *ngIf="!obj.EndTimeEdit"> {{obj.EndTime}}</label> -->
+                                        <label style="margin: 2px !important;">
+                      <input style="height: 28px !important;padding-top: 3px !important;"
+                        class="form-control timepicker" min="00:00" max="23:00" name="ApprovedEndTime"
+                        placeholder="00:00" [(ngModel)]="obj.ApprovedEndTime" type="time" id="ApprovedEndTime"
+                        required />
+                    </label>
+                                    </td>
+                                    <td style="padding-top: 8px !important;width: 100px;">
+                                        {{obj.TotalTimeDisplay}}
+                                    </td>
+                                    <td style="padding-top: 8px !important;width: 90px;">
+                                        <p matTooltip="{{obj.EmployeeRemarks}}" style="text-overflow: ellipsis; overflow: hidden; width: 90px;  height: 1.2em; white-space: nowrap;cursor: pointer;">
+                                            {{obj.EmployeeRemarks}}
+                                        </p>
+                                    </td>
+                                    <!-- <td [ngClass]="obj.Status == 300 ? 'Approved' :(obj.Status == 200 ? 'Rejected' : 'Normal')"
+                    style="width: 100px;padding-top: 5px !important;">
+                    {{obj.Status == 300 ? 'Approved' : (obj.Status == 200 ? 'Rejected' :(obj.Status == 100 ?'Applied' :
+                    '---'))}}
+                  </td> -->
+                                    <td [ngClass]="obj.Status == 300 ? 'Approved' :((obj.Status == 200 || obj.CancelStatus == 100) ? 'Rejected' : 'Normal')" style="width: 120px;padding-top: 5px !important;">
+                                        {{obj.DisplayStatus}}
+                                    </td>
+                                    <td style="width: 135px;" [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100) ? '' : 'HideDisable'">
+                                        <a href="javascript:;" class="btn action-edit" id="View2" style="margin-right: 5px" matTooltip="View" (click)="viewPermissionPop(obj,'regularize_req','Permission','single')">
+                                            <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Approve2" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','Permission','single')">
+                                            <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Decline2" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','Permission','single')">
+                                            <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isEnabled == 2">
+                <div style="text-align: center;padding: 60px;" class="tbl-scrollbody" *ngIf="PermissionArr.length==0 && !spinner">
+                    <label style="font-weight: 700;padding-top: 35px;">No Records Found...</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center ma-5" style="padding-top: 15px;" *ngIf="spinner">
+                            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+          aria-hidden="true"></span>
+        Please wait...
+      </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row" *ngIf="isEnabled == 2 && isMobileResolution">
+                <div class="col-md-4 col-sm-4 col-xs-6" *ngFor="let obj of PermissionArr">
+
+                    <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7;">
+                        <div class="card-header" style="background-color: white;border: none;padding: 10px;">
+
+                            <input #checkPer2 type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="checkPer2" (change)="onSelectedEmployeeChange('S',PermissionArr,checkPer2.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;margin-right: 10px;">
+
+                            <span *ngIf="obj.Status != 100 && obj.Status != 300 && obj.Status != 200" class="badge badge-soft-danger" style="display: inline;">{{obj.DisplayStatus}} </span>
+                            <span *ngIf="obj.Status == 300" class="badge badge-soft-success" style="display: inline;">{{obj.DisplayStatus}} </span>
+                            <span *ngIf="obj.Status == 200 || obj.Status == 100" class="badge badge-soft-warning" style="display: inline;"> {{obj.DisplayStatus}} </span>
+
+                        </div>
+                        <div class="card-body" style="background-color: #f3f8ff;padding: 10px;">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <span style="font-size: 13px;font-weight: 600;"> {{obj.EmployeeCode}} - {{obj.EmployeeName}}</span> <br />
+                                    <span style="font-size: 11px;">{{obj.Date | date :'MMMM d y'}} </span>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div style="font-size: 13px; color: #1890ff; font-weight: 600;">
+                                        <label style="margin: 2px !important;">
+                                    <input style="height: 28px !important;padding-top: 3px !important;"
+                                      class="form-control timepicker" min="00:00" max="23:00" name="ApprovedStartTime"
+                                      placeholder="00:00" [(ngModel)]="obj.ApprovedStartTime" type="time" id="ApprovedStartTime"
+                                      required />
+                                  </label>
+                                    </div>
+                                    <div style="font-size: 13px; color: #1890ff; font-weight: 600;">
+                                        <label style="margin: 2px !important;">
+                                    <input style="height: 28px !important;padding-top: 3px !important;"
+                                      class="form-control timepicker" min="00:00" max="23:00" name="ApprovedEndTime"
+                                      placeholder="00:00" [(ngModel)]="obj.ApprovedEndTime" type="time" id="ApprovedEndTime"
+                                      required />
+                                  </label>
+                                    </div>
+                                    <br />
+                                    <span style="font-size: 13px; color: #1890ff; font-weight: 600;">
+                                      No of hrs :  {{obj.TotalTimeDisplay}}
+                               </span>
+                                    <br/>
+
+                                    <span style="font-size: 11px;" title="{{obj.EmployeeRemarks}}"> Comments : {{obj.EmployeeRemarks}}
+                </span>
+                                </div>
+                                <div class="col-lg-6" style="text-align: right;" [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100) ? '' : 'HideDisable'">
+                                    <a href="javascript:;" class="btn action-edit" id="View2" style="margin-right: 5px" matTooltip="View" (click)="viewPermissionPop(obj,'regularize_req','Permission','single')">
+                                        <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Approve2" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','Permission','single')">
+                                        <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Decline2" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','Permission','single')">
+                                        <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="row" *ngIf="isEnabled == 3 && !isMobileResolution">
+                <!--WeekOffArr-->
+                <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                    <div class="table-responsive  table-height" style="height: 300px;">
+                        <table class="table-sticky table-bordered tble-row-height table mb-0" *ngIf="!spinner">
+                            <!-- style="text-align: center;" -->
+                            <thead>
+                                <tr>
+                                    <th style="background: #f3f3f3; width: 30px;">
+                                        <input #checkAllWOW1 type="checkbox" id="checkAllWOW1" [checked]="CheckdVal" (change)="onSelectedEmployeeChange('M',WeekOffArr,checkAllWOW1.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px;">
+                                        Emp Code
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px">
+                                        Emp Name
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px">
+                                        Date
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px">
+                                        Claim Type
+                                    </th>
+                                    <th style="background: #f3f3f3; width: 160px;">
+                                        Expired On
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 100px">
+                                        Emp Remarks
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 120px">
+                                        Status
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 125px">
+                                        Actions
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody class="tbl-scrollbody" *ngIf="WeekOffArr.length>0">
+                                <tr *ngFor="let obj of WeekOffArr">
+                                    <td style="padding-top: 5px !important;width: 30px">
+                                        <input #checkWOW2 type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="checkWOW2" (change)="onSelectedEmployeeChange('S',WeekOffArr,checkWOW2.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+                                    </td>
+                                    <td style="padding-top: 5px !important;width: 100px">
+                                        {{obj.EmployeeCode}}
+                                    </td>
+                                    <td style="padding-top: 5px !important;width: 100px">
+                                        <p matTooltip="{{obj.EmployeeName}}" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;cursor: pointer;width: 90px;height: 20px;margin-bottom: 0px;">
+                                            {{obj.EmployeeName}}
+                                        </p>
+                                    </td>
+                                    <td style="padding-top: 5px !important;width: 100px">
+                                        {{obj.Date}}
+                                    </td>
+                                    <td class="tdDropDown" style="padding: 0px !important;width: 100px">
+                                        <label class="form-group mb-0" style="width: 100% !important;">
+                      <ng-select [items]="WowClimeTypeArr" [clearable]="false" [(ngModel)]="obj.ApprovedClaimType"
+                        placeholder="Claim Type" bindLabel="ClimeType_Name" bindValue="ClimeType_Val"
+                        style="width: 100% !important;">
+                      </ng-select>
+                    </label>
+
+                                        <!-- {{obj.RequestedClaimType == 100 ? 'DecideLater' :(obj.RequestedClaimType == 200 ? 'Encash'
+                    :(obj.RequestedClaimType == 300 ? 'Leave' : 'None'))}} -->
+                                    </td>
+
+                                    <td style="padding-top: 0px !important;padding-left: 0px !important;padding-right: 0px !important; width: 160px">
+                                        <!-- {{item.Date}} -->
+                                        <div class="input-group" style="margin-top: 0px !important;">
+                                            <div class="input-group-prepend">
+                                                <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                        </label>
+                                            </div>
+                                            <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom" [minDate]="mindateFn(obj)" readonly [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }" placeholder="12-12-1970" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                                                autocomplete="off" [(ngModel)]="obj.ApprovedExpireOn">
+                                        </div>
+                                    </td>
+                                    <td style="padding-top: 5px !important;width: 100px">
+                                        <p matTooltip="{{obj.EmployeeRemarks}}" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;cursor: pointer;width: 90px;height: 20px;margin-bottom: 0px;">
+                                            {{obj.EmployeeRemarks}}
+                                        </p>
+                                    </td>
+                                    <td [ngClass]="obj.Status == 300 ? 'Approved' :((obj.Status == 200 || obj.CancelStatus == 100) ? 'Rejected' : 'Normal')" style="width: 120px;padding-top: 5px !important;">
+                                        {{obj.DisplayStatus}}
+                                    </td>
+                                    <td style="width: 125px" [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100) ? '' : 'HideDisable'">
+                                        <a href="javascript:;" class="btn action-edit" id="View" style="margin-right: 5px" matTooltip="View" (click)="ViewWOWPop(obj,'regularize_req','WeakOff','single')">
+                                            <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Approve" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','WeakOff','single')">
+                                            <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Decline3" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','WeakOff','single')">
+                                            <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isEnabled == 3">
+                <div style="text-align: center;padding: 60px;" class="tbl-scrollbody" *ngIf="WeekOffArr.length==0 && !spinner">
+                    <label style="font-weight: 700;padding-top: 35px;">No Records Found...</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center ma-5" style="padding-top: 15px;" *ngIf="spinner">
+                            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+          aria-hidden="true"></span>
+        Please wait...
+      </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="isEnabled == 3 && isMobileResolution">
+                <div class="col-md-4 col-sm-4 col-xs-6" *ngFor="let obj of WeekOffArr">
+
+                    <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7;">
+                        <div class="card-header" style="background-color: white;border: none;padding: 10px;">
+
+                            <input #checkWOW2 type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="checkWOW2" (change)="onSelectedEmployeeChange('S',WeekOffArr,checkWOW2.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;margin-right: 10px;">
+
+                            <span *ngIf="obj.Status != 100 && obj.Status != 300 && obj.Status != 200" class="badge badge-soft-danger" style="display: inline;">{{obj.DisplayStatus}} </span>
+                            <span *ngIf="obj.Status == 300" class="badge badge-soft-success" style="display: inline;">{{obj.DisplayStatus}} </span>
+                            <span *ngIf="obj.Status == 200 || obj.Status == 100" class="badge badge-soft-warning" style="display: inline;"> {{obj.DisplayStatus}} </span>
+
+                        </div>
+                        <div class="card-body" style="background-color: #f3f8ff;padding: 10px;">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <span style="font-size: 13px;font-weight: 600;"> {{obj.EmployeeCode}} - {{obj.EmployeeName}}</span> <br />
+                                    <span style="font-size: 11px;">{{obj.Date | date :'MMMM d y'}} </span>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <span style="font-size: 13px; color: #1890ff; font-weight: 600;">
+                                        <label class="form-group mb-0" style="width: 100% !important;">
+                                      <ng-select [items]="WowClimeTypeArr" [clearable]="false" [(ngModel)]="obj.ApprovedClaimType"
+                                        placeholder="Claim Type" bindLabel="ClimeType_Name" bindValue="ClimeType_Val"
+                                        style="width: 100% !important;">
+                                      </ng-select>
+                                    </label>
+                                  </span>
+
+                                    <br />
+                                    <span class="input-group" style="margin-top: 0px !important;">
+                                        <div class="input-group-prepend">
+                                            <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                </label>
+                                        </div>
+                                        <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom" [minDate]="mindateFn(obj)" readonly [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }" placeholder="12-12-1970" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                                            autocomplete="off" [(ngModel)]="obj.ApprovedExpireOn">
+                                    </span>
+
+                                    <span style="font-size: 11px;" title="{{obj.EmployeeRemarks}}"> Comments : {{obj.EmployeeRemarks}}
+              </span>
+                                </div>
+                                <div class="col-lg-6" style="text-align: right;" [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100) ? '' : 'HideDisable'">
+                                    <a href="javascript:;" class="btn action-edit" id="View" style="margin-right: 5px" matTooltip="View" (click)="ViewWOWPop(obj,'regularize_req','WeakOff','single')">
+                                        <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Approve" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','WeakOff','single')">
+                                        <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Decline3" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','WeakOff','single')">
+                                        <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="row" *ngIf="isEnabled == 4  && !isMobileResolution">
+                <!--OdArr-->
+                <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                    <div class="table-responsive  table-height" style="height: 300px;">
+                        <table class="table-sticky table-bordered tble-row-height table mb-0" *ngIf="!spinner">
+                            <thead>
+                                <tr>
+                                    <th style="background: #f3f3f3; width: 30px;">
+                                        <input #checkAllOd1 type="checkbox" id="checkAllOd1" [checked]="CheckdVal" (change)="onSelectedEmployeeChange('M',OdArr,checkAllOd1.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Emp Code
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Emp Name
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Date
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Requested Dates
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Emp Remarks
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 120px;">
+                                        Status
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbl-scrollbody" *ngIf="OdArr.length>0">
+                                <tr *ngFor="let obj of OdArr">
+                                    <td style="padding-top: 5px !important;">
+                                        <input #checkOd2 type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="checkWOW2" (change)="onSelectedEmployeeChange('S',OdArr,checkOd2.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        {{obj.EmployeeCode}}
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        <p matTooltip="{{obj.EmployeeName}}" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;cursor: pointer;width: 90px;height: 20px;margin-bottom: 0px;">
+                                            {{obj.EmployeeName}}
+                                        </p>
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        {{obj.CreatedOn | date :'dd-MM-yyyy'}}
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        <div class="position-relative">
+                                            <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="obj.dateRange" (bsValueChange)="onChange_DateRangeOd($event,_dateRange,obj)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }">
+                                            <!-- <i *ngIf="_dateRange" (click)="_dateRange = null" placeholder="Clear"
+                        style="position: absolute; right: 22px;transform: translate(-50%, -50%);top: 68%; cursor: pointer;color: #949494;"
+                        class="fa fa-times fa-1" aria-hidden="true"></i> -->
+                                        </div>
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        <p matTooltip="{{obj.EmployeeRemarks}}" style="text-overflow: ellipsis; overflow: hidden; width: 90px;  height: 1.2em;margin-bottom: 0px; white-space: nowrap;cursor: pointer;">
+                                            {{obj.EmployeeRemarks}}
+                                        </p>
+                                    </td>
+                                    <!-- <td style="padding-top: 5px !important;">
+                    {{obj.Status == 300 ? 'Approved' : (obj.Status == 200 ? 'Rejected' :'Applied')}}
+                  </td> -->
+                                    <td [ngClass]="obj.Status == 300 ? 'Approved' :((obj.Status == 200 || obj.CancelStatus == 100) ? 'Rejected' : 'Normal')" style="width: 120px;padding-top: 5px !important;">
+                                        {{obj.DisplayStatus}}
+                                    </td>
+                                    <td [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100) ? '' : 'HideDisable'">
+                                        <a href="javascript:;" class="btn action-edit" id="View" style="margin-right: 5px" matTooltip="View" (click)="ViewOdPop(obj,'regularize_req','Od','single')">
+                                            <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Approve4" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','Od','single')">
+                                            <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Decline4" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','Od','single')">
+                                            <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="isEnabled == 4">
+                <div style="text-align: center;padding: 60px;" class="tbl-scrollbody" *ngIf="OdArr.length==0 && !spinner">
+                    <label style="font-weight: 700;padding-top: 35px;">No Records Found...</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center ma-5" style="padding-top: 15px;" *ngIf="spinner">
+                            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+          aria-hidden="true"></span>
+        Please wait...
+      </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" *ngIf="isEnabled == 4 && isMobileResolution">
+                <div class="col-md-4 col-sm-4 col-xs-6" *ngFor="let obj of OdArr">
+
+                    <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7;">
+                        <div class="card-header" style="background-color: white;border: none;padding: 10px;">
+
+                            <input #checkOd2 type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="checkWOW2" (change)="onSelectedEmployeeChange('S',OdArr,checkOd2.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;margin-right: 10px;">
+
+                            <span *ngIf="obj.Status != 100 && obj.Status != 300 && obj.Status != 200" class="badge badge-soft-danger" style="display: inline;">{{obj.DisplayStatus}} </span>
+                            <span *ngIf="obj.Status == 300" class="badge badge-soft-success" style="display: inline;">{{obj.DisplayStatus}} </span>
+                            <span *ngIf="obj.Status == 200 || obj.Status == 100" class="badge badge-soft-warning" style="display: inline;"> {{obj.DisplayStatus}} </span>
+
+                        </div>
+                        <div class="card-body" style="background-color: #f3f8ff;padding: 10px;">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <span style="font-size: 13px;font-weight: 600;"> {{obj.EmployeeCode}} - {{obj.EmployeeName}}</span> <br />
+                                    <span style="font-size: 11px;">{{obj.CreatedOn | date :'MMMM d y'}} </span>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="position-relative">
+                                        <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="obj.dateRange" (bsValueChange)="onChange_DateRangeOd($event,_dateRange,obj)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }">
+                                        <!-- <i *ngIf="_dateRange" (click)="_dateRange = null" placeholder="Clear"
+                style="position: absolute; right: 22px;transform: translate(-50%, -50%);top: 68%; cursor: pointer;color: #949494;"
+                class="fa fa-times fa-1" aria-hidden="true"></i> -->
+                                    </div>
+
+                                    <br />
+
+
+                                    <span style="font-size: 11px;" title="{{obj.EmployeeRemarks}}"> Comments : {{obj.EmployeeRemarks}}
+            </span>
+                                </div>
+                                <div class="col-lg-6" style="text-align: right;" [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100) ? '' : 'HideDisable'">
+                                    <a href="javascript:;" class="btn action-edit" id="View" style="margin-right: 5px" matTooltip="View" (click)="ViewOdPop(obj,'regularize_req','Od','single')">
+                                        <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Approve4" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','Od','single')">
+                                        <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Decline4" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','Od','single')">
+                                        <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="row" *ngIf="isEnabled == 5  && !isMobileResolution">
+                <!--WfhArr-->
+                <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                    <div class="table-responsive  table-height" style="height: 300px;">
+                        <table class="table-sticky table-bordered tble-row-height table mb-0" *ngIf="!spinner">
+                            <!-- style="text-align: center;" -->
+                            <thead>
+                                <tr>
+                                    <th style="background: #f3f3f3; width: 30px;">
+                                        <input #checkAllWfh1 type="checkbox" id="checkAllWfh1" [checked]="CheckdVal" (change)="onSelectedEmployeeChange('M',WfhArr,checkAllWfh1.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Emp Code
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Emp Name
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Date
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Requested Dates
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Emp Remarks
+                                    </th>
+                                    <th style="background: #f3f3f3;width: 120px;">
+                                        Status
+                                    </th>
+                                    <th style="background: #f3f3f3;">
+                                        Actions
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody class="tbl-scrollbody" *ngIf="WfhArr.length>0">
+                                <tr *ngFor="let obj of WfhArr">
+                                    <td style="padding-top: 5px !important;">
+                                        <input #checkWfh2 type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="checkWfh2" (change)="onSelectedEmployeeChange('S',WfhArr,checkWfh2.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        {{obj.EmployeeCode}}
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        <p matTooltip="{{obj.EmployeeName}}" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;cursor: pointer;width: 90px;height: 20px;margin-bottom: 0px;">
+                                            {{obj.EmployeeName}}
+                                        </p>
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        {{obj.CreatedOn | date :'dd-MM-yyyy'}}
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        <div class="position-relative">
+                                            <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="obj.dateRange" (bsValueChange)="onChange_DateRangeWfh($event,_dateRange,obj)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }">
+                                            <!-- <i *ngIf="_dateRange" (click)="_dateRange = null" placeholder="Clear"
+                        style="position: absolute; right: 22px;transform: translate(-50%, -50%);top: 68%; cursor: pointer;color: #949494;"
+                        class="fa fa-times fa-1" aria-hidden="true"></i> -->
+                                        </div>
+                                    </td>
+                                    <td style="padding-top: 5px !important;">
+                                        <p matTooltip="{{obj.EmployeeRemarks}}" style="text-overflow: ellipsis; overflow: hidden; width: 90px;  height: 1.2em;margin-bottom: 0px; white-space: nowrap;cursor: pointer;">
+                                            {{obj.EmployeeRemarks}}
+                                        </p>
+                                    </td>
+                                    <!-- <td style="padding-top: 5px !important;">
+                    {{obj.Status == 300 ? 'Approved' : (obj.Status == 200 ? 'Rejected' :'Applied')}}
+                  </td> -->
+                                    <td [ngClass]="obj.Status == 300 ? 'Approved' :((obj.Status == 200 || obj.CancelStatus == 100) ? 'Rejected' : 'Normal')" style="width: 120px;padding-top: 5px !important;">
+                                        {{obj.DisplayStatus}}
+                                    </td>
+                                    <td [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100) ? '' : 'HideDisable'">
+                                        <a href="javascript:;" class="btn action-edit" id="View" style="margin-right: 5px" matTooltip="View" (click)="ViewWfhPop(obj,'regularize_req','Wfh','single')">
+                                            <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Approve" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','Wfh','single')">
+                                            <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                        </a>
+                                        <a href="javascript:;" class="btn action-edit" id="Decline3" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','Wfh','single')">
+                                            <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isEnabled == 5">
+                <div style="text-align: center;padding: 60px;" class="tbl-scrollbody" *ngIf="WfhArr.length==0 && !spinner">
+                    <label style="font-weight: 700;padding-top: 35px;">No Records Found...</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center ma-5" style="padding-top: 15px;" *ngIf="spinner">
+                            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+          aria-hidden="true"></span>
+        Please wait...
+      </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="isEnabled == 5 && isMobileResolution">
+                <div class="col-md-4 col-sm-4 col-xs-6" *ngFor="let obj of WfhArr">
+
+                    <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7;">
+                        <div class="card-header" style="background-color: white;border: none;padding: 10px;">
+
+                            <input #checkWfh2 type="checkbox" [(ngModel)]="obj.Select_Val" [checked]="obj.Select_Val==true" id="checkWfh2" (change)="onSelectedEmployeeChange('S',WfhArr,checkWfh2.checked)" style="border-width: thin;width:15px;vertical-align: text-bottom;margin-right: 10px;">
+
+                            <span *ngIf="obj.Status != 100 && obj.Status != 300 && obj.Status != 200" class="badge badge-soft-danger" style="display: inline;">{{obj.DisplayStatus}} </span>
+                            <span *ngIf="obj.Status == 300" class="badge badge-soft-success" style="display: inline;">{{obj.DisplayStatus}} </span>
+                            <span *ngIf="obj.Status == 200 || obj.Status == 100" class="badge badge-soft-warning" style="display: inline;"> {{obj.DisplayStatus}} </span>
+
+                        </div>
+                        <div class="card-body" style="background-color: #f3f8ff;padding: 10px;">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <span style="font-size: 13px;font-weight: 600;"> {{obj.EmployeeCode}} - {{obj.EmployeeName}}</span> <br />
+                                    <span style="font-size: 11px;">{{obj.CreatedOn | date :'MMMM d y'}} </span>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                            <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="position-relative">
+                                        <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="obj.dateRange" (bsValueChange)="onChange_DateRangeWfh($event,_dateRange,obj)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }">
+
+                                    </div>
+                                    <br />
+
+
+                                    <span style="font-size: 11px;" title="{{obj.EmployeeRemarks}}"> Comments : {{obj.EmployeeRemarks}}
+            </span>
+                                </div>
+                                <div class="col-lg-6" style="text-align: right;" [ngClass]="(obj.CancelStatus == 100 || obj.Status == 100) ? '' : 'HideDisable'">
+                                    <a href="javascript:;" class="btn action-edit" id="View" style="margin-right: 5px" matTooltip="View" (click)="ViewOdPop(obj,'regularize_req','Od','single')">
+                                        <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #24b7e4;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Approve4" style="margin-right: 5px" matTooltip="Approve" (click)="onCellClicked(obj,'approve_req','Od','single')">
+                                        <i class="fa fa-check" aria-hidden="true" style="font-size: 16px;color: #18ac20;"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn action-edit" id="Decline4" style="margin-right: 5px" matTooltip="Decline" (click)="onCellClicked_decline(obj,'decline_req','Od','single')">
+                                        <i class="fa fa-times" aria-hidden="true" style="font-size: 16px;color: #d60e0e;"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<div id="popup_edit_attendance" *ngIf="isEnabled == '1'" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 20px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;" *ngIf="rowData && rowData.Status != 600">Applied Leave Request</small>
+                        <!-- <h6 class="modal-title subheader_h6" id="popup_release_AL">Your Request</h6> -->
+                        <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;" *ngIf="rowData && rowData.Status == 600">Applied Cancel Leave Request</small>
+
+
+                    </div>
+
+                    <div class="modal-close" (click)="close_leaverequest_approval_slider()" style="margin-top: 5px;top: 7px !important;">
+                        <span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="row" style="margin-bottom: -16px;">
+
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon" style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{_employeeName}} </span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 15px;" *ngIf="isOpened">
+                                <div class="col-xs-12  col-sm-12  p-r-50">
+                                    <form [formGroup]="leaveForm">
+                                        <div class="row">
+
+                                            <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                                <label class="form-label" style="margin-bottom: -2px;">Applied From </label>
+                                                <span style="font-size: 12px;">{{leaveForm.get('AppliedFrom').value | date :'dd-MM-yyyy'}}
+                        </span>
+
+                                            </div>
+
+
+
+                                            <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                                <label class="form-label" style="margin-bottom: -2px;"> Applied Till </label>
+                                                <span style="font-size: 12px;">{{leaveForm.get('AppliedTill').value | date :'dd-MM-yyyy'}}
+                        </span>
+
+                                            </div>
+
+                                            <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3">
+                                                <label class="form-label">First half (from date)</label>
+                                                <div class="">
+                                                    <label class="el-checkbox el-checkbox-red">
+                            <input type="checkbox" name="IsAppliedForFirstHalf" disabled
+                              formControlName="IsAppliedForFirstHalf" />
+                            <span class="el-checkbox-style"></span>
+                          </label>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3">
+                                                <label class="form-label">Second half</label>
+                                                <div class="">
+                                                    <label class="el-checkbox el-checkbox-red">
+                            <input type="checkbox" name="IsAppliedFromSecondHalf" disabled
+                              formControlName="IsAppliedFromSecondHalf" />
+                            <span class="el-checkbox-style"></span>
+                          </label>
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3">
+                                                <label class="form-label">First half (till date)</label>
+                                                <div class="">
+                                                    <label class="el-checkbox el-checkbox-red">
+                            <input type="checkbox" name="IsAppliedTillFirstHalf" disabled
+                              formControlName="IsAppliedTillFirstHalf" />
+                            <span class="el-checkbox-style"></span>
+                          </label>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3">
+                                                <label class="form-label">Second half </label>
+                                                <div class="">
+                                                    <label class="el-checkbox el-checkbox-red">
+                            <input type="checkbox" name="IsAppliedTillSecondHalf" disabled
+                              formControlName="IsAppliedTillSecondHalf" />
+                            <span class="el-checkbox-style"></span>
+                          </label>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <span style="padding-left: 11px; 
+                            font-size: 12px;"> <label class="form-label"
+                            style="color: #e57e1b !important;margin-bottom: -2px;"> Requested </label>
+                          <span style="font-size: 12px;">{{leaveForm.get('AppliedOn').value | date :'EEEE, MMMM d,
+                            y'}}
+                          </span> </span>
+                                            </div>
+
+
+                                            <div class="form-group form-group-vertical col-xs-12 col-sm-6 pb-10">
+
+                                            </div>
+
+                                            <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                                                <label class="form-label" style="margin-bottom: -2px;"> Comments </label>
+                                                <span style="font-size: 12px;">{{leaveForm.get('ApplierRemarks').value}} </span>
+
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+                            <img src="assets/Images/leaverequest.svg" *ngIf="rowData && rowData.Status !=null  && rowData.Status == 600">
+                            <div>
+                                <div style="position: absolute;            
+              width: 95%;
+              overflow-y: auto;
+              height: 100px;" *ngIf="rowData && rowData.Status !=null  && rowData.Status != 600">
+                                    <div class="carbox" style="border-left: 4px solid #59D09E;" *ngFor="let i of _limitedEntitlementList">
+                                        <div class="carbox-content" style="padding-left: 10px; margin-top: 10px;" *ngIf="i.IsLossOfPay  == false">
+                                            <h6 class="carbox-title">
+                                                {{i.DisplayName}}
+                                                <div class="muted" style="font-size: 10px;">
+                                                    Available : {{i.AvailableUnits}} &nbsp;·&nbsp; Eligible : {{i.EligibleUnits}}
+                                                </div>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <a href="javascript:;" class="showmore" (click)="seeClientDetails()"> <i class="mdi mdi-collapse-all" *ngIf="seemoreTxt != 'View Others'"></i> <i class="mdi mdi-expand-all" *ngIf="seemoreTxt == 'View Others'"></i> {{seemoreTxt}}</a>
+                                </div>
+
+
+
+                                <div style="position: absolute;bottom: 10px;width: 90%;" *ngIf="isOpened">
+                                    <!-- <div class="breakdowns-list-separator"></div> -->
+
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                            <label class="form-label ">Leave Type <span class="required"> *</span> </label>
+                                            <ng-select [items]="_entitlementList" [(ngModel)]="selectedLeaveType" placeholder="-- select an option --" bindLabel="DisplayName" bindValue="EntitlementId" [disabled]="rowData.Status == '600'" [clearable]="false" (change)="onChange_Entitlement($event)">
+                                            </ng-select>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div *ngIf="rowData && rowData.Status != '600'">
+
+                                        <div>
+                                            <div class="tw-my-2 tw-px-3"><span style="font-size: 0.95rem;font-weight: 700;"><label
+                            class="tw-mr-1"> {{leaveForm.get('CalculatedAppliedUnits').value}} days -
+                            {{getLeaveType(leaveForm.get('Entitlement').value)}} </label>
+                        </span></div>
+                                            <div class="form-group">
+                                                <div data-cy="remaining-allowance-amount" *ngIf="!isLOP" style="font-size: 0.65rem;">
+                                                    <span> {{remainingDays}} days</span><span> remaining to take </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="form-group tw-mb-0">
+                                        <div class="tw-w-full tw-px-3">
+                                            <button type="submit" (click)="do_approve_reject(true)" style="width: 50%;border-radius: 20px;" class="btn upgrade-btn"><i class="mdi mdi-check-all  m-r-xs"></i> Approve
+                      </button>
+
+                                            <button type="button" class="btn btn-danger" id="btn_qc_reject" style="width: 50%;border-radius: 20px;" (click)="do_approve_reject(false)">
+                        <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                      </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div id="popup_editRequest" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_permission" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>Permission Approve</b></small>
+            <h3 class="modal-title subheader_h6" id="popup_release_AL"> New
+            </h3>
+          </div>
+          <div class="modal-close" style="top: 1 !important; right: 10px !important;"
+            (click)="onCellClickedPerPopDis()">
+            <span class="mdi mdi-close pull-left " style="margin-top: 5px;"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="row">
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                  <label class="form-label ">Date <span class="required">*</span></label>
+                  <input class="form-control calendar " name="date" [(ngModel)]="_date" type="date" id="date"
+                    autocomplete="off" bsDatepicker placement="bottom" readonly type="text" placeholder="01-01-2021"
+                    (bsValueChange)="onChangeExpenseDate($event)"
+                    [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                    [maxDate]="_MaxDate" >
+                </div>
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6 "></div>
+                <div class=" md-form form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Start Time <span class="required">*</span></label>
+                  <input class="form-control timepicker" min="00:00" max="23:00" name="startTime"
+                    [(ngModel)]="_startTime" type="time" id="startTime">
+                 
+                </div>
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">End Time <span class="required">*</span></label>
+                  <input class="form-control timepicker" min="00:00" max="23:00" name="endTime" placeholder="00:00"
+                    [(ngModel)]="_endTime" type="time" id="endTime" (blur)="onSearchChange($event.target.value)"
+                    required>
+                </div>
+              </div>
+              <div class="row">
+                <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                  <label class="form-label ">Reason<span class="required">*</span></label>
+                  <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                    id="Remarks" [(ngModel)]="_remarks" name="Remarks"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+
+              <img src="assets/Images/leaverequest.svg">
+
+              <div style="position: absolute;bottom: -3px;width: 90%;">
+                <div></div>
+                <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                  <div class="tw-w-full tw-px-3">
+                    <button type="submit" (click)="onClickSubmitPermission()" class="btn btn-primary"
+                      style="width:100%;border-radius: 25px;"> Approve
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+</div> -->
+<div id="popup_Permission" *ngIf="isEnabled == '2'" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 20px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Permission Request</small>
+                    </div>
+                    <div class="modal-close" (click)="closePermissionPopup()" style="margin-top: 5px;top: 7px !important;">
+                        <span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body" *ngIf="SelectedPermissionObj">
+                    <div class="row" style="margin-bottom: -16px;">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon" style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{SelectedPermissionObj.EmployeeName}} </span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-xs-12  col-sm-12  p-r-50">
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;"> Status </label>
+                                            <span style="font-size: 12px;"> {{SelectedPermissionObj.Status == 300 ? 'Approved' :
+                        (SelectedPermissionObj.Status == 200 ? 'Rejected'
+                        :'Applied')}}
+                      </span>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;"> Date </label>
+                                            <span style="font-size: 12px;">{{SelectedPermissionObj.Date | date :'dd-MM-yyyy'}}
+                      </span>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;"> Start Time </label>
+                                            <span style="font-size: 12px;"> {{SelectedPermissionObj.StartTime}}
+                      </span>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;"> End Time </label>
+                                            <span style="font-size: 12px;">{{SelectedPermissionObj.EndTime}}
+                      </span>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;"> No Of Hours </label>
+                                            <span style="font-size: 12px;">{{SelectedPermissionObj.TotalTimeDisplay}}
+                      </span>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;">Employee Remarks </label>
+                                            <span style="font-size: 12px;"> {{SelectedPermissionObj.EmployeeRemarks}} </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                                            <label class="form-label "> Remarks</label>
+                                            <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="SelectedPermissionObj.ApproverRemarks" name="Remarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+                            <img src="assets/Images/leaverequest.svg">
+                            <div>
+                                <div style="position: absolute;bottom: 10px;width: 90%;">
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="form-group tw-mb-0">
+                                        <div class="tw-w-full tw-px-3">
+                                            <button type="submit" (click)="onCellClicked(SelectedPermissionObj,'approve_req','Permission','single')" style="width: 50%;border-radius: 20px;" class="btn upgrade-btn"><i
+                          class="mdi mdi-check-all  m-r-xs"></i> Approve
+                      </button>
+                                            <button type="button" class="btn btn-danger" id="btn_qc_reject" style="width: 50%;border-radius: 20px;" (click)="onCellClicked(SelectedPermissionObj,'decline_req','Permission','single')">
+                        <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                      </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup_WOW" *ngIf="isEnabled == '3'" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 20px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Applied Work On Week-Off
+              Request</small>
+                        <!-- <h6 class="modal-title subheader_h6" id="popup_release_AL">Your Request</h6> -->
+                    </div>
+                    <div class="modal-close" (click)="closeWOWPopup()" style="margin-top: 5px;top: 7px !important;">
+                        <span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body" style="margin: 0 !important;height: 100% !important;overflow-y: auto !important;overflow-x: hidden !important;" *ngIf="SelectedWoWObj">
+                    <div class="row" style="margin-bottom: -16px;">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon" style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{SelectedWoWObj.EmployeeName}} </span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-xs-12  col-sm-12  p-r-50">
+                                    <!-- <form> -->
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label mb-2" style="margin-bottom: -2px;"> Claim Type </label>
+                                            <!-- <span style="font-size: 12px;"> {{SelectedWoWObj.RequestedClaimType == 100 ? 'DecideLater'
+                        :(SelectedWoWObj.RequestedClaimType == 200 ? 'Encash'
+                        :(SelectedWoWObj.RequestedClaimType == 300 ? 'Leave' : 'None'))}}
+                      </span> -->
+                                            <ng-select [items]="WowClimeTypeArr" [clearable]="false" [(ngModel)]="SelectedWoWObj.RequestedClaimType" placeholder="Claim Type" bindLabel="ClimeType_Name" bindValue="ClimeType_Val" style="width: 60% !important;">
+                                            </ng-select>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label mb-2" style="margin-bottom: -2px;"> Date </label>
+                                            <span style="font-size: 12px;">{{SelectedWoWObj.Date | date :'dd-MM-yyyy'}}
+                      </span>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label mb-2" style="margin-bottom: -2px;"> Requeted On </label>
+                                            <span style="font-size: 12px;">{{SelectedWoWObj.CreatedOn | date :'dd-MM-yyyy'}}
+                      </span>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                                            <label class="form-label mb-2" style="margin-bottom: -2px;">Employee Remarks </label>
+                                            <span style="font-size: 12px;"> {{SelectedWoWObj.EmployeeRemarks}} </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                                            <label class="form-label "> Remarks</label>
+                                            <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="SelectedWoWObj.ApproverRemarks" name="Remarks"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- </form> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+                            <img src="assets/Images/leaverequest.svg">
+                            <div>
+                                <div style="position: absolute;bottom: 10px;width: 90%;">
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="form-group tw-mb-0">
+                                        <div class="tw-w-full tw-px-3">
+                                            <button type="submit" (click)="onCellClicked(SelectedWoWObj,'approve_req','WeakOff','single')" style="width: 50%;border-radius: 20px;" class="btn upgrade-btn"><i
+                          class="mdi mdi-check-all  m-r-xs"></i> Approve
+                      </button>
+
+                                            <button type="button" class="btn btn-danger" id="btn_qc_reject" style="width: 50%;border-radius: 20px;" (click)="onCellClicked(SelectedWoWObj,'decline_req','WeakOff','single')">
+                        <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                      </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup_Od" *ngIf="isEnabled == 4" class="modal fade" tabindex="4" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 20px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Applied On Duty
+              Request</small>
+                    </div>
+                    <div class="modal-close" (click)="closeOdPopup()" style="margin-top: 5px;top: 7px !important;">
+                        <span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body" style="margin: 0 !important;height: 100% !important;overflow-y: auto !important;
+        overflow-x: hidden !important;" *ngIf="SelectedOdObj">
+                    <div class="row" style="margin-bottom: -16px;">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon" style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{SelectedOdObj.EmployeeName}} </span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-xs-12  col-sm-12  p-r-50">
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;"> Date </label>
+                                            <span style="font-size: 12px;">{{SelectedOdObj.CreatedOn | date :'dd-MM-yyyy'}}
+                      </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-6 pb-10">
+                                            <label class="form-label ">From - To Date <span class="required">*</span></label>
+                                            <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="SelectedOdObj.dateRange" [bsConfig]="{ isAnimated: true, dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }">
+                                            <!-- <i *ngIf="_dateRange" (click)="_dateRange = null" placeholder="Clear"
+                        style="position: absolute; right: 22px;transform: translate(-50%, -50%);top: 68%; cursor: pointer;color: #949494;"
+                        class="fa fa-times fa-1" aria-hidden="true"></i> -->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;">Employee Remarks </label>
+                                            <span style="font-size: 12px;"> {{SelectedOdObj.EmployeeRemarks}} </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class=" form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;">Remarks </label>
+                                            <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="SelectedOdObj.ApproverRemarks" name="Remarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+                            <img src="assets/Images/leaverequest.svg">
+                            <div>
+                                <div style="position: absolute;bottom: 10px;width: 90%;">
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="form-group tw-mb-0">
+                                        <div class="tw-w-full tw-px-3">
+                                            <button type="submit" (click)="onCellClicked(SelectedOdObj,'approve_req','Od','single')" style="width: 50%;border-radius: 20px;" class="btn upgrade-btn"><i
+                          class="mdi mdi-check-all  m-r-xs"></i> Approve
+                      </button>
+                                            <button type="button" class="btn btn-danger" id="btn_qc_reject" style="width: 50%;border-radius: 20px;" (click)="onCellClicked(SelectedOdObj,'decline_req','Od','single')">
+                        <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                      </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup_Wfh" *ngIf="isEnabled == 5" class="modal fade" tabindex="5" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 20px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Applied Work From Home
+              Request</small>
+                    </div>
+                    <div class="modal-close" (click)="closeWfhPopup()" style="margin-top: 5px;top: 7px !important;">
+                        <span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body" *ngIf="SelectedWfhObj">
+                    <div class="row" style="margin-bottom: -16px;">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon" style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{SelectedWfhObj.EmployeeName}} </span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-xs-12  col-sm-12  p-r-50">
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;"> Date </label>
+                                            <span style="font-size: 12px;">{{SelectedWfhObj.CreatedOn | date :'dd-MM-yyyy'}}
+                      </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-6 pb-10">
+                                            <label class="form-label ">From - To Date <span class="required">*</span></label>
+                                            <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="SelectedWfhObj.dateRange" [bsConfig]="{ isAnimated: true, dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }">
+                                            <!-- <i *ngIf="_dateRange" (click)="_dateRange = null" placeholder="Clear"
+                          style="position: absolute; right: 22px;transform: translate(-50%, -50%);top: 68%; cursor: pointer;color: #949494;"
+                          class="fa fa-times fa-1" aria-hidden="true"></i> -->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;">Employee Remarks </label>
+                                            <span style="font-size: 12px;"> {{SelectedWfhObj.EmployeeRemarks}} </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class=" form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                                            <label class="form-label" style="margin-bottom: -2px;">Remarks </label>
+                                            <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="SelectedWfhObj.ApproverRemarks" name="Remarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+                            <img src="assets/Images/leaverequest.svg">
+                            <div>
+                                <div style="position: absolute;bottom: 10px;width: 90%;">
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="form-group tw-mb-0">
+                                        <div class="tw-w-full tw-px-3">
+                                            <button type="submit" (click)="onCellClicked(SelectedWfhObj,'approve_req','Wfh','single')" style="width: 50%;border-radius: 20px;" class="btn upgrade-btn"><i
+                          class="mdi mdi-check-all  m-r-xs"></i> Approve
+                      </button>
+                                            <button type="button" class="btn btn-danger" id="btn_qc_reject" style="width: 50%;border-radius: 20px;" (click)="onCellClicked(SelectedWfhObj,'decline_req','Wfh','single')">
+                        <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                      </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

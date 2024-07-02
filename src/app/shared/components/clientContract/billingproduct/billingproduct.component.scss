@@ -1,0 +1,263 @@
+
+.backgroundsvg {
+    height: 100vh;
+    background-color: #ffffff;
+    background-image: url('../../../../../assets/Images/background_svg.svg');
+
+}
+table {
+    font-size: 12px !important;
+    border: solid 1px #cacbcd  !important;
+}
+thead tr {
+    font-weight: 600;
+    background: #7f8ea4;
+    color: white;
+}
+
+
+.table th
+{
+    border-top: none !important;
+}
+
+.table td
+{
+    border-top: solid 1px #F0F3FA;;
+}
+.column-body.responsible-user-block {
+    padding-bottom: 0;
+}
+.eventPopupTable .column-body {
+    padding: 7px 0;
+}
+.responsible-user-block .selectContainer {
+    width: 100%;
+}
+span.selectContainer {
+    max-width: 320px;
+}
+span.selectContainer:before {
+    content: "\e041";
+    font-size: 7px !important;
+    color: #CDD3DF;
+    font-family: scoroIcons;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    line-height: 12px;
+    height: 12px;
+    margin: auto;
+    pointer-events: none;
+    padding: 0 8px;
+}   
+#owner {
+    width: 100%;
+}
+
+
+#eventName {
+    width: 100%;
+    font-size: 12px;
+}
+ input[type=tel], input[type=password], select, textarea {
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #FFFFFF;
+    box-sizing: border-box;
+}
+input[type=text], input[type=tel], input[type=password], select {
+    border: 1px solid #CDD3DF;
+}
+// Normal INPUT and SELECT Properties END
+
+  // Skeleton for Table START
+  @keyframes loading {
+    40% {
+        background-position:
+            100% 0;
+    }
+    100% {
+        background-position:
+            100% 0;
+    }
+}
+
+
+.headline {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.tableWrapper {
+  width: 100%;
+  
+  .table {
+    // margin: 0 auto;
+    // text-align: left;
+    // border-spacing: 0;
+
+    tbody {
+
+      .skeleton {
+        padding: 20px 0;
+        min-width: 150px;
+
+        // span {
+        //     color: #FEFEFE;
+        // }
+
+        &:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+      }
+    }
+  }
+  .loading {
+    position: relative;
+    
+    .bar {
+      background-color: #E7E7E7;
+      height: 14px;
+      border-radius: 4px;
+      width: 80%;
+    }
+    .bar_checkbox {
+        background-color: #E7E7E7;
+        height: 14px;
+        border-radius: 4px;
+        width: 10%;
+        text-align: center;
+      }
+
+    &:after {
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        left: 0;
+        content: "";
+        display: block;
+        width: 100%;
+        height: 24px;
+        background-image: linear-gradient( 100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0) 80% );
+        background-size: 200px 24px;
+        background-position: -100px 0;
+        background-repeat: no-repeat;
+        animation: loading 1s infinite;
+    }
+  }
+}// Skeleton Table END
+
+.custom-control-input:checked~.custom-control-label::before {
+    color: #fff;
+    border-color: #337ab7;
+    background-color: #337ab7;
+}
+
+.custom-control-label::after {
+    position: absolute;
+    top: .25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1.2rem;
+    height: 1.2rem;
+    content: "";
+    background: no-repeat 50%/50% 50%;
+}
+  
+.custom-control-label::before {
+    position: absolute;
+    top: .25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1.2rem;
+    height: 1.2rem;
+    pointer-events: none;
+    content: "";
+    background-color: #fff;
+    border: #adb5bd solid 1px;
+}
+
+.table tr td {
+    height: 10px;
+    width: 10px;
+}
+
+tr {
+    line-height: 19px;
+    min-height: 20px;
+    height: 20px;
+    // font-weight: 600;
+}
+
+.left-margin-btn {
+    margin: 0 auto;
+    margin-left: 0px;
+}
+
+.table td {
+    padding: .25rem;
+    
+}
+
+.p-t-14 {
+    padding-top: 14px !important;
+}
+
+.table-td-center {
+    vertical-align: middle !important;
+}
+.cenr {
+    text-align: center;
+}
+.table-fixed{
+    width: 100%;
+    background-color: #f3f3f3;
+    tbody{
+      height:200px;
+      overflow-y:auto;
+      width: 100%;
+      }
+    thead,tbody,tr,td,th{
+      display:block;
+    }
+    tbody{
+      td{
+        float:left;
+      }
+    }
+    thead {
+      tr{
+        th{
+          float:left;
+         background-color: #f39c12;
+         border-color:#e67e22;
+        }
+      }
+    }
+  }
+  
+
+
+  thead, tbody tr {
+    display:table;
+    width:100%; 
+    table-layout:fixed;
+}
+thead {
+    width: calc( 100% - 1em )
+}
+table.tableBodyScroll tbody {
+  display: block;
+  max-height: 350px;
+  overflow-y: scroll;
+}
+
+table.tableBodyScroll thead, table.tableBodyScroll tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}

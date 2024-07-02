@@ -1,0 +1,96 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg" style="max-width: 1016px;">
+    <div class="modal-content">
+
+
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Document Preview | Claim Request</b></small>
+          <h6 class="modal-title subheader_h6" *ngIf="editObject"> Category : {{editObject.ProductName}} | Req Amt :
+            {{editObject.RequestedAmount | number : '1.2-2'}} </h6>
+        </div>
+        <div class="modal-close" (click)="confirmExit()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+
+      <div class="modal-body no-padder">
+
+        <div class="iframe-container" *ngIf="contentmodalurl == null"
+          style="  border: 0px solid #d3d3d3 !important; border-radius: 1rem;">
+          <img src="assets/Images/clientlogo/appmainlogo.png" style="    width: 4rem;
+          text-align: center;
+          display: block;
+          margin: 0 auto;
+          opacity: 0.6;">
+          <span style="text-align: center;
+          display: block;
+          margin: 0 auto;">
+            <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+              &nbsp; Please wait...</i>
+            <span class="sr-only">Please wait...</span>
+          </span>
+        </div>
+
+        <div class="iframe-container" *ngIf="contentmodalurl != null"
+          style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+          <iframe [src]="contentmodalurl" frameborder="0" scrolling="yes" style="width: 100%;
+          height: 500px;
+          border-radius: 15px;"></iframe>
+          <img style="top: 0 !important;
+          right: 0px !important;
+          position: absolute !important;
+          z-index: 9;
+          height: 55px !important;
+          vertical-align: top;
+          opacity: 0.5;
+          bottom: unset !important;
+          left: unset !important;" src="../../../../assets/Images/clientlogo/appmainlogo.png">
+        </div>
+
+
+
+      </div>
+
+      <div class="modal-footer" style="display: block;" *ngIf="IsVerification">
+        <div class="row">
+          <div class="col-lg-4">
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-12" style="margin-bottom: 0px;
+            margin-top: -10px;">
+              <label class="form-label"> Approved Amount <span class="required">*</span></label>
+              <input class="form-control" name="RequestedAmount" [(ngModel)]="approvedAmount" type="text"
+                onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987"
+                [ngClass]="{ 'is-invalid': submitted}" autocomplete="off">
+              <div *ngIf="submitted" class="invalid-feedback">
+                <div>Amount is required
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-lg-8" style="padding-top: 15px;">
+            <div class="text-right">
+              <ul class="list-inline">
+                <li class="list-inline-item">
+                  <button type="button" class="btn upgrade-btn" id="btn_qc_approve"
+                    (click)="tiggerApiCall_expenseBatch(true)"> <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+                    Approve
+                  </button>
+                </li>
+                <li class="list-inline-item">
+                  <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                    (click)="tiggerApiCall_expenseBatch(false)"> <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+
+
+      </div>

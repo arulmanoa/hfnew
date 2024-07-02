@@ -1,0 +1,57 @@
+<div class="row">
+  <div class="col-md-4" *ngFor="let item of cardConfiguration.LstCardItems">
+    <a href="javascript:;">
+      <div class="grid simple border-2px" style="border-color: #c6f5d7;">
+        <div class="grid-body">
+          <p class="m-b-0 title-height">{{item.CardTitle}} </p>
+          <div style="clear: both"></div>
+          <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+              <i class="fa fa-circle fa-stack-1x f-s-12" [style.color]="item.CardBodyTextColor"></i>
+              <i class="fa fa-circle fa-stack-1x f-s-29" [style.color]="item.CardBodyTextColor" style="opacity: 0.3"></i>
+            </span></div>
+          <span class="size-34 semi-bold">
+            {{item.OutputText}}
+          </span>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- <div class="col-md-4">
+    <a href="javascript:;">
+      <div class="grid simple border-2px" style="border-color: #ffebb4;">
+        <div class="grid-body">
+          <p class="m-b-0" style="height: 42px;">Approved -</p>
+          <div class="nowrap">
+            <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #63E59F"></i>
+                <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #63E59F; opacity: 0.3"></i>
+              </span></div>
+            <span class="size-34 semi-bold">
+              1
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-md-4">
+    <a href="javascript:;">
+      <div class="grid simple border-2px" style="border-color: #D8ECFF;">
+        <div class="grid-body">
+          <p class="m-b-0" style="height: 42px;">Rejected - </p>
+          <div class="nowrap">
+            <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #f44336"></i>
+                <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #f44336; opacity: 0.3"></i>
+              </span></div>
+            <span class="size-34 semi-bold">
+              1
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div> -->
+</div>

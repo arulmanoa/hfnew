@@ -1,0 +1,299 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="">
+
+
+
+
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Education Details</b></small>
+                        <h6 class="modal-title subheader_h6"> Add/Edit </h6>
+                    </div>
+                    <div class="modal-close" *ngIf="isLoading" (click)="confirmExit()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+
+
+                <div class="modal-body no-padder">
+
+                    <div id="overlay">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex-column">
+
+                        <form [formGroup]="academicForm">
+
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="clearfix">
+
+                                    <div class="row">
+
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="this.academicForm.controls.graduationType">
+                                            <label class="form-label">Graduation Type <span class="required"  >{{getRequired('graduationType')}}</span></label>
+
+
+                                            <ng-select [items]="graduationType" placeholder="-- select on option --" formControlName="graduationType" [ngClass]="{ 'ng-touched': submitted && g.graduationType.invalid }" bindLabel="name" bindValue="id">
+                                            </ng-select>
+
+
+                                            <div *ngIf="submitted && g.graduationType.invalid" class="help-block">
+                                                <div *ngIf="g.graduationType.errors.required">Graduation Type is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="this.academicForm.controls.educationDegree">
+                                            <label class="form-label">Educational Qualification <span class="required"  >{{getRequired('educationDegree')}}</span></label>
+                                            <input class="form-control" name="educationDegree" onkeypress="return /^[A-Za-z0-9 \s]+$/i.test(event.key)" formControlName="educationDegree" pattern="[\x00-\x7F]+" placeholder="Computer Science" [ngClass]="{ 'is-invalid': submitted && g.educationDegree .errors }"
+                                                type="text" autocomplete="off">
+                                            <div *ngIf="submitted && g.educationDegree.errors" class="invalid-feedback">
+                                                <div *ngIf="g.educationDegree.errors.required">Education Degree is required
+                                                </div>
+                                            </div>
+                                            <div *ngIf="academicForm.get('educationDegree').errors && academicForm.get('educationDegree').touched" class="help-block">
+
+                                                <span *ngIf="academicForm.get('educationDegree').errors.pattern"> Entered special characters are not allowed
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="this.academicForm.controls.courseType">
+                                            <label class="form-label">Course Type <span class="required" >{{getRequired('courseType')}}</span></label>
+
+
+                                            <ng-select [items]="courseType" placeholder="-- select on option --" formControlName="courseType" [ngClass]="{ 'ng-touched': submitted && g.courseType.invalid }" bindLabel="name" bindValue="id">
+                                            </ng-select>
+
+
+                                            <div *ngIf="submitted && g.courseType.invalid" class="help-block">
+                                                <div *ngIf="g.courseType.errors.required">Course Type is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="this.academicForm.controls.institutaion">
+                                            <label class="form-label">Institution </label>
+                                            <input class="form-control" name="institutaion" formControlName="institutaion" pattern="[\x00-\x7F]+" placeholder="IIT Madras" [ngClass]="{ 'is-invalid': submitted && g.institutaion .errors }" type="text" autocomplete="off">
+                                            <div *ngIf="submitted && g.institutaion .errors" class="invalid-feedback">
+                                                <div *ngIf="g.institutaion.errors.required">Institutaion is required
+                                                </div>
+                                            </div>
+                                            <div *ngIf="academicForm.get('institutaion').errors && academicForm.get('institutaion').touched" class="help-block">
+
+                                                <span *ngIf="academicForm.get('institutaion').errors.pattern"> Entered special characters are not allowed
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="this.academicForm.controls.universityName">
+                                            <label class="form-label">University Name </label>
+                                            <input class="form-control" name="universityName" formControlName="universityName" pattern="[\x00-\x7F]+" placeholder="IIT Madras" [ngClass]="{ 'is-invalid': submitted && g.universityName .errors }" type="text" autocomplete="off">
+                                            <div *ngIf="submitted && g.universityName .errors" class="invalid-feedback">
+                                                <div *ngIf="g.universityName .errors.required">University Name is required
+                                                </div>
+                                                <div *ngIf="academicForm.get('universityName').errors && academicForm.get('universityName').touched" class="help-block">
+
+                                                    <span *ngIf="academicForm.get('universityName').errors.pattern"> Entered special characters are not allowed
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="this.academicForm.controls.yearOfPassing">
+                                            <label class="form-label">Completed Year <span class="required">{{getRequired('yearOfPassing')}}</span></label>
+                                            <select class="form-control" id="yearOfPassing" name="yearOfPassing" formControlName="yearOfPassing" [ngClass]="{ 'is-invalid': submitted && g.yearOfPassing.errors }">
+                                                                    <option disabled="" hidden="" selected="" value=""> --
+                                                                    Select an Option --
+                                                                </option>
+                                                                <option *ngFor="let year of yearArray"  [value]="year.Value"  class="ng-star-inserted">{{year.Text}}</option>
+        
+                                                            </select>
+                                            <div *ngIf="submitted && g.yearOfPassing .errors" class="invalid-feedback">
+                                                <div *ngIf="g.yearOfPassing .errors.required">Year of Passing is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="this.academicForm.controls.scoringType">
+                                            <label class="form-label">Scoring Type <span class="required" >{{getRequired('scoringType')}}</span></label>
+
+
+                                            <ng-select [items]="scoringType" (change)="onChangescoringType($event)" placeholder="-- select on option --" formControlName="scoringType" [ngClass]="{ 'ng-touched': submitted && g.scoringType.invalid }" bindLabel="name" bindValue="id">
+                                            </ng-select>
+
+
+                                            <div *ngIf="submitted && g.scoringType.invalid" class="help-block">
+                                                <div *ngIf="g.scoringType.errors.required">Scoring Type is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="this.academicForm.controls.scoringValue">
+                                            <label class="form-label">Percentage/ CGPA <span class="required" >{{getRequired('scoringValue')}}</span></label>
+                                            <input *ngIf="!scrTypCGPA" class="form-control" name="scoringValue" formControlName="scoringValue" maxlength="4" placeholder="75" onkeypress="return /[0-9]/i.test(event.key)" [ngClass]="{ 'is-invalid': submitted && g.scoringValue.errors }" type="text"
+                                                autocomplete="off">
+                                            <input *ngIf="scrTypCGPA" class="form-control" name="scoringValue" formControlName="scoringValue" maxlength="4" placeholder="7.5" onkeypress="return /[0-9.]/i.test(event.key)" [ngClass]="{ 'is-invalid': submitted && g.scoringValue .errors }" type="text"
+                                                autocomplete="off">
+                                            <div *ngIf="submitted && g.scoringValue.errors" class="invalid-feedback">
+                                                <div *ngIf="submitted && g.scoringValue.errors.required">Scoring Value is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                                            <label class="form-label">Attachment  <span class="help-text m-l-5">(Max file size 2MB)</span></label>
+                                            <label class="upload control" style="width: 50%; float: left;" *ngIf="!FileName">
+                                                    <div class="upload-draggable is-primary">
+                                                        <section class="section">
+                                                            <div class="has-text-centered">
+                                                                <span class="icon is-large">
+                                                                    <span style="padding-left: 10px;"> <i
+                                                                            class="mdi mdi-cloud-upload "
+                                                                            style="color: #9ba7ca;"></i> Upload </span>
+                                                                </span>
+        
+                                                            </div>
+                                                        </section>
+                                                    </div>
+                                                    <input type="file" accept=
+                                                    "application/msword,  application/pdf, image/*"(change)="onFileUpload($event)"
+                                                        id="sTest-uploadFile-candidateAddResume">
+         
+                                                    </label>
+                                            <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                                                <div *ngIf="g.DocumentId.errors.required">Attachment is required
+                                                </div>
+                                            </div>
+                                            <p class="control" *ngIf="FileName">
+                                                <span class="file-name">
+                                                          <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a ngbTooltip="Delete Photo"
+                                                            id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                                   display: block   ;margin-top: -5px;"><i
+                                                                class="fa fa-trash-o"
+                                                                ></i></a> </button>  
+    
+                                                                
+                                                        <a target="blank" class="ahref" style="padding: 2px;">
+                                                            {{FileName}}
+                                                        </a>
+                                                       
+                                                    </span>
+
+                                            </p>
+                                        </div> -->
+
+                                        <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                                        *ngIf="academicForm.controls.idProoftype && !isAllenDigital">
+                                        <label class="form-label">Attachment Type</label>
+                  
+                                        <ng-select [items]="LstEducationDocumentTypes" (change)="IdFroofChange($event)"
+                                          placeholder="-- select an option --" formControlName="idProoftype"
+                                          bindLabel="Name"
+                                          bindValue="DocumentTypeId">
+                                        </ng-select>                  
+                                      </div>
+
+                                        <!-- #region after jszip -->
+                                        <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                                            <label class="form-label">Attachment  <span
+                                              class="required">*</span> <span class="help-text m-l-5">(Max file size 2MB)</span></label>
+                                            <label class="upload control" style="width: 100%; float: left;z-index: 999;margin-bottom: 10px;">
+                                                    <div class="upload-draggable is-primary">
+                                                        <section class="section">
+                                                            <div class="has-text-centered">
+                                                                <span class="icon is-large">
+                                                                    <span style="padding-left: 10px;"> <i
+                                                                            class="mdi mdi-cloud-upload "
+                                                                            style="color: #9ba7ca;"></i> Upload </span>
+                                                                </span>
+        
+                                                            </div>
+                                                        </section>
+                                                    </div>
+                                                    <input type="file" accept="application/msword,  application/pdf, image/*"
+                                                    (change)="onAddingFile($event)" (click)="$event.target.value=null"
+                                                    id="sTest-uploadFile-candidateAddResume" [disabled] = "fileList.length > 0" >
+         
+                                                    </label>
+                                            <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                                                <div *ngIf="g.DocumentId.errors.required">Attachment is required
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center" style="width: 100%;" *ngIf="firstTimeDocumentId && !fileList[0] && !isFileChange">
+                                                <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                                                <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                                            </div>
+                                            <p class="control" *ngFor="let file of fileList">
+                                                <span class="file-name">
+                                                          <button class="btn btn-danger c-btn" (click)="doDeleteFile(file)"><a ngbTooltip="Delete Photo"
+                                                            id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                                   display: block   ;margin-top: -5px;"><i
+                                                                class="fa fa-trash-o"
+                                                                ></i></a> </button>  
+    
+                                                                
+                                                        <a target="blank" class="ahref" style="padding: 2px;">
+                                                            {{file.name}}
+                                                        </a>
+                                                       
+                                                    </span>
+
+                                            </p>
+                                        </div>
+                                        <!-- #endregion -->
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <div *ngIf="isLoading">
+                        <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel</button>
+
+                        <!-- <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                            <div>
+                                <div>
+                                    <button class="btn  btn-primary " type="Submit" name="btnSaveAndNewSubmit" id="btnSaveAndNewSubmit" [disabled]="!disableBtn" (click)="savebutton()">
+                                      <div class="pos-rlt sm-btn-component"> <span> Save and add other </span> </div>
+                                  </button>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                            <div>
+                                <div>
+                                    <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" [disabled]="!disableBtn" (click)="onFileUpload()">
+                                      <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save </span></div>
+                                  </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex align-items-center" *ngIf="!isLoading">
+                        <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,157 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Attendance Log</b>
+           
+          </small>
+        <h6 class="modal-title subheader_h6" id="popup_release_AL">
+            Create/Revise</h6>
+        </div>
+
+      </div>
+
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <form [formGroup]="SOForm">
+            <div class="row">
+
+              <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <label class="form-label ">Name of Title<span class="required"> *</span></label>
+                <input class="form-control" type="text"  placeholder="Name of Title"
+                formControlName="NameofTitle" name="NameofTitle"
+                  [ngClass]="{ 'is-invalid': submitted && g.NameofTitle.errors }" autocomplete="off">
+                <div *ngIf="submitted && g.NameofTitle.invalid" class="help-block">
+                  <div *ngIf="g.NameofTitle.errors.required">Name of Title is required
+                  </div>
+                </div>
+              </div> -->
+  
+             
+  
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <label class="form-label ">Start date<span class="required"> *</span></label>
+                <input class="form-control" type="text" name="StartDate" bsDatepicker placement="top" readonly
+                  
+                  [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                  placeholder="12-12-1970" formControlName="StartDate" [ngClass]="{ 'is-invalid': submitted && g.StartDate.errors }"
+                  autocomplete="off" (bsValueChange)="onChangestartDate($event)">
+                <div *ngIf="submitted && g.StartDate.invalid" class="help-block">
+                  <div *ngIf="g.StartDate.errors.required">Start date is required
+                  </div>
+                </div>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6" >
+                <label class="form-label ">End date<span class="required"> *</span></label>
+                <input class="form-control" type="text" name="EndDate" bsDatepicker placement="top" readonly
+                  
+                  [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                  placeholder="12-12-1970" formControlName="EndDate" [ngClass]="{ 'is-invalid': submitted && g.EndDate.errors }"
+                  autocomplete="off" (bsValueChange)="onChangeendDate($event)">
+                <div *ngIf="submitted && g.EndDate.invalid" class="help-block">
+                  <div *ngIf="g.EndDate.errors.required">End date is required
+                  </div>
+                </div>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="IsLOP">
+                <label class="form-label ">Action<span class="required"> *</span></label>
+                <div class="form-check-inline">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" formControlName="Action"  name="Action"  value="Absent">Absent
+                  </label>
+                </div>
+                <div class="form-check-inline">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="Action"  formControlName="Action"  value="Present">Present 
+
+                  </label>
+                </div>
+                <!-- <div class="form-check-inline">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="Action"  formControlName="Action" value="Others">Others 
+
+                  </label>
+                </div> --> 
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="!IsLOP">
+                <label class="form-label ">Action<span class="required"> *</span></label>
+                <div class="form-check-inline">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" formControlName="Action"  name="Action"  value="RevokeLOP">Revoke LOP
+                  </label>
+                </div>
+                <div class="form-check-inline">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" formControlName="Action"  name="Action"  value="Absent">Absent
+                  </label>
+                </div>
+                <!-- <div class="form-check-inline">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="Action"  formControlName="Action" value="Others">Others 
+
+                  </label>
+                </div> --> 
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6" *ngIf="SOForm.controls.Action.value == 'Absent' && IsLOP">
+                <label class="form-label">Is Half Day</label>
+
+                <div class="p-t-10">
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="isHalfDay"  formControlName="isHalfDay" />
+                    <span class="el-switch-style"></span>
+                  </label>
+                </div>
+
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6" *ngIf="SOForm.controls.Action.value == 'RevokeLOP' && !IsLOP">
+                <label class="form-label">Is Half Day</label>
+
+                <div class="p-t-10">
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="isHalfDay"  formControlName="isHalfDay" />
+                    <span class="el-switch-style"></span>
+                  </label>
+                </div>
+
+              </div>
+              
+            </div>
+            </form>
+          </div>
+
+          
+        </div>
+      
+      </div>
+
+
+      <div class="modal-footer">
+        <div class="pull-left left-margin-btn">
+
+        </div>
+        <div class="pull-right m-r-sm">
+          <div>
+            <div>
+
+              <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="closeModal()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+              </button>
+
+              <button class="btn btn-primary pull-right" type="button" (click)="Save()"> <i
+                  class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Save and Continue!</button>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

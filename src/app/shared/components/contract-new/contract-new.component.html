@@ -1,0 +1,188 @@
+ <!--<div class="col-md-8">
+<app-add-update-contract  (createNewContract)="createNewContract($event)" [contractInfo]="currentContract" ></app-add-update-contract>
+</div>
+<!--  <app-contract-grid [contractData]="contractData" (RecordEdit)="editRecord($event)"></app-contract-grid>
+</div>
+
+
+  
+ -->
+ <!--
+ <div class="col-md-8">
+  <app-add-update-contract  (createNewContract)="createNewContract($event)" [contractInfo]="currentContract" ></app-add-update-contract>
+
+</div>
+--><!--
+<div class="col-md-8">
+  <app-contract-grid [contractData]="contractData" (RecordEdit)="editRecord($event)"></app-contract-grid>
+</div>-->
+<!--<div  #contractModal>
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">
+  Add New Contract 
+  </h4>
+  <button type="button" class="close" aria-label="close" (click)="modal.dismiss('Cross Click')">
+  <span aria-hidden="true">
+  X
+  </span>
+  </button>
+  </div>
+
+  <div class="modal-body">-->
+    <div  style="display: block;" class="modal fade show">
+      <!-- <div id="modalpopupClientLocation" class="modal fade" tabindex="-1"
+         role="dialog" aria-labelledby="modalpopupGenericMaster" aria-hidden="true"> -->
+      <div class="modal-dialog modal-lg">
+ 
+      <div class="modal-content">  
+        <div class="modal-header">
+          <div class="col-xs-11">
+              <h4 class="modal-title">Client Contract</h4>                          
+          </div>
+          <div class="col-xs-1">
+              <button type="button" class="close" data-dismiss="modal" (click)="closeModal()"aria-label="Close"><span
+                      aria-hidden="true">&times;</span>
+              </button>
+          </div>
+      </div>
+
+
+    <div style = "position:relative;right:0px;bottom:150px;" >
+      <ul class="list-inline">
+        <li class="list-inline-item subheader__main" style="cursor: default !important">
+          <h5 class="mt-0 p-l-5 subheader__title">Provide Contract Information</h5>
+      </li>
+      </ul>
+    </div>
+   <div >
+     <!--
+    <div style="position:relative; top:50px;">
+      <nz-steps [nzCurrent]="3" nzDirection="vertical" nzSize="medium">
+        <a href="#/app/Client"><nz-step nzTitle="Provide Client Details"></nz-step></a>
+         <a href="#/app/ClientLocation"><nz-step nzTitle="Provide Address"></nz-step></a>
+        <a href="#/app/ClientContact"> <nz-step nzTitle="Provide Contact Information"></nz-step></a>
+       <a href="#/app/ClientContract"><nz-step nzTitle="Contract Information"></nz-step></a>
+       <a href="#/app/Team"><nz-step nzTitle="Provide Team Informatioin"></nz-step></a>
+       <a href="#/app/Invoice"><nz-step nzTitle="Invoice"></nz-step></a>
+       </nz-steps>
+      </div> 
+    -->
+
+
+<form [formGroup]="clientContractForm">
+  <div class="modal-body">
+    <div class="row">
+  <div class="form-group " >
+    <label for="status-input">Status</label>
+    <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding:0px !important;">
+      <label class="el-switch el-switch-green">
+        <input type="checkbox" id="status-input" name="Status" checked enabled />
+          <span class="el-switch-style"></span>
+      </label>
+    </div>
+    </div>
+    
+    <div class="form-group form-group-vertical col-xs-6 col-sm-6"> 
+      <label>Client</label>
+      <ng-select #select2  [items]="listOfclient" [searchable]="true" 
+      placeholder="----Select----" bindValue="Id" 
+      bindLabel="Name"  formControlName="ClientId"
+     >
+      <!-- [disabled]="clientContactForm.controls.Id.value ? true: null"  -->
+
+          <ng-template ng-header-tmp>
+              <input placeholder="Search Client" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select2.filter($event.target.value)" />
+          </ng-template>
+      </ng-select>  
+     
+    </div> 
+
+      <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+        <label>Contract Code <span class="required">*</span> </label>
+        <input type="text" placeholder="Contract Code" class="form-control" formControlName="code">
+      </div>
+      </div>
+
+      <div class="row">
+      <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+        <label>Contract Name <span class="required">*</span> </label>
+        <input type="text" placeholder="Contract Name" class="form-control" formControlName="name">
+      </div>
+      </div>
+
+<div class="row">
+   <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+        <label>Description</label>
+        <input type="text" placeholder="Description" class="form-control" formControlName="description">
+      </div>
+      </div>
+    
+    <div class="row ">
+      <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12">
+        <label class="form-label">Contract Start Date
+          </label>
+
+        <input type="text" class="form-control"  onpaste="return false;" readonly bsDatepicker placement="top" [bsConfig]="{
+            isAnimated: true,
+            dateInputFormat: 'DD-MM-YYYY',
+            containerClass: 'theme-default'
+          }" name="ValidFrom" formControlName="validFrom"  placeholder="Contract Start Date" autocomplte="off"(bsValueChange)="onChangeStartDate($event)"  />
+      </div>
+    </div>
+    
+      
+    <div class="row">
+      <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12">
+        <label class="form-label">Contract End Date
+          </label>
+
+        <input type="text" class="form-control"  onpaste="return false;" readonly bsDatepicker placement="top" [bsConfig]="{
+            isAnimated: true,
+            dateInputFormat: 'DD-MM-YYYY',
+            containerClass: 'theme-default'
+          }" name="ValidTill" formControlName="validTill" 
+          placeholder="Contract Start Date" autocomplte="off"(bsValueChange)="onChangeStartDate($event)"  />
+      </div>
+    </div>
+
+    <div class="form-group " >
+      <label for="IsAutoRenewal-input">Is AutoRenewal</label>
+      <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding:0px !important;">
+        <label class="el-switch el-switch-green">
+          <input type="checkbox" id="IsAutoRenewal-input" name="IsAutoRenewal" checked enabled />
+            <span class="el-switch-style"></span>
+        </label>
+      </div>
+      </div>
+      
+      <div class="modal-footer">
+        <div class="pull-right">       
+            <!-- <button class="btn btn-primary" data-dismiss="modal">Cancel</button> &nbsp; -->
+            <button  class="btn btn-primary" type="submit" prevent-double-submit id="btnSubmit"  (click)="createNewContract()" >
+              <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save </span></div>
+            </button> &nbsp;
+            <button class="btn btn-default pull-right" type="button" (click)="closeModal()"><i class="fa fa-ban" aria-hidden="true"></i> &nbsp;Cancel</button>   
+            <!-- [disabled]="GenericForm.invalid" -->
+        </div>
+    </div>
+      
+   <!-- <div class="modal-footer">-->
+    <!-- <div class="form-group ">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6 col-12 text-right">
+      <div class="text-right">
+          <ul class="list-inline">
+    <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="createNewContract($event)">Save</button> 
+      <i class="mdi mdi-content-save  m-r-xs"></i></li>
+    </ul>
+    </div>
+    </div>-->
+  </div>
+  
+  </form>
+ </div>
+</div>
+</div>
+
+
+
+    

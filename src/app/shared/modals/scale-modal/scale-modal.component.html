@@ -1,0 +1,120 @@
+<div class="modal fade show" style="display: block;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="dfc100 overflow-y-auto">
+      <div class="modal-header">
+        <h5 class="modal-title pull-left">Scale</h5>
+        <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()" ><i class="mdi mdi-close font-size-md icon-close"></i></a>
+      </div>
+
+      <div class="modal-body no-padder builtin-calling-wrapper">
+        <div class="flex-column">
+          <form [formGroup]="scalemodalFrom">
+            <div class="col-12 col-md-12 col-sm-12">
+              <div class="clearfix">
+                <div class="row">
+
+                  <div class="form-group form-group-vertical col-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12">
+            
+                    <div class="row" style="float: right;">
+                      <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding-left: 10px !important;" >
+                        <label class="form-label">Status</label>
+                      </div>
+                      <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding:0px !important;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" formControlName="Status" checked enabled />
+                            <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6">
+                    <label class="form-label">Effective Date<span class="required">*</span> </label>             
+                    <input type="text" class="form-control" bsDatepicker placement="top" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+                      containerClass:'theme-default' }" name="Effectivedate" formControlName="Effectivedate" [ngClass]="{'is-invalid': submitted && f.Effectivedate.errors }" placeholder="Effective Date" autocomplete="off">
+                    <div *ngIf="submitted && f.Effectivedate.errors" class="invalid-feedback">
+                      <div *ngIf="f.Effectivedate.errors.required">Effective Date is required</div>
+                    </div>
+                  </div>
+
+
+                  <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-12">
+                    <label class="form-label"> Scale Type <span class="required"> * </span></label>    
+                        <ng-select [items]="ScaleTypes" placeholder="Scale Type" formControlName="ScaleType" [ngClass]="{ 'is-invalid': submitted && f.ScaleType.errors }" bindLabel="name" bindValue="id">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ScaleType.errors" class="invalid-feedback">
+                            <div *ngIf="f.ScaleType.errors.required">Scale Type is required</div>
+                        </div>       
+                  </div>
+
+
+                  <br><br>
+
+             
+
+                  <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6">
+                    <label class="form-label">Is String Based</label>&nbsp;
+                        <!-- <div class="p-t-10"> -->
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="IsStringBased" (change)="change($event)" checked enabled />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        <!-- </div> -->
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+          <div class="row tablerow" style="padding-left:15px;">
+            <div class="col-md-6">
+              <h6 class="m-b-md">Scale Ranges</h6>
+            </div>
+            <div class="col-md-6">
+              <div class="float-right d-flex justify-content-between">
+                <div class="btn-group m-r-xs">
+                  <button class="btn upgrade-btn btn-sm m-r-sm " (click)="addNewItem('bottom')" >
+                    <i class="mdi mdi-plus m-r-xs" style="border-radius: 3px;"></i>
+                      Add Row&nbsp;
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row tablerow" style="padding: 0px 15px;">
+            <div class="col-md-12 col-sm-12">
+              <angular-slickgrid gridId="scalegrid1" [columnDefinitions]="scalecolumnDefinitions" 
+              [gridOptions]="scalegridOptions" [dataset]="scaledataset" gridWidth="100%" (onAngularGridCreated)="angularGridReady($event)">
+              </angular-slickgrid>
+
+           
+            </div>
+          </div>
+  
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+        <button class="btn btn-default pull-right" type="button" data-dismiss="modal" (click)="closeModal()">Cancel</button>
+
+        <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+            <div>
+                <div>
+                    <button class="btn  btn-primary " type="Submit" name="btnSubmit"  id="btnSubmit" (click)="savebutton()">
+                        <div class="pos-rlt sm-btn-component" > <span> Save </span></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

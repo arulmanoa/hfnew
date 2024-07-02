@@ -1,0 +1,144 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered animated fadeInDownBig">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px !important;">
+
+
+                <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                    <small class="header-pretitle"><b>Import Data</b></small>
+                    <!-- <h6 class="modal-title subheader_h6" id="popup_release_AL">{{ClientName}}</h6> -->
+                    <h6 class="modal-title subheader_h6" id="popup_release_AL">--</h6>
+                </div>
+
+                <div class="modal-close" (click)="modal_dismiss()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                </div>
+            </div>
+
+
+            <div class="modal-body">
+
+
+                <div class="dropzone dropzone-single mb-3" style="width: 50%;" data-toggle="dropzone" data-options='{"url": "https://", "maxFiles": 1, "acceptedFiles": "image/*"}'>
+                    <label class="form-label searchbar-label">Kindly add appropriate client excel file and validate it</label>
+                    <!-- Fallback -->
+                    <div class="fallback">
+                        <div class="custom-file">
+
+                            <input type="file" class="custom-file-input" (change)="onbrowseFile($event)" #inputFile accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" id="projectCoverUploads">
+                            <label class="custom-file-label" for="projectCoverUploads">Choose file</label>
+                        </div>
+                    </div>
+
+
+                </div>
+                <p *ngIf="FileName"><b>{{FileName | uppercase}} </b> | Number of records in file : <b> {{FileCount}} </b></p>
+                <div class="row m-2 card mat-elevation-z8" *ngIf="outputData_Success?.length > 0 || outputData_Failed?.length > 0">
+                    <div class="col-xs-12 col-sm-6 float-left"></div>
+                   <div class="col-xs-12 col-sm-6 float-right" *ngIf="outputData_Failed && outputData_Failed.length > 0">
+                        <button type="button" class="btn btn-primary-custom mt-2"
+                            (click)="exportTableAsExcel()" style="margin-bottom: 3px">
+                            <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                        </button>
+                   </div>
+                    <!-- <div class="col-sm-12">
+                        <div id="msg"></div>
+                        <form method="post" id="image-form">
+                        <input type="file" name="img" class="file"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" #inputFile>
+                        <div class="input-group my-3">
+                            <input type="text" class="form-control" (change)="onbrowseFile($event)" placeholder="Upload File"
+                            id="file">
+                            <div class="input-group-append">
+                            <button type="button" class="browse btn btn-primary"
+                                (change)="onbrowseFile($event)">Browse...</button>
+                            </div>
+                        </div>
+                        </form>
+                        <p>file name | no of records </p>
+                    </div> -->
+                                <!-- <div class="col-12">
+
+                        <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" #inputFile />
+
+                    </div> -->
+                    <br> <br>
+
+                      <!-- Tabs navs -->
+                    <ngb-tabset class="justify-center">
+                        <ngb-tab id="valid">
+                            <ng-template ngbTabTitle>Valid Entries</ng-template>
+                            <ng-template ngbTabContent>
+                                <!-- <div style="overflow-x:auto;width: 100%;padding: 15px;"> -->
+                                <div class="p-2">
+                                    <table *ngIf="outputData_Success?.length > 0" class="table table-bordered table-striped table-responsive-stack deallist-tbl fixed_header" id="dataTable">
+                                        <thead>
+                                            <tr style="font-weight: 600;">
+                                                <th *ngFor="let head of outputData_Success[0] | keys">{{getLetterSpace(head)}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of outputData_Success" style="color:green;" [ngStyle]="{'min-width':item.Remarks != null || item.Remarks == null ? '700px': '140px', 'font-size': item.Remarks != null ? '12px': '12px'}">
+                                                <td *ngFor="let list of item | keys"> {{item[list]}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <span *ngIf="outputData_Success?.length == 0">No Data Available</span>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                        <ngb-tab id="invalid">
+                        <ng-template ngbTabTitle>Invalid Entries</ng-template>
+                        <ng-template ngbTabContent>
+                            <!-- <div style="overflow-x:auto;width: 100%;padding: 15px;"> -->
+                            <div class="p-2">
+                                <table *ngIf="outputData_Failed?.length > 0" class="table table-bordered table-striped table-responsive-stack deallist-tbl fixed_header" id="dataTable">
+                                    <thead>
+                                        <tr style="font-weight: 600;">
+                                            <th *ngFor="let head of outputData_Failed[0] | keys">{{getLetterSpace(head)}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of outputData_Failed" style="color:red;" [ngStyle]="{'min-width':item.Remarks != null || item.Remarks == null ? '700px': '140px', 'font-size': item.Remarks != null ? '12px': '12px'}">
+                                            <td *ngFor="let list of item | keys"> {{item[list]}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <span *ngIf="outputData_Failed?.length == 0">No Data Available</span>
+                            </div>
+                        </ng-template>
+                        </ngb-tab>
+                    </ngb-tabset>
+                    <!-- End Of Tabs navs -->
+
+                    <br>
+                    <br>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="pull-left left-margin-btn">
+
+                    <!-- <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"  [disabled]="!FileName" (click)="validateExcelRecords()">
+            <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-av-timer"></i> Validate using BRV </span>
+            </div>
+          </button> -->
+                </div>
+                <div class="pull-right m-r-sm">
+                    <div>
+                        <div>
+                            <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit" (click)="modal_dismiss()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+              </button>
+
+                            <button class="btn upgrade-btn pull-right" type="button" [disabled]="!FileName && !Result_ImportedPISLogData" (click)="validateExcelRecords('confirm')"> <i
+                  class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Confirm</button>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

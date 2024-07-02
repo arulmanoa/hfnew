@@ -1,0 +1,66 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="row m-t-b-10">
+            <div class="col-lg-6">
+                <ul class="list-inline">
+
+                    <div class="showGirdActionButtons">
+                        <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                            <div class="massOperationsPanel d-i-b">
+                                <!-- <div class="show-cancel m-r">
+                                    <a class="btn btn-sm bg-transparent text-dark" href="javascript:void(0)">
+                                        <i class="mdi mdi-close icon-close"></i></a>
+                                </div>
+                                <label class=" default-text font-size-sm m-r-md show-counts">0 Selected </label> -->
+                                <button class="btn btn-default btn-sm m-r-sm btn-danger">
+                          <i class="mdi mdi-delete-empty m-r-xs"></i>
+                          Delete
+                      </button><button class="btn btn-default btn-sm m-r-sm ">
+                          <i class="mdi mdi-content-save m-r-xs"></i>
+                          Update
+                      </button><button class="btn btn-default btn-sm m-r-sm ">
+                          <i class="mdi mdi-file-export m-r-xs"></i>
+                          Export
+                      </button><button class="btn btn-default btn-sm m-r-sm ">
+                          <i class="mdi mdi-file-send m-r-xs"></i>
+                          Merge
+                      </button>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+
+            </div>
+            <!--end col-->
+            <div class="col-lg-6 text-right">
+                <div class="text-right">
+                    <ul class="list-inline">
+
+                        <li class="list-inline-item"><button type="button" class="btn btn-primary"><i class="mdi mdi-google-assistant m-r-xs"></i>Add Role </button></li>
+                        <li class="list-inline-item"><button type="button" class="btn btn-primary"><i class="mdi mdi-content-duplicate m-r-xs"></i>Duplicate </button></li>
+                        <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="addCountry()"><i class="mdi mdi-file-plus m-r-xs"></i> Add Country</button></li>
+
+                    </ul>
+                </div>
+            </div>
+            <!--end col-->
+        </div>
+        <!-- end row  -->
+        <br>
+        <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+                                Pleas wait...
+              </button>
+        </div>
+
+        <!-- start slick grid data table   -->
+        <div class="content m-b report-content" *ngIf="isContent">
+
+            <angular-slickgrid gridId="grid1" [data]="ruleGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)" (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)"
+                (onAngularGridCreated)="angularGridReady($event)">
+            </angular-slickgrid>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,763 @@
+<div class="page-wrapper" style="padding-top: 0px;">
+    <div class="page-content">
+
+        <app-loading-screen></app-loading-screen>
+
+
+        <div class="docs-page" *ngIf="!outputPageLayout ">
+            <div class="Error full-screen">
+                <div><img src="assets/Images/designer-life.svg" style="height: 6rem;"> </div>
+                <h1>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                        aria-hidden="true"> </span>
+                </h1>
+                <p>Please wait while we set things up for you</p>
+            </div>
+        </div>
+
+        <!-- <app-searchbar-view [Content]="'PayTransaction'" *ngIf="!searchPanel && outputPageLayout && businessType === 3"
+            [searchConfiguration]="searchConfiguration" (searchButtonClicked)="onClickingSearchButton($event)"
+            (isClose)="isCloseContent($event)">
+        </app-searchbar-view>
+
+        <app-searchbar-view *ngIf="!searchPanel && outputPageLayout && businessType !== 3"
+            [searchConfiguration]="searchConfiguration" (searchButtonClicked)="onClickingSearchButton($event)"
+            (isClose)="isCloseContent($event)">
+        </app-searchbar-view> -->
+        <!-- 
+  <app-searchbar-view  [Content]="'General'"  *ngIf="activeTabName == 'Process'" 
+  [searchConfiguration]="searchConfigurationProcess" (searchButtonClicked)="onClickingProcessOutupSearchButton($event)">
+  </app-searchbar-view> -->
+<!-- 
+        <div class="content m-b report-content animated fadeInDown int-header-content-panel" style="margin-top: 10px;"
+            *ngIf="searchPanel && businessType === 3">
+            <span class="es-text">
+                <span *ngIf="searchObject !== undefined">
+                    <b> {{searchObject.ClientName}} </b> <span *ngIf="searchObject.ContractName != null"> &nbsp; |
+                        &nbsp;
+                        {{searchObject.ContractName}} </span> <span *ngIf="searchObject.TeamName != null"> &nbsp; |
+                        &nbsp;
+                        {{searchObject.TeamName}} </span> <span *ngIf="searchObject.PayPeriodName != null">&nbsp;
+                        | &nbsp; {{searchObject.PayPeriodName}}
+                    </span>
+                </span>
+                <span *ngIf="searchObject === undefined"> No record were found! Please try after sometimes. </span>
+                <button class="btn btn-default btn-bold" style="margin-top: -5px;float: right; margin-left: 20px;"
+                    (click)="openSearch()" tooltip="Custom filter" data-original-title="" title="">
+                    <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i>
+                </button>
+               
+            </span>
+        </div> -->
+
+        <!-- <div class="content m-b report-content animated fadeInDown int-header-content-panel"
+            *ngIf="searchPanel && businessType !== 3" style="margin-top: 10px;">
+            <span class="es-text">
+                <span *ngIf="searchObject !== undefined">
+                    <b> <span *ngIf="searchObject.TeamName != null"> {{searchObject.TeamName}} </span> </b>
+                    <span *ngIf="searchObject.PayPeriodName != null">&nbsp; | &nbsp; {{searchObject.PayPeriodName}}
+                    </span>
+                    <span *ngIf="searchObject === undefined"> No record were found! Please try after sometimes. </span>
+                </span>
+                <button class="btn btn-default btn-bold" style="margin-top: -5px;float: right; margin-left: 20px;"
+                    (click)="openSearch()" tooltip="Custom filter" data-original-title="" title="">
+                    <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i>
+                </button>
+            </span>
+        </div> -->
+
+        <div class="content m-b report-content " style="margin-top: 10px" *ngIf="searchPanel">
+            <ngb-tabset (tabChange)="beforeTabChange($event)" [(activeId)]="activeTabName">
+                <ngb-tab id="PendingExpense">
+                    <ng-template ngbTabTitle><i class="fa fa-hourglass-end" aria-hidden="true"></i>&nbsp;&nbsp;New
+                        Request</ng-template>
+                    <ng-template ngbTabContent>
+                        <div class="text-center ma-5" *ngIf="spinner">
+                            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                                    aria-hidden="true"></span>
+                                Please wait...
+                            </button>
+                        </div>
+
+
+                        <div class="row" style="margin-top: 10px ; z-index: -1;" *ngIf="!spinner">
+
+                            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+                                <ul class="list-inline">
+                                    <li class="list-inline-item" *ngIf="roleCode == 'FinanceAdmin'">
+                                        <button class="btn btn-danger" (click)="onClickRejectClaimRequest()">
+                                            <i class="mdi mdi-close-circle-outline m-r-xs"></i>Reject Request
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                                <div class="text-right">
+                                    <ul class="list-inline">
+                                       
+                                        <li class="list-inline-item" *ngIf="roleCode == 'FinanceAdmin'">
+                                            <button class="btn btn-primary" (click)="onClickCreatePayoutBatch()">
+                                                <i class="mdi mdi-play m-r-xs"></i>Create Payout Batch
+                                            </button>
+                                        </li>
+
+                                        <li class="list-inline-item"><button type="button" class="btn btn-default"
+                                                (click)="getExpenseData()">
+                                                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                                            </button>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row" style="margin-bottom: 10px;" *ngIf="!spinner">
+
+                            <div class="col-lg-4 col-md-4 col-xs-12 col-xxs-12 col-12 text-left">
+                                <div class="text-left">
+                                    <ul class="list-inline">
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-8 col-md-8 col-xs-12 col-xxs-12 col-12 text-right">
+                                <div class="text-right">
+                                    <ul class="list-inline">
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div *ngIf="!spinner">
+                            <angular-slickgrid gridId="output" [columnDefinitions]="expenseColumnDefinition"
+                                [gridOptions]="expenseGridOptions" [dataset]="expenseDataset" gridWidth="100%"
+                                (sgOnSelectedRowsChanged)="onexpenseSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                                (sgOnClick)="onexpenseCellClicked($event.detail.eventData, $event.detail.args)"
+                                (onAngularGridCreated)="expenseAngularGridReady($event)">
+                            </angular-slickgrid>
+                        </div>
+
+
+                    </ng-template>
+                </ngb-tab>
+
+            </ngb-tabset>
+        </div>
+    </div>
+</div>
+
+
+<div id="Download_Template" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Download_Template"
+    data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated fadeInDownBig">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11">
+                        <h6 class="modal-title pull-left"> Choose Employee</h6>
+                        <div class="modal-close" (click)="modal_dismiss()"><span class="mdi mdi-close pull-left"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" style="min-height: 30rem;">
+                    <div class="text-center ma-5" *ngIf="spinner">
+                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                                aria-hidden="true"></span>
+                            Please wait...
+                        </button>
+                    </div>
+
+                    <!-- <div *ngIf = "!spinner" >
+          <app-searchbar-view  Content = "General" [searchConfiguration]="importLayout.CreateExcelConfiguration.SearchConfiguration"
+          (searchButtonClicked)="onClickingSearchButton($event)"></app-searchbar-view>
+        </div> -->
+
+                    <div *ngIf="!spinner">
+                        <!-- Buttons -->
+                        <div class="row" style="margin-top : 30px">
+                            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                                <div class="text-left">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+                                            <button class="btn btn-default" style="margin-right : 10px"
+                                                (click)="downloadTemplate()">
+                                                <i class="mdi mdi-download m-r-xs"></i>Download Template
+                                            </button>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                                <div class="text-right">
+                                    <ul class="list-inline">
+
+                                        <li class="list-inline-item">
+                                            <button type="button" class="btn upgrade-btn"
+                                                [disabled]="selectedItems?.length > 1"
+                                                (click)="onClickingAddFromChooseEmployee()">
+                                                <i class="mdi mdi-plus  m-r-xs"></i> Add
+                                            </button>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" *ngIf="isNormalDSDuplicateEntry">
+                            <div class="col-lg-12 text-center">
+                                <ngb-alert [dismissible]="false">
+                                    <strong>The list item could not be displayed or updated because duplicate values
+                                        were found in the list. Please reach out to your Support Administrator.
+                                    </strong>
+                                </ngb-alert>
+                            </div>
+                        </div>
+
+
+                        <!-- Grids -->
+                        <div style="margin-top: 10px;" *ngIf="!isNormalDSDuplicateEntry">
+                            <angular-slickgrid gridId="chooseEmployee" [columnDefinitions]="columnDefinition"
+                                [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%"
+                                (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                                (onAngularGridCreated)="angularGridReady($event)">
+                            </angular-slickgrid>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 0px;">
+                    <!-- <button type="button" class="btn upgrade-btn" id="btn_onboarding_submit"
+        (click)="proceed()" style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> PROCEED
+        </button> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="api_Grid" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="api_Grid" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11">
+                        <h6 class="modal-title pull-left">Result</h6>
+                        <div class="modal-close" (click)="apiResult_dismiss()"><span
+                                class="mdi mdi-close pull-left"></span></div>
+                    </div>
+                </div>
+                <div class="modal-body" style="min-height: 30rem;">
+                    <div class="text-center ma-5" *ngIf="spinner">
+                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                                aria-hidden="true"></span>
+                            Please wait...
+                        </button>
+                    </div>
+
+                    <!-- <div *ngIf = "!spinner" >
+          <app-searchbar-view  Content = "General" [searchConfiguration]="importLayout.CreateExcelConfiguration.SearchConfiguration"
+          (searchButtonClicked)="onClickingSearchButton($event)"></app-searchbar-view>
+        </div> -->
+
+                    <div *ngIf="!spinner">
+                        <!-- Buttons -->
+                        <!-- <div class="row" style="margin-top : 30px">
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                  <div class="text-left">
+                      <ul class="list-inline">
+                          <li class="list-inline-item">
+                              <button  class="btn btn-default" style="margin-right : 10px"
+                              (click)="downloadTemplate()" >
+                              <i class="mdi mdi-download m-r-xs"></i>Download Template
+                              </button>
+                          </li>
+                          
+                      </ul>
+                  </div>
+              </div>
+              
+          </div>  -->
+
+                        <!-- Grids -->
+                        <div style="margin-top: 10px;">
+                            <angular-slickgrid gridId="apiResult" [columnDefinitions]="apiGridColumnDefinition"
+                                [gridOptions]="apiGridGridOptions" [dataset]="apiGridDataset" gridWidth="100%">
+                            </angular-slickgrid>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 0px;">
+                    <!-- <button type="button" class="btn upgrade-btn" id="btn_onboarding_submit"
+      (click)="proceed()" style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> PROCEED
+      </button> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popup_displayResult" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_displayResult"
+    aria-hidden="true">
+    <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11">
+                        <h6 class="modal-title pull-left">Result</h6>
+                        <div class="modal-close" (click)="modal_dismiss_displayResult()"><span
+                                class="mdi mdi-close pull-left"></span></div>
+                    </div>
+
+                    <!-- <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+              <small class="header-pretitle"><b>Processing Status (Employee) </b></small>
+              <h6 class="modal-title subheader_h6" id="popup_release_AL" >{{ClientName}} <span> - </span>
+                {{ClientContractName}} </h6>
+            </div> -->
+
+                    <!-- <div class="modal-close" (click)="modal_dismiss_display()" style="margin-top: 5px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div> -->
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12  col-sm-12  p-r-50">
+                            <div class="job-box ">
+                                <div class="inbox-message">
+                                    <ul>
+                                        <li *ngFor="let i of resultList" style="width: 100% !important;">
+                                            <a href="javascript:;">
+                                                <div class="message-avatar">
+                                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                                                        alt="">
+                                                </div>
+                                                <div class="message-body">
+                                                    <div class="message-body-heading">
+                                                        <h5>{{i.EmployeeName}} - <b *ngIf="i.Status"
+                                                                style="color: green;">Success</b>
+                                                            <b style="color: red;" *ngIf="!i.Status">Failed</b>
+                                                        </h5>
+                                                    </div>
+                                                    <p>{{i.ErrorMessage}}</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left left-margin-btn">
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popup_chooseCategory" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_chooseCategory"
+    aria-hidden="true">
+    <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11">
+                        <h6 class="modal-title pull-left">Push To Queue Result</h6>
+                        <div class="modal-close" (click)="modal_dismiss_display()"><span
+                                class="mdi mdi-close pull-left"></span></div>
+                    </div>
+
+                    <!-- <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+              <small class="header-pretitle"><b>Processing Status (Employee) </b></small>
+              <h6 class="modal-title subheader_h6" id="popup_release_AL" >{{ClientName}} <span> - </span>
+                {{ClientContractName}} </h6>
+            </div> -->
+
+                    <!-- <div class="modal-close" (click)="modal_dismiss_display()" style="margin-top: 5px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div> -->
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12  col-sm-12  p-r-50">
+                            <div class="job-box ">
+                                <div class="inbox-message">
+                                    <ul>
+                                        <li *ngFor="let i of processedEMP" style="width: 100% !important;">
+                                            <a href="javascript:;">
+                                                <div class="message-avatar">
+                                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                                                        alt="">
+                                                </div>
+                                                <div class="message-body">
+                                                    <div class="message-body-heading">
+                                                        <h5>{{i.EmployeeName}} - <b *ngIf="i.IsPushedToQueue"
+                                                                style="color: green;">Success</b>
+                                                            <b style="color: red;" *ngIf="!i.IsPushedToQueue">Failed</b>
+                                                        </h5>
+                                                    </div>
+                                                    <p>{{i.Remarks}}</p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left left-margin-btn">
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<nz-drawer [nzVisible]="slider" [nzWidth]="840" nzIcon="user"
+    nzTitle="{{isAdd ? 'Add New Reimbursement' : 'Edit Reimbursement'}}" (nzOnClose)="close_slider()"
+    [nzClosable]="!isChanged">
+
+    <div class="row" *ngIf="!addRowRecord">
+        <div class="col-6">
+            <label class="form-label">Employee Code:</label>
+            <input class="form-control" type="text" [(ngModel)]="employeeCode">
+
+            <button type="button" class="btn btn-default" style="margin-top: 10px;"
+                (click)="onConfirmingEmployeeCode()">
+                <i class="mdi mdi-check  m-r-xs"></i>Confirm
+            </button>
+        </div>
+    </div>
+
+    <nz-descriptions [nzColumn]="2" *ngIf="addRowRecord">
+
+        <nz-descriptions-item nzTitle="Employee Code" [nzSpan]="1">
+            {{addRowRecord.EmployeeCode}}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Employee Name" [nzSpan]="1"><b>{{addRowRecord.EmployeeName}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Client" [nzSpan]="2"><b>{{addRowRecord.ClientName}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Contract"
+            [nzSpan]="2"><b>{{addRowRecord.ClientContract}}</b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Team Name" [nzSpan]="2"><b>{{addRowRecord.Team}}</b></nz-descriptions-item>
+
+    </nz-descriptions>
+
+    <nz-table nzSize="small" *ngIf="addRowRecord"
+        [nzData]="addRowRecord.ReimbursementConfiguration.ProductConfigurationList" [nzTemplateMode]="false"
+        [nzShowPagination]=false>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Payable Amount</th>
+                <th>Billing Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of addRowRecord.ReimbursementConfiguration.ProductConfigurationList"
+                [ngStyle]="{'background': item.ProductTypeCode =='Total'  ? '#cbe2f7' : '#FFF' }">
+                <td>{{item.DisplayName}}</td>
+                <td class="txt-align document_table_validFrom table-td-center">
+                    <input type="number" style="text-align:right" min="0" max="999900000000" maxlength="12"
+                        oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value   < 0) ? (1/1) : this.value;"
+                        onkeypress="return /^[0-9--]+$/i.test(event.key)" onpaste="return false;"
+                        [(ngModel)]="item.PayableAmount" (change)="onPayableAmountChange($event , item)"
+                        class="form-control">
+                </td>
+                <td class="txt-align document_table_validFrom table-td-center">
+                    <input type="number" max="33333" style="text-align:right" maxlength="12"
+                        [disabled]="!item.AllowToInputBillableAmount" onkeypress="return /^[0-9--]+$/i.test(event.key)"
+                        onpaste="return false;" [(ngModel)]="item.BillingAmount"
+                        (change)="onBillingAmountChange($event , item)" class="form-control">
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+    <nz-divider></nz-divider>
+
+
+    <div class="row" style="margin-bottom: 10px;" *ngIf="addRowRecord">
+
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+            <div class="text-left">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <!-- <button type="button" class="btn btn-default" (click)="downloadExcel()">
+              <i class="mdi mdi-download  m-r-xs"></i> Download Excel
+            </button> -->
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="text-right">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <button type="button" class="btn btn-primary" (click)="save()">
+                            <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                        </button>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</nz-drawer>
+
+
+<nz-drawer [nzVisible]="netPaySlider" [nzWidth]="840" nzTitle="Employee Pay Transaction"
+    (nzOnClose)="close_netPaySlider()">
+    <nz-descriptions [nzColumn]="2" *ngIf="rowRecord">
+        <nz-descriptions-item nzTitle="Employee Name" [nzSpan]="0.5"><b>{{rowRecord.EmployeeName}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Employee Code" [nzSpan]="0.5"><b>{{rowRecord.EmployeeCode}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="DOJ" [nzSpan]="1"><b>{{rowRecord.DOJ | date: 'MMMM d, y'}}</b>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Pay Period" [nzSpan]="1"><b>{{rowRecord.PayPeriod}}</b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Team Name" [nzSpan]="0.5"><b>{{rowRecord.TeamName}}</b></nz-descriptions-item>
+        <!-- <nz-descriptions-item nzTitle="Payable Days / Workdays" [nzSpan]="0.5"><b> {{rowRecord.Payabledays}} /
+      {{rowRecord.Workdays}} </b></nz-descriptions-item> -->
+
+    </nz-descriptions>
+    <nz-divider></nz-divider>
+    <div *ngIf="Payitems">
+        <!-- <nz-divider></nz-divider> -->
+        <nz-table nzSize="small" [nzData]="Payitems" [nzTemplateMode]="false" [nzShowPagination]=false>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Actual Amount</th>
+                    <th>Earned Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of Payitems"
+                    [ngStyle]="{'background': data.ProductTypeCode =='Total'  ? '#cbe2f7' : '#FFF' }">
+                    <td>{{data.ProductDisplayName}}</td>
+                    <td style="text-align: right !important;">{{data.ActualAmount | number : '1.2-2'}}</td>
+                    <td style="text-align: right !important;">{{data.PayTotal | number : '1.2-2'}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <nz-divider></nz-divider>
+
+    <div class="row" style="margin-bottom: 10px;" *ngIf="!spinner">
+
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+            <div class="text-left">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <button type="button" class="btn btn-default" (click)="downloadExcel()">
+                            <i class="mdi mdi-download  m-r-xs"></i> Download Excel
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="text-right">
+                <ul class="list-inline">
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</nz-drawer>
+
+
+
+<nz-drawer [nzVisible]="expenseClaimRequestSlider" [nzWidth]="740" nzTitle="Expense Details"
+    (nzOnClose)="close_expenseClaimRequestSlider()">
+
+    <nz-descriptions [nzColumn]="2" nzTitle="Expense Request" *ngIf="rowData">
+        <nz-descriptions-item nzTitle="Employee Code" [nzSpan]="1">{{rowData.EmployeeCode}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Employee Name" [nzSpan]="1">{{rowData.EmployeeName}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Batch Name" [nzSpan]="1">{{rowData.Name}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Total Requested Amount" [nzSpan]="1">{{TotalRequestedAmount | number
+            : '1.2-2'}}</nz-descriptions-item>
+    </nz-descriptions>
+
+
+    <div class="row" *ngIf="rowData">
+
+        <div class="col-lg-6">
+
+            <!-- <div class="pretty p-icon p-curve p-bigger">
+              <input type="checkbox" [(ngModel)]="selectAll" (click)="selectAllClaimRequest($event)" />
+              <div class="state p-primary">
+                  <i class="icon mdi mdi-check"></i>
+                  <label style="font-weight: 600 !important;
+      padding-left: 4px;">Select All</label>
+              </div>
+          </div> -->
+        </div>
+
+        <div class="col-lg-6" style="text-align: right; 
+font-weight: 600;">
+            <p> No of Claims : {{NoOfClaims}} </p>
+        </div>
+
+        <ng-container *ngIf="ExpenseClaimRequestList.length > 0">
+            <ng-container *ngFor="let item of ExpenseClaimRequestList;let i = index"> 
+
+            <div class="col-md-12 col-sm-12 col-xs-12"
+                 style="padding: 5px;" *ngIf="(item.Status == 300 || item.Status == 400)">
+                <div class="card"
+                    style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                    <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <span>
+                                            <!-- <input type="checkbox" [(ngModel)]="item.isSelected"
+                                              (click)="selectClaimRequest(item)"
+                                              style="cursor: pointer;padding-right: 6px;" /> -->
+                                        </span>
+                                        <span style="font-size: 14px;margin-left: 10px;
+          font-weight: 600;
+          color: black;"> {{item.ProductName}} &nbsp; ₹ {{item.RequestedAmount | number : '1.2-2'}}</span>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <span style="font-size: 13px;font-weight: 600;">
+                                            <span class="badge badge-soft-warning"
+                                                *ngIf="item.Status == '100' || item.Status == '200'"
+                                                style="display: inline;"> {{getStatusName(item.Status)}} </span>
+                                            <span class="badge badge-soft-danger" *ngIf="item.Status == '300'"
+                                                style="display: inline;">
+                                                {{getStatusName(item.Status)}} </span>
+                                            <span class="badge badge-soft-success" *ngIf="item.Status == '400'"
+                                                style="display: inline;">
+                                                {{getStatusName(item.Status)}} </span>
+
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-4 text-right">
+                                        <!-- <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> </span> -->
+
+                                        <a href="javascript:;" *ngIf="item.DocumentId > 0" class="btn action-edit"
+                                            style="margin-right: 5px" matTooltip="View Documents"
+                                            (click)="do_viewDocuments(item)">
+                                            <i class="fa fa-list" aria-hidden="true"
+                                                style="font-size: 16px;color: #838383;"></i>
+                                        </a>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+/* margin-bottom: 0px; */
+padding-left: 0px;
+padding-top: 12px !important;">
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                    <label class="form-label"
+                                        style="font-weight: 600 !important;font-size: 11px !important;">EXPENSE
+                                        DATE <span class="required"></span></label>
+                                    <p class="date" style="font-size: 13px;"> {{item.ExpenseIncurredDate | date
+                                        :'dd-MM-yyyy'}} </p>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                    <label class="form-label"
+                                        style="font-weight: 600 !important;font-size: 11px !important;">APPROVED
+                                        AMT.
+                                        <span class="required"></span></label>
+                                    <p class="date" style="font-size: 13px;"> {{item.ApprovedAmount | number : '1.2-2'}}
+                                    </p>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+
+                            </div>
+
+                            <div class="col-md-3" style="text-align: right;">
+
+                                <!-- <button (click)="approveorReject(true, item)" type="button"
+                                  class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                                  style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i
+                                          class="fa fa-thumbs-o-up" aria-hidden="true"
+                                          style="padding-right: 5px;"></i>Approve</span></button> -->
+
+                                <button (click)="approveorReject(false, item)" type="button"
+                                    class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                                    style="font-size: 10px;color: #f44336;border-color: #f44336;"><span><i
+                                            class="fa fa-ban" aria-hidden="true" style="padding-right: 5px;"></i>Reject
+                                    </span></button>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </ng-container>
+
+        </ng-container>
+    </div>
+
+    <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+
+        <div style="float: right;" class="ng-star-inserted" style="width:98%;text-align: right !important;">
+            <button nz-button="" style="margin-right: 8px;" (click)="close_expenseClaimRequestSlider()" class="ant-btn">
+                <span class="ng-star-inserted">Close</span>
+            </button>
+            <button nz-button="" nztype="primary" (click)="submitExpenseRequest('false')"
+                class="ant-btn ant-btn-primary">
+                <span class="ng-star-inserted">Submit</span>
+            </button>
+
+        </div>
+
+    </div>
+
+
+</nz-drawer>

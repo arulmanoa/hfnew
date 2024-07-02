@@ -1,0 +1,67 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+              aria-hidden="true"></span>
+          Please wait...
+      </button>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner">
+      <div class="row">
+        <div class="col-lg-6 col-xs-12 col-sm-12">
+          <div class="headerbar">
+            <div><h2 class="header_title">FBP Submission List</h2></div>
+          </div>
+        </div>
+        <div class="col-lg-6 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+              <li class="list-inline-item" *ngIf="showAddNewSlotBtn">
+                <button type="button" class="btn btn-primary" (click)="redirectToFBPDeclarationSlot('NEW')">
+                  Add New
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- table -->
+      <div class="row">
+        <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+          <div class="table-responsive table-height">
+            <table class="table table-sticky table-bordered tble-row-height mb-0 fbp-history-table">
+              <thead class="tbl-freezhead fbp-history-table-header">
+                <tr>
+                  <th>Period From</th>
+                  <th>Period To</th>
+                  <th>Status</th>
+                  <th>Remarks</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody class="tbl-scrollbody fbp-history-table-body">
+                <tr *ngFor="let item of fbpHistoryDataset; let i=index;">
+                  <td>{{item.FBP[0].PeriodFrom}}</td>
+                  <td>{{item.FBP[0].PeriodTo}}</td>
+                  <td>{{item.FBP[0].Status}}</td>
+                  <td>{{item.FBP[0].Remarks}}</td>
+                  <td>
+                    <button class="btn btn-default btn-sm m-r-sm" (click)="editFbpHistory(item)" title="edit"
+                      [disabled]="item.isSlotClosed || (item.FBP[0].Status != 'Rejected' && item.FBP[0].Status != 'Saved')">
+                      <i class="fa fa-pencil-square-o m-r-xs"></i>
+                    </button>
+                    <button class="btn btn-default btn-sm m-r-sm" (click)="viewFbpHistory(item)" title="view">
+                      <i class="fa fa-eye m-r-xs"></i> 
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

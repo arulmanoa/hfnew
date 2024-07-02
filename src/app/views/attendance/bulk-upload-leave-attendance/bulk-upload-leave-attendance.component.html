@@ -1,0 +1,162 @@
+<div class="page-wrapper" style="margin-top: 0px;">
+  <div class="page-content ">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="fullSpinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="row m-b" *ngIf="!fullSpinner">
+      <div class="col-6">
+        <label class="form-label">Choose Import type</label>
+        <ng-select [(ngModel)]="selectedImportOption" (change)="onImportChange($event)" [items]="importDropdownList" bindLabel="Name"
+          bindValue="Code" [disabled]="disableImportDropdown" [clearable]="false">
+        </ng-select>
+      </div>
+      <div class="col-6"></div>
+    </div>
+    <div class="content m-b report-content" *ngIf="selectedImportOption && !fullSpinner">
+      <ngb-tabset (tabChange)="beforeTabChange($event)" [(activeId)]="activeTabName">
+        <ngb-tab id="Download">
+          <ng-template ngbTabTitle><i class="fa fa-download" aria-hidden="true"></i>&nbsp;&nbsp;Download
+            Template</ng-template>
+          <ng-template ngbTabContent>
+
+            <div class="text-center ma-5" *ngIf="spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+            <div *ngIf="!spinner">
+              <!-- Buttons -->
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                  <div class="text-left">
+                    <ul class="list-inline">
+                      <li class="list-inline-item">
+                        <button *ngIf="selectedImportOption" class="btn btn-default mr-3"  (click)="download_template()">
+                          <i class="mdi mdi-download m-r-xs"></i>Download Template
+                        </button>
+                      </li>
+
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+              <!-- Grids -->
+              <div *ngIf="columnDefinition != null && columnDefinition.length > 0" style="margin-top: 10px;">
+                <angular-slickgrid *ngIf="fillExcel" gridId="grid1" [columnDefinitions]="columnDefinition"
+                  [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%"
+                  (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  (onAngularGridCreated)="angularGridReady($event)">
+                </angular-slickgrid>
+              </div>
+              <!-- Row to show Count -->
+              <div class="row" style="margin-top: -10px;margin-bottom: -17px;"
+                *ngIf="columnDefinition != null && columnDefinition.length > 0 && fillExcel">
+                <div class="col-lg-6">
+                </div>
+                <div class="col-lg-6" style="text-align: right;">
+                  <label> <b> Total Record(s) : <b> {{dataset?.length}}</b>
+                      &nbsp; &nbsp; &nbsp; Selected Record(s) : <b> {{selectedItems?.length}}</b></b></label>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab id="Upload">
+          <ng-template ngbTabTitle><i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;Upload Excel</ng-template>
+          <ng-template ngbTabContent>
+            <div class="text-center ma-5" *ngIf="spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 col-lg-6 text-left">
+                <ul class="list-group">
+                  <li class="list-group-item" *ngFor="let m of message">
+                    {{m}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div *ngIf="!spinner">
+              <!-- Buttons -->
+              <div class="row" style="margin-top : 30px">
+                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                  <div class="text-left">
+                    <ul class="list-inline">
+
+                      <li class="list-inline-item">
+                        <button type="button" class="btn btn-primary-custom mr-3"
+                          (click)="onUploadButtonClicked(); fileInput.click()">
+                          <span><i class="mdi mdi-upload m-r-xs"></i>Upload Excel</span>
+                          <input #fileInput id="fileUpload" type="file" (change)="handleFileInput($event.target.files)"
+                            style="display:none;">
+                        </button>
+                        <span>{{file != undefined && file != null ? file.name : ''}}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right" *ngIf="uploaded && !bulkUploadHasError">
+                  <div class="text-right">
+                    <ul class="list-inline d-flex">
+                      <li class="list-inline-item d-flex mt-1" *ngIf="selectedImportOption == 'AttendanceBulkImportTemplate'">
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" value="" id="deleteExistingPunches" 
+                          (change)="onChangeDeletePunches($event)" [(ngModel)]="deleteExistingPunches">
+                          <label class="form-check-label" for="deleteExistingPunches">Delete Existing Punches</label>
+                        </div>
+                      </li>
+                      <li class="list-inline-item">
+                        <button class="btn btn-primary" style="margin-right : 10px"
+                          (click)="onClickingSubmitExcelButton()">
+                          <i class="mdi mdi-add_task m-r-xs"></i>Submit
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3" *ngIf="uploadedErrorMessage != '' && beforeUploadDataset && beforeUploadDataset.length === 0">
+              <div class="col-lg-12 text-center">
+                <ngb-alert [dismissible]="false">
+                  <strong>{{uploadedErrorMessage}}</strong>
+                </ngb-alert>
+              </div>
+            </div>
+              <!-- Grids -->
+              <div class="mt-2" *ngIf="beforeUploadColumnDefinition != null && beforeUploadColumnDefinition.length > 0">
+                <angular-slickgrid gridId="grid2"
+                  [columnDefinitions]="beforeUploadColumnDefinition" [gridOptions]="beforeUploadGridOptions"
+                  [dataset]="beforeUploadDataset" gridWidth="100%"
+                  (sgOnSelectedRowsChanged)="onbeforeUploadSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  (onAngularGridCreated)="angularBeforeUploadGridReady($event)">
+                </angular-slickgrid>
+              </div>
+
+              <div class="row m-1" *ngIf="finalResponse != null">
+                <div class="col-12">
+                  <ul>
+                    <li *ngFor="let item of finalResponse.FailedList">Failed Item: {{ item  | json }}</li>
+                  </ul>
+                  <p>Batch ID: {{ finalResponse.BatchId }}</p>
+                  <p>Number of Records Saved: {{ finalResponse.NumberOfRecordsSaved }}</p>
+                  <p>Number of Failed Records: {{ finalResponse.NumberOfFailedRecords }}</p>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+    </div>
+  </div>
+</div>

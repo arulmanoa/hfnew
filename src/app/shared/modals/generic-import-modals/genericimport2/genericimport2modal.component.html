@@ -1,0 +1,82 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Generic Import</b></small>
+          <h6 class="modal-title subheader_h6"> --- </h6>
+        </div>
+        <div class="modal-close" *ngIf="!isLoading" (click)="confirmExit('Closed')" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+      <div class="modal-body no-padder" style="padding-bottom: 7rem;">
+
+        <div class="d-flex align-items-center" *ngIf="firsttimeLoader">
+          <strong class="text-right"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+        <div *ngIf="!firsttimeLoader">
+
+        <div class="row">
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <label class="form-label"> Team Name </label>
+            <ng-select [items]="TeamList" placeholder="-- select on option --"  (change)="onChangeTeam($event)" bindLabel="Name" bindValue="Id">
+              
+          </ng-select>
+
+
+          </div>
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="selectedTeamId != null">
+            <label class="form-label"> Import Type</label>
+            <ng-select [(ngModel)]="importTypeId" [items]="ImportTypeList" placeholder="-- select on option --"  (change)="onChangeImportType($event)" bindLabel="name" bindValue="id">
+              
+          </ng-select>
+
+
+          </div>
+        </div>
+          <p *ngIf="!isValidToUpload">Note : Please select the import type to download a sample file</p>
+        <div *ngIf="isValidToUpload">
+        <!-- <p>Import transfer into port from Excel files. Choose a file to upload</p> -->
+        <p class="secondary-text m-b-lg">
+          <a (click)="download_template()"
+            style="color: #1f62ff;cursor: pointer;">Click here</a> to download a sample file
+        </p>
+     
+        <div class="row">
+
+          <div class="col-12" >
+
+            <input type="file" (change)="onFileChange($event)" 
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" #inputFile />
+
+          </div>
+      
+          <br>
+          <br>
+
+
+
+        </div> 
+      </div>
+    </div>
+      </div>
+
+      <div class="modal-footer">
+        <div *ngIf="!isLoading">
+          <button class="btn btn-default pull-right" type="button" (click)="confirmExit('Closed')">
+            <i class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel</button>
+        
+        </div>
+        <div class="d-flex align-items-center" *ngIf="isLoading">
+          <strong class="text-right"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

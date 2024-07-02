@@ -1,0 +1,665 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog modal-dialog-aside" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body" style="max-height: calc(110vh - 143px) !important;overflow-x: hidden !important;">
+        <div class="row" style="padding-bottom: 1rem;">
+          <div class="col-md-6">
+            <h3 class="header_lable">Investment Preview </h3>
+            <p class="small subheader_lable">---</p>
+          </div>
+          <div class="col-md-6" style="padding: 3px;">
+            <div class="row">
+
+              <div class="col-md-4">
+                <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Invested Amount</h6>
+                <h3 style="font-size: 14px;margin-bottom: 0px;margin-top: 15px;">
+                  {{TaxTotalDeclaredAmount |
+                  currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+
+              </div>
+              <div class="col-md-4">
+                <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Approved Amount</h6>
+                <h3 style="font-size: 14px;margin-bottom: 0px;margin-top: 15px;">
+                  {{TaxTotalApprovedAmount |
+                  currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- -----------  Table header -----------  -->
+        <div class="row" style="margin-top: 1rem;padding-left: 5px;padding-right: 15px;">
+          <div class="col-md-4">
+            <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Product Name</p>
+          </div>
+          <div class="col-md-2">
+            <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Invested Amount (₹)
+            </p>
+          </div>
+          <div class="col-md-2">
+            <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Approved Amount (₹)</p>
+          </div>
+          <div class="col-md-3">
+            <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Status </p>
+          </div>
+          <div class="col-md-1">
+
+          </div>
+
+        </div>
+
+        <ng-container *ngFor="let item of DeclarationRecords;let i = index">
+          <div class="card tab-item" *ngIf="!item.IsHRA"
+            style="margin: 3px;background: #FFFFFF;box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);border-radius: 4px;margin-right: 15px;cursor: pointer;">
+            <div class="card-body" style="padding: 10px;">
+              <div class="row">
+                <div class="text-left col-md-4">
+                  <h6 class="h6-content tab-item__subheading"> {{item.ProductName}}
+                    <b *ngIf="item.IsHP && !item.DeclarationItem.LetOut"> - Self-Occupied </b>
+                    <b *ngIf="item.IsHP && item.DeclarationItem.LetOut"> - Rented Out </b>
+                  </h6>
+                  <small class="small-content tab-item__subheading">{{item.ProductTaxCodeType}}</small>
+                </div>
+                <div class="col-md-2" style="margin-top: 15px;">
+                  <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                    class="tab-item__subheading">
+                    {{item.DeclaredAmount | currency:'INR':'symbol-narrow':'1.2-2'}}
+                  </p>
+                </div>
+                <div class="col-md-2" style="margin-top: 15px;">
+                  <p class="tab-item__subheading"
+                    style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);">
+                    {{item.ApprovedAmount | currency:'INR':'symbol-narrow':'1.2-2'}} </p>
+                </div>
+                <div class="col-md-3" style="margin-top: 15px;">
+                  <p style="font-weight: 500;
+                    font-size: 12px;
+                    line-height: 25px;
+                    color: #7B8193;
+                    transform: translatey(35%);
+                    margin-top: -15px;">
+                    <span class="badge badge-warning1" *ngIf="item.DocumentPendingStatus > 0">
+                      Saved ({{item.DocumentPendingStatus}}) </span>
+                    <span class="badge badge-danger1" *ngIf="item.DocumentRejectedtatus > 0">
+                      Rejected ({{item.DocumentRejectedtatus}})</span>
+                    <span class="badge badge-success1" *ngIf="item.DocumentApprovedStatus > 0">
+                      Approved ({{item.DocumentApprovedStatus}}) </span>
+                    <span class="badge badge-declaration" *ngIf="item.IsProposed">
+                      Declaration
+                    </span>
+                  </p>
+                </div>
+
+                <div class="col-md-1">
+                  <div class="" (click)="toggle(i)"
+                    style="margin-top: 15px;cursor: pointer;display: inline-block;padding-right: 5px;"
+                    matTooltip="Approve" id="plus">
+                    <i *ngIf="hideRuleContent[i]" class="mdi mdi-arrow-up-drop-circle-outline" style="display: block;
+  margin: 0 auto;
+  top: -3px;
+  position: relative;
+  color: #5d5f5e;
+  font-size: 18px;padding-right: 5px;">
+                    </i>
+                    <i *ngIf="!hideRuleContent[i]" class="mdi mdi-arrow-down-drop-circle-outline" style="display: block;
+  margin: 0 auto;
+  top: -3px;
+  position: relative;
+  color: #5d5f5e;
+  font-size: 18px;padding-right: 5px;">
+                    </i>
+
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="card-footer" *ngIf="hideRuleContent[i]">
+              <div class="row" style="margin-bottom: -15px;">
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label searchbar-label">Declared Remarks</label>
+                    <label class="qcsummarylabel form-text text-muted">
+
+                      <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.DeclaredRemarks != ''">
+                        {{item.DeclaredRemarks}}
+                      </h3>
+                      <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.DeclaredRemarks == ''">
+                        ---
+                      </h3>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label searchbar-label">Approver Remarks</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                      <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.ApproverRemarks != ''">
+                        {{item.ApproverRemarks}}
+                      </h3>
+                      <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.ApproverRemarks == ''">
+                        ---
+                      </h3>
+                    </label>
+                  </div>
+                </div>
+                <!-- <div class="col-md-12">
+                <ng-container *ngFor="let photo of item.DocumentList">
+                  <span style="font-size: 10px;
+                  border: 1px solid #e4e4e4;
+                  font-weight: 600;
+                  display: inline-block;
+                  padding: 4px;
+                  border-radius: 4px;
+                  background: #c1c1c1;
+                  color: white;
+                  cursor: pointer;" (click)="showImage(photo, 'NonExemptions')">
+                    <i class="mdi mdi-download" (click)="downloadImage(photo, 'NonExemptions')" matTooltip="Download"
+                      style="padding: 0px;
+                    margin-bottom: 7px;
+                    float: right;
+                    font-size: 15px;"></i>
+                    <img src="assets/Images/icons/{{getImageType(photo.FileName)}}.png" class="" style="    width: 20px;
+                    display: block;
+                    margin: 0 auto;
+                    margin-top: 8px;
+                    margin-left: 38px;
+                    margin-bottom: 2px;
+            ">
+
+                    <div class="upload-info">
+                      <svg t="1581822650945" class="clip" viewBox="0 0 1024 1024" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" p-id="3250" width="20" height="20">
+                        <path
+                          d="M645.51621918 141.21142578c21.36236596 0 41.79528808 4.04901123 61.4025879 12.06298852a159.71594214 159.71594214 0 0 1 54.26367236 35.87255836c15.84503198 16.07739258 27.76959252 34.13726783 35.78356909 54.13513184 7.86071778 19.30572486 11.76635766 39.80291724 11.76635767 61.53607177 0 21.68371583-3.90563989 42.22045875-11.76635767 61.54101586-8.01397729 19.99291992-19.95831275 38.02807617-35.78356909 54.08569313l-301.39672877 302.0839231c-9.21038818 9.22027564-20.15112281 16.48278832-32.74310277 21.77270508-12.29040503 4.81036401-24.54125953 7.19329834-36.82177783 7.19329834-12.29040503 0-24.56103516-2.38293433-36.85638427-7.19329834-12.63647461-5.28991675-23.53271461-12.55737281-32.7381587-21.77270508-9.55151367-9.58117675-16.69042992-20.44775367-21.50573731-32.57995583-4.7856443-11.61804223-7.15869117-23.91339135-7.15869188-36.9255979 0-13.14074708 2.37304688-25.55474854 7.16363524-37.19256639 4.81036401-11.94927954 11.94927954-22.78619408 21.50079395-32.55029274l278.11614966-278.46221923c6.45172119-6.51104737 14.22344971-9.75421118 23.27563501-9.75421119 8.8692627 0 16.54705787 3.24316383 23.03338622 9.75421119 6.47644019 6.49127173 9.73937964 14.18389916 9.73937964 23.08282495 0 9.0521853-3.26293945 16.81896972-9.73937964 23.32012891L366.97489888 629.73773218c-6.32812477 6.2935183-9.48724342 14.08007836-9.48724415 23.30529736 0 9.06701684 3.15417457 16.75964356 9.48724414 23.08776904 6.80273414 6.50610328 14.55963111 9.75915528 23.26574683 9.75915527 8.67150855 0 16.43334961-3.253052 23.27563501-9.76409935l301.37695313-302.04931665c18.93988037-18.96459937 28.40734887-42.04742432 28.40734814-69.25836158 0-27.16149926-9.4674685-50.26409912-28.40734815-69.22869849-19.44415283-19.13269043-42.55664086-28.72375464-69.31274438-28.72375536-26.97363258 0-49.99218727 9.59106422-69.1001587 28.72375536L274.3370815 536.89227319a159.99774146 159.99774146 0 0 0-35.80828883 54.33288526c-8.0337522 19.65179443-12.04321289 40.2824707-12.04321289 61.79809618 0 21.20910645 4.00451661 41.81011963 12.04321289 61.79809547 8.17218018 20.34393287 20.10168481 38.36920166 35.80828883 54.08569312 16.225708 16.06256104 34.30535888 28.13049292 54.23400854 36.15930176 19.91381813 8.0337522 40.47033667 12.06793189 61.64978002 12.0679326 21.13989281 0 41.70135474-4.03417969 61.63000513-12.0679326 19.91876221-8.02386474 38.01818872-20.09674073 54.2241211-36.15435768l300.86773656-301.53515601c6.47644019-6.50115991 14.23828125-9.76904273 23.28057912-9.76904344 8.88903833 0 16.56188941 3.26293945 23.04821776 9.76904344 6.48632836 6.48632836 9.7245481 14.17895508 9.7245481 23.06799269 0 9.09667992-3.23822046 16.8535769-9.7245481 23.37451172L552.40379244 815.35449242c-22.00012231 22.01989722-47.32745362 38.88336158-75.986938 50.49151564C449.10209565 877.14270043 420.37834101 882.78857422 390.21592671 882.78857422c-30.01904297 0-58.74279761-5.64587378-86.20587183-16.94256616-28.6842041-11.60815406-54.00659203-28.47161842-76.00671362-50.49151564a226.19586182 226.19586182 0 0 1-50.13061524-75.90289354A226.86328125 226.86328125 0 0 1 160.9697104 653.04797364c0-30.08331323 5.62115479-58.88122559 16.90795899-86.38385035 11.40545654-28.37768578 28.11566138-53.75939917 50.13061523-76.15997313h0.24719287L530.14164643 189.20135474c15.69177247-15.731323 33.68737817-27.70037818 53.98681641-35.89727735C604.09666377 145.26043701 624.55430562 141.23120141 645.51127583 141.23120141V141.21142578z"
+                          p-id="3251"></path>
+                      </svg>
+                      <span class="upload-filename drop-text" matTooltip="{{photo.FileName}}" style="white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      width: 75px;">{{photo.FileName}}</span>
+                    </div>
+                  </span>
+                </ng-container>
+                </div> -->
+
+                <div class="col-md-12" *ngIf="item.IsExemptions">
+                  <ng-container *ngFor="let exemption of getExemptionBills(item.DeclarationItem)">
+                    <div class="row">
+
+                      <div class="col-md-3">
+                        <b>{{exemption.BillNumber}}</b>
+                        <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;">
+                          {{exemption.BillAmount | currency:'INR':'symbol-narrow':'1.2-2'}} - {{exemption.BillDate |
+                          date}}
+                        </p>
+                      </div>
+                      <!-- <div class="col-md-3">
+                        <h3
+                        style="font-size: 12px;margin-bottom: 0px;">
+                        {{exemption.BillAmount | currency:'INR':'symbol-narrow':'1.2-2'}}
+                      </h3> -->
+                      <!-- </div> -->
+                      <div class="col-md-3">
+                        <h3 style="font-size: 12px;margin-bottom: 0px;">
+                          {{exemption.ApprovedAmount | currency:'INR':'symbol-narrow':'1.2-2'}}
+                        </h3>
+                      </div>
+                      <div class="col-md-3">
+                        <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;padding-top: 10px;
+                        padding-bottom: 10px;">
+                          <span class="badge badge-warning1" *ngIf="exemption.Status == 0">
+                            Pending
+                          </span>
+                          <span class="badge badge-danger1" *ngIf="exemption.Status == 2">
+                            Rejected
+                          </span>
+                          <span class="badge badge-success1" *ngIf="exemption.Status == 1">
+                            Approved
+                          </span>
+                        </p>
+                      </div>
+
+                      <div class="col-md-3">
+                        <h3 *ngIf="exemption.Status == 2" style="font-size: 12px;margin-bottom: 0px;">
+                          Remarks : {{exemption.RejectedRemarks}}
+                        </h3>
+
+                        <h3 *ngIf="exemption.Status == 1" style="font-size: 12px;margin-bottom: 0px;">
+                          Remarks : {{exemption.Remarks}}
+                        </h3>
+
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" (click)="doViewFile(exemption, item)">
+                          <span>
+                            <i class="fa fa-files-o" style="font-size: 14px;position: relative;
+                   top: 2px;"></i>
+                            <span style="padding-right: 5px;cursor: pointer;    color: steelblue !important;">
+                              {{exemption.FileName}} </span>
+                          </span>
+                        </h3>
+                      </div>
+                    </div>
+                    <hr />
+                  </ng-container>
+                </div>
+
+
+                <div class="col-md-12" *ngIf="item.IsHP">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Address Details</label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            {{item.DeclarationItem.AddressDetails}}
+                          </h3>
+                          <!-- <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="iitem.DeclarationItem.AddressDetails == ''">
+                          ---
+                        </h3> -->
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Lender Details</label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            Name : {{item.DeclarationItem.NameOfLender}}
+                          </h3>
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            Address : {{item.DeclarationItem.AddressOfLender}}
+
+                          </h3>
+                          <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.DeclarationItem.LenderPANNO">
+                            PAN : {{item.DeclarationItem.LenderPANNO}}
+                          </h3>
+                          <h3 style="font-size: 12px;margin-bottom: 0px;"
+                            *ngIf="item.DeclarationItem.LenderPANNO == null">
+                            PAN : ---
+                          </h3>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Loan Date - Possession Date</label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            {{item.DeclarationItem.LoanDate | date}} - {{item.DeclarationItem.PossessionDate | date}}
+                          </h3>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Interest Amount - Interest Amount Approved</label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            {{item.DeclarationItem.InterestAmount}} -
+                            {{item.DeclarationItem.InterestAmountApprovedAmount}}
+                          </h3>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Municipal Tax -Municipal Tax Approved Amount</label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            {{item.DeclarationItem.MunicipalTax}} - {{item.DeclarationItem.MunicipalTaxApprovedAmount}}
+                          </h3>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Pre Construction Interest Amount - PreConstruction
+                          Interest Approved Amount</label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            {{item.DeclarationItem.PreConstructionInterestAmount}} -
+                            {{item.DeclarationItem.PreConstructionInterestApprovedAmount}}
+                          </h3>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4" *ngIf="!item.DeclarationItem.LetOut">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Principal Amount </label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            {{item.DeclarationItem.PrincipalAmount}}
+                          </h3>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-4" *ngIf="item.DeclarationItem.LetOut">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Principal Amount - Gross Annual - GA Approved
+                          Amount</label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            {{item.DeclarationItem.PrincipalAmount}} - {{item.DeclarationItem.GrossAnnualValue}} -
+                            {{item.DeclarationItem.GrossAnnualValueApprovedAmount}}
+                          </h3>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4" *ngIf="item.ExsitingChildProduct != null">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Additional Interest -
+                          {{getHPAdditionalSecCode(item.ExsitingChildProduct)}} </label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            {{item.ExsitingChildProduct.Amount}} - {{item.ExsitingChildProduct.ApprovedAmount}}
+                          </h3>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4" *ngIf="item.Existing80CChildProduct != null">
+                      <div class="form-group">
+                        <label class="form-label searchbar-label">Stamp Duty Fee - Approved Amount </label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <h3 style="font-size: 12px;margin-bottom: 0px;">
+                            {{item.Existing80CChildProduct.Amount}} - {{item.Existing80CChildProduct.ApprovedAmount}}
+                          </h3>
+                        </label>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-md-12" *ngIf="item.IsMedical">
+
+                  <ng-container *ngFor="let medical of getDependentsItems(item.DeclarationItem)">
+
+                    <div class="row">
+
+                      <div class="col-md-3">
+                        <b>{{medical.DependentName}}</b>
+                        <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;">
+                          {{getRelationShipName(medical.Relationship)}} - {{medical.DependentDateOfBirth | date}}</p>
+                      </div>
+                      <div class="col-md-3" *ngIf="medical.DependentType > 0">
+                        <p style="font-weight: 500;font-size: 12px;line-height: 18px;color: #7B8193;margin-top: 10px;">
+                          {{getDependentTypeName(medical.DependentType)}}</p>
+                      </div>
+                      <div class="col-md-3" *ngIf="medical.DisabilityPercentage> 0">
+                        <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;">
+                          {{getDisabilityPercentageName(medical.DisabilityPercentage)}}</p>
+                      </div>
+                      <div class="col-md-3" style="margin-top: 14px;">
+                        <h3 style="font-size: 12px;margin-bottom: 0px;">
+                          {{medical.Amount | currency:'INR':'symbol-narrow':'1.2-2'}}
+                        </h3>
+                      </div>
+                      <div class="col-md-3" style="margin-top: 14px;">
+                        <h3 style="font-size: 12px;margin-bottom: 0px;">
+                          {{medical.ApprovedAmount | currency:'INR':'symbol-narrow':'1.2-2'}}
+                        </h3>
+                      </div>
+                      <div class="col-md-12">
+                        <h3 style="font-size: 12px;margin-bottom: 0px;">
+                          Remarks : {{medical.InputsRemarks}}
+                        </h3>
+                      </div>
+                    </div>
+                    <hr />
+                  </ng-container>
+                </div>
+
+                <div class="col-md-12" *ngIf="!item.IsExemptions && item.DocumentList && item.DocumentList.length > 0">
+                  <div class="form-group">
+                    <label class="form-label searchbar-label">
+                      <span style="color: #000 !important;"> <span style="padding-right: 5px;color: #000 !important;">
+                          Attachments
+                        </span>
+
+                      </span>
+                    </label>
+                    <label class="qcsummarylabel form-text text-muted" *ngFor="let photo of item.DocumentList">
+                      <h3 style="font-size: 12px;margin-bottom: 0px;" (click)="doViewFile(photo, item)">
+                        <span>
+                          <i class="fa fa-files-o" style="font-size: 14px;position: relative;
+                 top: 2px;"></i>
+                          <span style="padding-right: 5px;cursor: pointer;"> {{photo.FileName}} </span>
+                        </span>
+                      </h3>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </ng-container>
+
+
+        <ng-container *ngIf="DeclarationRecords != null && getHRADetails()">
+          <br />
+          <br />
+
+          <div class="row">
+            <div class="col-md-12">
+              <h6>House Rent P<span style="border-bottom: 4px solid #3498db;">aid</span> </h6>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 1rem;padding-left: 5px;padding-right: 15px;">
+            <div class="col-md-4">
+              <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Start Date - End Date </p>
+            </div>
+            <div class="col-md-2">
+              <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Rent Amount (₹)
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Approved Amount (₹)</p>
+            </div>
+            <div class="col-md-3">
+              <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">Status </p>
+            </div>
+            <div class="col-md-1">
+            </div>
+          </div>
+
+          <ng-container *ngFor="let item of getHRAItems(); let i = index">
+            <div class="card tab-item"
+              style="margin: 3px;background: #FFFFFF;box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);border-radius: 4px;margin-right: 15px;cursor: pointer;">
+              <div class="card-body" style="padding: 10px;" *ngIf="item.FinancialYearId == selectedFinYear">
+                <div class="row">
+                  <div class="text-left col-md-4">
+                    <h6 class="h6-content tab-item__subheading">{{item.StartDate | date}} - {{item.EndDate |
+                      date}} </h6>
+                    <small class="small-content tab-item__subheading">
+                      {{item.LandLordDetails.Name}}
+                    </small>
+                  </div>
+                  <div class="col-md-2" style="margin-top: 15px;">
+                    <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #000;transform: translatey(35%);"
+                      class="tab-item__subheading">
+                      {{item.RentAmount | currency:'INR':'symbol-narrow':'1.2-2'}}
+                    </p>
+                  </div>
+                  <div class="col-md-2" style="margin-top: 15px;">
+                    <p class="tab-item__subheading"
+                      style="font-weight: 500;font-size: 12px;line-height: 14px;color: #000;transform: translatey(35%);">
+                      {{item.ApprovedAmount | currency:'INR':'symbol-narrow':'1.2-2'}} </p>
+                  </div>
+                  <div class="col-md-3" style="margin-top: 15px;">
+                    <p
+                      style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);">
+                      <span class="badge badge-warning1" *ngIf="getCount(item.LstEmployeeInvestmentDocuments, '0') > 0">
+                        Saved </span>
+                      <span class="badge badge-danger1" *ngIf="getCount(item.LstEmployeeInvestmentDocuments, '2')  > 0">
+                        Rejected </span>
+                      <span class="badge badge-success1"
+                        *ngIf="getCount(item.LstEmployeeInvestmentDocuments, '1')  > 0 ">
+                        Approved </span>
+                      <span class="badge badge-declaration" *ngIf="item.IsProposed">
+                        Declaration </span>
+                    </p>
+                  </div>
+                  <div class="col-md-1" style="margin-top: 15px;">
+                    <div class="" (click)="toggle_HRA(i)"
+                      style="margin-top: 15px;cursor: pointer;display: inline-block;padding-right: 5px;"
+                      matTooltip="Approve" id="plus">
+                      <i *ngIf="hideRuleContent_HRA[i]" class="mdi mdi-arrow-up-drop-circle-outline" style="display: block;
+  margin: 0 auto;
+  top: -3px;
+  position: relative;
+  color: #5d5f5e;
+  font-size: 18px;padding-right: 5px;">
+                      </i>
+                      <i *ngIf="!hideRuleContent_HRA[i]" class="mdi mdi-arrow-down-drop-circle-outline" style="display: block;
+  margin: 0 auto;
+  top: -3px;
+  position: relative;
+  color: #5d5f5e;
+  font-size: 18px;padding-right: 5px;">
+                      </i>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+              <div class="card-footer" *ngIf="hideRuleContent_HRA[i]">
+                <div class="row" style="margin-bottom: -15px;">
+
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label searchbar-label">Declared Remarks</label>
+                      <label class="qcsummarylabel form-text text-muted">
+
+                        <h3 style="font-size: 12px;margin-bottom: 0px;"
+                          *ngIf="item.InputsRemarks != null && item.InputsRemarks != ''">
+                          {{item.InputsRemarks}}
+                        </h3>
+                        <h3 style="font-size: 12px;margin-bottom: 0px;"
+                          *ngIf="item.InputsRemarks == null || item.InputsRemarks == ''">
+                          ---
+                        </h3>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label searchbar-label">Approver Remarks</label>
+                      <label class="qcsummarylabel form-text text-muted">
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.ApproverRemarks != ''">
+                          {{item.ApproverRemarks}}
+                        </h3>
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.ApproverRemarks == ''">
+                          ---
+                        </h3>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label searchbar-label">Address Details (Rental)</label>
+                      <label class="qcsummarylabel form-text text-muted">
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.AddressDetails != ''">
+                          {{item.AddressDetails}}
+                        </h3>
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.AddressDetails == ''">
+                          ---
+                        </h3>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label searchbar-label">Landlord Details</label>
+                      <label class="qcsummarylabel form-text text-muted">
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.IsMetro">
+                          Metro : {{getCityName(item)}}
+                        </h3>
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="!item.IsMetro">
+
+                          City : {{getHRAAddressDetails(item,'NameofCity')}}
+                        </h3>
+                        <h3 style="font-size: 12px;margin-bottom: 0px;">
+                          Address : {{getHRAAddressDetails(item,'LandlordAddress')}}
+
+                        </h3>
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.LandLordDetails.PAN">
+                          PAN : {{item.LandLordDetails.PAN}}
+                        </h3>
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" *ngIf="item.LandLordDetails.PAN == null">
+                          PAN : ---
+                        </h3>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-12"
+                    *ngIf="item.LstEmployeeInvestmentDocuments && item.LstEmployeeInvestmentDocuments.length > 0">
+                    <div class="form-group">
+                      <label class="form-label searchbar-label">
+                        <span style="color: #000 !important;"> <span style="padding-right: 5px;color: #000 !important;">
+                            Attachments
+                          </span>
+
+                        </span>
+                      </label>
+                      <label class="qcsummarylabel form-text text-muted"
+                        *ngFor="let photo of item.LstEmployeeInvestmentDocuments">
+                        <h3 style="font-size: 12px;margin-bottom: 0px;" (click)="doViewFile(photo, item)">
+                          <span>
+                            <i class="fa fa-files-o" style="font-size: 14px;position: relative;
+                 top: 2px;"></i>
+                            <span style="padding-right: 5px;"> {{photo.FileName}} </span>
+                          </span>
+                        </h3>
+                      </label>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+
+
+        <div class="row" style="margin-top: 2rem;margin-bottom: 20px;" *ngIf="DeclarationRecords.length == 0">
+          <div class="col-md-12 text-center">
+            <span style="font-weight: 600;
+              color: #000;">No records <span style="border-bottom: 4px solid #3498db;">were</span> found </span>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-link" style="margin-right: 10px;" type="button" (click)="close_preview_investments()">
+          Close </button>
+
+      </div>
+    </div>
+
+  </div>

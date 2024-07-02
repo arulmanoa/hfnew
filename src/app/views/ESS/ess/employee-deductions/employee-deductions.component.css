@@ -1,0 +1,93 @@
+.inv-feedback {
+  /* display: none; */
+  width: 100%;
+  margin-top: 0.25rem;
+  color: #dc3545;
+  font-weight: 500 !important;
+}
+input[type="checkbox"]{
+  width: 16px; /*Desired width*/
+  height: 16px; /*Desired height*/
+}
+
+.btn.disabled, .btn:disabled {
+  cursor: not-allowed;
+}
+/* thead.tbl-freezhead {
+  display: table !important;
+  width: 100% !important;
+  
+}
+
+tbody.tbl-scrollbody {
+  display: block !important;
+ 
+  max-height: 200px !important;
+  
+  overflow-y: auto !important;
+  
+} */
+.table thead th {
+  background-color: #f9fbfd !important;
+  text-transform: none !important;
+  font-weight: 490 !important;
+  letter-spacing: -0.02em !important;
+  color: #3770c3 !important;
+  border-bottom-width: 1px !important;
+}
+
+
+.table-sticky>thead>tr>th,
+        .table-sticky>thead>tr>td {
+           
+            top: 0px;
+            position: sticky;
+        }
+        
+        .table-height {
+           
+            display: block;
+            overflow: auto;
+            width: 100%;
+        }
+        
+        .table-sticky>thead th {
+          background-color:rgb(245 245 245)
+           /* rgb(199 199 199) !important; */
+        }
+        .clickedcard{
+          /* background-color: red; */
+          border: 2px solid #1caf9a;
+        }
+        .card-before-clicked{
+          cursor:pointer;
+           border-width: 2px;
+           border-style: solid; 
+           /* border-color: #c6f5d7  */
+        }
+
+        .right-active-arrow::before {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 100%;
+          /* margin-left: -20px; */
+          border-width: 15px;
+          border-style: solid;
+          border-color: transparent transparent transparent #1caf9a;
+          transform: translate(0%, -50%);
+          /* border-color: transparent transparent transparent #09db72; */
+      }
+      
+        .right-active-arrow::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 99.5%;
+          /* margin-left: -20px; */
+          border-width: 15px;
+          border-style: solid;
+          border-color: transparent transparent transparent #fff;
+          transform: translate(0%, -50%);
+
+        }

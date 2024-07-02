@@ -1,0 +1,143 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="dfc100 overflow-y-auto">
+
+
+                <div class="modal-header">
+                    <!-- <h4 class="modal-title pull-left">Add State Statutory</h4> -->
+                    <h4 class="modal-title pull-left">{{header}}</h4>
+                    <!-- <button type="button" class="close" (click)="closeModal()"><i class="mdi mdi-close"></i></button> -->
+                    <!-- <button type="button" class="btn btn-sm btn-default modal-close-btn" (click)="closeModal()">
+                        <i class="mdi mdi-close font-size-md"></i>
+                    </button> -->
+                    <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+
+                </div>
+
+
+                <div class="modal-body no-padder builtin-calling-wrapper">
+
+                    <div class="flex-column">
+
+
+
+
+                        <form [formGroup]="statutoryForm">
+
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="clearfix">
+                                    <div class="row">
+
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label>Effective Date <span class="required">*</span> </label>
+                                            <input type="date" placeholder="Effective Date" onkeypress="return /[a-z]/i.test(event.key)" autocomplete="off" class="form-control" formControlName="EffectiveDate" [ngClass]="{ 'is-invalid': submitted && f.EffectiveDate.errors }">
+
+                                            <div *ngIf="submitted && f.EffectiveDate.errors" class="invalid-feedback">
+                                                <div *ngIf="f.EffectiveDate.errors.required">Effective Date is required</div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label> Statutory Type <span class="required">*</span> </label>
+                                            <select class="form-control" formControlName="StatutoryType" [ngClass]="{ 'is-invalid': submitted && f.StatutoryType.errors }">
+                                                <option value="" disabled>Choose Type</option>
+                                                <option *ngFor="let statutory of StatutoryType" [value]="statutory.id">{{statutory.name}}</option>
+                                              </select>
+                                            <div *ngIf="submitted && f.StatutoryType.errors" class="invalid-feedback">
+                                                <div *ngIf="f.StatutoryType.errors.required">Statutory Type is required</div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- <div class="col-md-6 col-sm-6 p-15">
+                                            <label>Is Applicable <span class="required">*</span> </label>
+
+                                            <label class="container">
+                                                <input type="checkbox" class="form-control" formControlName="isapplicable" [ngClass]="{ 'is-invalid': submitted && f.isapplicable.errors }">
+                                                <span class="checkmark"></span>
+                                              </label>
+
+                                            
+                                        </div> -->
+
+
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label> Scale <span class="required">*</span> </label>
+                                            <select class="form-control" formControlName="ScaleId" [ngClass]="{ 'is-invalid': submitted && f.ScaleId.errors }">
+                                                <option value="" disabled>Choose Type</option>
+                                                <option *ngFor="let ScaleCode of Scales" [value]="ScaleCode.Id">{{ScaleCode.Name}}</option>
+                                              </select>
+                                            <div *ngIf="submitted && f.ScaleId.errors" class="invalid-feedback">
+                                                <div *ngIf="f.ScaleId.errors.required">Scale is required</div>
+                                            </div>
+                                        </div>
+
+                                        <!--Applicable Months-->
+                                
+                                        <div class="col-12 col-md-12 col-sm-12 p-15">
+                                            <label> Applicable Months <span class="required">*</span></label>
+                                            <ul class="checkbox-grid">                                                                                       
+                                                <div *ngFor="let Month of Months">                                                                                                                                                      
+                                                    <li><input type="checkbox" formControlName="ApplicableMonths" [checked]="Month.checked" (change)="monthChange($event, Month)"  [value]="Month.id" />{{Month.name}}</li>
+                                                </div>
+                                            </ul>
+                                                                                                                                      
+                                        </div>
+                                        
+                                    </div>
+                                           
+                                    
+                                </div>
+
+                            </div>
+                            <!-- <div class="col-12 col-md-8 col-sm-6">
+                                        <div class="row">
+                                            <div class="col-md-12 p-15">
+                                                <label> Abbrevation <span class="required">*</span> </label>
+                                                <textarea class="form-control" rows="5" spellcheck="false" id="abbrevation" formControlName="abbrevation" [ngClass]="{ 'is-invalid': submitted && f.abbrevation.errors }"></textarea>
+                                                <div *ngIf="submitted && f.abbrevation.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.abbrevation.errors.required">The Abbrevation field is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  
+                                  -->
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default pull-right" type="button" data-dismiss="modal" (click)="closeModal()">Cancel</button>
+
+                    <!-- <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSaveAndNewSubmit" id="btnSaveAndNewSubmit" [disabled]="!disableBtn" (click)="savebutton()">
+                                    <div class="pos-rlt sm-btn-component" > <span> Save and add other </span> </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" [disabled]="!disableBtn" id="btnSubmit" (click)="savebutton()">
+                                    <div class="pos-rlt sm-btn-component" > <span> Save </span></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

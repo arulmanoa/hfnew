@@ -1,0 +1,222 @@
+<div class="ant-drawer-body ff">
+  <app-loading-screen></app-loading-screen>
+
+  <div class="row">
+    <div class="col-lg-12">
+
+
+      <form [formGroup]="expenseClaimRequestForm">
+        <div class="row">
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Category <span class="required"> * </span></label>
+            <ng-select [items]="CategoryList" placeholder="-- select on option --" formControlName="ProductId"
+              [ngClass]="{ 'ng-touched': submitted && g.ProductId.invalid }" bindLabel="DisplayName" bindValue="ProductId"
+              (change)="onChangeCategory($event)">
+            </ng-select>
+            <div *ngIf="submitted && g.ProductId.invalid" class="help-block">
+              <div *ngIf="g.ProductId.errors.required">Product is required
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <label class="form-label">Expense Date <span class="required">*</span></label>
+            <input class="form-control" name="ExpenseIncurredDate" formControlName="ExpenseIncurredDate" bsDatepicker
+              placement="bottom" readonly (bsValueChange)="onChangeExpenseDate($event)"
+              [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+              placeholder="01-01-2021" [ngClass]="{ 'is-invalid': submitted && g.ExpenseIncurredDate.errors }" [maxDate]="ExpenseMinDate"
+              type="text" autocomplete="off">
+            <div *ngIf="submitted && g.ExpenseIncurredDate.errors" class="invalid-feedback">
+              <div *ngIf="g.ExpenseIncurredDate.errors.required">Expense Incurred Date required
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="reimbursementConfiguration != null && reimbursementConfiguration.EligibilityCriteria != null && reimbursementConfiguration.EligibilityCriteria.IsFromAndToDateFieldsRequired">
+            <label class="form-label">From Date <span class="required">*</span></label>
+            <input class="form-control" name="ExpenseFromDate" formControlName="ExpenseFromDate" bsDatepicker
+              placement="bottom" readonly (bsValueChange)="onChangeExpenseStartDate($event)"
+              [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+              placeholder="01-01-2021" [ngClass]="{ 'is-invalid': submitted && g.ExpenseFromDate.errors }" [maxDate]="ExpenseMinDate"
+              type="text" autocomplete="off">
+            <div *ngIf="submitted && g.ExpenseFromDate.errors" class="invalid-feedback"> 
+              <div *ngIf="g.ExpenseFromDate.errors.required">Expense From Date required
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="reimbursementConfiguration != null && reimbursementConfiguration.EligibilityCriteria != null && reimbursementConfiguration.EligibilityCriteria.IsFromAndToDateFieldsRequired">
+            <label class="form-label">To Date <span class="required">*</span></label>
+            <input class="form-control" name="ExpenseToDate" formControlName="ExpenseToDate" bsDatepicker
+              placement="bottom" readonly (bsValueChange)="onChangeExpenseDate($event)"
+              [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" 
+              placeholder="01-01-2021" [ngClass]="{ 'is-invalid': submitted && g.ExpenseToDate.errors }" [minDate]="ExpenseToDate"  [maxDate]="ExpenseMinDate"
+              type="text" autocomplete="off">
+            <div *ngIf="submitted && g.ExpenseToDate.errors" class="invalid-feedback">
+              <div *ngIf="g.ExpenseToDate.errors.required">Expense To Date required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6"  *ngIf="reimbursementConfiguration != null && reimbursementConfiguration.EligibilityCriteria != null && reimbursementConfiguration.EligibilityCriteria.IsBillDataRequired">
+            <label class="form-label">Bill Number <span class="required" *ngIf="reimbursementConfiguration != null && reimbursementConfiguration.EligibilityCriteria != null && reimbursementConfiguration.EligibilityCriteria.IsBillDataRequired">*</span> </label>
+            <input class="form-control" name="DocumentNumber" spellcheck="false" maxlength="25"
+              formControlName="DocumentNumber" placeholder="#20210101"
+              [ngClass]="{ 'is-invalid': submitted && g.DocumentNumber.errors }" type="text" autocomplete="off">
+            <div *ngIf="submitted && g.DocumentNumber.errors" class="invalid-feedback">
+              <div *ngIf="g.DocumentNumber.errors.required">Bill Number is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6"  *ngIf="reimbursementConfiguration != null && reimbursementConfiguration.EligibilityCriteria != null && reimbursementConfiguration.EligibilityCriteria.IsBillDataRequired">
+            <label class="form-label">Bill Date <span class="required" *ngIf="reimbursementConfiguration != null && reimbursementConfiguration.EligibilityCriteria != null && reimbursementConfiguration.EligibilityCriteria.IsBillDataRequired">*</span></label>
+            <input class="form-control" name="DocumentDate" formControlName="DocumentDate" bsDatepicker
+              placement="bottom" readonly
+              [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+              placeholder="01-01-2000" [ngClass]="{ 'is-invalid': submitted && g.DocumentDate.errors }" type="text"
+              autocomplete="off">
+            <div *ngIf="submitted && g.DocumentDate.errors" class="invalid-feedback">
+              <div *ngIf="g.DocumentDate.errors.required">Bill Date is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <label class="form-label"> Amount <span class="required">*</span></label>
+            <input class="form-control" name="RequestedAmount" formControlName="RequestedAmount" type="text"
+              onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987" 
+              [ngClass]="{ 'is-invalid': submitted && g.RequestedAmount.errors }" autocomplete="off">
+            <div *ngIf="submitted && g.RequestedAmount.errors" class="invalid-feedback">
+              <div *ngIf="g.RequestedAmount.errors.required">Amount is required
+              </div>
+            </div>
+            <div class="d-flex align-items-center" style="font-size: 11px;
+            padding-top: 10px;" *ngIf="amountSpinner">
+              <strong>Checking...</strong>
+              <div class="spinner-border ml-auto" role="status" style="width: 1rem !important;
+              height: 1rem !important;" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-12 col-12">
+            <label class="form-label">Reason/Comment </label>
+            <textarea class="form-control" name="InputRemarks" spellcheck="false" 
+              formControlName="InputRemarks" placeholder="Add a comment"></textarea>
+            <div *ngIf="submitted && g.InputRemarks.errors" class="invalid-feedback">
+              <div *ngIf="g.InputRemarks.errors.required">Reason is required
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row"  *ngIf="reimbursementConfiguration != null && reimbursementConfiguration.EligibilityCriteria != null && reimbursementConfiguration.EligibilityCriteria.IsBillRequired">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label searchbar-label">Upload a receipt <span class="required" *ngIf="reimbursementConfiguration != null && reimbursementConfiguration.EligibilityCriteria != null && reimbursementConfiguration.EligibilityCriteria.IsBillRequired">*</span>  <span class="help-text m-l-5"> <i
+                    style="font-size: 10px;"> (Max file
+                    size
+                    2MB)</i> </span> </label>
+              <label class="qcsummarylabel form-text text-muted">
+                <label class="upload control" style="width: 100%; float: left;" *ngIf="!FileName">
+                  <div class="upload-draggable is-primary">
+                    <section class="section">
+                      <div class="has-text-centered">
+                        <span class="icon is-large">
+                          <span style="padding-left: 10px;">
+                            <i class="fa fa fa-cloud-upload" style="color: #9ba7ca;"></i>
+                            &nbsp; Upload </span>
+                        </span>
+                      </div>
+                    </section>
+                  </div>
+                  <input type="file" accept="application/msword,  application/pdf, image/*"
+                    (change)="onFileUpload($event)" id="sTest-uploadFile-candidateAddResume">
+                </label>
+
+                <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                  <div *ngIf="g.DocumentId.errors.required">Receipt is required
+                  </div>
+                </div>
+
+                <p class="control" *ngIf="FileName">
+                  <span class="file-name">
+                    <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a ngbTooltip="Delete Photo"
+                        id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                               display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                    </button>
+
+
+                    <a target="blank" class="ahref" style="padding: 2px;">
+                      {{FileName}}
+                    </a>
+
+                  </span>
+
+                </p>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="d-flex align-items-center" style="position: absolute;bottom: 10px;width: 100%;" *ngIf="!isLoading">
+    <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+  </div>
+
+  <div class="row" style="position: absolute;bottom: 10px;width: 100%;"  *ngIf="isLoading && !amountSpinner">
+
+    <div style="float: right;" class="ng-star-inserted" style="width:95%;text-align: right !important;">
+      <button nz-button="" style="margin-right: 8px;" (click)="cancel()" class="ant-btn">
+        <span class="ng-star-inserted">Cancel</span>
+      </button>
+      <button nz-button="" nztype="primary" style="margin-right: 8px;" (click)="saveExpense('false')"
+        class="ant-btn ant-btn-primary">
+        <span class="ng-star-inserted">Save</span>
+      </button>
+      <button nz-button="" nztype="primary" class="ant-btn ant-btn-primary" (click)="saveExpense('true')">
+        <span class="ng-star-inserted">Save and Add New</span>
+      </button>
+    </div>
+
+
+    <!-- <div class="col-lg-6">
+      <ul class="list-inline">
+      </ul>
+    </div>
+    <div class="col-lg-6 text-right">
+      <div class="text-right">
+        <ul class="list-inline">
+
+          <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="cancel()">
+              <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+              Cancel</button>
+          </li>
+          <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit"
+            (click)="save()">
+            <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+              </span></div>
+          </button></li>
+          <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit"
+              (click)="saveandNew()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save and New
+                </span></div>
+            </button></li>
+
+        </ul>
+      </div>
+    </div> -->
+  </div>
+
+
+</div>

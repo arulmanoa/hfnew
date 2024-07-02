@@ -1,0 +1,587 @@
+// // body *:not(.innerhtml-container) {
+// //     @import 'bootstrap';
+// // }
+// // #tab-pane.active {
+// //      background-color: white; 
+// //     /* color: black; */
+// // }
+// // #tab-pane:active {
+// //     background-color: white; 
+// //    /* color: black; */
+// // }
+// // .tab-pane.active {
+// //     background-color: white; 
+// //    /* color: black; */
+// // }
+// .page-wrapper {
+//     padding-top: 20px;
+//     overflow-x: hidden;
+// }
+// :host ::ng-deep .input-group {
+//     margin-top: 0px !important;
+// }
+// .btn-clear {
+//     color: #324061!important;
+//     background-color: #e9c254;
+//     border-color: #d3d9e6;
+// }
+// .btn-search {
+//     color: #324061!important;
+//     background-color: #e9c254;
+//     border-color: #d3d9e6;
+// }
+// :host ::ng-deep .search-filter .operator.input-group-addon .form-control {
+//     border-radius: 4px 0 0 4px;
+//     border-right: none;
+//     padding: 0 0 0 2px !important;
+//     font-size: 13px;
+//     color: #31708F;
+//     font-weight: normal;
+//     background-color: #e5dede33;
+// }
+// :host ::ng-deep .slickgrid-container .slick-header-columns .slick-header-column.ui-state-default {
+//     background: transparent;
+//     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+//     color: #000000;
+//     font-weight: 500;
+// }
+// .nav-tabs .nav-item {
+//     margin-bottom: -1px;
+// }
+// *,
+//  ::after,
+//  ::before {
+//     box-sizing: border-box;
+// }
+// .nav {
+//     list-style: none;
+// }
+// .nav-tabs {
+//     border-bottom: 1px solid #dee2e6;
+// }
+// .nav-tabs .nav-item {
+//     margin-bottom: 8px !important;
+// }
+// .accordion {
+//     border: 1px solid #f0f0f0;
+//     border-radius: 1px;
+//     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+// }
+// #accordionSearch .card-header {
+//     background: #f7f9fc;
+//     padding: 5px 12px;
+//     padding-left: 0px;
+// }
+// #accordionSearch .card-header:hover {
+//     /* background-color: #efefef; */
+// }
+// .accordion>.card .card-header {
+//     margin-bottom: -1px;
+// }
+// #accordionSearch .card-header h5 button::before {
+//     font-family: "Material Icons";
+//     content: "\e5cd";
+//     font-weight: 600;
+//     position: absolute;
+//     top: 13px;
+//     left: 10px;
+//     transition: -webkit-transform .25s;
+//     -webkit-transition: -webkit-transform .25s;
+//     transition: transform .25s;
+//     transition: transform .25s, -webkit-transform .25s;
+//     -webkit-transform: rotate(180deg);
+//     transform: rotate(180deg);
+//     /* color: #4d79f6; */
+//     font-size: 10px;
+//     background-color: rgba(96, 97, 102, 0.15);
+//     width: 24px;
+//     height: 24px;
+//     line-height: 24px;
+//     border-radius: 50%;
+//     font-size: 12px;
+//     float: right;
+//     position: static;
+//     margin-right: 15px;
+//     margin-top: 10px;
+//     color: black;
+// }
+// #accordionSearch .card-header h5 button.collapsed::before {
+//     font-family: "Material Icons";
+//     content: "\e5cc";
+//     -webkit-transform: rotate(0);
+//     transform: rotate(0);
+//     font-size: 10px;
+//     font-size: 12px;
+//     float: right;
+//     position: static;
+//     margin-right: 15px;
+//     margin-top: 10px;
+//     color: black;
+// }
+// #accordionSearch .card-header {
+//     background: #f7f9fc;
+//     padding: 8px 12px;
+//     padding-bottom: 0px;
+//     padding-top: 0px;
+// }
+// .accordion>.card .card-header {
+//     margin-bottom: -1px;
+// }
+// .content {
+//     padding: 0px !important;
+// }
+// .card-header {
+//     border-bottom: none !important
+// }
+// .card {
+//     border: none !important
+// }
+// .card-header-title {
+//     align-items: center;
+//     color: #363636;
+//     display: flex;
+//     flex-grow: 1;
+//     font-weight: 500;
+//     padding: 0.75rem;
+//     margin: 0px;
+//     //margin-left: -30px;
+// }
+// .p-r-10 {
+//     padding-right: 10px !important;
+// }
+// .btn-link {
+//     font-weight: 400;
+//     text-decoration: none;
+//     width: 100%;
+//     padding: 0px;
+// }
+// #accordion ul li:first-child div {
+//     display: block;
+//     border-top: 3px solid #FFCDCD;
+// }
+// .material-icons {
+//     font-family: 'Material Icons';
+//     font-weight: normal;
+//     font-style: normal;
+//     font-size: 18px;
+//     display: inline-block;
+//     line-height: 1;
+//     text-transform: none;
+//     letter-spacing: normal;
+//     word-wrap: normal;
+//     white-space: nowrap;
+//     direction: ltr;
+//     -webkit-font-smoothing: antialiased;
+//     text-rendering: optimizeLegibility;
+//     -moz-osx-font-smoothing: grayscale;
+//     font-feature-settings: 'liga';
+// }
+// /* The switch - the box around the slider */
+// .switch {
+//     position: relative;
+//     display: inline-block;
+//     width: 51px;
+//     height: 26px;
+// }
+// /* Hide default HTML checkbox */
+// .switch input {
+//     opacity: 0;
+//     width: 0;
+//     height: 0;
+// }
+// /* The slider */
+// .slider {
+//     position: absolute;
+//     cursor: pointer;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     background-color: #ccc;
+//     -webkit-transition: .4s;
+//     transition: .4s;
+// }
+// .slider:before {
+//     position: absolute;
+//     content: "";
+//     height: 20px;
+//     width: 20px;
+//     left: 6px;
+//     bottom: 3px;
+//     background-color: white;
+//     -webkit-transition: .4s;
+//     transition: .4s;
+// }
+// input:checked+.slider {
+//     background-color: #2196F3;
+// }
+// input:focus+.slider {
+//     box-shadow: 0 0 1px #2196F3;
+// }
+// input:checked+.slider:before {
+//     -webkit-transform: translateX(26px);
+//     -ms-transform: translateX(26px);
+//     transform: translateX(26px);
+// }
+// /* Rounded sliders */
+// .slider.round {
+//     border-radius: 34px;
+//     margin-right: -5px;
+// }
+// .slider.round:before {
+//     border-radius: 50%;
+// }
+// //unused
+// /* main styles */
+// // .switch {
+// //     // width: 24rem;
+// //     position: relative;
+// // }
+// .switch input {
+//     position: absolute;
+//     top: 0;
+//     z-index: 2;
+//     opacity: 0;
+//     cursor: pointer;
+// }
+// .switch input:checked {
+//     z-index: 1;
+// }
+// .switch input:checked+label {
+//     opacity: 1;
+//     cursor: default;
+// }
+// .switch input:not(:checked)+label:hover {
+//     opacity: 0.5;
+// }
+// .switch label {
+//     color: #fff;
+//     opacity: 0.33;
+//     transition: opacity 0.25s ease;
+//     cursor: pointer;
+// }
+// .switch .toggle-outside {
+//     height: 100%;
+//     border-radius: 2rem;
+//     padding: 0.25rem;
+//     overflow: hidden;
+//     transition: 0.25s ease all;
+// }
+// .switch .toggle-inside {
+//     border-radius: 5rem;
+//     background: #FFF;
+//     position: absolute;
+//     transition: 0.25s ease all;
+// }
+// .switch--horizontal {
+//     // width: 18rem;
+//     // height: 3rem;
+//     // margin: 0 auto;
+//     // font-size: 0;
+//     // margin-bottom: 1rem;
+//     margin: 0 2.5rem;
+//     padding: 0;
+//     position: relative;
+//     border: none;
+//     height: 1.5rem;
+//     width: 3rem;
+//     border-radius: 1.5rem;
+//     color: #6b7381;
+//     background: #0c8;
+// }
+// .switch--horizontal input {
+//     height: 1.5rem;
+//     left: 0rem;
+//     width: 3rem;
+//     margin: 0;
+// }
+// .switch--horizontal label {
+//     font-size: 1rem;
+//     line-height: 1.5rem;
+//     display: inline-block;
+//     width: 7rem;
+//     height: 100%;
+//     margin: 0;
+//     text-align: center;
+//     font-weight: 400;
+// }
+// .switch--horizontal label:last-of-type {
+//     margin-left: 6rem;
+// }
+// .switch--horizontal .toggle-outside {
+//     background: #0c8;
+//     position: absolute;
+//     left: 0rem;
+//     width: 3rem;
+// }
+// .switch--horizontal .toggle-inside {
+//     height: 1rem;
+//     width: 1rem;
+// }
+// .switch--horizontal input:checked~.toggle-outside .toggle-inside {
+//     left: 0.25rem;
+//     position: absolute;
+//     top: 0.1875rem;
+//     // left: 0.1875rem;
+//     width: 1.125rem;
+//     height: 1.125rem;
+//     border-radius: 1.125rem;
+//     background: #fff;
+//     transition: left .25s;
+// }
+// .switch--horizontal input~input:checked~.toggle-outside .toggle-inside {
+//     left: 1.7rem;
+// }
+// .switch--horizontal input~input:checked~.toggle-inside {
+//     left: 1.7rem;
+//     background: #000;
+// }
+// .switch--vertical {
+//     width: 12rem;
+//     height: 1.5rem;
+// }
+// .switch--vertical input {
+//     height: 100%;
+//     width: 3rem;
+//     right: 0;
+//     margin: 0;
+// }
+// .switch--vertical label {
+//     font-size: 1.5rem;
+//     line-height: 3rem;
+//     display: block;
+//     width: 8rem;
+//     height: 50%;
+//     margin: 0;
+//     text-align: center;
+// }
+// .switch--vertical .toggle-outside {
+//     background: #fff;
+//     position: absolute;
+//     width: 3rem;
+//     height: 100%;
+//     right: 0;
+//     top: 0;
+// }
+// .switch--vertical .toggle-inside {
+//     height: 2.5rem;
+//     left: 0.25rem;
+//     top: 0.25rem;
+//     width: 2.5rem;
+// }
+// .switch--vertical input:checked~.toggle-outside .toggle-inside {
+//     top: 0.25rem;
+// }
+// .switch--vertical input~input:checked~.toggle-outside .toggle-inside {
+//     top: 3.25rem;
+// }
+// .switch--no-label label {
+//     width: 0;
+//     height: 0;
+//     visibility: hidden;
+//     overflow: hidden;
+// }
+// .switch--no-label input:checked~.toggle-outside .toggle-inside {
+//     background: rgba(0, 0, 0, 0.2);
+//     border: 1px solid rgba(0, 0, 0, 0.2);
+// }
+// .switch--no-label input~input:checked~.toggle-outside {
+//     background: #fff;
+// }
+// .switch--no-label input~input:checked~.toggle-outside .toggle-inside {
+//     background: #2ecc71;
+// }
+// .switch--no-label.switch--vertical {
+//     width: 3rem;
+// }
+// .switch--no-label.switch--horizontal {
+//     width: 6rem;
+// }
+// .switch--no-label.switch--horizontal input,
+// .switch--no-label.switch--horizontal .toggle-outside {
+//     left: 0;
+// }
+// .switch--expanding-inner input:checked+label:hover~.toggle-outside .toggle-inside {
+//     height: 2.5rem;
+//     width: 2.5rem;
+// }
+// .switch--expanding-inner.switch--horizontal input:hover~.toggle-outside .toggle-inside {
+//     width: 3.5rem;
+// }
+// .switch--expanding-inner.switch--horizontal input:hover~input:checked~.toggle-outside .toggle-inside {
+//     left: 2.25rem;
+// }
+// .switch--expanding-inner.switch--vertical input:hover~.toggle-outside .toggle-inside {
+//     height: 3.5rem;
+// }
+// .switch--expanding-inner.switch--vertical input:hover~input:checked~.toggle-outside .toggle-inside {
+//     top: 2.25rem;
+// }
+// // end here swithc toggle 
+// @keyframes lds-eclipse {
+//     0% {
+//         -webkit-transform: rotate(0deg);
+//         transform: rotate(0deg);
+//     }
+//     50% {
+//         -webkit-transform: rotate(180deg);
+//         transform: rotate(180deg);
+//     }
+//     100% {
+//         -webkit-transform: rotate(360deg);
+//         transform: rotate(360deg);
+//     }
+// }
+// @-webkit-keyframes lds-eclipse {
+//     0% {
+//         -webkit-transform: rotate(0deg);
+//         transform: rotate(0deg);
+//     }
+//     50% {
+//         -webkit-transform: rotate(180deg);
+//         transform: rotate(180deg);
+//     }
+//     100% {
+//         -webkit-transform: rotate(360deg);
+//         transform: rotate(360deg);
+//     }
+// }
+// .lds-eclipse {
+//     position: relative;
+// }
+// .lds-eclipse div {
+//     position: absolute;
+//     -webkit-animation: lds-eclipse 0.5s linear infinite;
+//     animation: lds-eclipse 0.5s linear infinite;
+//     width: 80px;
+//     height: 80px;
+//     top: 60px;
+//     left: 60px;
+//     border-radius: 50%;
+//     box-shadow: 0 4px 0 0 #0a609eeb;
+//     -webkit-transform-origin: 40px 42px;
+//     transform-origin: 40px 42px;
+// }
+// .lds-eclipse {
+//     width: 200px !important;
+//     height: 200px !important;
+//     -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+//     transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+// }
+.search-icon {
+    font-size: 12px;
+    margin-bottom: 3px;
+    margin-right: 5px;
+}
+
+.accordion {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.input-group-addon:first-child {
+    border-right: 0;
+}
+
+.input-group-addon:last-child {
+    border-left: 0;
+}
+
+.input-group-addon {
+    box-shadow: none;
+    border: 1px solid #ced4da;
+}
+
+.form-control,
+.form-control-static,
+.input-group-addon {
+    color: #4a4a4a;
+    height: 38px;
+}
+
+.input-group-addon {
+    padding: 10px 23px 16px 10px;
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    border-radius: 0px 3px 3px 0px;
+}
+
+.input-group-addon,
+.input-group-btn {
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.input-group .form-control,
+.input-group-addon,
+.input-group-btn {
+    display: table-cell;
+}
+
+.icon-color {
+    color: #a39e9e;
+}
+
+.m-t-m5 {
+    margin-top: -5px !important;
+}
+
+.searchbar-label {
+    text-transform: uppercase;
+    font-size: 12px !important;
+}
+
+
+/* Tooltip container */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+    /* If you want dots under the hoverable text */
+}
+
+
+/* Tooltip text */
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+
+/* Tooltip arrow */
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+
+/* Show the tooltip text when you mouse over the tooltip container */
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

@@ -1,0 +1,478 @@
+.modal .modal-dialog-aside {
+  /* // width: 350px;
+    // max-width: 80%; */
+  height: 100%;
+  margin: 0;
+  transform: translate(0);
+  transition: transform 0.2s;
+}
+
+.modal .modal-dialog-aside .modal-content {
+  height: inherit;
+  border: 0;
+  border-radius: 0;
+}
+
+.modal .modal-dialog-aside .modal-content .modal-body {
+  overflow-y: auto;
+}
+
+.modal_header {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 23px;
+  color: #333333;
+  margin-top: 15px;
+}
+
+.modal.fixed-left .modal-dialog-aside {
+  margin-left: auto;
+  transform: translateX(100%);
+}
+
+.modal.fixed-right .modal-dialog-aside {
+  margin-right: auto;
+  transform: translateX(-100%);
+}
+
+.modal.show .modal-dialog-aside {
+  transform: translateX(0);
+}
+
+@media (min-width: 1200px) {
+  .modal-xl {
+    max-width: 1315px !important;
+    width: 1315px !important;
+  }
+  .modal-dialog {
+    max-width: 1315px !important;
+  }
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 932px !important;
+    margin: 1.75rem auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .modal-lg {
+    max-width: 1315px !important;
+  }
+  .modal-dialog {
+    max-width: 1315px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .pt-md-8 {
+    padding-top: 8rem !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mb-xl-0 {
+    margin-bottom: 0 !important;
+  }
+}
+
+.btn-outline {
+  text-decoration: none !important;
+  margin-top: 10px;
+  margin-right: 15px;
+  background: #FFFFFF;
+  border: 1px solid #146BA2 !important;
+  border-radius: 4px;
+  color: #146BA2 !important;
+}
+
+.btn-blue-fill {
+  background: #146BA2 !important;
+  border: 1px solid #146BA2 !important;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-right: 10px;
+  color: #FFFFFF !important;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  text-align: center;
+  padding: 11px 35px;
+} 
+
+.modal-fixed-custom-footer {
+  position: fixed;
+  height: 50px;
+  background-color: white;
+  bottom: 0px;
+  left: 0px;
+  right: 0px; 
+  margin-bottom: 0px;
+  box-shadow: 0px -3px 5px #f1f1f1;
+}
+
+.text-bold {
+  font-weight: 500 !important;
+}
+
+.text-nowrap {
+  white-space: nowrap !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-uppercase {
+  text-transform: uppercase !important;
+}
+
+.odd {
+  background-color: #f8f8f8;
+}
+
+.even {
+  background-color: #fff;
+}
+
+.btn-back {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #333333;
+}
+
+.pending-status {
+  background: #FFE9C7;
+  border-radius: 4px;
+  text-align: center;
+  color: #EE9A15 !important;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.approved-status {
+  text-align: center;
+  background: #E2FEEE;
+  border-radius: 4px;
+  color: #2DA05E !important;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.rejected-status {
+  text-align: center;
+  background: #FFE4E1;
+  border-radius: 4px;
+  color: #E74C3C !important;
+  font-style: normal;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+hr {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.d-grid {
+  display: inline-grid !important;
+}
+
+.empNameLabel {
+  color: #1C1E24;
+  font-size: 14px;
+  font-family: Roboto;
+  font-weight: 500;
+}
+
+.empCodeLabel {
+  color: #7B8193;
+  font-size: 12px;
+  font-family: Roboto;
+}
+
+.normal-text {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  color: #1C1E24;
+}
+
+.text-label {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.text-label-bold {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 600 !important;
+  font-size: 13px;
+  color: #333333
+}
+
+.text-header-bold {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500 !important;
+  font-size: 16px;
+  line-height: 19px;
+  color: #333333;
+}
+
+.text-header-label {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400 !important;
+  font-size: 16px;
+  line-height: 19px;
+  color: #333333;
+}
+
+.dot {
+  height: 5px;
+  width: 5px;
+  background-color: #808080;
+  margin: 0.6%;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.table-grouped thead {
+  position: sticky;
+  top: 0;
+  background: #FFFF;
+}
+
+.table-grouped {
+  width: 100%;
+  border-collapse: collapse;
+  border: 0 !important;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15px;
+  color: #333333;
+  width: 100%;
+}
+
+.table-grouped th {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 15px;
+  text-align: left;
+  border-right: 0 !important;
+  border-left: 0 !important;
+  border-top: 0 !important;
+}
+
+.table-grouped td {
+  font-weight: 400;
+  font-size: 13px;
+  text-align: center;
+  line-height: 4rem;
+}
+
+.table-grouped tbody tr {
+  text-align: left;
+  border: 0 !important;
+}
+
+.table-grouped tbody td {
+  text-align: left;
+  border: 1px solid #E9E9E9;
+  color: #333333 !important;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  padding: 0 0 0 1rem;
+  vertical-align: middle;
+}
+
+.grouped-table-content tr {
+  background-color: #FFFFFF;
+}
+
+.even-row {
+  background-color: #F6F6F6 !important;
+}
+
+.color-grey {
+  color: #808080 !important;
+}
+
+.line-ht-10 {
+  line-height: 10rem;
+}
+
+.custom-popover-class {
+  z-index: 1200 !important;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+  border: 0;
+}
+
+.custom-popover-class .arrow::after, .custom-popover-class .arrow::before {
+  border-left-color: #FFF;
+}
+
+.custom-popover-class .popover-header {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 19.5px;
+  background: white;
+  padding-right: 1em;
+  padding-left: 1em;
+  border: 0 !important;
+}
+
+.custom-popover-class .popover-body {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  color: #1C1E24;
+}
+
+.text-container {
+  margin: 0;
+  padding: 0;
+  margin-top: -2.5rem;
+}
+
+.detailView {
+  margin-top: -20px;
+  padding: 0px !important; 
+  margin-left: -10px;
+}
+
+.modal_header_view {
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21px;
+  text-align: left;
+}
+
+.kt-header__topbar-user {
+  padding: 0px 2px 0px 2px;
+  height: 45px;
+  cursor: pointer !important;
+  border-radius: 4px;
+  color: #fff;
+  background: #0a609eeb;
+  border-radius: 100%;
+  margin-right: 0.9em;
+}
+
+.kt-header__topbar-user > a {
+  padding: 0.8rem 1rem;
+}
+
+.kt-badge.kt-badge--unified-success {
+  color: #fff !important;
+}
+
+.icon-lg {
+  font-size: 25px !important;
+}
+
+.approved .ng-select-container {
+  text-align: center;
+  background-color: #E2FEEE;
+  border: 1px solid #E2FEEE !important;
+  border-radius: 4px;
+  color: #2DA05E !important;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.approved .ng-arrow-wrapper .ng-arrow {
+  border-color: #2DA05E transparent transparent;
+}
+
+.rejected .ng-select-container {
+  text-align: center;
+  background-color: #FFE4E1;
+  border: 1px solid #FFE4E1 !important;
+  border-radius: 4px;
+  color: #E74C3C !important;
+  font-style: normal;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.rejected .ng-arrow-wrapper .ng-arrow {
+  border-color: #E74C3C transparent transparent;
+}
+
+.pending-status {
+  background: #FFE9C7;
+  border-radius: 4px;
+  text-align: center;
+  color: #EE9A15;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.btn-cancel-fill {
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-right: 10px;
+  color: #FFFFFF !important;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  text-align: center;
+  padding: 11px 35px;
+} 

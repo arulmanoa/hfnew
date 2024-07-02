@@ -1,0 +1,1057 @@
+<div class="page-wrapper" style=" font-family: 'Roboto'!important;">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="row m-1" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left">
+          <h6 class="h6_c" style="font-size: 16px;font-weight: 600;">Team Attendance</h6>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner">
+      <div class="row">
+        <div class="col-12 d-flex">
+          <div class="form-group-vertical col-xs-12 col-lg-6 col-md-6">
+            <label class="form-label searchbar-label"> Employee Code<span class="required"> * </span></label>
+            <ng-select [items]="employeeList" #selectEmpl class="mt-1" (change)="onChangeEmpDropdown($event)"
+              [clearable]="false" placeholder="Choose..." bindLabel="LabelName" bindValue="Id"
+              [(ngModel)]="selectedEmployee" [searchable]="false" [multiple]="false" [virtualScroll]="true">
+              <ng-template ng-header-tmp>
+                <input placeholder="Search Employee" type="text" class="form-control"
+                  style="border: none;border-radius: 0px !important;background: white"
+                  (input)="selectEmpl.filter($event.target.value)" />
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-lg-6 col-md-6 mt-4">
+            <button class="btn btn-primary" [disabled]="selectedEmployee == null || selectedEmployee == undefined"
+              (click)="onSearchEmpAttendance()">Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content">
+      <div class="text-center ma-5" *ngIf="calendarSpinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+      </div>
+      <div class="content m-b report-content" style="box-shadow: none;padding: 0;" *ngIf="showCalendar">
+        <ng-template #customCellTemplate let-day="day" let-locale="locale">
+          <div *ngFor="let event of day.events" class="cal-cell-top" [ngClass]="{ 
+            'highlight-week-off-holiday': (event.meta.breakupObject && event.meta.breakupObject.IsHoliday) 
+            || (event.meta.breakupObject && event.meta.breakupObject.IsWeekOff) }">
+            <span *ngIf="_attendanceConfiguration != null && _attendanceConfiguration.IsEmployeeAllowToRegularizeAttendance
+             && _attendanceConfiguration.RegularizationType == 1">
+              <!--  ! : 16.2 for panasonic  -->
+              <span *ngIf="(event.meta.StatusInUI != '' && event.color.primary == '#FF5555')">
+                <input type="checkbox" style="text-align: center; margin-left: 7px;margin-right: 5px; cursor: pointer;"
+                  [ngModel]="event.meta.isChecked" (change)="selectDay($event,event,event.meta)"
+                  (click)="$event.stopPropagation()" />
+              </span>
+            </span>
+            <!-- <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span> -->
+            <span *ngIf="!isMobileResolution && event.meta.breakupObject && event.meta.breakupObject.AttendanceCode">
+              <span class="attdCode-style" [ngClass]="{
+                'stripe': event.meta.breakupObject && event.meta.breakupObject.IsRegularizationSubmitted == 1}">
+                {{ event.meta.breakupObject.AttendanceCode }}
+              </span>
+            </span>
+            <span class="pull-right">
+              <span class="cal-day-number custom-cal-day-number" [ngStyle]="{
+                'font-weight': (event.meta.breakupObject && event.meta.breakupObject.IsHoliday) || 
+                (event.meta.breakupObject && event.meta.breakupObject.IsWeekOff) ? '600' : '400'
+              }"> {{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+            </span>
+            <span class="pull-right mt-set-custom" *ngFor="let event of day.events"
+              [ngStyle]="{'margin-right': (day.date.getDate() > 9) ? '-1.2rem' : '-0.9rem'}">
+              <!-- attendance status when first and second half are same -->
+              <span *ngIf="event.meta.isFirstHalfAndSecondHalfSame && event.meta.StatusInUI != ''"
+                class="pull-right border-line" [ngClass]="{
+                  'present-color': event.color.primary == '#3BBD72',
+                  'absent-color': event.color.primary == '#FF5555',
+                  'leave-color': event.color.primary == '#F39C12' && event.color.secondary != '#F39C12',
+                  'leave-applied-color': event.color.primary == '#F39C12' && event.color.secondary == '#F39C12',
+                  'od-color': event.color.primary == '#2506E2',
+                  'week-off-color': event.color.primary == '#FFE79A',
+                  'holiday-color': event.color.primary == '#8E44AD',
+                  'permission-color': event.color.primary == '#365879',
+                  'wowh-color': event.color.primary == '#F368E0',
+                  'wfh-color':event.color.primary == '#00A8FF'
+                }"></span>
+              <div class="d-flex pull-left">
+                <!-- other combinations first half -->
+                <span *ngIf="!event.meta.isFirstHalfAndSecondHalfSame && event.meta.FirstHalfType != ''"
+                  class="pull-right width-11 border-line" [ngClass]="{
+                  'present-color': event.meta.firstHalfColor.primary == '#3BBD72',
+                  'absent-color': event.meta.firstHalfColor.primary == '#FF5555',
+                  'od-color': event.meta.firstHalfColor.primary == '#2506E2',
+                  'week-off-color': event.meta.firstHalfColor.primary == '#FFE79A',
+                  'holiday-color': event.meta.firstHalfColor.primary == '#8E44AD',
+                  'permission-color': event.meta.firstHalfColor.primary == '#365879',
+                  'wowh-color': event.meta.firstHalfColor.primary == '#F368E0',
+                  'leave-color': event.meta.firstHalfColor.primary == '#F39C12' && event.meta.firstHalfColor.secondary != '#F39C12',
+                  'leave-applied-color': event.meta.firstHalfColor.primary == '#F39C12' && event.meta.firstHalfColor.secondary == '#F39C12',
+                  'wfh-color':event.meta.firstHalfColor.primary == '#00A8FF'
+                }"></span>
+                <!-- other combinations second half -->
+                <span *ngIf="!event.meta.isFirstHalfAndSecondHalfSame && event.meta.SecondHalfType != ''"
+                  class="pull-right width-11 border-line" [ngClass]="{
+                  'present-color': event.meta.secondHalfColor.primary == '#3BBD72',
+                  'absent-color': event.meta.secondHalfColor.primary == '#FF5555',
+                  'od-color': event.meta.secondHalfColor.primary == '#2506E2',
+                  'week-off-color': event.meta.secondHalfColor.primary == '#FFE79A',
+                  'holiday-color': event.meta.secondHalfColor.primary == '#8E44AD',
+                  'permission-color': event.meta.secondHalfColor.primary == '#365879',
+                  'wowh-color': event.meta.secondHalfColor.primary == '#F368E0',
+                  'leave-color': event.meta.secondHalfColor.primary == '#F39C12' && event.meta.secondHalfColor.secondary != '#F39C12',
+                  'leave-applied-color': event.meta.secondHalfColor.primary == '#F39C12' && event.meta.secondHalfColor.secondary == '#F39C12',
+                  'wfh-color': event.meta.secondHalfColor.primary == '#00A8FF'
+                }"></span>
+              </div>
+            </span>
+          </div>
+          <div *ngFor="let event of day.events" [ngClass]="{ 
+            'highlight-week-off-holiday': (event.meta.breakupObject && event.meta.breakupObject.IsHoliday) 
+            || (event.meta.breakupObject && event.meta.breakupObject.IsWeekOff) }">
+            <span class="pull-right mt-set-custom permission-style permission-color" *ngIf="!isMobileResolution && event.meta.breakupObject && event.meta.breakupObject.PermissionNumber 
+              && event.meta.breakupObject.PermissionNumber > 0">
+              P-{{event.meta.breakupObject.PermissionNumber}}
+            </span>
+          </div>
+          <small *ngFor="let event of day.events" [ngClass]="{ 'highlight-week-off-holiday': 
+            (event.meta.breakupObject && event.meta.breakupObject.IsHoliday) || 
+            (event.meta.breakupObject && event.meta.breakupObject.IsWeekOff) 
+            }">
+            <span class="ml-2 mr-2">
+              <span class="d-inline-grid" *ngIf="!isMobileResolution">
+                <span class="f-14 text-success" *ngIf="event.meta.FirstIn != '--:--'">
+                  <i class="align-middle mdi mdi-arrow-right"></i> <span class="grey-muted-text"
+                    style="font-size: 11px;">
+                    {{formatOneTimeRange(event.meta.FirstIn)}} </span>
+                </span>
+                <span class="f-14 text-danger" *ngIf="event.meta.LastOut != '--:--'">
+                  <i class="align-middle mdi mdi-arrow-left"></i> <span class="grey-muted-text"
+                    style="font-size: 11px;">
+                    {{formatOneTimeRange(event.meta.LastOut)}} </span>
+                </span>
+                <span class="f-14 text-danger" *ngIf="event.meta.FirstIn != '--:--' && event.meta.LastOut === '--:--'">
+                  <i class="align-middle mdi mdi-arrow-left"></i> <span class="grey-muted-text"
+                    style="font-size: 16px;">
+                    {{event.meta.LastOut}} </span>
+                </span>
+              </span>
+
+              <span class="hrs-style pull-right" *ngIf="showTotalHours">
+                {{getnoOfHours(event)}} {{getnoOfHours1(event)}}
+              </span>
+
+              <span class="hrs-style pull-right" *ngIf="!showTotalHours">
+                {{getDayHoursConsidered(event.meta.breakupObject)}} &nbsp;&nbsp;
+              </span>
+
+              <span *ngIf="checkIsCurrentDate(event) && spinner"
+                class="spinner-border spinner-border-sm m-r-10 primary-color text-center" role="status"
+                aria-hidden="true"></span>
+            </span>
+
+            <span *ngIf=" day.events == null"></span>
+
+          </small>
+        </ng-template>
+
+        <div class="row" style="margin-bottom: 1rem;">
+          <div class="col-lg-12 text-center">
+            <div class="d-flex justify-content-center ">
+              <a href="javascript:;" (click)="decrement()" tooltip="Previous Month" tooltip-placement="bottom"
+                class="cursor-pointer btn action-edit pull-left" style="margin-right: 5px;margin-left: 5px;">
+                <i class="fa fa-angle-left cursor-pointer" aria-hidden="true" style="font-size: 20px;
+                color: #808080;margin-top: 3px; margin-left: -2px;"></i>
+              </a>
+              <h6 class="calendar-view-month">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h6>
+              <a class="cursor-pointer btn action-edit pull-left" (click)="increment()" tooltip="Next Month"
+                tooltip-placement="bottom">
+                <i class="fa fa-angle-right cursor-pointer" aria-hidden="true" style="font-size: 20px;
+                  color: #808080;margin-top: 3px;margin-left: 2px;"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!spinner">
+          <div class="col-lg-12">
+            <div [ngSwitch]="view">
+              <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events"
+                [refresh]="refresh" (dayClicked)="dayClicked($event.day)"
+                (beforeViewRender)="beforeMonthViewRender($event)" [cellTemplate]="customCellTemplate"
+                [excludeDays]="excludeDays">
+              </mwl-calendar-month-view>
+            </div>
+          </div>
+        </div>
+
+        <div class="row pull-right m-2">
+          <div class="col-12">
+            <p class="small mb-0 pull-right legend-text">
+              <i class="fa fa-square legend-stripe legend-square" aria-hidden="true"></i> Awaiting Regularization Approval
+            </p>
+            <p class="small mb-0 pull-right legend-text">
+              <i class="fa fa-square week-off-color legend-square" aria-hidden="true"></i> Week Off
+            </p>
+            <!-- <p class="small mb-0 pull-right legend-text">
+              <i class="fa fa-square wowh-color legend-square" aria-hidden="true"></i> Work on Weekoff/Holiday
+            </p>
+            <p class="small mb-0 pull-right legend-text">
+              <i class="fa fa-square wfh-color legend-square" aria-hidden="true"></i> Work From Home
+            </p> -->
+            <p class="small mb-0 pull-right legend-text">
+              <i class="fa fa-square od-color legend-square" aria-hidden="true"></i> On Duty
+            </p>
+            <p class="small mb-0 pull-right legend-text">
+              <i class="fa fa-square holiday-color legend-square" aria-hidden="true"></i> Holiday
+            </p>
+            <p class="small mb-0 pull-right legend-text">
+              <!-- <span class="text-self" style="font-size: 1em; color: #75d6db!important;">●</span> Permission -->
+              <i class="fa fa-square permission-color legend-square" aria-hidden="true"></i> Permission
+            </p>
+            <p class="small mb-0 pull-right legend-text">
+              <i class="fa fa-square leave-color legend-square" aria-hidden="true"></i> Leave
+            </p>
+            <p class="small mb-0 pull-right legend-text">
+              <i class="fa fa-square absent-color legend-square" aria-hidden="true"></i> Absent
+            </p>
+            <p class="small mb-0 pull-right legend-text">
+              <i class="fa fa-square present-color legend-square" aria-hidden="true"></i> Present
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Monthly Summary -->
+      <div class="row w-100 p-3 ml-1 mr-2" style="background: #EFF4FF;"
+        *ngIf="showCalendar && (_employeeBasicAttendanceDefinition != null || _employeeBasicAttendanceDefinition != undefined)">
+        <div class="col-12 summary-text mb-2">Month Summary - {{selectedMonthName}}</div>
+        <div class="col-12 col-sm-6 col-lg-3 mb-1">
+          <div class="card no-border-card">
+            <div class="card-body padding-card-body-custom">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h6 class="card-value">
+                    {{_employeeBasicAttendanceDefinition.WorkedDays}} <span class="card-value-lighter">/
+                      {{_employeeBasicAttendanceDefinition.WorkingDays}}</span>
+                  </h6>
+                  <span class="grey-muted-text">
+                    Working Days
+                  </span>
+                </div>
+                <div class="col-4 text-right">
+                  <span class="circle icon-green"><i class="material-icons">work_outline</i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3 mb-1">
+          <div class="card no-border-card">
+            <div class="card-body padding-card-body-custom">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h6 class="card-value">
+                    {{_employeeBasicAttendanceDefinition.LeavesCount}}
+                  </h6>
+                  <span class="grey-muted-text">
+                    Leaves
+                  </span>
+                </div>
+                <div class="col-4 text-right">
+                  <span class="circle icon-yellow"><i class="material-icons">no_accounts</i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3 mb-1">
+          <div class="card no-border-card">
+            <div class="card-body padding-card-body-custom">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h6 class="card-value">
+                    {{_employeeBasicAttendanceDefinition.WeekOffsCount}}
+                  </h6>
+                  <span class="grey-muted-text">
+                    WeekOffs
+                  </span>
+                </div>
+                <div class="col-4 text-right">
+                  <span class="circle icon-blue"><i class="material-icons">event</i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3 mb-1">
+          <div class="card no-border-card">
+            <div class="card-body padding-card-body">
+              <div class="row align-items-center pb-2">
+                <div class="col-8">
+                  <h6 class="card-value">
+                    {{_employeeBasicAttendanceDefinition.HolidaysCount}}
+                  </h6>
+                  <span class="dropup dropup-with-arrow-down" *ngIf="lstHolidays && lstHolidays.length > 0">
+                    <button type="button" class="pl-0 btn dropdown-toggle grey-muted-text" data-toggle="dropdown">
+                      Holidays
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li class="dropdown-submenu" *ngFor="let h of lstHolidays">
+                        <a class="dropdownHeader">{{h.date}}</a>
+                        <a class="dropdownValue">{{h.holidayName}}</a>
+                      </li>
+                    </ul>
+                  </span>
+                  <span class="grey-muted-text" *ngIf="lstHolidays && lstHolidays.length == 0">
+                    Holidays
+                  </span>
+                </div>
+                <div class="col-4 text-right">
+                  <span class="circle icon-purple"><i class="material-icons">beach_access</i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- LEAVE SUMMARY -->
+      <div class="row w-100 p-3 ml-1 mr-2" style="background: #EFF4FF;"
+        *ngIf="showCalendar && (entitlementCards && entitlementCards.length > 0)">
+        <div class="col-12 summary-text mb-2"> Leave Balance </div>
+        <div class="col-12 col-sm-6 col-lg-3 mb-1" *ngFor="let entitlemnt of entitlementCards">
+          <div class="card no-border-card">
+            <div class="card-body padding-card-body">
+              <div class="row align-items-center pb-2">
+                <div class="col-8">
+                  <h6 class="card-value">
+                    {{entitlemnt.EligibleUnits}}
+                  </h6>
+                  <span class="grey-muted-text">
+                    {{entitlemnt.DisplayName}}
+                  </span>
+                </div>
+                <div class="col-4 text-right">
+                  <span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- leave summary no data -->
+      <div class="row w-100 p-3 ml-1 mr-2" style="background: #EFF4FF;"
+        *ngIf="showCalendar && (entitlementCards && entitlementCards.length == 0)">
+        <div class="col-12 summary-text mb-2">Leave Summary - {{selectedMonthName}}</div>
+        <div class="col-12 form-label mb-2">No Data Available</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DETAILED VIEW SLIDER FOR NON MOBILE-->
+<nz-drawer [nzVisible]="showSliderForWeb" [nzWidth]="580" (nzOnClose)="closeDetailedViewSlider()" [nzClosable]="true">
+  <div class="modal-dialog m-0 p-0" *ngIf="showSliderForWeb" style="min-height: 600px;">
+    <div class="modal-content">
+      <div class="modal-header slider-header">
+        <div class="col-xs-11">
+          <h4 class="slider-title"> {{sliderTitle}} </h4>
+          <div class="d-flex mt-2">
+            <!-- SHOW HOLIDAY/WEEKOFF ONLY WHEN FIRST HALF AND SECOND HALF CODE ARE SAME -->
+            <span class="badge holiday-badge" *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame 
+              && selectedCalendarObj.meta.breakupObject.IsHoliday && selectedCalendarObj.meta.StatusInUI != 'Holiday'">
+              Holiday
+            </span>
+            <span class="badge week-off-badge" *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame 
+              && !selectedCalendarObj.meta.breakupObject.IsHoliday && selectedCalendarObj.meta.breakupObject.IsWeekOff 
+              && selectedCalendarObj.meta.StatusInUI != 'WeekOff'">
+              Week Off
+            </span>
+            <!-- Attendance status for same first and second half -->
+            <span class="badge" [ngClass]="{
+            'present-badge':selectedCalendarObj.color.primary == '#3BBD72',
+            'absent-badge':selectedCalendarObj.color.primary == '#FF5555',
+            'od-badge':selectedCalendarObj.color.primary == '#2506E2',
+            'week-off-badge':selectedCalendarObj.color.primary == '#FFE79A',
+            'holiday-badge':selectedCalendarObj.color.primary == '#8E44AD',
+            'permission-badge':selectedCalendarObj.color.primary == '#365879',
+            'leave-applied-badge':selectedCalendarObj.color.primary == '#F39C12' && selectedCalendarObj.color.secondary == '#F39C12',
+            'leave-badge':selectedCalendarObj.color.primary == '#F39C12' && selectedCalendarObj.color.secondary != '#F39C12',
+            'wfh-badge':selectedCalendarObj.color.primary == '#00A8FF'
+            }"
+              *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.StatusInUI != ''">
+              {{selectedCalendarObj.color.primary == '#2506E2' ? selectedCalendarObj.meta.FirstHalfCode :
+              selectedCalendarObj.meta.StatusInUI }}
+            </span>
+            <!-- Attendance status for first half -->
+            <span class="f-13 legend-text" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.FirstHalfType != '' &&
+              !selectedCalendarObj.meta.breakupObject.DontShowSplitStatus">
+              <i class="fa fa-square legend-square" aria-hidden="true" [ngClass]="{
+                'present-color': selectedCalendarObj.meta.firstHalfColor.primary == '#3BBD72',
+                'absent-color': selectedCalendarObj.meta.firstHalfColor.primary == '#FF5555',
+                'od-color': selectedCalendarObj.meta.firstHalfColor.primary == '#2506E2',
+                'week-off-color': selectedCalendarObj.meta.firstHalfColor.primary == '#FFE79A',
+                'holiday-color': selectedCalendarObj.meta.firstHalfColor.primary == '#8E44AD',
+                'permission-color': selectedCalendarObj.meta.firstHalfColor.primary == '#365879',
+                'wowh-color': selectedCalendarObj.meta.firstHalfColor.primary == '#F368E0',
+                'leave-color': selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12',
+                'wfh-color':selectedCalendarObj.meta.firstHalfColor.primary == '#00A8FF'
+              }"></i>
+              {{selectedCalendarObj.meta.firstHalfColor.primary == '#2506E2' ? selectedCalendarObj.meta.FirstHalfCode :
+              selectedCalendarObj.meta.FirstHalfType }}
+              <span *ngIf=" selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12'"> (
+                {{selectedCalendarObj.meta.FirstHalfCode }})</span>
+              <small> - First Half <i
+                  *ngIf="selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12'">({{selectedCalendarObj.meta.breakupObject.FirstHalfRequestStatusDescription}})</i></small>
+            </span>
+            <!-- Attendance status for second half -->
+            <span class="f-13 legend-text" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.SecondHalfType != ''
+               && !selectedCalendarObj.meta.breakupObject.DontShowSplitStatus">
+              <i class="fa fa-square legend-square" aria-hidden="true" [ngClass]="{
+              'present-color':selectedCalendarObj.meta.secondHalfColor.primary == '#3BBD72',
+              'absent-color':selectedCalendarObj.meta.secondHalfColor.primary == '#FF5555',
+              'od-color':selectedCalendarObj.meta.secondHalfColor.primary == '#2506E2',
+              'week-off-color':selectedCalendarObj.meta.secondHalfColor.primary == '#FFE79A',
+              'holiday-color':selectedCalendarObj.meta.secondHalfColor.primary == '#8E44AD',
+              'permission-color':selectedCalendarObj.meta.secondHalfColor.primary == '#365879',
+              'wowh-color':selectedCalendarObj.meta.secondHalfColor.primary == '#F368E0',
+              'leave-color':selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12',
+              'wfh-color':selectedCalendarObj.meta.secondHalfColor.primary == '#00A8FF'
+            }"></i>
+              {{selectedCalendarObj.meta.secondHalfColor.primary == '#2506E2' ? selectedCalendarObj.meta.SecondHalfCode
+              : selectedCalendarObj.meta.SecondHalfType }}
+              <span *ngIf="selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12'">(
+                {{selectedCalendarObj.meta.SecondHalfCode }})</span>
+              <small> - Second Half <i
+                  *ngIf="selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12'">({{selectedCalendarObj.meta.breakupObject.SecondHalfRequestStatusDescription}})</i></small>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body pl-0 ">
+        <!-- Attendance status split for breakshift -->
+        <div class="row" *ngIf="selectedCalendarObj.meta.breakupObject.DontShowSplitStatus">
+          <span class="ml-3 grey-muted-text" *ngIf="selectedCalendarObj.meta.breakupObject.IntermittentStatus">
+            <i class="fa fa-square legend-square present-color" aria-hidden="true"></i>
+            {{selectedCalendarObj.meta.breakupObject.IntermittentStatus}} &nbsp;&nbsp;
+          </span>
+          <span class="ml-3 grey-muted-text font-italic"
+            *ngIf="selectedCalendarObj.meta.breakupObject.IntermittentText">
+            ( {{selectedCalendarObj.meta.breakupObject.IntermittentText}} )
+          </span>
+        </div>
+        <!-- Legends for Holiday type-->
+        <div class="row"
+          *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.breakupObject.IsHoliday">
+          <span class="ml-3 grey-muted-text">
+            <i class="fa fa-square holiday-color legend-square" aria-hidden="true"></i>
+            {{selectedCalendarObj.meta.breakupObject.HolidayInfo}}
+          </span>
+        </div>
+        <!-- Legends for Leave type-->
+        <div class="row" *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame">
+          <span class="ml-3 grey-muted-text"
+            *ngIf="selectedCalendarObj.meta.StatusInUI != '' && selectedCalendarObj.color.primary == '#F39C12'">
+            <i class="fa fa-square leave-color legend-square" aria-hidden="true"></i>
+            {{selectedCalendarObj.meta.FirstHalfCode}} <i>-
+              {{selectedCalendarObj.meta.breakupObject.FirstHalfRequestStatusDescription}}</i>
+          </span>
+        </div>
+        <!-- Working Hrs & Shift details -->
+        <div class="row p-0 mt-2">
+          <div class="pl-0 col-12">
+            <div class="col-6 pull-left" *ngIf="showRegularizeBtn">
+              <span class="description-title" >Total Working Hours</span>
+              <p class="description-value" *ngIf="showRegularizeBtn && getDayHoursConsidered(selectedBreakUpObject) != null">
+                <b class="fw-600">{{ getDayHoursConsidered(selectedBreakUpObject)}}<span> (hh:mm)</span></b>
+              </p>
+            </div>
+            <div class="col-6" [ngClass]="{ 'pull-right': showRegularizeBtn }">
+              <span class="description-title">Shift</span>
+              <p class="description-value"><b class="fw-600">{{LstworkShiftMapping.Code}}</b> ({{ formatTimeRange()}})
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Punch Details -->
+        <div class="m-0 p-0">
+          <div class="row m-0 p-0">
+            <div class="col-12 pl-0">
+              <div class="col-xs-8 mt-2 mb-2 pull-left">
+                <h4 class="slider-subtitle"> Punch In & Out History </h4>
+              </div>
+              <div class="col-xs-4 mt-2 mb-2 pull-right">
+                <h4 *ngIf="!showRegularizeBtn" class="card-value-lighter">
+                 <i> Regularization Request Submitted</i>
+                </h4>
+              </div>
+            </div>
+          </div>
+          <!-- CURRENT (before regularized) DATA -->
+          <div class="row m-1 with-bg-grey mb-3" *ngIf="!showRegularizeBtn">
+            <div class="col-12 p-0">
+              <h6 class="slider-subtitle p-2">Existing Information</h6>
+              <div class="pl-2 form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-left">
+                <label class="form-label label-title" name="existingStatus">Status</label>
+                <button class="btn" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" 
+                  [class.holiday-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'Holiday'"
+                  [class.pending-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'WeekOff'"
+                  [class.approved-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'Present'"
+                  [class.rejected-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'Absent'"
+                  [class.default-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'default'">
+                  {{existingAttendanceData[0].AttendanceCode != null ? existingAttendanceData[0].AttendanceCode : 'Absent'}}
+                </button>
+                <span class="form-label label-title ml-0 mt-2" *ngIf="LstworkShiftMapping.IsBreakShift">
+                  <i class="fa fa-square" aria-hidden="true" 
+                  [class.holiday-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) == 'Holiday'"
+                  [class.pending-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) == 'WeekOff'"
+                  [class.approved-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) != 'Absent' && getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) != 'Holiday' && getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) != 'WeekOff'"
+                  [class.rejected-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                  {{getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData)}} - 1st Half
+                </span>
+                <span class="form-label label-title ml-0 mt-2" *ngIf="LstworkShiftMapping.IsBreakShift">
+                  <i class="fa fa-square" aria-hidden="true" 
+                  [class.holiday-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) == 'Holiday'"
+                  [class.pending-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) == 'WeekOff'"
+                  [class.approved-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) != 'Absent' && getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) != 'Holiday' && getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) != 'WeekOff'"
+                  [class.rejected-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                  {{getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData)}} - 2nd Half
+                </span>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right">
+                <label class="form-label label-title" name="existingHrs">Total Working Hours</label>
+                <span class="form-text label-value" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" > 
+                  {{getTotalWorkingHoursInHoursMinuteFormat(existingAttendanceData[0].DayHoursConsidered)}} 
+                  <span class="small-text">(hh:mm)</span>
+                </span>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right" *ngIf="LstworkShiftMapping.IsBreakShift">
+                <div class="mb-2">
+                  <label class="form-label label-title" name="existingFirstHalfWrkHrs">1st Half Working Hours</label>
+                  <span class="form-text label-value" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" > 
+                    {{getTotalWorkingHoursInHoursMinuteFormat(existingAttendanceData[0].FirstHalfHoursConsidered)}}
+                    <span class="small-text">(hh:mm)</span>
+                  </span>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label label-title" name="existingSecondHalfWrkHrs">2nd Half Working Hours</label>
+                  <span class="form-text label-value" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" > 
+                    {{getTotalWorkingHoursInHoursMinuteFormat(existingAttendanceData[0].SecondHalfHoursConsidered)}}
+                    <span class="small-text">(hh:mm)</span> 
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12" *ngIf="existingPunchDetails && existingPunchDetails.length > 0">
+              <table class="table emp-punches-table">
+                <thead class="emp-punches-table-header">
+                  <tr class="w-100">
+                    <th> Time </th>
+                    <th> In/Out </th>
+                    <th> Work Location/Machine </th>
+                    <th> Remarks </th>
+                  </tr>
+                </thead>
+                <tbody class="emp-punches-table-body">
+                  <tr *ngFor="let item of existingPunchDetails; let i = index">
+                    <td *ngIf="LstworkShiftMapping.IsBreakShift == false">{{item.Time}}</td>
+                    <td *ngIf="LstworkShiftMapping.IsBreakShift == true">{{item.Time}}
+                      <span *ngIf="item.Half_Type && item.Half_Type != ''" class="subLabel">({{item.Half_Type }})</span>
+                    </td>
+                    <td>{{item.Type}}</td>
+                    <td>
+                      <span *ngIf="item.BiometricDeviceId > 0 && item.LocationId == 0">
+                        {{item.BioMetricDeviceName}}
+                      </span>
+                      <span *ngIf="item.BiometricDeviceId == 0 && item.LocationId > 0">
+                        {{item.LocationName}}
+                      </span>
+                    </td>
+                    <td>
+                      <button id="ex-remarks-Popover-{{i}}" type="button" *ngIf="item.Remarks"
+                        class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;" [ngbPopover]="item.Remarks"
+                        popoverTitle="Remarks" triggers="mouseenter:mouseleave" container="body" placement="left"
+                        popoverClass="custom-popover-class">
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- REGULARIZED DATA -->
+          <div class="row m-1 with-bg-white" *ngIf="!showRegularizeBtn">
+            <div class="col-12 p-0">
+              <h6 class="slider-subtitle p-2">Regularized Information</h6>
+              <div class="pl-2 form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-left">
+                <label class="form-label label-title" name="existingStatus">Status</label>
+                <button class="btn" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" 
+                  [class.holiday-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'Holiday'"
+                  [class.pending-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'WeekOff'"
+                  [class.approved-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'Present'"
+                  [class.rejected-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'Absent'"
+                  [class.default-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'default'">
+                  {{regularizedAttendanceData[0].AttendanceCode != null  ? regularizedAttendanceData[0].AttendanceCode : 'Absent'}}
+                </button>
+                <span class="form-label label-title mt-2" *ngIf="LstworkShiftMapping.IsBreakShift">
+                  <i class="fa fa-square" aria-hidden="true"
+                  [class.holiday-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) == 'Holiday'"
+                  [class.pending-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) == 'WeekOff'" 
+                  [class.approved-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) != 'Holiday' && getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) != 'WeekOff' && getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) != 'Absent'"
+                  [class.rejected-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                  {{getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData)}} - 1st Half
+                </span>
+                <span class="form-label label-title mt-2" *ngIf="LstworkShiftMapping.IsBreakShift">
+                  <i class="fa fa-square" aria-hidden="true"
+                  [class.holiday-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) == 'Holiday'"
+                  [class.pending-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) == 'WeekOff'"
+                  [class.approved-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) != 'Absent' && getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) != 'Holiday' && getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) != 'WeekOff'"
+                  [class.rejected-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                  {{getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData)}} - 2nd Half
+                </span>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right">
+                <label class="form-label label-title" name="existingHrs">Total Working Hours</label>
+                <span class="form-text label-value" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" > 
+                  {{getTotalWorkingHoursInHoursMinuteFormat(regularizedAttendanceData[0].DayHoursConsidered) }} 
+                  <span class="small-text">(hh:mm)</span>
+                </span>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right" *ngIf="LstworkShiftMapping.IsBreakShift">
+                <div class="mb-2">
+                  <label class="form-label label-title" name="existingFirstHalfWrkHrs">1st Half Working Hours</label>
+                  <span class="form-text label-value" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" > 
+                    {{getTotalWorkingHoursInHoursMinuteFormat(regularizedAttendanceData[0].FirstHalfHoursConsidered) }} 
+                    <span class="small-text">(hh:mm)</span>
+                  </span>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label label-title" name="existingSecondHalfWrkHrs">2nd Half Working Hours</label>
+                  <span class="form-text label-value" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" > 
+                    {{getTotalWorkingHoursInHoursMinuteFormat(regularizedAttendanceData[0].SecondHalfHoursConsidered) }} 
+                    <span class="small-text">(hh:mm)</span> 
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12" *ngIf="regularizedPunchDetails && regularizedPunchDetails.length > 0">
+              <table class="table emp-punches-table">
+                <thead class="emp-punches-table-header">
+                  <tr class="w-100">
+                    <th> Time </th>
+                    <th> In/Out </th>
+                    <th> Work Location/Machine </th>
+                    <th> Remarks </th>
+                  </tr>
+                </thead>
+                <tbody class="emp-punches-table-body">
+                  <tr *ngFor="let item of regularizedPunchDetails; let i = index">
+                    <td *ngIf="LstworkShiftMapping.IsBreakShift == false">{{item.Time}}</td>
+                    <td *ngIf="LstworkShiftMapping.IsBreakShift == true">{{item.Time}}
+                      <span *ngIf="item.Half_Type && item.Half_Type != ''" class="subLabel">({{item.Half_Type }})</span>
+                    </td>
+                    <td>{{item.Type}}</td>
+                    <td>
+                      <span *ngIf="item.BiometricDeviceId > 0 && item.LocationId == 0">
+                        {{item.BioMetricDeviceName}}
+                      </span>
+                      <span *ngIf="item.BiometricDeviceId == 0 && item.LocationId > 0">
+                        {{item.LocationName}}
+                      </span>
+                    </td>
+                    <td>
+                      <button id="reg-remarks-Popover-{{i}}" type="button" *ngIf="item.Remarks"
+                      class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;" [ngbPopover]="item.Remarks"
+                      popoverTitle="Remarks" triggers="mouseenter:mouseleave" container="body" placement="left"
+                      popoverClass="custom-popover-class">
+                    </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-12 mt-2 p-0" *ngIf="showRegularizeBtn && lstPunches && lstPunches.length > 0">
+            <table class="table emp-punches-table">
+              <thead class="emp-punches-table-header">
+                <tr class="w-100">
+                  <th> Time </th>
+                  <th> In/Out </th>
+                  <th> Work Location/Machine </th>
+                  <th> Remarks </th>
+                </tr>
+              </thead>
+              <tbody class="emp-punches-table-body">
+                <tr *ngFor="let item of lstPunches; let i = index">
+                  <td *ngIf="LstworkShiftMapping.IsBreakShift == false">{{item.Time}}</td>
+                  <td *ngIf="LstworkShiftMapping.IsBreakShift == true">{{item.Time}}
+                    <span *ngIf="item.Half_Type && item.Half_Type != ''" class="subLabel">({{item.Half_Type }})</span>
+                  </td>
+                  <td>{{item.Type}}</td>
+                  <td>
+                    <span *ngIf="item.BiometricDeviceId > 0 && item.LocationId == 0">
+                      {{item.BioMetricDeviceName}}
+                    </span>
+                    <span *ngIf="item.BiometricDeviceId == 0 && item.LocationId > 0">
+                      {{item.LocationName}}
+                    </span>
+                  </td>
+                  <td #target>
+                    <button id="remarks-Popover-{{i}}" type="button" *ngIf="item.Remarks"
+                      class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;" [ngbPopover]="item.Remarks"
+                      popoverTitle="Remarks" triggers="mouseenter:mouseleave" placement="left">
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer pull-right bg-transparent border-top-0">
+    <button type="button" class="btn btn-primary" (click)="doApplyOnDuty()">
+      <i class="mdi mdi-calendar-check desktop-icon m-r-xs"></i> Apply OD
+    </button>
+    <button type="button" class="btn btn-primary" (click)="doApplyLeave()">
+      <i class="material-icons desktop-icon m-r-xs">spellcheck</i> Apply Leave
+    </button>
+    <button *ngIf="showRegularizeBtn" type="button" class="btn btn-primary" (click)="doRegularizeDetailType()">
+      <i class="material-icons desktop-icon m-r-xs">fact_check</i> Regularize
+    </button>
+  </div>
+
+</nz-drawer>
+<!-- APPLY LEAVE / OD -->
+<div id="popup_edit_leave" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_edit_leave" aria-hidden="true">
+  <div class="d-block modal fade show animated">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-8" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Apply {{popupTitle}} Request</small>
+          </div>
+          <div class="modal-close" (click)="close_leaverequest_slider()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+          <!-- EMP DETAILS
+          <div class="row">
+            <div class="col-md-8">
+              <div class="kt-header__topbar-user pull-left">
+                <a class="nav-link waves-effect waves-light nav-user" href="javascript:;" role="button" aria-haspopup="false" aria-expanded="false">
+                  <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">
+                    {{getShortName(data.FirstName) | uppercase}} 
+                  </span>
+                </a>
+              </div>
+              <div class="nameLabel" id="nameLabel1">{{ data.FirstName }}</div>
+              <div class="subLabel" id="subLabel1">{{ data.Code }} - {{data.Designation}}</div >
+              <div class="clearfix"></div>
+            </div>
+          </div> -->
+        </div>  
+        <div class="modal-body">
+          <div class="row" style="margin-bottom: -16px;">
+            <div class="col-lg-12">
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 text-right"
+                *ngIf="leaveForm.get('Id').value == 0 &&  employeeEntitlement && employeeEntitlement.Definition.DownloadDocPath ">
+                <a (click)="downloadFile()" href="javascript:;"
+                  style="color: #1f62ff;cursor: pointer;font-size: 13px;font-weight: 600;">Click here to
+                  {{employeeEntitlement.Definition.DownloadLinkName}}
+                </a>
+              </div>
+              <div class="row" *ngIf="leaveForm.get('Id').value == 0 &&  employeeEntitlement && employeeEntitlement.Definition.InfoText">
+                <div class="col-lg-12 text-center">
+                  <ngb-alert [dismissible]="false">
+                    <strong> {{employeeEntitlement.Definition.InfoText}}
+                    </strong>
+                  </ngb-alert>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+
+                  <form [formGroup]="leaveForm" #formDirective="ngForm">
+                    <div class="row">
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="popupTitle == 'Leave'">
+                        <label class="form-label ">Leave Type <span *ngIf="leaveForm.get('Id').value == 0" class="fa fa-info-circle" placement="bottom"
+                            ngbTooltip="Note : The day off you are going to take should be on continuous dates."></span>
+                          <span class="required"> *</span> </label>
+                        <ng-select [items]="_entitlementList" placeholder="-- select an option --"
+                          formControlName="Entitlement" bindLabel="DisplayName" bindValue="EntitlementId"
+                          (change)="onChange_Entitlement($event)"
+                          [ngClass]="{ 'is-invalid': submitted && g.Entitlement.invalid }">
+                        </ng-select>
+                        <div *ngIf="submitted && g.Entitlement.invalid" class="help-block">
+                          <div *ngIf="g.Entitlement.errors.required">Entitlement is required
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                        *ngIf="employeeEntitlement && employeeEntitlement.Entitlement.IsOptionalHoliday">
+                        <label class="form-label ">Holiday's <span class="required"> *</span> </label>
+                        <ng-select [items]="optionalHolidayList" placeholder="-- select an option --"
+                          [clearable]="false" formControlName="OptinalHoliday" bindLabel="HolidayName" bindValue="Id"
+                          [ngClass]="{ 'is-invalid': submitted && g.OptinalHoliday.invalid }"
+                          (change)="onChangeHolidays($event)">
+                        </ng-select>
+                        <div *ngIf="submitted && g.OptinalHoliday.invalid" class="help-block">
+                          <div *ngIf="g.OptinalHoliday.errors.required">Optional Holiday is required
+                          </div>
+                        </div>
+                      </div>
+
+                       <!-- COMP OFF SELECTION  -->
+                       <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="employeeEntitlement && 
+                        employeeEntitlement.Definition && employeeEntitlement.Definition.IsCompOff">
+                        <label class="form-label ">{{employeeEntitlement.Definition.AdditionalDateLabelName}} <span class="required"> *</span></label>
+                        <ng-select [items]="availableCompOffDates" placeholder="-- select a date --" formControlName="compOffDates" 
+                          bindLabel="AttendanceDate" [ngClass]="{ 'is-invalid': submitted && g.compOffDates.invalid }" 
+                          (change)="onChangeCompOffDates($event)" [multiple]="employeeEntitlement.Definition.IsMultiSelectAllowedForCompOff" 
+                          [clearable]="!employeeEntitlement.Definition.IsMultiSelectAllowedForCompOff" [closeOnSelect]="!employeeEntitlement.Definition.IsMultiSelectAllowedForCompOff">
+                          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index" let-search="searchTerm">
+                            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{standalone: true}">
+                            {{ item.AttendanceDate }} ( {{item.ApplicableUnits}} day )
+                          </ng-template>
+                          <ng-template ng-label-tmp let-item="item">
+                            <span>  {{ item.AttendanceDate }} ( {{item.ApplicableUnits}} day )</span>
+                          </ng-template>
+                        </ng-select>
+                        <div *ngIf="submitted && g.compOffDates.invalid" class="help-block">
+                          <div *ngIf="g.compOffDates.errors.required">Please choose one option from dropdown</div>
+                        </div>
+                      </div>
+
+                      <!-- Bereavement leave  -->
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="employeeEntitlement && 
+                        employeeEntitlement.Definition && employeeEntitlement.Definition.IsBereavementLeave">
+                        <label class="form-label ">{{employeeEntitlement.Definition.AdditionalDateLabelName}} <span class="required"> *</span></label>
+                        <ng-select [items]="lstRelation" placeholder="-- select relationship --" 
+                          formControlName="relationshipId" [ngClass]="{ 'is-invalid': submitted && g.relationshipId.invalid }"
+                          bindLabel="Name" bindValue="Id" (change)="onChangeRelationshipForBL($event)" [clearable]="false">
+                        </ng-select>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                        *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsAdditionalDateInputRequired">
+                        <label class="form-label ">{{employeeEntitlement.Definition.AdditionalDateLabelName}} <span
+                            class="required"> *</span></label>
+                        <input class="form-control" type="text" name="AdditionalDateInput" bsDatepicker
+                          placement="bottom" readonly
+                          [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                          placeholder="12-12-1970" formControlName="AdditionalDateInput"
+                          [ngClass]="{ 'is-invalid': submitted && g.AdditionalDateInput.errors }" autocomplete="off" [minDate]="employeeEntitlement && employeeEntitlement.Definition.IsAdditionalDateFromDOJ ? minDateForAdditionalDateInput : null" 
+                          (ngModelChange)="onChange_AdditionalDate($event)">
+
+
+                        <div *ngIf="submitted && g.AdditionalDateInput.invalid" class="help-block">
+                          <div *ngIf="g.AdditionalDateInput.errors.required">
+                            {{employeeEntitlement.Definition.AdditionalDateLabelName}} is required
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <ng-container *ngIf="employeeEntitlement && !employeeEntitlement.Entitlement.IsOptionalHoliday">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                          <label class="form-label ">Applied From <span class="required"> *</span></label>
+                          <input class="form-control" type="text" name="AppliedFrom" bsDatepicker                           
+                             placement="bottom" readonly [minDate]="_from_minDate" [maxDate]="_from_maxDate"
+                            [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            placeholder="Choose Date" formControlName="AppliedFrom"
+                            [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off"
+                            (ngModelChange)="onChange_FromDate($event)">
+                          <div *ngIf="submitted && g.AppliedFrom.invalid" class="help-block">
+                            <div *ngIf="g.AppliedFrom.errors.required">Applied From is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;" *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <div *ngIf="(tabName!=null && getEntitlementDefintionCode(tabName) != 'COMP') || !isSameDate">
+                            <label class="form-label"> First Half </label>
+                            <div class="">
+                              <label class="el-checkbox el-checkbox-red">
+                                <input type="checkbox" name="IsAppliedForFirstHalf"
+                                  (change)="onChange_firstHalf($event)" [disabled]="tobeDisabledCheckbox"
+                                  formControlName="IsAppliedForFirstHalf" />
+                                <span class="el-checkbox-style"></span>
+                              </label>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;" *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <div *ngIf="(tabName!=null && getEntitlementDefintionCode(tabName) != 'COMP') || !isSameDate">
+                            <label class="form-label"> Second Half</label>
+                            <div class="">
+                              <label class="el-checkbox el-checkbox-red">
+                                <input type="checkbox" name="IsAppliedFromSecondHalf"
+                                  (change)="onChange_secondHalf($event)" formControlName="IsAppliedFromSecondHalf"
+                                  [disabled]="isDisabledFromSecondHalf" />
+                                <span class="el-checkbox-style"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                          <label class="form-label ">Applied Till<span class="required"> *</span></label>
+                          <input class="disabled-prop form-control" type="text"
+                           name="AppliedTill" [minDate]="_till_minDate" [maxDate]="appliedTillMaxDate"
+                          bsDatepicker placement="bottom" [disabled]="shouldAllowtoEdit()"
+                            (ngModelChange)="onChange_TillDate($event)"
+                            [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            placeholder="Choose Date" formControlName="AppliedTill" 
+                            [ngClass]="{ 'is-invalid': submitted && g.AppliedTill.errors }" autocomplete="off">
+                          <div *ngIf="submitted && g.AppliedTill.invalid" class="help-block">
+                            <div *ngIf="g.AppliedTill.errors.required">Applied Till is required
+                            </div>
+                          </div>
+                          <div *ngIf="isinvalidDate == true" class="help-block">
+                            <div>Note: The till date has to be greater than or equal to the from date.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-12 col-xs-6 col-sm-3" style="margin-top: 5px;"
+                          *ngIf="!isSameDate && employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <label class="form-label"> First Half</label>
+                          <div class="">
+                            <label class="el-checkbox el-checkbox-red">
+                              <input type="checkbox" name="IsAppliedTillFirstHalf"
+                                (change)="onChange_tillfirstHalf($event)" formControlName="IsAppliedTillFirstHalf"
+                                [disabled]="isDisabledTillFirstHalf" />
+                              <span class="el-checkbox-style"></span>
+                            </label>
+                          </div>
+                        </div>
+                       
+                        <div class="form-group form-group-vertical col-12 col-xs-6 col-sm-3" style="margin-top: 5px;"
+                          *ngIf="!isSameDate && employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <label class="form-label"> Second Half</label>
+                          <div class="">
+                            <label class="el-checkbox el-checkbox-red">
+                              <input type="checkbox" name="IsAppliedTillSecondHalf" [disabled]="tobeDisabledCheckbox"
+                                (change)="onChange_tillSecondHalf($event)" formControlName="IsAppliedTillSecondHalf" />
+                              <span class="el-checkbox-style"></span>
+                            </label>
+                          </div>
+                        </div>
+
+                      </ng-container>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                        *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsOptionRequiredToUploadDocuments">
+                        <div class="form-group">
+                          <label class="form-label searchbar-label">Attachment <span
+                              *ngIf="employeeEntitlement && employeeEntitlement.Definition.AreSupportingDocumentsMandatory"
+                              class="required">*</span>
+                            <span class="help-text m-l-5"> <i style="font-size: 10px;"> (Max file size 2MB) </i>
+                            </span>
+                          </label>
+
+                          <label class="qcsummarylabel form-text text-muted" *ngIf="!isLoading">
+                            <label class="upload control" style="width: 100%; float: left;"
+                              *ngIf="!leaveForm.get('AdditionalDocumentName').value">
+                              <div class="upload-draggable is-primary">
+                                <section class="section">
+                                  <div class="has-text-centered">
+                                    <span class="icon is-large">
+                                      Upload
+                                    </span>
+                                  </div>
+                                </section>
+                              </div>
+                              <input type="file" 
+                                (change)="onFileUpload($event)" id="sTest-uploadFile-candidateAddResume">
+                            </label>
+
+                            <div *ngIf="submitted && g.AdditionalDocumentId.invalid" class="help-block">
+                              <div *ngIf="g.AdditionalDocumentId.errors.required">Attachment is required
+                              </div>
+                            </div>
+
+                            <p class="control" *ngIf="leaveForm.get('AdditionalDocumentName').value">
+                              <span class="file-name">
+                                <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a
+                                    ngbTooltip="Delete Photo" id="sTest-deleteFile-candidateAddResume"
+                                    style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block;margin-top: -5px;">
+                                    <i class="fa fa-trash-o"></i>
+                                  </a>
+                                </button>
+                                <a target="blank" class="ahref" style="padding: 2px;">
+                                  {{leaveForm.get('AdditionalDocumentName').value}}
+                                </a>
+                              </span>
+                            </p>
+
+                          </label>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center" style="text-align:center;padding-left: 1rem;"
+                        *ngIf="isLoading">
+                        <strong class="text-right"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                        <label class="form-label"> Comments <span class="required"> *</span> </label>
+                        <textarea class="form-control" rows="3" spellcheck="false" id="ApplierRemarks"
+                          formControlName="ApplierRemarks" placeholder="Include comments for your approver"
+                          [ngClass]="{ 'is-invalid': submitted && g.ApplierRemarks.errors }"></textarea>
+                        <div *ngIf="submitted && g.ApplierRemarks.invalid" class="help-block">
+                          <div *ngIf="g.ApplierRemarks.errors.required">Comments is required</div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left w-100">
+            <div class="row">
+              <div class="col-lg-6">
+                <div data-cy="remaining-allowance-amount text-left" style="font-size: 0.85rem;"
+                  *ngIf="!IsLossOfPay && IsShowBalanceInUI">
+                  Available Balance : <b style="color: black;"> {{availableDays}} </b>
+                </div>
+              </div>
+               <!-- SHOW AVAILABLE BALANCE -->
+               <div class="col-lg-6 text-center">
+                <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;">
+                  {{leaveDaysApplied}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pull-right m-r-sm" style="width: 20%;">
+            <div>
+              <button type="submit" [disabled]="isLoading" (click)="saveEntitlementRequest()"
+                style="border-radius: 20px;" class="btn btn-primary w-100"> Submit Request
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

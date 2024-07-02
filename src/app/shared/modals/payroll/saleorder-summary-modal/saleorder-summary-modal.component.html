@@ -1,0 +1,706 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg modal-dialog-centered animated fadeInDownBig ">
+    <div class="modal-content fontfamily">
+      <div class="modal-header" style="padding: 15px !important;">
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b *ngIf="current == 0">Approve Sale Order</b> <b *ngIf="current == 1">Invoice Updation</b> <b *ngIf="current == 2">Attainment</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL">{{tempPurposetLstSO[0].ClientName}} |
+            {{tempPurposetLstSO[0].PayPeriod}}</h6>
+        </div>
+
+        <div class="modal-close" (click)="modal_dismiss()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+       
+      </div>
+      <div class="modal-header" style="padding: 0px !important;">
+        <div class="" style="padding: 16px;width: 100%;">
+          <nz-steps [nzCurrent]="current" [nzProgressDot]="progressTemplate">
+            <nz-step nzTitle="Sale Order(s)" nzIcon="container" nzDescription="Step 1"></nz-step>
+            <nz-step nzTitle="Invoice(s)" nzIcon="audit" nzDescription="Step 2"></nz-step>
+            <nz-step nzTitle="Carried Out" nzIcon="frown" nzDescription="Step 3"></nz-step>
+          </nz-steps>
+        </div>
+        </div>
+
+      <div class="modal-body">
+        
+        <div class="steps-content" *ngIf="current == 0">
+          <div class="row p-lr30 row_custom sticky-top" style="margin-top : -16px;">
+            <div class="col-md-6">
+              <!-- <p><b>Billable Structure :: </b> </p> -->
+
+              <div class="pretty p-icon p-round" style="margin-bottom: 10px;">
+                <input type="radio" name="icon_solid" value="1" (change)="onProfitSelectionChange(1)" />
+                <div class="state p-success">
+                  <i class="icon mdi mdi-check"></i>
+                  <label>One Invoice per Sale Oder</label>
+                </div>
+              </div>
+              <br>
+              <div class="pretty p-icon p-round">
+                <input type="radio" name="icon_solid" checked value="2" (change)="onProfitSelectionChange(2)" />
+                <div class="state p-success">
+                  <i class="icon mdi mdi-check"></i>
+                  <label>One Consolidated Invoice for selected Sale
+                    Orders</label>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-6">
+              <div class="pretty p-icon p-round" style="margin-bottom: 10px;">
+                <input type="radio" name="icon_solid1" value="3" checked (change)="onSendInvoicetoClient(3)" />
+                <div class="state p-success">
+                  <i class="icon mdi mdi-check"></i>
+                  <label>Send Invoice Immediately</label>
+                </div>
+              </div>
+              <br>
+              <div class="pretty p-icon p-round">
+                <input type="radio" name="icon_solid1" value="4" (change)="onSendInvoicetoClient(4)" />
+                <div class="state p-success">
+                  <i class="icon mdi mdi-check"></i>
+                  <label>Send Invoice Later</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <p style="font-weight: 700;margin-bottom:0px; text-align: left;padding-top: 15px !important;"> <input
+                  type="checkbox" [(ngModel)]="selectAll" (click)="selectAllSO($event)"> <span
+                  style="padding-top: 1px; padding-left: 5px;"> Select All </span> </p>
+            </div>
+            <div class="col-lg-6">
+
+              <p style="font-weight: 700;margin-bottom:0px; text-align: right;padding-top: 15px !important;"> No.Of Sale
+                Order(s) :
+                {{tempPurposetLstSO.length}} &nbsp; | &nbsp; Selected Sale Order(s): {{selectedSOs.length}}</p>
+              <!-- <div class="label">Search :</div>
+              <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+                placeholder=" Start searching for a Sale Order number, bill to and so on" style="background: #f3f3f3;
+                border: 1px solid black;
+            "> -->
+            </div>
+
+
+          </div>
+          <br>
+          <!-- <div class="row p-lr30">
+            <div class="col-lg-8" style="padding-top: 10px !important; ">
+              <p style="font-weight: 700;margin-bottom:0px; text-align: left;"> <input type="checkbox"
+                  [(ngModel)]="selectAll" (click)="selectAllEmp($event)"> <span
+                  style="padding-top: 1px; padding-left: 5px;"> Select All </span> </p>
+            </div>
+            <div class="col-lg-4">
+              <div class="label">Search :</div>
+              <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+                placeholder=" Start searching for a Employee Name, Code">
+            </div>
+          </div> -->
+          <div class="row" style="margin-top: -30px;">
+
+            <div class="col-12">
+              <div class="card section4" *ngFor="let i of lstSelectedObj;let i = index;">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <div class="">
+                      <div class="row">
+                        <div class="col-lg-4">
+                          <div class="label">Bill To Contact Name</div>
+                          <div class="value">{{i.SOList[0].BillToContactName}}</div>
+                        </div>
+                        <div class="col-lg-5">
+                          <div class="label">Bill To Address</div>
+                          <div class="value">{{i.SOList[0].BillToAddressDetails.Address1}}</div>
+                        </div>
+                        <div class="col-lg-3">
+                          <div class="d-flex flex-wrap align-items-center pull-right"><span
+                              class="ant-tag ant-tag-has-color m-1" style="background-color: rgb(145, 180, 230);">Sale
+                              Order(s) : {{i.SOList.length}} </span></div>
+                          <div *ngIf="showAction" class="d-flex flex-wrap align-items-center pull-right"
+                            (click)="previewSaleOrderInvoice(i, 'multiple')"><span class="ant-tag ant-tag-has-color m-1"
+                              style="background-color: rgb(29, 108, 166);"> <i class="fa fa-eye"></i> Preivew Invoice
+                            </span></div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </h5>
+                  <div class="card-intro">
+                    <table class="table  table-container customborder">
+                      <thead>
+                        <tr class="document_table_tr">
+                          <th scope="col" style="width: 3%; text-align: center !important"></th>
+                          <th scope="col" style="width: 8%; text-align: center !important">SO #</th>
+                          <th scope="col" style="width: 17%;text-align: center !important; ">Billable Amt.</th>
+                          <th scope="col" style="width: 15%;text-align: center !important">Service Tax</th>
+                          <th scope="col" style="width: 15%;text-align: center !important">Service Fee</th>
+                          <th scope="col" style="width: 10%;text-align: center !important">Total Bill Amt</th>
+                          <th scope="col" style="width: 10%;text-align: center !important">Status</th>
+                          <th scope="col" style="width: 10%;text-align: center !important" *ngIf="!showAction">Action
+                          </th>
+                          <th scope="col" style="width: 10%;text-align: center !important" *ngIf="!showAction">
+                          </th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container
+                          *ngFor="let item of i.SOList  | filter: searchText;let ii = index; let last = last">
+                          <tr style="font-size: 12px;">
+                            <td style="width: 3%;text-align: center !important" class="text-center"><input
+                                type="checkbox" [(ngModel)]="item.isSelected" (click)="change(item, i, $event)"> </td>
+                            <td style="width: 8%;text-align: center !important" class="text-center"> {{item.Number}}
+                            </td>
+                            <td style="width: 17%;text-align: right !important;" class="text-center">
+                              {{item.BillableAmount | number : '1.2-2'}}</td>
+                            <td style="width: 17%;text-align: right !important;" class="text-center">
+                              {{item.TotalServiceTax | number : '1.2-2'}}</td>
+                            <td style="width: 17%;text-align: right !important;" class="text-center">
+                              {{item.TotalMarkup | number : '1.2-2' }}</td>
+                            <td style="width: 17%;text-align: right !important;" class="text-center">
+                              {{item.TotalBillAmount | number : '1.2-2' }}</td>
+                            <td style="width: 17%;text-align: center !important;" class="text-center"> {{item.Status}}
+                            </td>
+                            <td *ngIf="!showAction" style="width: 17%;padding: 5px !important;" class="text-center"
+                              data-toggle="collapse" [attr.data-target]="'#demo'+ item.Id" class="accordion-toggle">
+                              <button type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                                style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-pencil" aria-hidden="true"
+                                    style="padding-right: 5px;"></i>Edit</span></button>
+                            </td>
+                            <td *ngIf="!showAction" style="width: 17%;padding: 5px !important;" class="text-center">
+                              <button (click)="previewSaleOrderInvoice(item,'singleItem')" type="button"
+                                class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                                style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-eye" aria-hidden="true"
+                                    style="padding-right: 5px;"></i>Preview Invoice</span></button>
+                            </td>
+
+
+                          </tr>
+                          <tr *ngIf="!showAction">
+                            <td colspan="12" class="hiddenRow" style="padding: 0px;">
+                              <div class="accordian-body collapse" id="demo{{item.Id}}"
+                                style="padding: 10px;font-size: 12px;">
+                                <div class="row">
+
+
+
+                                  <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                                    <label class="form-label ">Shipping Despatch To </label>
+                                    <ng-select [items]="ClientContactList" placeholder="-- select an option --"
+                                      [(ngModel)]="item.ShipToClientContactId" bindLabel="Name" bindValue="Id"
+                                      (change)="onChange_Despatch(item, $event, i, 'normal');">
+                                    </ng-select>
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                                    <label class="form-label ">Purchase Order No </label>
+                                    <input class="form-control" type="text" spellcheck="false" name="PurchaseOrderNo"
+                                      [(ngModel)]="item.PurchaseOrderNo" placeholder="INT00034" autocomplete="off">
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                                    <label class="form-label ">Company Bank </label>
+                                    <ng-select [items]="companyBankList" placeholder="-- select an option --"
+                                      [(ngModel)]="item.CompanyBankAccountId"
+                                      (change)="onChangeBank(item, $event, i, 'normal')" bindLabel="Details"
+                                      bindValue="Id">
+                                    </ng-select>
+                                  </div>
+
+
+                                  <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                                    <label class="form-label"> Shipping Address </label>
+                                    <textarea class="form-control" rows="2" spellcheck="false"
+                                      [(ngModel)]="item.ShipToAddressDetails.Address1"
+                                      id="ShipToAddressDetails"></textarea>
+
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                                    <label class="form-label"> Narration </label>
+                                    <textarea class="form-control" rows="2" spellcheck="false"
+                                      [(ngModel)]="item.Narration" id="Narration"></textarea>
+
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                                    <label class="form-label">Remarks</label>
+                                    <textarea class="form-control" rows="2" spellcheck="false"
+                                      [(ngModel)]="item.Remarks" id="Remarks"></textarea>
+
+                                  </div>
+
+
+
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr *ngIf="showAction && last">
+                            <td colspan="12" class="hiddenRow" style="padding: 0px;">
+                              <div class="" style="padding: 10px;font-size: 12px;">
+                                <div class="row">
+
+
+
+                                  <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                                    <label class="form-label ">Shipping Despatch To </label>
+                                    <ng-select [items]="ClientContactList" placeholder="-- select an option --"
+                                      [(ngModel)]="item.ShipToClientContactId" bindLabel="Name" bindValue="Id"
+                                      (change)="onChange_Despatch(item, $event, i, 'lastIndex');">
+                                    </ng-select>
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                                    <label class="form-label ">Purchase Order No </label>
+                                    <input class="form-control" type="text" spellcheck="false" name="PurchaseOrderNo"
+                                      [(ngModel)]="item.PurchaseOrderNo" (keyup)="onKeyUp($event,'PurchaseOrderNo',i)"
+                                      placeholder="INT00034" autocomplete="off">
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                                    <label class="form-label ">Company Bank </label>
+                                    <ng-select [items]="companyBankList" placeholder="-- select an option --"
+                                      [(ngModel)]="item.CompanyBankAccountId"
+                                      (change)="onChangeBank(item, $event, i, 'lastIndex')" bindLabel="Details"
+                                      bindValue="Id">
+                                    </ng-select>
+                                  </div>
+
+
+                                  <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                                    <label class="form-label"> Shipping Address </label>
+                                    <textarea class="form-control" rows="2" spellcheck="false"
+                                      [(ngModel)]="item.ShipToAddressDetails.Address1"
+                                      (keyup)="onKeyUp($event,'ShipToAddressDetails',i)"
+                                      id="ShipToAddressDetails"></textarea>
+
+                                  </div>
+                                  <!-- <div class="form-group form-group-vertical col-xs-3 col-sm-3">
+                                    <label class="form-label"> Account Details </label>
+                                    <textarea class="form-control" disabled rows="2" spellcheck="false"
+                                      [(ngModel)]="item.CompanyAddressDetails" id="CompanyAddressDetails"></textarea>
+  
+                                  </div> -->
+
+                                  <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                                    <label class="form-label"> Narration </label>
+                                    <textarea class="form-control" rows="2" spellcheck="false"
+                                      [(ngModel)]="item.Narration" (keyup)="onKeyUp($event,'Narration',i)"
+                                      id="Narration"></textarea>
+
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                                    <label class="form-label">Remarks</label>
+                                    <textarea class="form-control" (keyup)="onKeyUp($event,'Remarks',i)" rows="2"
+                                      spellcheck="false" [(ngModel)]="item.Remarks" id="Remarks"></textarea>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        </ng-container>
+
+                      </tbody>
+                    </table>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="steps_content" *ngIf="current == 1">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card-intro">
+                <table class="table  table-container customborder">
+                  <thead>
+                    <tr class="document_table_tr">
+                      <th scope="col" style="width: 8%; text-align: center !important">Inv #</th>
+                      <th scope="col" style="width: 17%;text-align: center !important; ">Billable Amt.</th>
+                      <th scope="col" style="width: 15%;text-align: center !important">Service Tax</th>
+                      <th scope="col" style="width: 15%;text-align: center !important">Service Fee</th>
+                      <th scope="col" style="width: 10%;text-align: center !important">Total Bill Amt</th>
+                      <th scope="col" style="width: 10%;text-align: center !important">Status</th>
+                      <th scope="col" style="width: 10%;text-align: center !important">Action
+                      </th>
+                      <!-- <th scope="col" style="width: 10%;text-align: center !important">
+                      </th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let item of invoceRecords ;let ii = index; let last = last">
+                      <tr style="font-size: 12px;">
+
+                        <td style="width: 8%;text-align: center !important" class="text-center"> {{item.InvNo}}
+                        </td>
+                        <td style="width: 17%;text-align: right !important;" class="text-center">
+                          {{item.BillableAmount | number : '1.2-2'}}</td>
+                        <td style="width: 17%;text-align: right !important;" class="text-center">
+                          {{item.TotalServiceTax | number : '1.2-2'}}</td>
+                        <td style="width: 17%;text-align: right !important;" class="text-center">
+                          {{item.TotalMarkup | number : '1.2-2' }}</td>
+                        <td style="width: 17%;text-align: right !important;" class="text-center">
+                          {{item.TotalBillAmount | number : '1.2-2' }}</td>
+                        <td style="width: 17%;text-align: center !important;" class="text-center"> Initiated
+                        </td>
+                        <td style="width: 17%;padding: 5px !important;" class="text-center" data-toggle="collapse"
+                          [attr.data-target]="'#demo'+ item.Id" class="accordion-toggle">
+                          <button type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                            style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-pencil" aria-hidden="true"
+                                style="padding-right: 5px;"></i>Edit</span></button>
+
+                        </td>
+                        <!-- <td style="width: 17%;padding: 5px !important;" class="text-center">
+                          <button (click)="previewInvoice(item,'singleItem')" type="button"
+                            class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                            style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-eye" aria-hidden="true"
+                                style="padding-right: 5px;"></i>Preview Invoice</span></button>
+                        </td> -->
+
+                      </tr>
+                      <tr>
+                        <td colspan="12" class="hiddenRow" style="padding: 0px;">
+                          <div class="accordian-body collapse" id="demo{{item.Id}}"
+                            style="padding: 10px;font-size: 12px;">
+                            <div class="row">
+
+                              <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                <label class="form-label ">Billing Despatch To </label>
+                                <ng-select disabled [items]="ClientContactList" placeholder="-- select an option --"
+                                  [(ngModel)]="item.BillToClientContactId" bindLabel="Name" bindValue="Id"
+                                  (change)="onChange_Despatch1(item, $event, i, 'normal');">
+                                </ng-select>
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                <label class="form-label ">Shipping Despatch To </label>
+                                <ng-select [items]="ClientContactList" placeholder="-- select an option --"
+                                  [(ngModel)]="item.ShipToClientContactId" bindLabel="Name" bindValue="Id"
+                                  (change)="onChange_Despatch(item, $event, i, 'normal');">
+                                </ng-select>
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                <label class="form-label ">Purchase Order No </label>
+                                <input class="form-control" type="text" spellcheck="false" name="PurchaseOrderNo"
+                                  [(ngModel)]="item.PurchaseOrderNo" placeholder="INT00034" autocomplete="off">
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                <label class="form-label ">Company Bank </label>
+                                <ng-select [items]="companyBankList" placeholder="-- select an option --"
+                                  [(ngModel)]="item.CompanyBankAccountId"
+                                  (change)="onChangeBank(item, $event, i, 'normal')" bindLabel="Details" bindValue="Id">
+                                </ng-select>
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-3 col-sm-3">
+                                <label class="form-label"> Billing Address </label>
+                                <textarea class="form-control" disabled rows="2" spellcheck="false"
+                                  [(ngModel)]="item.BillToAddressDetails.Address1" id="BillToAddressDetails"></textarea>
+
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-3 col-sm-3">
+                                <label class="form-label"> Shipping Address </label>
+                                <textarea class="form-control" rows="2" spellcheck="false"
+                                  [(ngModel)]="item.ShipToAddressDetails.Address1" id="ShipToAddressDetails"></textarea>
+
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-3 col-sm-3">
+                                <label class="form-label"> Narration </label>
+                                <textarea class="form-control" rows="2" spellcheck="false" [(ngModel)]="item.Narration"
+                                  id="Narration"></textarea>
+
+                              </div>
+
+                              <div class="form-group form-group-vertical col-xs-3 col-sm-3">
+                                <label class="form-label">Remarks</label>
+                                <textarea class="form-control" rows="2" spellcheck="false" [(ngModel)]="item.Remarks"
+                                  id="Remarks"></textarea>
+
+                              </div>
+
+
+
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+
+                    </ng-container>
+
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="steps-content" *ngIf="current == 2">
+          <div class="container">
+            <div class=""></div>
+            <div class="paper-container">
+              <div class=""></div>
+
+              <div class="paper" style="width: 100%;">
+                <div class="main-contents">
+                  <div class="success-icon">&#10004;</div>
+                  <div class="success-title">
+                    Invoice updated Successfully
+                  </div>
+                  <div class="success-description">
+                    <!-- We received your invoice request;
+                    we'll be in touch shortly! -->
+                  </div>
+                  <div class="order-details">
+                    <div class="order-number-label">Invoice Number(s)</div>
+                    <div class="order-number"> <span class="txt" title="Preview Invoice" *ngFor="let i of invoceRecords;let isLast=last" (click)="previewInvoice(i,'singleItem')"><i class="fa fa-external-link" style="font-size: 18px;" aria-hidden="true" >  </i> {{i.InvNo}}{{isLast ? '' : ', '}} </span> </div>
+                  </div>
+                  <div class="order-footer">Thank you!</div>
+                </div>
+                <div class="jagged-edge"></div>
+              </div>
+            </div>
+          </div>
+         
+
+
+
+          <!-- <ng-template #progressTemplate let-dot let-status="status" let-index="index">
+          <span nz-popover nzContent="steps {{ index }} status: {{ status }}" style="margin-left: -100%;">
+            <ng-template [ngTemplateOutlet]="dot"></ng-template>
+          </span>
+        </ng-template> -->
+
+
+          <!-- <div class="row p-lr30">
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label class="form-label"> Narration </label>
+              <textarea class="form-control" disabled rows="2" spellcheck="false" [(ngModel)]="Narration"
+                id="Narration"></textarea>
+
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label class="form-label">Remarks</label>
+              <textarea class="form-control" rows="2" spellcheck="false" [(ngModel)]="Remarks" id="Remarks"></textarea>
+
+            </div>
+        </div> -->
+
+          <!-- <div class="row p-lr30">
+          <div class="col-md-12">
+
+              <div class="pretty p-icon p-round" style="margin-bottom: 10px;">
+                <input type="radio" name="icon_solid" value="1" (change)="onSendInvoicetoClient(1)" />
+                <div class="state p-success">
+                  <i class="icon mdi mdi-check"></i>
+                  <label>Send Invoice Immediately</label>
+                </div>
+              </div>
+              <br>
+              <div class="pretty p-icon p-round">
+                <input type="radio" name="icon_solid" value="2" (change)="onSendInvoicetoClient(2)" />
+                <div class="state p-success">
+                  <i class="icon mdi mdi-check"></i>
+                  <label>Send Invoice Later</label>
+                </div>
+              </div>
+
+          </div>
+
+
+        </div> -->
+
+
+          <!-- <div class="accordion" id="accordionExample-faq" style="border: 1px solid #d3d3d3;
+            border-radius: 3px;">
+              <div class="card shadow-none border mb-1" *ngFor="let item of lstSelectedObj; let i= index">
+    
+                <div class="card-header" id="headingTwo">
+                  <h5 class="my-0"><button class="btn btn-link ml-4 collapsed" type="button" data-toggle="collapse"
+                      [attr.data-target]="'#onBoardingCollapse_' + i" style="line-height: 2.5 !important;"
+                      aria-expanded="false" aria-controls="onBoardingCollapse">
+    
+                      <span style="float: left;
+                                    margin-top: 0px;"> # {{item.SONumber}} | {{item.PayPeriod}} | {{item.ClientName}} |
+                      </span>
+                    </button></h5>
+                </div>
+    
+                <div id="onBoardingCollapse_{{i}}" class="collapse show" aria-labelledby="headingOne"
+                  data-parent="#accordionExample-faq" style="">
+                  <div class="card-body">
+    
+                    <div class="row" style="padding: 15px;margin-top: -10px;">
+                      <div class="card-inner" style="width: 100%;">
+                        <div class="sp-plan-desc sp-plan-desc-mb">
+                          <ul class="row gx-1">
+    
+    
+                            <li class="col-sm-4">
+                              <p><span class="text-soft"> Client GST Details </span>{{item.ClientGSTDetails}} </p>
+                            </li>
+                            <li class="col-sm-4">
+                              <p><span class="text-soft"> Company GST Details </span> {{item.CompanyGSTDetails}}
+                              </p>
+                            </li>
+    
+                            <li class="col-sm-4">
+                              <p><span class="text-soft">Sale Order Date </span>
+                                {{item.SaleOrderDate | date: 'MMMM d, y'}}</p>
+                            </li>
+    
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+    
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                        <label class="form-label ">Shipping Despatch To </label>
+    
+                        <ng-select [items]="ClientContactList" placeholder="-- select an option --"
+                          [(ngModel)]="item.ShippingContactId" bindLabel="Name" bindValue="Id"
+                          (change)="onChange_Despatch(item, $event);">
+                        </ng-select>
+    
+    
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                        <label class="form-label ">Billing Despatch To </label>
+    
+                        <ng-select [items]="ClientContactList" placeholder="-- select an option --"
+                          [(ngModel)]="item.BillingContactId" bindLabel="Name" bindValue="Id"
+                          (change)="onChange_Despatch1(item, $event);">
+                        </ng-select>
+    
+    
+                      </div>
+    
+                      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-4">
+                        <label class="form-label">Purchase Order # </label>
+    
+                        <input class="form-control" type="text" spellcheck="false" [(ngModel)]="item.PurchaseOrderNumber"
+                          name="PurchaseOrderNumber " placeholder="INT00034" autocomplete="off">
+    
+    
+                      </div>
+    
+    
+                      <div class="form-group form-group-vertical col-xs-4 col-sm-4">
+                        <label class="form-label"> Shipping Address </label>
+                        <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="item.ShippingContactDetails"
+                          id="ShippingContactDetails"></textarea>
+    
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-4 col-sm-4">
+                        <label class="form-label"> Billing Address </label>
+                        <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="item.BillingContactDetails"
+                          id="BillingContactDetails"></textarea>
+    
+                      </div>
+    
+                      <div class="form-group form-group-vertical col-xs-4 col-sm-4">
+                        <label class="form-label"> Narration </label>
+                        <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="item.Narration"
+                          id="Narration"></textarea>
+    
+                      </div>
+    
+                      <div class="form-group form-group-vertical col-xs-4 col-sm-4">
+                        <label class="form-label">Remarks</label>
+                        <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="item.Remarks"
+                          id="Remarks"></textarea>
+    
+                      </div>
+                      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-4 col-md-4 col-sm-4">
+                        <label class="form-label">Send Invoice to Client</label>
+    
+                        <div class="p-t-10">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" name="SendInvoicetoClient" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+    
+                      </div>
+    
+                    </div>
+    
+                  </div>
+                </div>
+              </div>
+            </div>
+     -->
+
+
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <!-- <div class="steps-action">
+          <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
+            <span>Previous</span>
+          </button>
+          <button nz-button nzType="default" (click)="next()" *ngIf="current < 2">
+            <span>Next</span>
+          </button>
+          <button nz-button nzType="primary" (click)="done()" *ngIf="current === 2">
+            <span>Done</span>
+          </button>
+        </div> -->
+
+
+        <div class="pull-left left-margin-btn">
+
+          <!-- <button class="btn btn-primary-custom " type="Submit" name="btnSubmit" id="btnSubmit">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-download"></i> &nbsp; View Grouping Rule
+                  </span>
+                </div> 
+              </button> -->
+        </div>
+        <div class="pull-right m-r-sm">
+          <div>
+            <div>
+
+              <button class="btn  btn-primary m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit" *ngIf="current == 0"
+                (click)="modal_dismiss()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-ban"></i> I will Create it later </span>
+                </div>
+              </button>
+
+              <button class="btn upgrade-btn pull-right" type="button" *ngIf="current == 0"
+                (click)="confirm_InvoiceCreation()"> <i class="fa fa-check-circle"></i> &nbsp; Confirm Invoice Creation
+              </button>
+
+              <button class="btn upgrade-btn pull-right" type="button" *ngIf="current == 1"
+                (click)="confirm_InvoiceUpdation()"> <i class="fa fa-floppy-o"></i> &nbsp; Update and Preview Invoice
+              </button>
+             
+              <button class="btn upgrade-btn pull-right" type="button" *ngIf="current == 2" (click)="modal_dismiss()">
+                <i class="fa fa-smile-o"></i> &nbsp; Done
+              </button>
+
+              <button class="btn btn-default pull-right"  style="margin-right:10px" type="button" *ngIf="current == 2" (click)="pre()">
+                <i class="fa fa-angle-double-left"></i> &nbsp; Go Back to Invoice
+              </button> 
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>

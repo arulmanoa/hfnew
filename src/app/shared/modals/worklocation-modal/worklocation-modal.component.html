@@ -1,0 +1,120 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-sm ">
+        <div class="modal-content">
+            <div class="">
+
+                <app-loading-screen></app-loading-screen>
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">Client Location</h4>
+
+                    <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="confirmExit()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+                </div>
+
+
+                <div class="modal-body no-padder">
+
+
+                    <div class="flex-column">
+
+                        <form [formGroup]="clientLocationForm">
+
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="clearfix">
+                                    <div class="row">
+
+
+
+
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                            <label class="form-label">Country <span class="required" > *</span></label>
+
+                                            <ng-select [items]="listOfcountry" [searchable]="true" autocomplete="off" placeholder="-- select on option --" bindValue="Id" (change)="onChangeCountry($event)" bindLabel="Name" formControlName="country" [ngClass]="{ 'ng-touched': submitted && g.country.errors }">
+                                            </ng-select>
+                                            <div *ngIf="submitted && g.country.invalid" class="help-block">
+                                                <div *ngIf="g.country.errors.required">Country is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                                            <label class="form-label">State <span class="required" > *</span></label>
+
+                                            <ng-select [items]="listOfstate" [searchable]="true" autocomplete="off" placeholder="-- select on option --" bindValue="Id" (change)="onChangeState($event)" bindLabel="Name" formControlName="state" [ngClass]="{ 'ng-touched': submitted && g.state.errors }">
+                                            </ng-select>
+                                            <div *ngIf="submitted && g.state.invalid" class="help-block">
+                                                <div *ngIf="g.state.errors.required">State is required
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                        <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                                            <label class="form-label">City <span class="required" > *</span></label>
+
+                                            <ng-select [items]="listOfcity" [searchable]="true" autocomplete="off" placeholder="-- select on option --" bindValue="Id" bindLabel="Name" (change)="onChangeCity($event)" formControlName="city" [ngClass]="{ 'ng-touched': submitted && g.city.errors }">
+                                            </ng-select>
+                                            <div *ngIf="submitted && g.city.invalid" class="help-block">
+                                                <div *ngIf="g.city.errors.required">City is required
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+                                            <label class="form-label">Location Name <span class="required" >*</span></label>
+
+                                            <input class="form-control" type="text" spellcheck="false" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" maxlength="25" name="locationName" formControlName="locationName" [ngClass]="{ 'is-invalid': submitted && g.locationName.errors }" placeholder="Bangalore"
+                                                autocomplete="off">
+                                            <div *ngIf="submitted && g.locationName.errors" class="invalid-feedback">
+                                                <div *ngIf="g.locationName.errors.required">Location Name is required
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+                                            <label class="form-label">Address</label>
+                                            <textarea class="form-control" style="height: 90px;" rows="3" spellcheck="false" id="address" onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)" formControlName="address" [ngClass]="{ 'is-invalid': submitted && g.address.errors }"></textarea>
+                                            <div *ngIf="submitted && g.address.errors" class="invalid-feedback">
+                                                <div *ngIf="g.address.errors.required">Address is required</div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <div>
+                        <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel</button>
+                        <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                            <div>
+                                <div>
+                                    <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" [disabled]="!disableBtn" (click)="savebutton()">
+                                <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save </span></div>
+                            </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,133 @@
+<div class="modal fade show d-block">
+  <div class="modal-dialog modal-xl">
+
+    <div class="modal-content">
+
+      <div class="dfc100 overflow-y-auto">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">{{header}}</h4>
+          <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="cancelModal()">
+            <i class="mdi mdi-close font-size-md icon-close"></i>
+          </a>
+        </div>
+        <div class="modal-body no-padder builtin-calling-wrapper">
+          <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+              <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+              Please wait...
+            </button>
+          </div>
+          <div class="w-100" *ngIf="!spinner">
+            <div class="flex-column">
+              <form [formGroup]="ruleMappingForm">
+                <div class="row pull-right">
+                  <div class="col-12 col-md-12 col-sm-12 d-flex">
+                    <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6"
+                      style="padding-left: 10px !important;">
+                      <label class="form-label">Status</label>
+                    </div>
+                    <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding:0px !important;">
+                      <label class="el-switch el-switch-green">
+                        <input type="checkbox" formControlName="status" checked enabled />
+                        <span class="el-switch-style"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row w-100">
+                  <div class="col-12 col-md-12 col-sm-12">
+                    <div class="row">
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12">
+                        <label class="form-label">Code<span class="required"> * </span></label>
+                        <input type="text" class="form-control" placeholder="Enter Code" formControlName="code"
+                          [ngClass]="{ 'ng-touched': submitted && g.code.invalid }" autocomplte="off">
+                        <div *ngIf="submitted && g.code.invalid" class="help-block">
+                          <div *ngIf="g.code.errors.required"> Code is required</div>
+                        </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12">
+                        <label class="form-label">Name<span class="required"> * </span></label>
+                        <input type="text" class="form-control" placeholder="Enter Name" formControlName="name"
+                          [ngClass]="{ 'ng-touched': submitted && g.name.invalid }" autocomplte="off">
+                        <div *ngIf="submitted && g.name.invalid" class="help-block">
+                          <div *ngIf="g.name.errors.required"> Name is required</div>
+                        </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control" placeholder="Enter Description"
+                          formControlName="description" [ngClass]="{ 'ng-touched': submitted && g.description.invalid }"
+                          autocomplte="off">
+                        <div *ngIf="submitted && g.description.invalid" class="help-block">
+                          <div *ngIf="g.description.errors.required"> Description is required</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label"> CTC Rule<span class="required">*</span>
+                          <span class="form__length createNew" (click)="newCTCRule()"
+                            *ngIf="!isCTCRuleEditable()"> + Create New</span>
+                        </label>
+                        <ng-select [items]="ctcRuleList" (change)="onChangeCtcRule($event)" [clearable]="false"
+                          placeholder="-- select ctc rule --" formControlName="ctcRule" bindLabel="Name" bindValue="Id">
+                        </ng-select>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label"> Payroll Rule<span class="required">*</span>
+                          <span class="form__length createNew" (click)="newpayrollRule()"
+                            *ngIf="!isPayrollRuleEditable()"> + Create New</span>
+                        </label>
+                        <ng-select [items]="payrollRuleList" (change)="onChangePayrollRule($event)"
+                          placeholder="-- select payroll rule --" formControlName="payrollRule" bindLabel="Name"
+                          bindValue="Id" [clearable]="false">
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="flex-column" style="padding: 0 !important;">
+              <div class="col-lg-6 text-left" *ngIf="isCTCRuleEditable()">
+                <div class="text-left">
+                  <div class="pull-left pl-4" >
+                    <button type="button" class="btn btn-primary" (click)="editCTCRule()">
+                      <i class="mdi mdi-file-plus m-r-xs"></i> Edit CTC Rule</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 text-right" *ngIf="isPayrollRuleEditable()">
+                <div class="text-left">
+                  <div class="pull-left">
+                    <button type="button" class="btn btn-primary" (click)="editPayRollRule()">
+                      <i class="mdi mdi-file-plus m-r-xs"></i> Edit Payroll Rule</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-default pull-right" type="button" (click)="cancelModal()">
+            <i class="mdi mdi-close m-r-xs"></i>Cancel
+          </button>
+          <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+            <div>
+              <div>
+                <button class="btn btn-primary" type="Submit" id="btnSubmit"
+                  [disabled]="disableBtn || ruleMappingForm.invalid" (click)="savePayrollCtcRule()">
+                  <div class="pos-rlt sm-btn-component">
+                    <span><i class="mdi mdi-content-save  m-r-xs"></i> Save</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

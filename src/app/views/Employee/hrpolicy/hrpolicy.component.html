@@ -1,0 +1,171 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div *ngIf="!spinner" class="content report-content custom-font-family" >
+      <div class="row">
+        <div class="col-lg-6 col-xs-12 col-sm-12">
+          <div class="headerbar">
+            <div>          
+              <h2 class="header_title"> <i *ngIf="selectedFolderName != null" (click)="deselectFolder()" class="mdi mdi-arrow-left"></i> &nbsp; Company Policy Documents  <span class="header_title_span">{{selectedFolderName==null? '':'/ '+selectedFolderName}}</span></h2>              
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+              <li class="list-inline-item" *ngIf="RoleCode != 'Employee' && selectedFolderName==null"><button type="btn"
+                  class="ml-5 mb-3 btn btn-primary" (click)="openUploadDocModal()">
+                  + Add Document
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="content report-content" style="box-shadow: none;">
+      <div class="row">
+        <ng-container *ngIf="this.RoleCode != 'Employee' && BusinessType == 3">
+          <div class="form-group form-group-vertical w-25">
+            <label class="form-label">Client <span class="required"> *</span></label>
+            <ng-select [items]="clientsList" [searchable]="true" autocomplete="off" placeholder="-- select an option --"
+              bindValue="Id" bindLabel="Name" [(ngModel)]="selectedClientId"
+              [ngClass]="{ 'ng-touched': submitted && g.clientId.errors }">
+            </ng-select>
+          </div>
+          <div class="form-group form-group-vertical ml-md-5 mt-md-4">
+            <button type="button" class="btn btn-primary" (click)="getClientDocuments()">
+              Search
+            </button>
+          </div>
+        </ng-container>
+
+        <div class="col-lg-12">
+          <div *ngIf="folderCount && selectedFolderName==null" class="folder-count">Folders ({{folderCount}})</div>
+          <div class="search-container">
+            <input class="form-control search-input" type="text" name="search" [(ngModel)]="searchText" (ngModelChange)="getSearchResult()" placeholder="Search">
+          </div>
+        </div>
+
+        <div *ngIf="selectedFolderName==null" class="col-lg-12 col-xl-12 d-flex my-3 flex-wrap" style="padding-left: 0px;">
+          <div class="folder-box" *ngFor="let folderName of getFilteredFolders() | keyvalue">
+            <div class="folder-man-box mx-3" (click)="selectFolder(folderName.key)">
+              <div class="file-img-box d-flex" [ngClass]="{'d-flex': RoleCode == 'Employee'}">
+                <img [src]="getDocImage()" alt="icon" />
+              </div>
+              <div class="file-man-title">
+                <h4 class="mb-0 text-overflow folder-name" title="folder">
+                  {{ folderName.key }}<br>
+                </h4>
+                <div class="folder-files-count">
+                  {{ folderName.value.length}} Files
+                </div>
+              </div>
+              <div class="folder-text-center"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="!spinner">
+          <div *ngIf="filesCount" class="files-count">Files ({{filesCount}})</div>
+        </div>
+
+        <div *ngIf="!spinner" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 position-relative" style="padding: 10px;">
+          <div class="card-box">            
+            <div class="row">
+              <ng-container *ngFor="let item of getFilteredItems()">
+                <div *ngIf="this.RoleCode == 'Employee'; else other" class="col-lg-3 col-xl-3 col-md-6 col-12" style="padding-bottom: 10px;">
+                  <div id="file-box" class="row node file-box">
+                    <div class="col-lg-3 customjustify">
+                      <img id="extension-img" [src]="getDocImage(item.Extension)" alt="icon" />
+                    </div>
+                    <div class="col-lg-6 customjustify file-box-title">
+                      <h5 class="mb-0 text-overflow file-name" matTooltip="{{ item.DisplayName }}">
+                        {{ item.DisplayName }}
+                      </h5>
+                    </div>
+                    <div class="col-lg-3 customjustify hover-display pt-2">
+                      <div (click)="viewDocument(item, videoModal)" class="file-view-icon" matTooltip="View" id="plus">
+                        <i class="mdi mdi-eye"></i>
+                      </div>
+
+                      <div *ngIf="item.IsDowloadApplicable" (click)="downloadDocument(item, videoModal)" class="file-download-icon" matTooltip="Download" id="plus">
+                        <i class="mdi mdi-download"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-template #other>
+                  <div class="col-lg-3 col-xl-3 col-md-6 col-12" style="padding-bottom: 10px;">
+                    <div class="row node file-box">
+                      <div class="col-lg-3 customjustify p-l-r-10">
+                        <img id="extension-img" [src]="getDocImage(item.Extension)" alt="icon" />
+                      </div>
+                      <div class="col-lg-6 customjustify p-l-r-0 file-box-title">
+                        <h5 class="mb-0 text-overflow file-name" title="{{ item.DisplayName }}">
+                          {{ item.DisplayName }}
+                        </h5>
+                      </div>
+                      <div id="actionbtns" class="col-lg-3 hover-display customjustify p-l-r-0">
+                        <div class="action-btns">
+                          <i class="mdi mdi-eye mr-2 cursor-pointer" matTooltip="View" (click)="viewDocument(item, videoModal)"></i>
+                          <i class="mdi mdi-pencil mr-2 cursor-pointer" matTooltip="Edit" (click)="editDoc(item.Id)"></i>
+                          <i class="mdi mdi-delete cursor-pointer" matTooltip="Delete" (click)="doDeleteFile(item)"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="(HrPolicyFilesS3.length == 0 && selectedFolderName) || (filesCount==0 && folderCount==0)" style="display: flex; flex-direction: column; justify-content: center; width: 100%; height: 55vh;align-items: center;">
+          <img  src="./assets/Images/no_data.svg" alt="img" style="height: 130px;">
+          <p style="margin-top: 20px;">No documents Found!</p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #videoModal>
+  <div class="modal fade show">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="col-12 d-flex justify-content-end">
+            <div *ngIf="isDownload">
+              <app-filedownload [documentId]="documentURLId">
+              </app-filedownload>
+            </div>
+            <button type="button" class="ml-3" (click)="closeModal()">
+              <i class="mdi mdi-close"></i>
+            </button>
+          </div>
+        </div>
+        <div class="content d-flex align-items-center">
+          <div class="modal-body no-padder">
+            <div class="popup">
+              <video class="video-dimension" controls #videoPlayer>
+                <source [src]="videoSource" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

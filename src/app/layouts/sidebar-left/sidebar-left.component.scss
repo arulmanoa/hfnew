@@ -1,0 +1,64 @@
+:host {
+    
+    .alignright{
+        text-align: right !important;
+        padding-bottom: 10px;
+    }
+    .PadBottum{
+        margin-bottom: 10px !important;
+    }
+
+  >.container {
+      max-width: 2000px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      background: none;
+     
+  }
+  
+}
+
+
+.container {
+  position: relative;
+  flex: 1 0 auto;
+  margin: 0 auto;
+  text-align: left;
+  //   box-shadow: 0 0 20px rgba(0, 0, 0, 0.34);
+  height: 100%;
+}
+
+#content {
+  box-sizing: content-box;
+  margin: 0 auto;
+  width: 2000px;
+}
+
+#content {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 0px;
+}
+
+#main-content1{
+    // box-shadow: 0 0 20px rgba(0, 0, 0, 0.34);
+}
+
+#content,
+#main-content {
+  &::before,
+  &::after {
+      content: "";
+      display: table;
+  }
+  &::after {
+      clear: both;
+  }
+}
+
+
+
+

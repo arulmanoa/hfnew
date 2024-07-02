@@ -1,0 +1,261 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+
+    <div class="docs-page" *ngIf="!confirmSeparationPageLayout ">
+      <div class="Error full-screen">
+        <div><img src="assets/Images/designer-life.svg" style="height: 6rem;"> </div>
+        <h1>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"> </span>
+        </h1>
+        <p>Please wait while we set things up for you</p>
+      </div>
+    </div>
+
+    <app-searchbar-view *ngIf="confirmSeparationPageLayout" [Content]="'Accordian'"
+      [searchConfiguration]="confirmSeparationPageLayout.SearchConfiguration"
+      (onSearchBarAccordianChange)="onSearchBarAccordianChange($event)"
+      [toggleAccordian]="toggleAccordianSubject.asObservable()"
+      (searchButtonClicked)="onClickingSearchButton($event)"></app-searchbar-view>
+
+    <div class="text-center ma-5" *ngIf="spinner" style="margin-top: 20px;">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        fetching data...
+      </button>
+    </div>
+
+    <div class="content  report-content" *ngIf="!spinner && confirmSeparationPageLayout" style="margin-top: 20px;">
+
+      <div class="row m-b">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+          <div class="text-left">
+            <ul class="list-inline">
+
+              <li class="list-inline-item">
+                <button type="button" class="btn btn-default" [disabled]="selectedItems.length == 0"
+                  (click)="confirmSeparation()">
+                  <i class="mdi mdi-bookmark-check m-r-xs"></i> Confirm Exit
+                </button>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+          <div class="text-left">
+            <ul class="list-inline">
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <app-grid-view [gridConfiguration]="confirmSeparationPageLayout.GridConfiguration" [dataset]="dataset"
+        (onGridCreated)="onGridCreated($event)" (onSelectedRowsChanged)="onSelectedRowsChanged($event)">
+      </app-grid-view>
+    </div>
+
+
+  </div>
+</div>
+
+<!-- Display Result Modal -->
+<div *ngIf="confirmSeparationFormLayout" id="popup_dynamicForm" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="popup_dynamicForm" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left">Confirm Exit</h6>          
+            <div class="modal-close" (click)="modal_dismiss_Form()"><span class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <!-- <app-form-view [formLayout]="confirmSeparationFormLayout" [displayType]="'General'" 
+              (onFormCreated)="onFormCreated($event)"
+              >
+              </app-form-view> -->
+
+          <form [formGroup]="myForm">
+            <div class="row">
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label for="LDA" class="form-label">Employee Code</label>
+                {{myForm.get('EmployeeCode').value}}
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label for="LDA" class="form-label">Employee Name</label>
+                {{myForm.get('EmployeeName').value}}
+              </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label for="LDA" class="form-label">Last Date of Association <span class="required">*
+              </span></label>
+              <input id="LDA" formControlName="LDA" type="text" #dp="bsDatepicker" class="form-control"
+                [ngClass]="{'is-invalid': myForm.get('LDA').invalid && myForm.get('LDA').touched}"
+                [bsConfig]="{ isAnimated: false, dateInputFormat:'DD-MM-YYYY' }"
+                (bsValueChange)="onSearchElementValueChange(searchElement , $event)" readonly
+                placeholder="31/01/2024" autocomplete="off" bsDatepicker placement="bottom">
+              <div *ngIf="myForm.get('LDA').invalid && myForm.get('LDA').touched"
+                class="invalid-feedback">
+                Last Date of Association is required.
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label" for="Remarks">Remarks <span class="required">*
+              </span></label>
+              <textarea id="Remarks" formControlName="Remarks" class="form-control"
+                [ngClass]="{'is-invalid': myForm.get('Remarks').invalid && myForm.get('Remarks').touched}"></textarea>
+              <div *ngIf="myForm.get('Remarks').invalid && myForm.get('Remarks').touched" class="invalid-feedback">
+                Remarks are required.
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <div class="row">
+              <div class="col" >
+                <label class="form-label" >Generate Letters</label>
+              </div>
+
+              <div class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" 
+                  formControlName="GenerateLetters" />
+                  <span class="el-switch-style"></span> 
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col" >
+                <label class="form-label" >Send Mail to Employee</label>
+              </div>
+
+              <div class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" 
+                  formControlName="SendMailToEmployee" />
+                  <span class="el-switch-style"></span> 
+                </label>
+              </div>
+              </div>
+            
+            </div>
+
+           
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label" for="CCMailIds">CC Mail IDs</label>
+              <input id="CCMailIds" formControlName="CCMailIds" type="text" class="form-control"
+              [ngClass]="{'is-invalid': myForm.get('CCMailIds').invalid && myForm.get('CCMailIds').touched}">
+                <div *ngIf="myForm.get('CCMailIds').invalid && myForm.get('CCMailIds').touched" class="invalid-feedback">
+                  Please enter valid comma-separated email addresses.
+                </div>
+            </div>
+
+          </div>
+          </form>
+
+        </div>
+        <div class="modal-footer" style="display: block;">
+
+          <div class="row m-b">
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+              <div class="text-left">
+                <ul class="list-inline">
+
+                  <!-- <li class="list-inline-item">
+                        <button type="button" class="btn btn-default" [disabled]="selectedItems.length == 0"
+                          (click)="confirmSeparation()">
+                          <i class="mdi mdi-bookmark-check m-r-xs"></i> Confirm Exit
+                        </button>
+                      </li> -->
+
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+              <div class="text-right">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <button type="button" class="btn upgrade-btn" id="btn_onboarding_submit" (click)="submitForm()"
+                      style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> Submit
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Display Result Modal -->
+<div id="popup_displayResult" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_displayResult"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left">Result</h6>
+            <div class="modal-close" (click)="modal_dismiss_displayResult()"><span
+                class="mdi mdi-close pull-left"></span></div>
+          </div>
+
+          <!-- <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                <small class="header-pretitle"><b>Processing Status (Employee) </b></small>
+                <h6 class="modal-title subheader_h6" id="popup_release_AL" >{{ClientName}} <span> - </span>
+                  {{ClientContractName}} </h6>
+              </div> -->
+
+          <!-- <div class="modal-close" (click)="modal_dismiss_display()" style="margin-top: 5px;"><span
+                  class="mdi mdi-close pull-left"></span>
+              </div> -->
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12  col-sm-12  p-r-50">
+              <div class="job-box ">
+                <div class="inbox-message">
+                  <ul>
+                    <li *ngFor="let i of resultList" style="width: 100% !important;">
+                      <a href="javascript:;">
+                        <div class="message-avatar">
+                          <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                        </div>
+                        <div class="message-body">
+                          <div class="message-body-heading">
+                            <h5>{{i.EmployeeCode}} - <b *ngIf="i.Status" style="color: green;">Success</b>
+                              <b style="color: red;" *ngIf="!i.Status">Failed</b>
+                            </h5>
+                          </div>
+                          <p>{{i.ErrorMessage}}</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left left-margin-btn">
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

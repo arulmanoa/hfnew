@@ -1,0 +1,128 @@
+.choosefilebox {
+    /* background-color: rgb(255, 183, 0); */
+    display: flex;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    padding: 12px;
+    height: 100%;
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+}
+.boxborder {
+    display: flex;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    border-radius: 4px;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    flex: 1 1 auto;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 2px dashed rgba(0, 0, 0, 0.15);
+    z-index: 1;
+}
+.fqHzAf {
+    display: flex;
+    flex: 1 1 auto;
+}
+.boxlabel {
+    cursor: pointer;
+    display: flex;
+    flex: 1 1 auto;
+}
+.fqzcVW {
+    position: absolute;
+    clip: rect(1px, 1px, 1px, 1px);
+    padding: 0px;
+    border: 0px;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}
+.svgicon_content {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    flex: 1 1 auto;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+.cxCMfa {
+    padding-bottom: 18px;
+    color: white;
+}
+.filebox {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+.filebox_body {
+    position: relative;
+    display: flex;
+    border-radius: 4px;
+    color: rgb(33, 33, 33);
+    background-color: rgb(255, 255, 255);
+}
+.filebox_content {
+    cursor: pointer;
+    user-select: none;
+    margin: 0px;
+    outline: 0px;
+    border: 0px;
+    width: auto;
+    overflow: visible;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    color: inherit;
+    background-color: transparent;
+    transition: background-color 0.1s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s;
+    font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 15px 24px;
+    height: 54px;
+    position: relative;
+    border-radius: 4px 0px 0px 4px;
+    text-transform: uppercase;
+}
+
+.svgicon > svg {
+    display: flex;
+    flex: 1 1 auto;
+}
+.svgicon_a {
+    height: 60px;
+    width: 96px;
+}
+.svgicon {
+    display: flex;
+    overflow: hidden;
+}
+.svgicon_head {
+    padding-bottom: 18px;
+    color: white;
+}
+
+
+
+/* /// ---- */
+
+table.tableBodyScroll tbody {
+    display: block;
+    max-height: 350px;
+    overflow-y: scroll;
+  }
+  
+  table.tableBodyScroll thead, table.tableBodyScroll tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }

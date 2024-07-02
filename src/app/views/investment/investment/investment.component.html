@@ -1,0 +1,3647 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="!spinner">
+      <div class="row">
+        <div class="col-lg-6 col-xs-12 col-md-6">
+          <!-- <div class="headerbar">
+                        <div>
+                            <h2 class="header_title">My Investments </h2>
+
+                        </div>
+                    </div> -->
+          <div class="row" *ngIf="employeedetails">
+            <div class="col-md-2"
+              style="display: block;margin: 0 auto;text-align: center;margin-left: -5px;margin-right: -15px;">
+              <a href="javascript:;" class="circle">
+                <img height="128" width="128" src="assets/Images/personnel_boy.png" style="width: 48px;height: 48px;"
+                  alt="Cloud Chen">
+              </a>
+            </div>
+            <div class="col-md-10" style="margin-left: 0px;padding-left: 0px;margin-top: 10px;">
+              <h6 *ngIf="employeedetails" style="font-size: 14px; font-weight: 600; line-height: 18px;">
+                {{employeedetails.FirstName}} &nbsp; {{employeedetails.LastName}} </h6>
+              <span style="font-size: 12px;"> {{employeedetails.Code}} &nbsp; • &nbsp; {{_Designation}}
+                &nbsp;•&nbsp; {{_DOJ | date : 'dd-MM-yyyy'}} </span>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="col-lg-6 col-xs-12 col-md-6 text-right">
+          <ul class="list-inline" style="margin-top: 10px;">
+            <li class="list-inline-item" *ngIf="!isESSLogin">
+              <button class="btn btn-sm btn-default" tooltip="Close" (click)="confirmExit()" tooltip-placement="bottom"
+                data-original-title="" title="">
+                <i class="mdi mdi-close font-size-md"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row"
+        *ngIf="!spinner && isInvestmentUnderQC && currentTaxMode == 2 && currentFinYear == selectedFinYear">
+
+        <div class="col-lg-12 text-center">
+          <ngb-alert [dismissible]="false">
+            <strong> Your Investment Proof verification is underway. Please wait until it is completed.
+            </strong>
+          </ngb-alert>
+        </div>
+
+        <br />
+        <br />
+
+      </div>
+
+      <!-- <div class="row" *ngIf="!spinner && isInvestmentUnderQC && summaryDocumentId > 0 &&  currentTaxMode == 2">
+                <div class="col-lg-12" style="TEXT-ALIGN: CENTER;">
+                    <button type="button" class="btn btn-default" (click)="download12BB(false)">
+                        <i class="mdi mdi-download  m-r-xs"></i> Download Form 12BB
+                    </button>
+                    <br />
+                </div>
+            </div> -->
+
+      <div class="row"
+        *ngIf="!spinner && !isInvestmentUnderQC && isInvestmentQcRejected && currentTaxMode == 2 && currentFinYear == selectedFinYear">
+        <br />
+        <div class="col-lg-12" style="TEXT-ALIGN: CENTER;COLOR: RED;"
+          *ngIf="employeedetails.EmployeeInvestmentMaster.Remarks">
+          <span class="text-center"> Rejection Remarks :
+            {{this.employeedetails.EmployeeInvestmentMaster.Remarks}} </span>
+          <br />
+          <br />
+        </div>
+      </div>
+
+      <!-- FOR FORCESCOUT DEMO -->
+      <div class="row">
+        <br />
+        <div class="col-lg-12">
+          <div class="col-md-6 float-right mb-2 p-0" style="margin-top: -0.75rem;text-align: right;">
+            <button class="btn btn-blank" style="color: #146BA2 !important;" (click)="doViewTaxSlip()"> <i
+                class="mdi mdi-file-document-outline"></i>
+              &nbsp;View Taxslip</button>
+          </div>
+          <br />
+          <br />
+        </div>
+      </div>
+
+      <div class="row"
+        *ngIf="!PermissibleRoles() && !IsPriorDOJ && !isResigned && indicateSubmissionSlotEnddate && indicateSubmissionSlotIsAfter && indicateSubmissionSlotIsBefore && !isInvestmentUnderQC && currentTaxMode == 2 && currentFinYear == selectedFinYear">
+        <div class="col-lg-12 text-center">
+          <ngb-alert [dismissible]="false">
+            <strong> The investment submission date will close on {{InvestmentClosedDate |
+              date:'dd-MM-yyyy'}} </strong>
+          </ngb-alert>
+        </div>
+        <br />
+        <br />
+      </div>
+      <div class="row"
+        *ngIf="!PermissibleRoles() && !IsPriorDOJ && !isResigned && indicateSubmissionSlotEnddate && !indicateSubmissionSlotIsAfter && !indicateSubmissionSlotIsBefore && !isInvestmentUnderQC && currentTaxMode == 2 && currentFinYear == selectedFinYear">
+        <div class="col-lg-12 text-center">
+          <ngb-alert [dismissible]="false">
+            <strong> The investment submission date will close on {{InvestmentClosedDate |
+              date:'dd-MM-yyyy'}} </strong>
+          </ngb-alert>
+        </div>
+        <br />
+        <br />
+      </div>
+      <div class="row"
+        *ngIf="!PermissibleRoles() && !IsPriorDOJ && !isResigned && !indicateSubmissionSlotEnddate && indicateSubmissionSlotIsAfter && !indicateSubmissionSlotIsBefore && !isInvestmentUnderQC && currentTaxMode == 2 && currentFinYear == selectedFinYear">
+        <div class="col-lg-12 text-center">
+          <ngb-alert [dismissible]="false">
+            <strong> The submission period has ended. Please wait until HR reopens the time slot.
+            </strong>
+            <!-- <strong>
+                            Investment submission time closed
+                        </strong> -->
+          </ngb-alert>
+        </div>
+        <br />
+        <br />
+      </div>
+      <div class="row"
+        *ngIf="!PermissibleRoles() && !IsPriorDOJ && !isResigned && !indicateSubmissionSlotEnddate && !indicateSubmissionSlotIsAfter && indicateSubmissionSlotIsBefore && !isInvestmentUnderQC && currentTaxMode == 2 && currentFinYear == selectedFinYear">
+        <div class="col-lg-12 text-center">
+          <ngb-alert [dismissible]="false">
+            <!-- <strong> The submission start time for this financial year has not yet started. Please wait
+                            until specialists open up the time slot. </strong> -->
+            <strong>
+              Investment submission time closed
+            </strong>
+          </ngb-alert>
+        </div>
+        <br />
+        <br />
+      </div>
+
+
+
+      <div class="card text-white" style="background-color: none !important;
+            background-clip: none;
+            border: none !important;
+            border-radius: none;">
+        <div class="card-body card-bg">
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="">
+                <div class="row" style="margin-bottom: 10px;font-weight: 600;">
+                  <div class="col-12">
+                    <p class="p-content">Declare your IT saving investments for this financial
+                      year!</p>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-md-4 text-left">
+                    <small class="small-content" style="line-height: 26px;">Total Qualifying
+                      Amount</small>
+                    <h6 class="h6-content">{{TaxTotalQualifyingAmount |
+                      currency:'INR':'symbol-narrow':'1.2-2'}}</h6>
+
+                  </div>
+                  <div class="col-md-4 text-left">
+                    <small class="small-content" style="line-height: 26px;">Total Invested
+                      Amount</small>
+                    <h6 class="h6-content">{{TaxTotalDeclaredAmount |
+                      currency:'INR':'symbol-narrow':'1.2-2'}}</h6>
+                  </div>
+                  <div class="col-md-4 text-left" *ngIf="currentTaxMode == 2">
+                    <small class="small-content" style="line-height: 26px;">Total Approved
+                      Amount</small>
+                    <h6 class="h6-content">{{TaxTotalApprovedAmount |
+                      currency:'INR':'symbol-narrow':'1.2-2'}}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 text-right">
+              <div class="row" style=" position: relative;
+                            transform: translatey(-50%);
+                            top: 60%;">
+                <div class="col-lg-12 text-right">
+
+                  <!-- <button class="btn btn-blank" (click)="doTaxCalculator()"> <i
+                                        class="mdi mdi-eye-outline"></i>
+                                    &nbsp;Tax Calculator</button> -->
+
+
+                  <button class="btn btn-blank" (click)="previewInvestmentItesm()"> <i class="mdi mdi-eye-outline"></i>
+                    &nbsp;Preview Investment</button>
+
+
+                  <button class="btn btn-blank" *ngIf="currentTaxMode == 2 && !isInvestmentUnderQC"
+                    (click)="preview12BBForm('nonDownload')"> <i class="mdi mdi-eye-outline"></i>
+                    &nbsp;Preview Form 12BB</button>
+
+                  <button class="btn btn-blank"
+                    *ngIf="currentTaxMode == 2 && !spinner && isInvestmentUnderQC && summaryDocumentId > 0 &&  currentTaxMode == 2 && currentFinYear == selectedFinYear"
+                    (click)="download12BB(false)"> <i class="mdi mdi-download"></i> &nbsp;Download
+                    Form 12BB</button>
+
+
+                  <button class="btn btn-white" (click)="doTaxCalculator()"><i class="mdi mdi-cash-multiple"></i>
+                    &nbsp;My Tax Calculator </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- #region My Investment Conditions Part -->
+      <div class="row" style="margin-top:  10px">
+        <div class="col-xxs-4 col-xs-4 col-md-2">
+          <label class="form-label">Financial Year </label>
+          <select class="form-select" [(ngModel)]="selectedFinYear"
+            (change)="onChangeFinancialYear($event.target.value)">
+            <option *ngFor="let fyear of LstEmployeeInvestmentLookup.FicalYearList" [value]="fyear.Id"
+              [selected]="fyear.Id == currentFinYear">{{fyear.code}}</option>
+          </select>
+        </div>
+        <div class="col-xxs-4 col-xs-4 col-md-2" style="line-height: 20px;margin-top: 16px;">
+          <label class="form-label" *ngIf="currentTaxMode == 2">Tax Mode : Proof</label>
+          <label class="form-label" *ngIf="currentTaxMode == 1">Tax Mode : Declaration</label>
+
+        </div>
+
+
+        <div class="col-xxs-4 col-xs-4 col-md-8 text-right">
+          <div class="wrapper">
+            <input type="radio" value="newregime" name="select" id="option-1"
+              [disabled]=" isInvestmentUnderQC || IsTaxRegimeDisabled" (change)="onChangeTaxRegime($event.target.value)"
+              [checked]="IsNewTaxRegimeOpted">
+            <input type="radio" value="oldregime" name="select" id="option-2"
+              [disabled]="isInvestmentUnderQC || IsTaxRegimeDisabled" (change)="onChangeTaxRegime($event.target.value)"
+              [checked]="!IsNewTaxRegimeOpted">
+            <label for="option-1" class="option option-1">
+              <span style="font-weight: 600;
+                         font-size: 12px;
+                         line-height: 14px;">New Regime</span>
+            </label>
+            <label for="option-2" class="option option-2">
+              <span style="font-weight: 600;
+                         font-size: 12px;
+                         line-height: 14px;">Old Regime</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <br />
+      <!-- #endregion -->
+
+      <!-- #region Tax Summary Box -->
+      <ng-container *ngFor="let product of LstTaxInvestmentsSummary; let k = index">
+        <div class="card mb-3" style="background: #FFFFFF;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);
+            border-radius: 4px; border-left-width: 7px;" [ngStyle]="{'border-left-color':getColor(k)}"
+          *ngIf="getValidToShowInvestment(product) && showExemptionCard(product)">
+          <div class="row no-gutters">
+            <div class="col-md-2" style="background: #EEEEEE;">
+              <img src="assets/Images/{{product.ImgURL}}" style="height: 30%;
+                   
+                        margin: auto;
+                        position: relative;
+                        top: 50%;
+                        transform: translateY(-50%);" alt="">
+
+              <span style="position: relative;
+                        top: 44%;
+                        transform: translateY(-50%);
+                        text-align: center;
+                        display: block;
+                        color: #000;">{{product.TaxInvestmentName}}</span>
+            </div>
+            <div class="col-md-10">
+              <div class="card-body">
+                <button class="btn btn-download" *ngIf="product.IsRejected && currentFinYear == selectedFinYear"
+                  style="color:#ee534f">
+                  <i class="mdi mdi-frequently-asked-questions"></i> &nbsp; Looks like one of the
+                  documents does not meet the validation criteria. Please check! </button>
+
+                <!-- <p class="card-text" style="font-weight: 400;font-size: 12px;color: #1C1E24;">
+                                {{product.Text}} </p> -->
+
+                <p *ngIf="product.Code == 'INVT'"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 0px;"> Use this
+                  provision to submit your investment details related to Sections 80C, 80CCC, 80CCD (1),
+                  80CCD (1B) like LIC, NSC, HLPR, NPS, etc</p>
+                <p *ngIf="product.Code == 'INVT'"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 10px;"> The total
+                  Amount Invested will be shown against the Qualifying Amount. </p>
+
+                <p *ngIf="product.Code == 'DEDUT'"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 0px;">Use this
+                  provision to claim deductions in respect to mediclaim, health check up, medical
+                  expenditure details under Sections 80D, 80DD</p>
+                <p *ngIf="product.Code == 'DEDUT'"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 10px;"> The total
+                  Amount Claimed will be shown against the Qualifying Amount.</p>
+
+                <p *ngIf="product.Code == 'EXMPT' && IsAllen"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 0px;"> {{ExemptionCardText}}
+                </p>
+                <p *ngIf="product.Code == 'EXMPT' && !IsAllen"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 0px;">Use this provision to
+                  claim exemptions related to ection 10 like LTA, Vehicle Reimbursement, PDR, etc.
+                </p>
+                <p *ngIf="product.Code == 'EXMPT'"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 10px;"> <i>Note:
+                    HRA exemption claim has to be done under the House Rent Allowance option</i></p>
+
+                <p *ngIf="product.Code == 'HRA'"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 0px;">Use this
+                  provision to claim HRA exemption. The qualifying amount is the least of the below three
+                  conditions</p>
+                <p *ngIf="product.Code == 'HRA'"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 0px;"> (1) Annual
+                  HRA Received </p>
+                <p *ngIf="product.Code == 'HRA'"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 0px;"> (2) Annual
+                  Rent - (1/10th) of Annual Basic </p>
+                <p *ngIf="product.Code == 'HRA'"
+                  style="font-weight: 400;font-size: 12px;color: #1C1E24;margin-bottom: 10px;"> (3) 40% or
+                  50% of Annual Basic depending on Metro city </p>
+
+                <p *ngIf="product.Code == 'HP'" style="font-weight: 400;font-size: 12px;color: #1C1E24;">Use
+                  this provision to claim Loss from House Property. First time house buyers who have
+                  availed housing loans between 1st April 2019 and 31st March 2022 are eligible to claim
+                  an additional deduction of interest payment 1,50,000/- under Section 80 EEA. Loans
+                  availed from 1st April 2017 by first time home buyers are eligible to claim an
+                  additional deduction of interest payment 50,000/- under Section 80EE</p>
+
+                <p *ngIf="product.Code == 'PERQ'" style="font-weight: 400;font-size: 12px;color: #1C1E24;">
+                  Use this provision to declare benefits/amenties over and above salary and wages,
+                  provided by your employer. These benefits are taxable and will be included in the
+                  taxable income. Examples of perquisites would include company owned car for personal
+                  purposes, stock options, rent free furnished accommodation, club memberships, etc.</p>
+                <p *ngIf="product.Code == 'INCM'" style="font-weight: 400;font-size: 12px;color: #1C1E24;">
+                  Use this option to submit details of income other than salary, capital gains,
+                  business/profession. Any external income like dividends, interest from fixed deposits,
+                  commission can be declared here</p>
+
+                <p *ngIf="product.Code == 'PE'" style="font-weight: 400;font-size: 12px;color: #1C1E24;">
+                  Previous employment details refer to the information about an employee's work history before joining
+                  the
+                  current organization. The information includes details such as the name of the previous employer, job
+                  title, employment dates, income and deductions done by the previous employer pertaining to the current
+                  financial year.</p>
+                <div class="row">
+
+                  <div class="col-md-10">
+                    <ng-container *ngIf="product.Code != 'PE'">
+                      <div class="row"
+                        *ngIf="product.Code != 'EXMPT' && product.Code != 'INVT' && product.Code != 'DEDUT' && product.Code != 'PERQ' &&  product.Code != 'INCM'">
+                        <div class="col-md-2">
+                          <label class="text-left" style="color: #8A8A8C;font-weight: 400;
+                                            font-size: 10px;">Qualifying Amount </label>
+                        </div>
+                        <div class="col-md-7">
+                          <div class="progress" style="margin-top: 10px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0"
+                              aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <label class="text-left" style="font-size: 12px;
+                                            font-weight: 600;">{{product.QualifyingAmount |
+                            currency:'INR':'symbol-narrow':'1.2-2'}}</label>
+                        </div>
+                      </div>
+
+                      <div class="row" *ngIf="product.Code != 'PERQ' ">
+                        <div class="col-md-2">
+                          <label class="text-left" style="color: #8A8A8C;font-weight: 400;
+                                            font-size: 10px;"
+                            *ngIf="product.Code != 'DEDUT' && product.Code !='EXMPT'">Amount
+                            Invested </label>
+                          <label class="text-left" style="color: #8A8A8C;font-weight: 400;
+                                             font-size: 10px;"
+                            *ngIf="product.Code == 'DEDUT' || product.Code =='EXMPT'">Amount Claimed
+                          </label>
+                        </div>
+                        <div class="col-md-7">
+                          <div class="progress" style="margin-top: 10px;"
+                            [ngStyle]="getColorCodeValueEvent(product.AmountDeclared, product.QualifyingAmount, product.AmountApproved,'D')">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 100%"
+                              aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <label class="text-left" style="font-size: 12px;
+                                            font-weight: 600;">{{product.AmountDeclared |
+                            currency:'INR':'symbol-narrow':'1.2-2'}}</label>
+                        </div>
+                      </div>
+
+                      <div class="row" *ngIf="currentTaxMode == 2">
+                        <div class="col-md-2">
+                          <label class="text-left" style="color: #8A8A8C;font-weight: 400;
+                                            font-size: 10px;">Amount Approved</label>
+                        </div>
+                        <div class="col-md-7">
+                          <div class="progress" style="margin-top: 10px;"
+                            [ngStyle]="getColorCodeValueEvent(product.AmountDeclared, product.QualifyingAmount, product.AmountApproved,'A')">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="15"
+                              aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+
+                        </div>
+                        <div class="col-md-2">
+                          <label class="text-left" style="font-size: 12px;
+                                            font-weight: 600;">{{product.AmountApproved |
+                            currency:'INR':'symbol-narrow':'1.2-2'}}</label>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                  <div class="col-md-2" style=" display: flex;
+                                align-items: center;">
+                    <button class="btn btn-download"
+                      *ngIf="!isInvestmentUnderQC && !IsNewTaxRegimeOpted && selectedFinYear == currentFinYear  && IsValidToShow()"
+                      (click)="addNewTaxProductItem(product)"><i class="mdi mdi-file-download-outline"></i> &nbsp; Add
+                      new
+                    </button>
+                    <button class="btn btn-download"
+                    *ngIf="!isInvestmentUnderQC && IsNewTaxRegimeOpted && addNewConfigNewRegime.includes(product.Code)  && selectedFinYear == currentFinYear  && IsValidToShow()"
+                      (click)="addNewTaxProductItem(product)"><i class="mdi mdi-file-download-outline"></i> &nbsp; Add
+                      new
+                    </button>
+
+                    <!-- <button class="btn btn-download"
+                                            *ngIf="IsNewTaxRegimeOpted && selectedFinYear != currentFinYear"
+                                            (click)="viewInvestmentDetails(product)"><i
+                                                class="mdi mdi-file-download-outline"></i> &nbsp; View Details </button> -->
+
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+
+      <!-- #endregion -->
+
+      <div class="row" *ngIf="!isInvestmentUnderQC && currentTaxMode == 2">
+        <div class="col-md-12 text-right">
+          <div class="row" style=" position: relative;
+                transform: translatey(-50%);
+                top: 60%;">
+            <div class="col-lg-6 text-left">
+              <!-- <button class="btn btn-blank" style="color:  #146BA2 !important"
+                                *ngIf="!isInvestmentUnderQC" 
+                                (click)="downloadExcel()"> <i class="mdi mdi-file-excel"></i> &nbsp;Download as
+                                Excel</button> -->
+
+            </div>
+            <div class="col-lg-6 text-right">
+
+              <button class="btn btn-blank" (click)="preview12BBForm('nonDownload')" style="color:  #146BA2 !important">
+                <i class="mdi mdi-eye-outline"></i> &nbsp;Preview
+                Form 12BB</button>
+              <button class="btn btn-primary" (click)="onWorkFlowSubmit()"
+                *ngIf="!PermissibleRoles() && ispendingInvestmentExist && currentFinYear == selectedFinYear"
+                style="background: #146BA2 !important;"> <i class="mdi mdi-sticker-check-outline"></i> &nbsp; Submit
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- #region Deduction (Medical Expenditure) -->
+
+<nz-drawer [nzVisible]="visible_slider_medical" [nzWidth]="1040" nzIcon="user" [nzClosable]="false">
+
+  <div class="row" style="margin: -11px;">
+    <div class="col-md-4" style="padding: 3px;">
+      <h3 style="font-size: 16px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+        Medical Insurances & Expenditures</h3>
+
+
+    </div>
+    <div class="col-md-8" style="padding: 3px;">
+      <div class="row">
+        <!-- <div class="col-md-4">
+                    <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Qualifying Amount</h6>
+                    <h3 style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">₹ 15,000</h3>
+
+                </div>
+                <div class="col-md-4">
+                    <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Declared Amount</h6>
+                    <h3 style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">₹ 14,500</h3>
+
+                </div>
+                <div class="col-md-4">
+                    <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Approved Amount</h6>
+                    <h3 style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">₹ 14,500</h3>
+
+                </div> -->
+      </div>
+
+
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+  <div class="row" style="margin-right: -30px;margin-left: -30px;">
+    <div class="col-md-6 text-left">
+      <h3>Insured Person Details</h3>
+    </div>
+    <div class="col-md-6 text-right">
+      <div class="row" style=" position: relative;
+            transform: translatey(-50%);
+            top: 60%;">
+        <div class="col-lg-12 text-right">
+          <button class="btn btn-white" *ngIf="!IsOpenDependentCard" (click)="AddDependent(true)"
+            style="background: #146BA2;color: #ffffff;">
+            <i class="mdi mdi-plus"></i>
+            &nbsp; Add Insured Person</button>
+          <button class="btn btn-white" *ngIf="IsOpenDependentCard" (click)="AddDependent(false)"
+            style="background: #146BA2;color: #ffffff;">
+            <i class="mdi mdi-minus"></i>
+            &nbsp; Hide Insured Person</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="row" *ngIf="IsOpenDependentCard" style="background: #F7F7F7;padding: 14px;margin-top: 10px;margin: 0px; margin-top: 9px !important;border-radius: 4px;margin-right: -10px;
+        margin-left: -15px;">
+      <div class="col-md-12">
+        <h3>Add Insured Person/Dependent Details</h3>
+      </div>
+
+      <div class="col-xs-12 col-md-4">
+        <div class="form-group">
+          <label class="form-label searchbar-label"> Insured Person * </label>
+          <label class="qcsummarylabel form-text text-muted">
+            <input class="form-control" [(ngModel)]="DependentName" type="text" name="NameOfLender"
+              placeholder="Insured Person" autocomplete="off">
+          </label>
+          <div *ngIf="IsDependentAdded && !CheckIsNullOrEmpty('DependentName')" class="help-block">
+            Insured Person is required
+          </div>
+        </div>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+        <label class="form-label">Relationship</label>
+        <ng-select [items]="relationship" placeholder="-- select an option --" [(ngModel)]="Relationship"
+          bindLabel="name" bindValue="id" (change)="onChangeRelationship($event)">
+        </ng-select>
+        <div *ngIf="IsDependentAdded && !CheckIsNullOrEmpty('Relationship')" class="help-block">
+          Relationship Name is required
+        </div>
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+        <label class="form-label">Date of Birth * </label>
+        <input class="form-control" [(ngModel)]="DateOfBirth" type="text" readonly name="startDate" bsDatepicker
+          placement="left"
+          [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+          placeholder="DD-MM-YYYY" [maxDate]="EnddateminDate">
+        <div *ngIf="IsDependentAdded && !CheckIsNullOrEmpty('DateOfBirth')" class="help-block">
+          Date Of Birth is required
+        </div>
+      </div>
+      <div class="col-md-12 text-right">
+        <button class="btn btn-white" (click)="PushDependent()" style="background: #146BA2;color: #ffffff;">
+          Add</button>
+      </div>
+
+    </div>
+
+    <div class="row" *ngIf="IsOpenDependentCard && LstDependent.length > 0" style="margin-top: 5px;margin-right: -25px;
+            margin-left: -30px;">
+      <div class="col-md-12">
+        <table class="table table-borderless"
+          style="font-size: 12px !important;box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);background-color: white;">
+          <thead>
+            <tr class="" style="font-weight: 600; border-bottom: 1px solid #ddd;">
+              <th> <span style="width: 40%;"> Insured Person </span></th>
+              <th style="width: 30%;">Relationship </th>
+              <th style="width: 20%;">Date of Birth </th>
+              <th style="width: 5%;"> </th>
+              <th style="width: 5%;"> </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of LstDependent; let i = index">
+              <tr style="line-height: 10px;">
+                <td class="table-td-center">
+                  {{item.DependentName}}
+                </td>
+                <td class="table-td-center">
+                  {{getRelationShipName(item.Relationship)}}
+                </td>
+                <td class="table-td-center">
+                  {{getDateOfBirthFormat(item.DateOfBirth)}}
+                </td>
+                <td>
+                  <div class="centered">
+                    <div class="" (click)="editDependent(item,i)" style="cursor: pointer;" matTooltip="Edit Dependent"
+                      id="plus">
+                      <i class="fa fa-pencil" style="display: block;
+                                    margin: 0 auto;
+                                    top: -3px;
+                                    position: relative;
+                                    color: gray;
+                                    font-size: 18px;"></i>
+                    </div>
+                  </div>
+
+                </td>
+                <td>
+                  <div class="centered">
+                    <div class="" (click)="deleteDependent(item,i)" style="cursor: pointer;"
+                      matTooltip="Delete Dependent" id="plus">
+                      <i class="fa fa-trash-o" style="display: block;
+                                    margin: 0 auto;
+                                    top: -3px;
+                                    position: relative;
+                                    color: red;
+                                    font-size: 18px;"></i>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="">
+    <div class="row" style="margin-top: 10px;; border:  1px solid #E6E6E6;">
+      <div class="col-lg-12 text-center" *ngIf="IsFailedToValidate">
+        <ngb-alert [dismissible]="false" type="danger">
+          <strong> {{InvestmentWarningMessage}}
+            <i class="fa fa-question-circle" style="color: red;font-size: 14px;margin-left: 5px;"></i>
+          </strong>
+          <!-- <strong>The form cannot be submitted as its missing required data. Please correct the marked fields and try again.</strong> -->
+        </ngb-alert>
+      </div>
+
+      <div class="col-md-4">
+        <ng-container *ngFor="let tab of LstMedicalInsuranceProduct">
+          <div class="tab-item" (click)="handleTabClick(tab)"
+            [ngClass]="{'active': tab.ProductCode == selectedMedicalInsurantTab.ProductCode}">
+            <h3 class="tab-item__heading">{{tab.ProductName}}</h3>
+            <p class="tab-item__subheading">{{tab.Code}}
+
+              <span *ngIf="LstMedicalDependent.length > 0 && getMedicalExpenditureStatus(tab) == 3"
+                style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                <span class="badge badge-success1"> Partially Approved </span>
+                <span class="badge badge-remarks" matTooltip="{{getMedicalExpenditureStatusRemarks(tab)}}"
+                  title="{{getMedicalExpenditureStatusRemarks(tab)}}"> <i class="mdi mdi-message-alert-outline"></i>
+                </span>
+              </span>
+              <span *ngIf="LstMedicalDependent.length > 0 && getMedicalExpenditureStatus(tab) == 0"
+                style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                <span class="badge badge-warning1"> Saved </span>
+              </span>
+
+              <span *ngIf="LstMedicalDependent.length > 0 && getMedicalExpenditureStatus(tab) =='2'"
+                style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                <span class="badge badge-danger1"> Rejected </span>
+                <span class="badge badge-remarks" matTooltip="{{getMedicalExpenditureStatusRemarks(tab)}}"
+                  title="{{getMedicalExpenditureStatusRemarks(tab)}}"> <i class="mdi mdi-message-alert-outline"></i>
+                </span>
+              </span>
+              <span *ngIf="LstMedicalDependent.length > 0 && getMedicalExpenditureStatus(tab) ==  '1'"
+                style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                <span class="badge badge-success1" matBadge="10"> Approved </span>
+                <h6 class="badge badge-remarks" data-toggle="tooltip"
+                  matTooltip="{{getMedicalExpenditureStatusRemarks(tab)}}"
+                  title="{{getMedicalExpenditureStatusRemarks(tab)}}"> <i class="mdi mdi-message-alert-outline"></i>
+                </h6>
+              </span>
+              <span *ngIf="LstMedicalDependent.length > 0 && getMedicalExpenditureStatus(tab)== '5'"
+                style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                <span class="badge badge-declaration"> Declaration </span>
+              </span>
+
+              <i class="fa fa-question-circle" style="color: red;font-size: 14px;margin-left: 5px;"
+                *ngIf="tab.IsInvalid"></i>
+            </p>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="col-md-8">
+        <div *ngIf="selectedMedicalInsurantTab != null" style="padding-top: 2rem">
+          <div class="row" style="margin: -11px;">
+            <div class="col-md-6" style="padding: 3px;">
+              <h3
+                style="font-size: 16px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                {{selectedMedicalInsurantTab.ProductName}}</h3>
+              <p class="small" style="line-height: 16px;
+                            font-size: 12px;
+                            font-weight: 600;
+                            color: #b9b7b7;">{{selectedMedicalInsurantTab.Code}} |
+                {{selectedMedicalInsurantTab.Description}}</p>
+
+            </div>
+            <div class="col-md-6" style="padding: 3px;">
+              <div class="row">
+                <div class="col-md-6">
+                  <h6 class="small" style="line-height: 2px;
+                                    font-size: 12px;
+                                    font-weight: 600;
+                                    color: #d3d3d3;
+                                    ">Qualifying Limit</h6>
+                  <h3
+                    style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                    {{selectedMedicalInsurantTab.ThresholdLimit |
+                    currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+
+                </div>
+                <div class="col-md-6">
+                  <h6 class="small" style="line-height: 2px;
+                                    font-size: 12px;
+                                    font-weight: 600;
+                                    color: #d3d3d3;
+                                    ">Qualifying Limit for Senior </h6>
+                  <h3
+                    style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                    {{selectedMedicalInsurantTab.ThresholdLimitSenior |
+                    currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-right: -25px" *ngIf="CHeckIsNull()">
+
+
+
+
+
+          <!-- <div class="col-md-6 text-left" style="margin-top: 10px;">
+                        <span class="badge badge-warning"
+                            *ngIf="getMedicalExpenditureStatus(selectedMedicalInsurantTab, 0)"
+                            style="display: inline;color:white !important;">Pending </span>
+                        <span class="badge badge-success"
+                            *ngIf="getMedicalExpenditureStatus(selectedMedicalInsurantTab, 1)"
+                            style="display: inline;color:white !important;">Approved </span>
+                        <span class="badge badge-danger"
+                            *ngIf="getMedicalExpenditureStatus(selectedMedicalInsurantTab, 2)"
+                            style="display: inline;color:white !important;">Rejected </span>
+
+                    </div> -->
+
+
+
+          <div class="col-md-12 text-right" style="padding-top: 20px;">
+            <button class="btn btn-white" (click)="UseListedDependents()" style="background: #F4F4F4;
+                        color: #146BA2;"> Add insured person details for further use</button>
+          </div>
+        </div>
+
+
+        <div class="row" style="margin-top: 3rem;margin-bottom: 10px;"
+          *ngIf="IsMedicalDependentExists() && CHeckIsNull()">
+          <div class="col-md-4">
+            <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;">Insured Person *</p>
+          </div>
+          <div class="col-md-4" *ngIf="getAllowableCodeForDependent(selectedMedicalInsurantTab)">
+            <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;">Dependent Type *
+            </p>
+          </div>
+          <div class="col-md-4" *ngIf="getAllowableCodeForDisability(selectedMedicalInsurantTab)">
+            <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;">Disability
+              Percentage *</p>
+          </div>
+          <div class="col-md-3">
+            <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;">Amount (₹) *</p>
+          </div>
+          <div class="col-md-1">
+          </div>
+        </div>
+
+        <ng-container *ngFor="let medical of LstMedicalDependent; let j =index">
+          <div class="row" style="margin-top: 10px;
+                margin-bottom: 20px;"
+            *ngIf="medical.SelectedMedicalInsurantTab == selectedMedicalInsurantTab &&  !medical.IsDeleted && medical"
+            (change)="test()">
+            <ng-container>
+              <div class="col-md-4">
+                <b>{{medical.DependentName}}</b>
+                <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;">
+                  {{getRelationShipName(medical.Relationship)}} - {{medical.DateOfBirth | date}}</p>
+
+              </div>
+              <div class="col-md-4" *ngIf="getAllowableCodeForDependent(selectedMedicalInsurantTab)">
+                <ng-select [items]="DependentType" placeholder="-- select an option --"
+                  [(ngModel)]="medical.DependentType" (change)="OnChangeMedicalData(medical)" bindLabel="Name"
+                  bindValue="Id">
+                </ng-select>
+              </div>
+              <div class="col-md-4" *ngIf="getAllowableCodeForDisability(selectedMedicalInsurantTab)">
+                <ng-select #select [items]="lstDisabilityPercentage	" bindValue="Id"
+                  [(ngModel)]="medical.DisabilityPercentage" (change)="OnChangeMedicalData(medical)" bindLabel="Name"
+                  placeholder="Select an option">
+                </ng-select>
+              </div>
+              <div class="col-md-3">
+                <input class="form-control" type="text" maxlength="10" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                  [(ngModel)]="medical.MedicalAmount" name="MedicalAmount" (change)="OnChangeMedicalData(medical)"
+                  placeholder="₹ 8000.00" autocomplete="none|false|no">
+              </div>
+              <div class="col-md-1" (click)="deleteMedicalDependent(medical, j)">
+                <i class="fa fa-trash delete_icon" matTooltip="Delete" aria-hidden="true"></i>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="isApprovedRejectedMedicalItems() && !isGuidId(medical.Id)">
+              <div class="col-md-6" style="margin-top: 0px;">
+                <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;color: #000000;
+                                font-weight: 600;">
+                  App. Amt : {{medical.ApprovedAmount}}
+                  <ng-container *ngIf="PermissibleRoles()">
+                    <i class="fa fa-pencil" style="padding-left: 10px;font-size: 14px;
+                                    cursor: pointer;" matTooltip="Edit Approved Amount" [autoClose]="'outside'"
+                      placement="bottom" [ngbPopover]="popContent_medical" [popoverTitle]="popTitle_medical"></i>
+
+                    <ng-template #popContent_medical>
+                      <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)"
+                        (keyup)="OnChangeMedicalApprovedData(medical)" [(ngModel)]="medical.ApprovedAmount"
+                        name="amount" placeholder="1,50,000" autocomplete="off">
+
+                    </ng-template>
+                    <ng-template #popTitle_medical>Approved Amount</ng-template>
+                  </ng-container>
+
+                </p>
+              </div>
+
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="IsMedicalDependentExists()">
+          <div class="row" *ngFor="let medical of getLimitedDependents() |  slice:0:1" style="margin-top: 10px">
+            <ng-container *ngIf="medical.SelectedMedicalInsurantTab == selectedMedicalInsurantTab && CHeckIsNull()">
+              <div [ngClass]="currentTaxMode == 2 ? 'col-md-6' : 'col-md-12' ">
+                <div class="form-group">
+                  <label class="form-label searchbar-label">Remarks</label>
+                  <label class="qcsummarylabel form-text text-muted">
+                    <textarea class="form-control" [(ngModel)]="medical.MedicalRemarks" rows="4" spellcheck="false"
+                      placeholder="Type your message here..." id="MedicalRemarks"></textarea>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="currentTaxMode == 2">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label searchbar-label">Attachments</label>
+                      <div class="upload-files-container" draggable="true">
+                        <div class="drag-file-area" style="height: 95px; cursor: pointer;margin: 0px 0 0px;"
+                          *ngIf="isLoading">
+                          <label class="label" style="margin-bottom: -5px;width: 100%;cursor: pointer;">
+                            <h3 class="dynamic-message" style="color: #146BA2;top: 5%;position: relative;"> Upload
+                              your files here </h3>
+                            <span style="display: block;font-size: 10px;"> (Max size:
+                              2MB) </span>
+                            <span class="browse-files"> <input #myInput type="file"
+                                step="height: 100%;width: 100%;padding: 7px;" class="default-file-input"
+                                accept="application/msword,  application/pdf, image/*"
+                                (change)="onFileUpload($event, medical, 'Medical')" />
+                            </span>
+                          </label>
+                        </div>
+
+                        <div class="d-flex align-items-center" style="margin-top: 10%;" *ngIf="!isLoading">
+                          <strong class="text-right"> {{docSpinnerText}} ...
+                            &nbsp;&nbsp;&nbsp;</strong>
+                          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6" style="padding: 5px;" *ngIf="medical.DeclarationAttachments.length > 0">
+                    <div id="scroll-wrapper scrollbox_delayed">
+                      <div id="thumbnails">
+                        <div class="thumbnail-container" style="position: relative;
+                                    border: 1px solid steelblue;
+                                    margin: 16px;
+                                    display: inline-block;
+                                    height: 95px;                             
+                                    border-radius: 3px;
+                                    width: 110px;
+                                    margin-left: 5px;" *ngFor="let photo of medical.DeclarationAttachments">
+                          <div class="box">
+                            <button type="button" class="delete" (click)="doDeleteFile(medical,photo, 'Medical')">
+                              <span style="background-color: #e1e1e1;
+                                                            border-radius: 10%;"><i class="fa fa-minus-circle"
+                                  style="margin-top: 2px;" aria-hidden="true"></i></span>
+                            </button>
+                            <button type="button" class="delete" style="right: 1px;top: 70px;font-size: 20px;"
+                              (click)="doViewFile(medical, photo, 'Medical')">
+                              <span style="border-radius: 14%;background: #e4e4e4;"><i class="mdi mdi-progress-download"
+                                  style="color: #787c7b;"></i> </span>
+                            </button>
+                            <div>
+                              <span class="material-icons p-r-10">
+                                file_present
+                              </span>
+                              <span class="file-name" matTooltip="{{photo.FileName}}">
+                                {{photo.FileName}} </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+
+              <div class="col-md-6" style="margin-top: 0px;"
+                *ngIf="isApprovedRejectedMedicalItems() && !isGuidId(medical.Id)">
+                <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;color: #000000;
+                                font-weight: 600;"
+                  *ngIf="medical.ApproverRemarks != null && medical.ApproverRemarks != ''">
+                  App. Remarks : {{medical.ApproverRemarks}}</p>
+                <p style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;color: #000000;
+                                    font-weight: 600;"
+                  *ngIf="medical.ApproverRemarks == null || medical.ApproverRemarks == '' ">
+                  App. Remarks : --- </p>
+              </div>
+            </ng-container>
+
+          </div>
+        </ng-container>
+
+        <div class="row" *ngIf="!CHeckIsNull()">
+          <div class="col-md-12 text-center">
+            <button class="btn btn-white" (click)="UseListedDependents()" style="background: #F4F4F4;
+                        color: #146BA2;"> Add insured person details for further use</button>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+  <br />
+  <br />
+  <br />
+
+  <div class="row"
+    style="position: absolute; bottom: 0px;width: 100%; background: #FFFFFF;box-shadow: 0px -3px 5px #f1f1f1; margin-left: -23px;padding: 5px;">
+    <div class="col-lg-6">
+
+    </div>
+    <div class="col-lg-6 text-right" style="margin-top: 10px;">
+      <div class="text-right">
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <button class="btn btn-link" type="button" style="text-decoration: none !important;"
+              (click)="close_slider_medical()"> Cancel</button>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn  btn-primary"
+              style="padding-left: 25px;padding-right: 25px;padding-top: 2px;padding-bottom: 3px;width: 107px;height: 35px;"
+              type="Submit" name="btnSubmit" id="btnSubmit" (click)="saveDeclarations('Medical')"> Save
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+</nz-drawer>
+<!-- #endregion -->
+<!-- #region HRA (Add/Edit) -->
+
+<nz-drawer [nzVisible]="visible_slider_hra" [nzWidth]="940" nzIcon="user" [nzClosable]="false">
+
+  <div class="row" style="margin: -11px;">
+    <div class="col-md-6" style="padding: 3px;">
+      <h3 style="font-size: 16px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+        House Rent Paid</h3>
+      <p class="small" style="line-height: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #b9b7b7;" *ngIf="IsAllen"> Section 10 (13A) | Exemptions</p>
+      <p class="small" style="line-height: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #b9b7b7;" *ngIf="!IsAllen"> Sec 10 | Exemptions</p>
+      <!-- staic_syntax  -->
+
+    </div>
+    <div class="col-md-6" style="padding: 3px;">
+      <div class="row">
+        <div class="col-md-6">
+          <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Annual Basic</h6>
+          <h3 style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+            {{HRA_Annual_Basic | currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+
+        </div>
+        <div class="col-md-6">
+          <h6 class="small" style="line-height: 2px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #d3d3d3;
+                    margin-top: 16px;">Annual HRA</h6>
+          <h3 style="font-size: 14px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+            {{HRA_Annual | currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+
+  <div class="col-lg-12 text-center" style="font-size: 12px;" *ngIf="isHRAAllowedToEdit">
+    <ngb-alert [dismissible]="false" type="info">
+      <strong> Note: When you change the entry type, the previously recorded data gets deleted.</strong>
+      <!-- <strong>The form cannot be submitted as its missing required data. Please correct the marked fields and try again.</strong> -->
+    </ngb-alert>
+  </div>
+
+
+  <div class="row">
+
+
+
+    <div class="form-group form-group-vertical col-md-12">
+      <label class="form-label searchbar-label">Entry Type </label>
+
+      <div class="plans">
+        <label class="plan basic-plan" style="padding: 5px" for="annual">
+          <input [checked]="selectedEntryType =='annual'" value="annual" type="radio" name="plan"
+            (click)="OnChangeEntryType($event.target.value)" id="annual" />
+          <div class="plan-content">
+            <img loading="lazy" src="assets/Images/Annual.svg" alt="" />
+            <div class="plan-details" style="margin-top: 8px;">
+              <span style="margin-bottom: -5px;
+                            font-size: 12px;">Annual</span>
+              <p> For annually rent details submission</p>
+            </div>
+          </div>
+        </label>
+
+        <label class="plan complete-plan" style="padding: 5px" for="quarter">
+          <input type="radio" [checked]="selectedEntryType =='quarter'" value="quarter" id="quarter"
+            (click)="OnChangeEntryType($event.target.value)" name="plan" />
+          <div class="plan-content">
+            <img loading="lazy" src="assets/Images/Quarter.svg" alt="" />
+            <div class="plan-details" style="margin-top: 8px;">
+              <span style="margin-bottom: -5px;
+                            font-size: 12px;">Quarter</span>
+              <p>For quarterly rent details submission</p>
+            </div>
+          </div>
+        </label>
+        <label class="plan complete-plan" style="padding: 5px" for="month">
+          <input type="radio" [checked]="selectedEntryType =='month'" value="month" id="month"
+            (click)="OnChangeEntryType($event.target.value)" name="plan" />
+          <div class="plan-content">
+            <img loading="lazy" src="assets/Images/Month.svg" alt="" />
+            <div class="plan-details" style="margin-top: 8px;">
+              <span style="margin-bottom: -5px;
+                            font-size: 12px;">Month</span>
+              <p>For monthly rent details submission</p>
+            </div>
+          </div>
+        </label>
+        <label class="plan complete-plan" style="padding: 5px" for="custom">
+          <input type="radio" [checked]="selectedEntryType =='custom'" value="custom" id="custom"
+            (click)="OnChangeEntryType($event.target.value)" name="plan" />
+          <div class="plan-content">
+            <img loading="lazy" src="assets/Images/Custom.svg" alt="" />
+            <div class="plan-details" style="margin-top: 8px;">
+              <span style="margin-bottom: -5px;
+                            font-size: 12px;">Custom</span>
+              <p>For manually rent details submission</p>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-lg-12 text-center" *ngIf="IsFailedToValidate">
+      <ngb-alert [dismissible]="false" type="danger">
+        <strong> {{InvestmentWarningMessage}} <span class="required" style="color: #f89595fa;"
+            *ngIf="selectedEntryType == 'annual'"> *
+          </span> <i *ngIf="selectedEntryType != 'annual'" class="fa fa-question-circle"
+            style="color: red;font-size: 14px;margin-left: 5px;"></i> </strong>
+        <!-- <strong>The save cannot be submitted as its missing required data. Please correct the marked fields and try again.</strong> -->
+      </ngb-alert>
+    </div>
+
+
+
+
+    <ng-container *ngFor="let item of LstHouseRentAllowance; let inx = index">
+
+      <ng-container *ngIf="!item.IsDeleted && selectedEntryType == 'annual'">
+        <div class="col-md-12 text-right"
+          *ngIf="selectedEntryType != 'annual' && selectedEntryType != 'quarter' && selectedEntryType != 'month' && inx > 0">
+          <div class="form-group">
+            <a (click)="deleteNewHRA(item,inx)" href="javascript:;" class="btn btn-default" style="background-color: #e84953;
+                        border-color: #e6d3d7;
+                        color: #fefbfbeb !important;
+                        border-radius: 5px;"> <i class="mdi mdi-delete"></i> &nbsp; Delete
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <h6 *ngIf="!item.IsProposed && item.Status == 3"
+            style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+            <span class="badge badge-success1"> Partially Approved </span>
+            <span class="badge badge-remarks" matTooltip="{{item.ApproverRemarks}}"> <i
+                class="mdi mdi-message-alert-outline"></i>
+            </span>
+          </h6>
+          <h6 *ngIf="!item.IsProposed && item.Status == 0"
+            style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+            <span class="badge badge-warning1"> Saved </span>
+          </h6>
+          <h6 *ngIf="!item.IsProposed && item.Status == 2"
+            style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+            <span class="badge badge-danger1"> Rejected </span>
+            <span class="badge badge-remarks" matTooltip="{{item.ApproverRemarks}}"> <i
+                class="mdi mdi-message-alert-outline"></i>
+            </span>
+          </h6>
+          <h6 *ngIf="!item.IsProposed && item.Status == 1"
+            style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+            <span class="badge badge-success1"> Approved </span>
+            <span class="badge badge-remarks" matTooltip="{{item.ApproverRemarks}}"> <i
+                class="mdi mdi-message-alert-outline"></i>
+            </span>
+
+          </h6>
+          <h6 *ngIf="item.IsProposed" style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+            <span class="badge badge-declaration"> Declaration </span>
+
+          </h6>
+        </div>
+
+
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+          *ngIf="selectedEntryType == 'quarter' && selectedEntryType != 'month'">
+          <label class="form-label"> Financial Quarter
+          </label>
+          <input class="form-control" [(ngModel)]="item.QuarterRange" disabled type="text" name="financialQuarter"
+            bsDaterangepicker placement="bottom"
+            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+            placeholder="DD-MM-YYYY - DD-MM-YYYY" autocomplete="off"
+            (ngModelChange)="doChangeHRAFinancialQuarterDate($event)">
+        </div>
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+          *ngIf="selectedEntryType == 'quarter' && selectedEntryType != 'month'">
+        </div>
+
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="selectedEntryType != 'month'">
+          <label class="form-label"> Amount <span class="required" style="color: #f89595fa !important;">*</span>
+          </label>
+          <input class="form-control" type="text" maxlength="10" onkeypress="return /^[0-9]+$/i.test(event.key)"
+            name="HRAAmount" [(ngModel)]="item.HRAAmount" (keyup)="onChangeHRAAnnualDeclaredAmount(item)"
+            [ngClass]="{ 'is-invalid': IsSaved  && !doFieldValidationAmount(item.HRAAmount) }" placeholder="₹ 8000.00"
+            autocomplete="none|false|no">
+
+        </div>
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="selectedEntryType != 'month'">
+          <label class="form-label"> City <span class="required" style="color: #f89595fa !important;">*
+            </span> <i _ngcontent-c38="" class="fa fa-info-circle"
+              matTooltip="Please enter the name of the city if it is non-metro"></i>
+          </label>
+          <div class="input-group">
+            <div class="input-group-prepend" style="margin-top: 9px;padding-right: 10px;">
+              <div class="">
+                <input type="checkbox" id="isaddress" [(ngModel)]="item.IsMetro" [ngModelOptions]="{standalone:
+                            true}" (change)="onChangeIsMetroCity(item, $event)" [checked]="item.IsMetro">
+                <label for="isaddress_{{item.Id}}"></label>
+              </div>
+            </div>
+            <div *ngIf="item.IsMetro" style="width: 93%;">
+              <select #s class="form-control" id="financialYear"
+                [ngClass]="{ 'is-invalid': IsSaved  && !doFieldValidation(item.CityName) }" [(ngModel)]="item.CityName"
+                placeholder="Select an option" (change)="doChangeAnnualHRA(item)">
+                <option *ngFor="let city of LstEmployeeInvestmentLookup.CityList" [ngValue]="city.Id"
+                  class="ng-star-inserted">{{city.Code}}</option>
+              </select>
+            </div>
+            <div *ngIf="!item.IsMetro" style="width: 93%;">
+              <input type="text" [(ngModel)]="item.CityName"
+                [ngClass]="{ 'is-invalid': IsSaved  && !doFieldValidation(item.CityName) }"
+                placeholder="Name of the City" style="text-align:left" maxlength="12" class="form-control"
+                (keyup)="doChangeAnnualHRA(item)">
+            </div>
+          </div>
+
+        </div>
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+          *ngIf="selectedEntryType != 'quarter' && selectedEntryType != 'month'">
+          <label class="form-label"> Start Date <span class="required" style="color: #f89595fa !important;">*</span>
+          </label>
+          <input class="form-control" [disabled]="selectedEntryType != 'custom'" [(ngModel)]="item.StartDate"
+            type="text" name="startDate" bsDatepicker placement="left"
+            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+            placeholder="DD-MM-YYYY" (ngModelChange)="doChangeHRAStartDate($event, item)">
+        </div>
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+          *ngIf="selectedEntryType != 'quarter' && selectedEntryType != 'month'">
+          <label class="form-label"> End Date <span class="required" style="color: #f89595fa !important;">*</span>
+          </label>
+          <input class="form-control" [disabled]="selectedEntryType != 'custom'" [(ngModel)]="item.EndDate" type="text"
+            bsDatepicker name="endDate" placement="left"
+            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+            placeholder="DD-MM-YYYY" autocomplete="off" (ngModelChange)="doChangeHRAEndDate($event)">
+        </div>
+
+
+
+
+
+        <div class="col-md-6" *ngIf="selectedEntryType != 'month'">
+          <div class="form-group">
+            <label class="form-label searchbar-label">Rental House Address <span class="required"
+                style="color: #f89595fa !important;">*</span></label>
+            <label class="qcsummarylabel form-text text-muted">
+              <textarea class="form-control" [(ngModel)]="item.RentalHouseAddress"
+                [ngClass]="{ 'is-invalid': IsSaved  && !doFieldValidation(item.RentalHouseAddress) }" rows="3"
+                spellcheck="false" id="Remarks" (keyup)="doChangeAnnualHRA(item)"
+                placeholder="Type you address here..."></textarea>
+            </label>
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="selectedEntryType != 'month'">
+          <div class="form-group">
+            <label class="form-label searchbar-label">Address of Landlord <span class="required"
+                style="color: #f89595fa !important;">*</span></label>
+            <label class="qcsummarylabel form-text text-muted">
+              <textarea class="form-control" [(ngModel)]="item.AddressOfLandlord" (keyup)="doChangeAnnualHRA(item)"
+                [ngClass]="{ 'is-invalid': IsSaved  && !doFieldValidation(item.AddressOfLandlord) }" rows="3"
+                spellcheck="false" placeholder="Type your lender address here..." id="AddressofLender"></textarea>
+            </label>
+
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="selectedEntryType != 'month'">
+          <div class="form-group">
+            <label class="form-label searchbar-label">Name of Landlord <span class="required"
+                style="color: #f89595fa !important;">*</span></label>
+            <label class="qcsummarylabel form-text text-muted">
+              <input class="form-control" [(ngModel)]="item.NameOfLandlord" (keyup)="doChangeAnnualHRA(item)"
+                [ngClass]="{ 'is-invalid': IsSaved  && !doFieldValidation(item.NameOfLandlord) }" type="text"
+                name="NameOfLender" placeholder="Name of Lender" autocomplete="off">
+            </label>
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="selectedEntryType != 'month'">
+          <div class="form-group">
+            <label class="form-label searchbar-label">PAN of Landlord <span class="required"
+                *ngIf="isPanMandatoryForHRA" style="color: #f89595fa !important;">*</span></label>
+            <label class="qcsummarylabel form-text text-muted">
+              <input class="form-control" [(ngModel)]="item.PANOfLandlord" #input (keyup)="doChangeAnnualHRA(item)"
+                (input)="input.value=$event.target.value.toUpperCase()"
+                [ngClass]="{ 'is-invalid': IsSaved  && isPanMandatoryForHRA }" type="text" name="PANofLender"
+                placeholder="ABCPD1234E"
+                pattern="^([a-zA-Z]){3}([pPcCHhaAbBgGlLfFTtjJ]){1}([a-zA-Z]){1}([0-9]){4}([a-zA-Z]){1}?$" maxlength="10"
+                autocomplete="off">
+            </label>
+            <!-- <div class="help-block">
+                    <span  *ngIf="lhpForm.get('PANofLender').errors?.pattern || lhpForm.get('PANofLender').errors?.invalid">
+                        Please  match the requested format. (Ex: ABCPD1234E)
+                    </span>
+                </div> -->
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="selectedEntryType != 'month'">
+          <div class="form-group">
+            <label class="form-label searchbar-label">Remarks</label>
+            <label class="qcsummarylabel form-text text-muted">
+              <textarea class="form-control" [(ngModel)]="item.HRARemarks" (keyup)="doChangeAnnualHRA(item)" rows="4"
+                spellcheck="false" placeholder="Type your message here..." id="AddressofLender"></textarea>
+            </label>
+
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="selectedEntryType != 'month'">
+          <div class="row">
+            <div [ngClass]="item.DeclarationAttachments.length > 0 ? 'col-md-6' : 'col-md-12' "
+              *ngIf="currentTaxMode == 2">
+              <div class="form-group">
+                <label class="form-label searchbar-label">Attachments <span class="required"
+                    style="color: #f89595fa !important;">*</span></label>
+                <div class="upload-files-container" draggable="true">
+                  <div class="drag-file-area" style="height: 95px; cursor: pointer;margin: 0px 0 0px;" *ngIf="isLoading"
+                    [ngClass]="{ 'is-invalid-border': IsSaved && item.DeclarationAttachments.length == 0 }">
+
+                    <label class="label" style="margin-bottom: -5px;width: 100%;cursor: pointer;">
+                      <h3 class="dynamic-message" style="color: #146BA2;top: 5%;position: relative;"> Upload
+                        your files here </h3>
+                      <span style="display: block;font-size: 10px;"> (Max size:
+                        2MB) </span>
+                      <span class="browse-files"> <input #myInput type="file"
+                          step="height: 100%;width: 100%;padding: 7px;" class="default-file-input"
+                          accept="application/msword,  application/pdf, image/*"
+                          (change)="onFileUpload($event, item, 'HRA')" />
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="d-flex align-items-center" style="margin-top: 10%;"
+                    *ngIf="!isLoading && item.Id == selectedUploadIndex">
+                    <strong class="text-right"> {{docSpinnerText}} ... &nbsp;&nbsp;&nbsp;</strong>
+                    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div [ngClass]="isHRAAllowedToEdit ? 'col-md-6' : 'col-md-12' " style="padding: 5px;"
+              *ngIf="item.DeclarationAttachments.length > 0">
+              <div id="scroll-wrapper scrollbox_delayed">
+                <div id="thumbnails">
+                  <div class="thumbnail-container" style="position: relative;
+                                border: 1px solid steelblue;
+                                margin: 16px;
+                                display: inline-block;
+                                height: 95px;                             
+                                border-radius: 3px;
+                                width: 110px;
+                                margin-left: 5px;" *ngFor="let photo of item.DeclarationAttachments">
+                    <div class="box">
+                      <button type="button" class="delete" *ngIf="isHRAAllowedToEdit"
+                        (click)="doDeleteFile(item,photo, 'HRA')">
+                        <span>&times;</span>
+                      </button>
+                      <div>
+                        <span class="material-icons p-r-10">
+                          file_present
+                        </span>
+                        <span class="file-name" matTooltip="{{photo.FileName}}">
+                          {{photo.FileName}} </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+          *ngIf="!isGuidId(item.Id) && selectedEntryType != 'month'">
+          <label class="form-label">Approved Amount <span class="required" style="color: #f89595fa !important;">*</span>
+          </label>
+          <input class="form-control" type="text" maxlength="10" onkeypress="return /^[0-9]+$/i.test(event.key)"
+            name="ApprovedAmount" [(ngModel)]="item.ApprovedAmount" (keyup)="onChangeHRAAnnualApprovedAmount(item)"
+            placeholder="18000" autocomplete="none|false|no">
+
+        </div>
+
+        <nz-divider *ngIf="LstHouseRentAllowance.length > 1"></nz-divider>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="selectedEntryType != 'annual'">
+      <div class="col-md-12" *ngIf="isHRAAllowedToEdit">
+
+        <div class="col-lg-12 text-center" style="padding-bottom: 10px;color: #f8a01c;">
+          <b> Note : By clicking on the "Edit Icon" <i class="fa fa-pencil" style="    color: #000;
+                        font-size: 10px;
+                        background: #ffe581;
+                        padding: 2px;
+                        border-radius: 50%;margin: 2px;"></i> you can fill in your landlord details, such as address,
+            PAN, and attachments and information you fill in the first row will be auto-filled
+
+            by using the 'Fill Below'</b>
+        </div>
+
+
+      </div>
+      <div class="col-md-12">
+        <table class="table table-bordered table-container table-borderless"
+          style="font-size: 12px !important;box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);">
+          <thead>
+            <tr class="document_table_tr" style="background: white !important;border-bottom: 1px solid #e3e3e3;">
+              <th [ngStyle]="{'width': selectedEntryType != 'custom' ? '22%' : '32%'}"> <span style="text-align: left;">
+                  Duration </span> </th>
+              <th style="text-align: center !important;width: 8%;">Is Metro </th>
+              <th style="width: 18%;">City <i class="fa fa-info-circle"
+                  matTooltip="Please enter the name of the city if it is non-metro"></i> </th>
+              <th style="width: 15%;"> Amount</th>
+              <th style="width: 24%;"> Name of Landlord </th>
+              <th> </th>
+              <th style="width: 17%;">
+
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item1 of getLimitedHRA(); let i = index">
+              <tr *ngIf="!item1.IsDeleted" (change)='onChangeHRA_table(item1)'
+                [ngStyle]="{'border-left' : item1.IsError ? '2px solid red' : 'none'}">
+                <td class="table-td-center" *ngIf="selectedEntryType != 'custom'">
+
+                  <h6 style="font-size: 12px"> <i *ngIf="item1.IsError" class="fa fa-question-circle"
+                      matTooltip="Please fill in the required fields and try to save"
+                      style="color: red;font-size: 14px;margin-left: 5px;"></i> {{item1.StartDate
+                    | date:'d MMM y'}} - {{item1.EndDate | date:'d MMM y'}}</h6>
+                  <h6 *ngIf="!item1.IsProposed && item1.Status == 3"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-success1"> Partially Approved </span>
+                    <span class="badge badge-remarks" matTooltip="{{item1.ApproverRemarks}}"> <i
+                        class="mdi mdi-message-alert-outline"></i>
+                    </span>
+                  </h6>
+                  <h6 *ngIf="!item1.IsProposed && item1.Status == 0"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-warning1"> Saved </span>
+                  </h6>
+                  <h6 *ngIf="!item1.IsProposed && item1.Status == 2"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-danger1"> Rejected </span>
+                    <span class="badge badge-remarks" matTooltip="{{item1.ApproverRemarks}}"> <i
+                        class="mdi mdi-message-alert-outline"></i>
+                    </span>
+                  </h6>
+                  <h6 *ngIf="!item1.IsProposed && item1.Status == 1"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-success1"> Approved </span>
+                    <span class="badge badge-remarks" matTooltip="{{item1.ApproverRemarks}}"> <i
+                        class="mdi mdi-message-alert-outline"></i>
+                    </span>
+                  </h6>
+                  <h6 *ngIf="item1.IsProposed" style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-declaration"> Declaration </span>
+                  </h6>
+
+                </td>
+                <td *ngIf="selectedEntryType == 'custom'">
+                  <h6 style="font-size: 12px;padding-top: 5px;"> <i *ngIf="item1.IsError" class="fa fa-question-circle"
+                      matTooltip="Please fill in the required fields and try to save"
+                      style="color: red;font-size: 14px;margin-left: 5px;"></i>
+                    <input readonly class="form-control" [(ngModel)]="item1.QuarterRange" type="text"
+                      name="financialQuarter" bsDaterangepicker
+                      [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                      placeholder="DD-MM-YYYY - DD-MM-YYYY" autocomplete="off" [minDate]="HRAminDate"
+                      [maxDate]="HRAmaxDate" placement="bottom"
+                      (ngModelChange)="doChangeHRAFinancialQuarterDate($event, item1)">
+                  </h6>
+
+                  <h6 *ngIf="item1.Status == 3" style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-success1"> Partially Approved </span>
+                    <span class="badge badge-remarks" matTooltip="{{item1.ApproverRemarks}}"> <i
+                        class="mdi mdi-message-alert-outline"></i>
+                    </span>
+                  </h6>
+                  <h6 *ngIf="!item1.IsProposed && item1.Status == 0"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-warning1"> Saved </span>
+                  </h6>
+                  <h6 *ngIf="!item1.IsProposed && item1.Status == 2"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-danger1"> Rejected </span>
+                    <span class="badge badge-remarks" matTooltip="{{item1.ApproverRemarks}}"> <i
+                        class="mdi mdi-message-alert-outline"></i>
+                    </span>
+                  </h6>
+                  <h6 *ngIf="!item1.IsProposed && item1.Status == 1"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-success1"> Approved </span>
+                    <span class="badge badge-remarks" matTooltip="{{item1.ApproverRemarks}}"> <i
+                        class="mdi mdi-message-alert-outline"></i>
+                    </span>
+                  </h6>
+                  <h6 *ngIf="item1.IsProposed" style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-declaration"> Declaration </span>
+                  </h6>
+                </td>
+                <td class="table-td-center" style="text-align: center !important;">
+                  <div class="custom-control custom-checkbox chkbox_custom" style="margin: 0 auto;
+                                    text-align: center;
+                                    margin-left: 15px !important;">
+                    <input type="checkbox" class="custom-control-input" style="width: 10.5rem !important;"
+                      id="isaddress_{{item1.Id}}" [(ngModel)]="item1.IsMetro"
+                      [ngModelOptions]="{standalone:                    true}"
+                      (change)="onChangeIsMetroCity(item1, $event)" [checked]="item1.IsMetro">
+                    <label class="custom-control-label" for="isaddress_{{item1.Id}}"></label>
+                  </div>
+                </td>
+                <td style="text-align: center" class="table-td-center" *ngIf="item1.IsMetro">
+                  <select #s class="form-control" id="financialYear" [(ngModel)]="item1.CityName"
+                    placeholder="Select an option">
+                    <option *ngFor="let city of LstEmployeeInvestmentLookup.CityList" [ngValue]="city.Id"
+                      class="ng-star-inserted">{{city.Code}}</option>
+                  </select>
+                </td>
+                <td style="text-align: center" class="table-td-center" *ngIf="!item1.IsMetro">
+                  <div class="row">
+                    <div class="col-10" style="padding-right: 0px !important;">
+                      <input type="text" style="text-align:left" maxlength="12" [(ngModel)]="item1.CityName"
+                        placeholder="Name of the City" class="form-control">
+
+                    </div>
+                    <!-- <div class="col-lg-2" style="padding-top: 12px !important;">
+
+                                    <ng-template #tipContent>
+                                        <p>
+                                            Please enter the name of the city
+                                        </p>
+                                    </ng-template>
+
+                                    <i class="fa fa-info-circle" style="float: right;" matTooltip="Please enter the name of the city"></i>
+
+                                </div> -->
+                  </div>
+
+                </td>
+
+                <td>
+                  <input type="text" style="text-align:right" maxlength="12" placeholder="8000.00"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" (keyup)="onChangeHRADeclaredAmount()"
+                    [(ngModel)]="item1.HRAAmount" class="form-control">
+                </td>
+
+                <td style="text-align: center" class="table-td-center">
+                  <div class="row">
+                    <div class="col-10" style="padding-right: 0px !important;">
+                      <input type="text" style="text-align:left" [(ngModel)]="item1.NameOfLandlord"
+                        placeholder="Name of Landlord" class="form-control">
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="centered">
+                    <div class="plus" *ngIf="item1.Status != 1 && item1.Status != 4" (click)="addLandloadAddress(item1)"
+                      style="cursor: pointer;"
+                      matTooltip="To add or change the landlord's address and PAN information, click here. " id="plus">
+                      <i class="fa fa-pencil" style="display: block;
+                                            margin: 0 auto;
+                                            top: 3px;
+                                            position: relative;
+                                            color: #000;
+                                            font-size: 12px;"></i>
+                    </div>
+                    <div class="plus" *ngIf="item1.Status == 1 || item1.Status == 4"
+                      (click)="viewLandloadAddress(item1)" style="cursor: pointer;"
+                      matTooltip="To view the landlord's address and PAN information, click here. " id="plus">
+                      <i class="fa fa-eye" style="display: block;
+                                            margin: 0 auto;
+                                            top: 3px;
+                                            position: relative;
+                                            color: #000;
+                                            font-size: 12px;"></i>
+                    </div>
+                  </div>
+
+                </td>
+                <td class="txt-align document_table_validFrom table-td-center"
+                  *ngIf="selectedEntryType == 'custom' && item1.Status != 1 && item1.Status != 4">
+
+                  <div class="plus" (click)="deleteCustomItem(item1, i)" style="cursor: pointer;" matTooltip="Delete"
+                    id="plus">
+                    <i class="fa fa-trash-o" style="display: block;
+                                    margin: 0 auto;
+                                    top: 3px;
+                                    position: relative;
+                                    color: #000;
+                                    font-size: 12px;"></i>
+                  </div>
+
+                  <!-- <a (click)="deleteCustomItem(item1)"  href="javascript:;"
+                                        class="btn btn-default"> 
+                                 <i class="fa fa-trash-o" style="display: block;
+                                 margin: 0 auto;
+                                 top: -3px;
+                                 position: relative;
+                                 color: red;
+                                 font-size: 18px;"></i>
+                                    </a> -->
+
+                </td>
+
+                <td class="txt-align document_table_validFrom table-td-center"
+                  *ngIf="selectedEntryType != 'custom' && !PermissibleRoles() && item1.Status != 1 && item1.Status != 4">
+
+                  <a (click)="fillBelow(item1)" *ngIf="i==0" href="javascript:;" class="btn btn-default" style="background-color: #ffe581;
+                                    border-color: #e6d3d7;
+                                    color: #fefbfbeb !important;
+                                    border-radius: 3px;padding: 4px;font-size: 10px;
+    color: black !important;"> Fill Below
+                  </a>
+
+                  <!-- <button type="button" class="btn" *ngIf="i==0" (click)="fillBelow(item1)">fill below</button> -->
+                  <!-- <button type="button" class="btn" *ngIf="i==0" (click)="deleteAll(item)">delete all</button> -->
+
+                </td>
+
+                <td class="txt-align document_table_validFrom table-td-center"
+                  *ngIf="selectedEntryType != 'custom' && PermissibleRoles()">
+
+                  <a (click)="fillBelow(item1)" *ngIf="i==0" href="javascript:;" class="btn btn-default" style="background-color: #ffe581;
+                                border-color: #e6d3d7;
+                                color: #fefbfbeb !important;
+                                border-radius: 3px;padding: 4px;font-size: 10px;
+color: black !important;"> Fill Below
+                  </a>
+
+                  <!-- <button type="button" class="btn" *ngIf="i==0" (click)="fillBelow(item1)">fill below</button> -->
+                  <!-- <button type="button" class="btn" *ngIf="i==0" (click)="deleteAll(item)">delete all</button> -->
+
+                </td>
+
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+    </ng-container>
+
+
+
+  </div>
+
+  <div class="row" *ngIf="selectedEntryType != 'annual' && selectedEntryType != 'month'">
+    <div class="col-md-12">
+
+    </div>
+
+    <div class="col-md-12 text-right" *ngIf="isHRAAllowedToEdit">
+      <div class="form-group" *ngIf="selectedEntryType == 'custom'">
+        <a (click)="addNewHRA(selectedEntryType, 'New')" href="javascript:;" class="btn btn-default"
+          style="background-color: #f7f9fc;border-color: #d3d9e6;color: #0a609eeb !important;"> <i
+            class="mdi mdi-plus"></i> &nbsp;
+          <ng-container *ngIf="selectedEntryType == 'custom'"> Add New </ng-container>
+        </a>
+      </div>
+      <!-- <div class="form-group" *ngIf="(selectedEntryType == 'quarter' && LstHouseRentAllowance.length < 5)">
+                <a (click)="addNewHRA(selectedEntryType)" href="javascript:;" class="btn btn-default" style="background-color: #f7f9fc;border-color: #d3d9e6;color: #0a609eeb !important;"> <i class="mdi mdi-plus"></i> &nbsp;
+                    <ng-container *ngIf="selectedEntryType == 'quarter'"> Add New Finance Quarter</ng-container>
+                </a>
+            </div> -->
+    </div>
+  </div>
+
+
+  <br />
+  <br />
+  <br />
+
+  <div class="row"
+    style="position: absolute; bottom: 0px;width: 100%; background: #FFFFFF;box-shadow: 0px -3px 5px #f1f1f1; margin-left: -23px;padding: 5px;">
+    <div class="col-lg-6">
+      <ul class="list-inline">
+        <h3 style="font-size: 14px;">Total Rent Amount : {{TotalDeclaredAmount |
+          currency:'INR':'symbol-narrow':'1.2-2'}} </h3>
+        <!-- <h3 style="font-size: 14px;">Exemption Allowed : {{TotalDeclaredAmount | currency:'INR':'symbol-narrow':'1.2-2'}} </h3> -->
+        <span style="font-size: 10px;
+                color: #aeabab;">Least of (1) Actual HRA (2) Rent paid - 10% of Basic (3) 40% or 50% of Basic</span>
+      </ul>
+    </div>
+    <div class="col-lg-6 text-right" style="margin-top: 25px;">
+      <div class="text-right">
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <button class="btn btn-link" type="button" style="text-decoration: none !important;"
+              (click)="close_slider_hra()"> Cancel</button>
+          </li>
+          <li class="list-inline-item" *ngIf="IsHRADataExists && checkIsAnyValidRecordToDeleteHRA">
+            <button class="btn btn-danger" type="button"
+              style="padding-left: 25px;padding-right: 25px;padding-top: 2px;padding-bottom: 3px;width: 107px;height: 35px;"
+              (click)="delete_hra()"> Delete</button>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn  btn-primary"
+              style="padding-left: 25px;padding-right: 25px;padding-top: 2px;padding-bottom: 3px;width: 107px;height: 35px;"
+              type="Submit" name="btnSubmit" id="btnSubmit" (click)="saveDeclarations('HRA')"> Save
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+</nz-drawer>
+
+<!-- #endregion -->
+<!-- #region Add and Edit : Investment -->
+
+
+<nz-drawer [nzVisible]="visible_slider" [nzWidth]="940" nzIcon="user" nzTitle="{{DeclarationTitle}}"
+  [nzClosable]="false">
+
+  <div class="row">
+    <ng-container *ngFor="let item of LstDeclarationCategories | slice:0:tobeShown">
+      <div class="col-md-3" style="padding: 3px;" *ngIf="doHideIgnoredProducts(item)">
+        <a class="card1" href="javascript:;" (click)="addItem(item)"
+          matTooltip="{{productNameWithLetterSpace(item.ProductName)}}">
+          <h3
+            style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;width: 165px;">
+            {{productNameWithLetterSpace(item.ProductName)}}</h3>
+          <p class="small" style="line-height: 18px;font-size: 12px;
+                font-weight: 400;">{{item.Code}}</p>
+          <div class="go-corner" href="#">
+            <div class="go-arrow">
+              +
+            </div>
+          </div>
+        </a>
+      </div>
+    </ng-container>
+  </div>
+  <div class="row">
+    <div class="col-lg-12" style="text-align: right; font-size: 13px;font-weight: 700;cursor: pointer;color: #146BA2;"
+      (click)="seeMore()" *ngIf="LstDeclarationCategories.length > 0">
+      <span> <span style="padding-right: 5px;"> {{seeMoreText}}</span>
+        <i class="fa fa fa-sort-desc bounce" style="font-size: 17px;position: relative;
+             top: -2px;" *ngIf="seeMoreText =='See more'"></i>
+        <i class="fa fa fa-sort-asc" style="font-size: 17px;position: relative;
+             top: 6px;" *ngIf="seeMoreText =='See less'"></i></span>
+      <br>
+
+    </div>
+  </div>
+
+  <nz-divider></nz-divider>
+  <div class="row">
+    <div class="col-md-12 text-left">
+      <h3>Your Investment </h3>
+    </div>
+  </div>
+
+  <!-- <div class="card animated fadeInDownBig" style="box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.13);
+    border-radius: 4px;margin-bottom: 10px;border-left: 4px solid #5b7aac;" *ngFor="let i of DeclarationItems.slice().reverse(); let j = index">
+        <div class="row" style="margin: 1px;">
+            <div class="col-md-12">
+                <div class="row" style="background: #ffffff;
+                padding-top: 10px;
+                ">
+                    <div class="col-md-6" style="margin-bottom: -10px;">
+                        <div class="col-lg-12 text-left">
+                            <h3 style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{i.Declarations.ProductName}}</h3>
+                            <p class="small" style="line-height: 16px;  font-size: 12px; font-weight: 400;">{{i.Declarations.Code}} | {{i.Declarations.Description}}</p>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="margin-bottom: -10px;">
+                        <div class="col-lg-12 text-left">
+
+                            <p class="small" style="line-height: 16px;font-size: 12px;
+                            font-weight: 400;margin-bottom: 0px;">Qualifying Limit of Section {{i.Code}} <i *ngIf="i.IsError" class="fa fa-question-circle" matTooltip="Please fill in the required fields and try to save" style="color: red;font-size: 14px;margin-left: 5px;"></i></p>
+                            <h3 style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{i.Declarations.ThresholdLimit | currency:'INR':'symbol-narrow':'4.2-2'}} </h3>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 5px;
+                margin-left: 0px;">
+                    <div class="col-md-6">
+                        <label class="form-label">Amount </label>
+                        <div class="input-group" style="margin-bottom: 10px;margin-top: 0px;">
+                            <div class="input-group-prepend" style="height: 38px !important;">
+                                <span class="input-group-text" id="basic-addon1" style="background: white;
+                            ">₹</span>
+                            </div>
+                            <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" (keyup)="onChangeDeclaredAmount(i)" [(ngModel)]="i.DeclaredAmount" name="amount" placeholder="1,50,000" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Remarks </label>
+                        <textarea class="form-control" rows="1" style="height: 38px !important;" (change)="OnChangeInvestmentProducts(i)" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="i.DeclaredAmountRemarks"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="go-corner" href="javascript:;" (click)="deleteInvestmentProduct(i)" matTooltip="Delete" style="background: #f4f4f4;
+        cursor: pointer;
+        border-radius: 0 4px 0 10px;">
+            <div class="go-arrow">
+                <i class="fa fa-trash delete_icon"></i>
+            </div>
+        </div>
+    </div> -->
+
+  <div class="col-lg-12 text-center" *ngIf="IsFailedToValidate">
+    <ngb-alert [dismissible]="false" type="danger">
+      <strong> {{InvestmentWarningMessage}}<i class="fa fa-question-circle"
+          style="color: red;font-size: 14px;margin-left: 5px;"></i>
+      </strong>
+      <!-- <strong>The form cannot be submitted as its missing required data. Please correct the marked fields and try again.</strong> -->
+    </ngb-alert>
+  </div>
+
+  <ng-container *ngFor="let i of DeclarationItems.slice().reverse(); let j = index">
+    <div class="card animated fadeInDownBig" style="box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.13);
+    border-radius: 4px;margin-bottom: 10px;"
+      [ngClass]="i.IsProposed ? 'border-blank' : i.Status == 1?'border-success': i.Status == 2 ? 'border-rejected' : 'border-pending'"
+      *ngIf="!i.IsDeleted">
+      <div class="row" style="margin: 1px;">
+        <!-- <div [ngClass]="i.Status == 1? 'col-md-12' : currentTaxMode == 2 ? 'col-md-9' : 'col-md-12' "> -->
+        <div class="col-md-9">
+          <div class="row" style="background: #ffffff;
+                padding-top: 10px;
+                ">
+            <div class="col-md-6" style="margin-bottom: -10px;">
+              <div class="col-lg-12 text-left">
+                <h3
+                  style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                  {{i.Declarations.ProductName}}</h3>
+                <p class="small" style="line-height: 16px;  font-size: 12px; font-weight: 400;">
+                  {{i.Declarations.Code}} | {{i.Declarations.Description}}</p>
+
+              </div>
+            </div>
+            <div class="col-md-6" style="margin-bottom: -10px;">
+              <div class="col-lg-12 text-left">
+
+                <p class="small" style="line-height: 16px;font-size: 12px;
+                            font-weight: 400;margin-bottom: 0px;">Qualifying Limit of Section {{i.Code}} <i
+                    *ngIf="i.IsError" class="fa fa-question-circle"
+                    matTooltip="Please fill in the required fields and try to save"
+                    style="color: red;font-size: 14px;margin-left: 5px;"></i>
+                  <span *ngIf="!i.IsProposed && i.Status == 3"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-success1"> Partially Approved </span>
+                    <span class="badge badge-remarks" matTooltip="{{i.ApproverRemarks}}"> <i
+                        class="mdi mdi-message-alert-outline"></i>
+                    </span>
+                  </span>
+                  <span *ngIf="!i.IsProposed && i.Status == 0"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-warning1"> Saved </span>
+                  </span>
+                  <span *ngIf="!i.IsProposed && i.Status == 2"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-danger1"> Rejected </span>
+                    <!-- <span class="badge badge-remarks" matTooltip="{{i.ApproverRemarks}}"> <i
+                                                class="mdi mdi-message-alert-outline"></i>
+                                        </span> -->
+                  </span>
+                  <span *ngIf="!i.IsProposed &&  i.Status == 1"
+                    style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-success1"> Approved </span>
+                    <!-- <span class="badge badge-remarks" style="cursor: pointer;"
+                                            matTooltip="{{i.ApproverRemarks}}"> <i
+                                                class="mdi mdi-message-alert-outline"></i>
+                                        </span> -->
+                    <!-- <span class="badge badge-remarks" style="cursor: pointer;"
+                                            title="Approved Amount : {{i.ApprovedAmount}}"> <i
+                                                class="mdi mdi-checkbox-marked-circle"></i>
+                                        </span> -->
+                  </span>
+                  <span *ngIf="i.IsProposed" style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                    <span class="badge badge-declaration"> Declaration </span>
+
+                  </span>
+                </p>
+                <h3
+                  style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                  {{i.Declarations.ThresholdLimit | currency:'INR':'symbol-narrow':'4.2-2'}} </h3>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 20px;margin-left: 0px;margin-bottom: 10px;">
+            <div class="col-md-6">
+              <label class="form-label">Amount </label>
+              <div class="input-group" style="margin-bottom: 10px;margin-top: 0px;">
+                <div class="input-group-prepend" style="height: 38px !important;">
+                  <span class="input-group-text" id="basic-addon1" style="background: white;
+                            ">₹</span>
+                </div>
+                <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)"
+                  (keyup)="onChangeDeclaredAmount(i)" [(ngModel)]="i.DeclaredAmount" name="amount"
+                  placeholder="1,50,000" autocomplete="off">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Remarks </label>
+              <textarea class="form-control" rows="1" style="height: 38px !important;"
+                (change)="OnChangeInvestmentProducts(i)" placeholder="Type your message here..." spellcheck="false"
+                id="Remarks" [(ngModel)]="i.DeclaredAmountRemarks"></textarea>
+            </div>
+
+
+            <!-- -- approved -- -->
+
+            <ng-container
+              *ngIf="(!i.IsProposed &&  (i.Status == 1 || i.Status == 2)) || (PermissibleRoles() && currentTaxMode == 2)">
+              <div class="col-md-6" style="margin-top: 10px;">
+                <label class="form-label">Approved Amount
+
+                  <i class="fa fa-pencil" *ngIf="PermissibleRoles()" style="padding-left: 10px;font-size: 14px;
+                                    cursor: pointer;" matTooltip="Edit Approved Amount" [autoClose]="'outside'"
+                    placement="top" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+                    (click)="editApprovedAmount(i, 'INVT')"></i>
+                </label>
+                <p class="small" style="line-height: 16px;  font-size: 12px; font-weight: 400;">
+                  {{i.ApprovedAmount}}
+
+
+                </p>
+                <ng-template #popContent>
+                  <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)"
+                    (keyup)="onChangeApprovedAmount(i)" [(ngModel)]="i.ApprovedAmount" name="amount"
+                    placeholder="1,50,000" autocomplete="off">
+
+                </ng-template>
+                <ng-template #popTitle>Approved Amount</ng-template>
+
+              </div>
+              <div class="col-md-6" style="margin-top: 10px;">
+                <label class="form-label">Approver Remarks </label>
+                <p class="small" *ngIf="i.ApproverRemarks != null && i.ApproverRemarks != ''"
+                  style="line-height: 16px;  font-size: 12px; font-weight: 400;">
+                  {{i.ApproverRemarks}}</p>
+                <p class="small" *ngIf="i.ApproverRemarks == null || i.ApproverRemarks == ''"
+                  style="line-height: 16px;  font-size: 12px; font-weight: 400;">
+                  --- </p>
+              </div>
+            </ng-container>
+            <!-- -- approved -- -->
+          </div>
+
+        </div>
+        <div class="col-md-3" style="padding-right: 30px;" *ngIf="currentTaxMode == 2">
+          <div class="upload-files-container" style="margin: 7px;">
+            <div class="drag-file-area" style="height: 110px; cursor: pointer;padding: 10px;" *ngIf="isLoading">
+              <label class="label" style="margin-bottom: -5px;width: 100%;cursor: pointer;">
+                <h3 class="dynamic-message" style="color: #146BA2;top: 5%;position: relative;"> Upload
+                  your files here </h3>
+                <span style="display: block;font-size: 10px;"> (Max size:
+                  2MB) </span>
+                <span class="browse-files"> <input #myInput type="file" step="height: 100%;width: 100%;padding: 7px;"
+                    class="default-file-input" accept="application/msword,  application/pdf, image/*"
+                    (change)="onFileUpload($event, i, 'Investment')" />
+                </span>
+              </label>
+            </div>
+            <div class="d-flex align-items-center" style="margin-top: 10%;"
+              *ngIf="!isLoading && i.Id == selectedUploadIndex">
+              <strong class="text-right"> {{docSpinnerText}} ... &nbsp;&nbsp;&nbsp;</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-left: 5px;">
+        <div class="col-md-12" style="padding: 5px;" *ngIf="currentTaxMode == 2 && i.DeclarationAttachments.length > 0">
+          <div id="scroll-wrapper scrollbox_delayed">
+            <div id="thumbnails" style="padding-bottom: 0px;margin-left: 15px;
+                    margin-right: 15px;">
+              <div class="thumbnail-container" *ngFor="let photo of i.DeclarationAttachments">
+
+                <div class="box" style="height: 60px;border: none;">
+                  <button type="button" class="delete" style="color: white"
+                    (click)="doDeleteFile(i,photo, 'Investment')">
+                    <span style="background-color: #ee6d6d">&times;</span>
+                  </button>
+
+                  <div style="margin: 0 auto;
+                                   margin-top: 0px;
+                                    font-size: 12px;
+                                    margin-left: 10px;">
+                    <!-- <span class="material-icons p-r-10"> 
+                                    file_present
+                                    </span> -->
+                    <span class="file-name" style="padding-top: 20px;">
+                      <button type="button" class="delete" matTooltip="View Document"
+                        style="right: 1px;top: 38px;font-size: 20px;" (click)="doViewFile(medical, photo, 'Medical')">
+                        <span style="border-radius: 14%;background: #e4e4e4;"><i class="mdi mdi-progress-download"
+                            style="color: #787c7b;"></i>
+                        </span>
+                      </button>
+
+                      {{photo.FileName}} </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="go-corner" href="javascript:;" (click)="deleteInvestmentProduct(i)" matTooltip="Delete" style="background: #f4f4f4;
+        cursor: pointer;
+        border-radius: 0 4px 0 10px;">
+        <div class="go-arrow">
+          <i class="fa fa-trash delete_icon"></i>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+
+  <!-- <ng-container *ngFor="let i of DeclarationItems.slice().reverse(); let j = index">
+        <div class="card animated fadeInDownBig" style="box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.13);
+    border-radius: 4px;margin-bottom: 10px;" [ngClass]="{'data-selected': selectedRow === i.Id}" *ngIf="i.Declarations.TaxCodeTypeId == selectedTaxDeclaration && !i.IsDeleted">
+            <div class="row" style="margin: 1px;">
+                <div class="col-md-3" style="background: #F7F7F7;">
+                    <div class="row" style=" position: relative;
+                            transform: translatey(-50%);
+                            top: 50%;">
+                        <div class="col-lg-12 text-left">
+                            <h3 style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{i.Declarations.ProductName}}</h3>
+                            <p class="small" style="line-height: 16px;  font-size: 12px; font-weight: 400; margin-bottom: 20px;">{{i.Declarations.Code}} | {{i.Declarations.Description}}</p>
+                            <p class="small" style="line-height: 16px;font-size: 12px;
+                            font-weight: 400;margin-bottom: 0px;">Qualifying Limit of Section {{i.Code}} <i *ngIf="i.IsError" class="fa fa-question-circle" matTooltip="Please fill in the required fields and try to save" style="color: red;font-size: 14px;margin-left: 5px;"></i></p>
+                            <h3 style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">{{i.Declarations.ThresholdLimit | currency:'INR':'symbol-narrow':'4.2-2'}} </h3>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div style="padding: 5px;" [ngClass]="currentTaxMode == 2 ? 'col-md-9' : 'col-md-4' ">
+                    <div class="input-group" style="margin-bottom: 10px;margin-top: 0px;">
+                        <div class="input-group-prepend" style="height: 38px !important;">
+                            <span class="input-group-text" id="basic-addon1" style="background: white;
+                        ">₹</span>
+                        </div>
+                        <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" (keyup)="onChangeDeclaredAmount(i)" [(ngModel)]="i.DeclaredAmount" name="amount" placeholder="1,50,000" autocomplete="off">
+                    </div>
+                    <textarea class="form-control" rows="2" (change)="OnChangeInvestmentProducts(i)" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="i.DeclaredAmountRemarks"></textarea>
+
+                </div>
+                <div class="col-md-5" style="padding: 2px;" *ngIf="currentTaxMode == 2">
+
+                    <div class="row">
+                        <div [ngClass]="i.DeclarationAttachments.length > 0 ? 'col-md-6' : 'col-md-12' ">
+                            <div class="upload-files-container">
+                                <div class="drag-file-area" style="height: 102px; cursor: pointer;" *ngIf="isLoading">
+                                  
+                                    <h3 class="dynamic-message" style="
+                                    color: #146BA2;top: 5%;
+                    position: relative;"> Upload your files here </h3>
+
+                                    <label class="label" style="margin-bottom: -5px;width: 100%;">
+                                    <span style="display: block;font-size: 10px;"> (Max size: 2MB)  </span> 
+                                     <span class="browse-files"> <input type="file" class="default-file-input" accept="application/msword,  application/pdf, image/*" (change)="onFileUpload($event, i, 'Investment')"/>
+                                 </span> 
+                                </label>
+
+                                </div>
+
+
+                                <div class="d-flex align-items-center" style="margin-top: 10%;" *ngIf="!isLoading && i.Id == selectedUploadIndex">
+                                    <strong class="text-right"> {{docSpinnerText}} ... &nbsp;&nbsp;&nbsp;</strong>
+                                    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-6" style="padding: 5px;" *ngIf="i.DeclarationAttachments.length > 0">
+                            <div id="scroll-wrapper scrollbox_delayed">
+                                <div id="thumbnails">
+                                    <div class="thumbnail-container" *ngFor="let photo of i.DeclarationAttachments">
+                                        <div class="box">
+                                            <button type="button" class="delete" (click)="doDeleteFile(i,photo, 'Investment')">
+                                        <span>&times;</span>
+                                    </button>
+                                            <div>
+                                                <span class="material-icons p-r-10"> 
+                                            file_present
+                                            </span>
+                                                <span class="file-name"> {{photo.FileName}} </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="go-corner" href="javascript:;" (click)="deleteInvestmentProduct(i)" matTooltip="Delete" style="background: #f4f4f4;
+            cursor: pointer;
+            border-radius: 0 4px 0 10px;">
+                <div class="go-arrow">
+                    <i class="fa fa-trash delete_icon"></i>
+                </div>
+            </div>
+        </div>
+    </ng-container> -->
+  <br />
+  <br />
+  <br />
+  <br />
+
+  <div class="row"
+    style="position: absolute; bottom: 0px;width: 100%; background: #FFFFFF;box-shadow: 0px -3px 5px #f1f1f1; margin-left: -23px;padding: 5px;">
+    <div class="col-lg-6">
+      <ul class="list-inline">
+        <h3 style="font-size: 14px;
+                padding-top: 5px;">Total Amount : {{TotalDeclaredAmount | currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+      </ul>
+    </div>
+    <div class="col-lg-6 text-right">
+      <div class="text-right">
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <button class="btn btn-link" type="button" (click)="close_slider()"> Cancel</button>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn  btn-primary"
+              style="padding-left: 25px;padding-right: 25px;padding-top: 2px;padding-bottom: 3px;" type="Submit"
+              name="btnSubmit" id="btnSubmit" (click)="saveDeclarations('Investment')"> Save
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</nz-drawer>
+<!-- #endregion -->
+
+
+<div id="popup_chooseCategory_Exemptions" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseCategoryExemptions" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>Exemptions - Category</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL" *ngIf="employeedetails != null">
+              {{employeedetails.FirstName}} <span>
+                - </span> {{employeedetails.Code}} </h6>
+          </div>
+          <div class="modal-close" (click)="modal_dismiss2('exemptions')" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12  col-sm-4  p-r-50">
+              <img src="assets/Images/designer-life.svg" style="position: absolute; /* bottom: 0px; */
+                            height: auto;
+                            width: 100%;
+                            text-align: center;padding: 55px;">
+            </div>
+            <div class="col-xs-12  col-sm-8  p-r-50">
+              <!-- <h5 style="text-transform: uppercase;font-size: 14px;margin-bottom: 10px;">Commonly Used
+                            </h5> -->
+              <div class="row" *ngIf="popupTaxBills != null && popupTaxBills.length > 0 ">
+                <div class="col-md-3 col-xs-6 mb10 mt10" *ngFor="let category of popupTaxBills"
+                  style="margin-bottom:10px" (click)="chooseCategory(category,'exemption')">
+                  <a href="javascript:;" style="text-decoration: none !important;">
+                    <div style="box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 2px, rgba(0, 0, 0, 0.117647) 0 1px 2px; padding: 3px; height: 137px;text-decoration: none;
+                                    border-radius: 10px;
+                                    border: 1px solid #f3f2f2;">
+                      <img class="aligncenter size-full wp-image-25227 img-responsive" alt="80C" width="50" height="50"
+                        src="assets/Images/accounting.png">
+                      <p class="mb0 pt5" style="font-size: 11px;margin-bottom: 5px;
+                                    color: #4C5656;
+                                    margin-top: 5px;
+                                    z-index: 1000;
+                                    transition: color 0.3s ease-out;
+                                    font-weight: 500;
+                                    text-align: center;"><b>{{category.ProductName}}</b></p>
+                      <p class="mb0 pt5" style="text-align: center; font-size: 10px;">
+                        {{category.Code}}</p>
+                    </div>
+                  </a>
+                </div>
+                <p class="center_text" *ngIf="LstTaxExemptionProduct.length == 0">No records found!
+                </p>
+              </div>
+              <br>
+              <br>
+              <!-- <h5 style="font-size: 14px;text-transform: uppercase;margin-bottom: 10px;">Other Investments
+                            </h5> -->
+              <br>
+              <!-- <div class="row">
+                                <div class="col-md-3 col-xs-6 mb10 mt10"
+                                    *ngFor="let othercategory of TaxationOtherCategory_Exemption"
+                                    (click)="chooseCategory(othercategory,'investment')" style="margin-bottom:10px">
+                                    <a href="javascript:;" style="text-decoration: none !important;">
+                                        <div style="box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 2px, rgba(0, 0, 0, 0.117647) 0 1px 2px; padding: 3px; height: 137px;text-decoration: none;
+                                    border-radius: 10px;
+                                    border: 1px solid #f3f2f2;">
+                                            <img class="aligncenter size-full wp-image-25227 img-responsive" alt="80C"
+                                                width="50" height="50"
+                                                src="https://image.flaticon.com/icons/svg/3003/3003268.svg">
+                                            <p class="mb0 pt5" style="font-size: 11px;margin-bottom: 5px;
+                                    color: #4C5656;
+                                    margin-top: 5px;
+                                    z-index: 1000;
+                                    transition: color 0.3s ease-out;
+                                    font-weight: 500;
+                                    text-align: center;"><b>{{getLetterSpace(othercategory.ProductName)}}</b></p>
+                                            <p class="mb0 pt5" style="text-align: center; font-size: 10px;"
+                                                *ngFor="let child of othercategory.b">
+                                                {{child.Code}}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div> -->
+              <p class="center_text" *ngIf="LstTaxExemptionProduct.length == 0">No records found!
+              </p>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left left-margin-btn">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<nz-drawer [nzVisible]="visible_slider_form12bb" [nzWidth]="940" nzIcon="user" (nzOnClose)="close_slider_form12bb()">
+
+  <div class="print" id="printid" *ngIf="jsonObject != null">
+    <div style="font-size:12px !important;margin: 30px !important;font-family: initial !important;">
+      <div class="text-center" style="text-align: center;">
+        <h3 class="tbl-main-title" style="font-size: 1.3em; font-weight: bold;margin-bottom: 5px;">FORM NO. 12BB
+        </h3>
+        <p class="tbl-sub-title" style="color: #000;text-align: center;">[<i>See</i> rule 26C]</p>
+      </div>
+      <div>
+        <h3 class="tbl-page-title"> Statement showing particulars of claims by an employee for
+          deduction of tax under section 192
+        </h3>
+
+        <ol class="tbl-ol-list" type="1" style="list-style-type: auto;margin-left: 12px;font-size: 14px;color: #000;">
+          <li>
+            Name and address of the employee: &nbsp;
+            <strong *ngIf="employeedetails != null">{{employeedetails.FirstName}}, {{_empAddress}}</strong>
+          </li>
+
+          <li>
+            <i> [Permanent Account Number or Aadhaar Number] </i> of the employee: &nbsp;
+            <strong *ngIf="employeedetails != null">{{employeedetails.PAN}}</strong>
+          </li>
+          <li>
+            Financial year: &nbsp;
+            <strong *ngIf="employeedetails != null">{{FinancialYearDescription}}</strong>
+          </li>
+        </ol>
+      </div>
+      <div>
+        <div class="table-responsive">
+          <table
+            style="border: 1px solid #000 !important;border-bottom: none;border-collapse: collapse;width: 100%;margin-bottom: 0px;"
+            class="table table-bordered">
+            <tr>
+              <th style="border: 1px solid #000;">
+                <span class="tbl-caption" style="text-align: center;
+                                font-size: 14px;
+                                display: block;
+                                margin: 0 auto;
+                                font-weight: 600;">
+                  DETAILS OF CLAIMS AND EVIDENCE THEREOF</span>
+              </th>
+            </tr>
+          </table>
+
+          <table class="table table-bordered" style="font-size: 12px !important;border-collapse: collapse">
+
+            <tr>
+              <th class="text-center" style="width :40px;border: 1px solid #000;border-top: none;">
+                <i> Sl.No </i>
+              </th>
+              <th class="text-center" style="width :auto;border: 1px solid #000;border-top: none;"> <i>
+                  Nature of claim
+                </i></th>
+              <th class="text-center" style="width :160px;border: 1px solid #000;border-top: none;"> <i>
+                  Amount (Rs.) </i>
+              </th>
+              <th class="text-center" style="width :135px;border: 1px solid #000;border-top: none;"> <i>
+                  Evidence/
+                  particulars </i></th>
+            </tr>
+            <tr>
+              <th class="text-center" style="width :40px;border: 1px solid #000;"> <i> (1) </i></th>
+              <th class="text-center" style="width :auto;border: 1px solid #000;"> <i> (2) </i></th>
+              <th class="text-center" style="width :160px;border: 1px solid #000;"> <i> (3) </i></th>
+              <th class="text-center" style="width :135px;border: 1px solid #000;"> <i> (4) </i></th>
+            </tr>
+
+            <tbody style="border: 1px solid #000;">
+              <tr>
+                <td [attr.rowspan]="getrowspan()" *ngIf="jsonObject._hraDetails.length > 0"
+                  style="vertical-align: top;border: 1px solid #000;padding: 5px;">1.</td>
+                <td rowspan="1" *ngIf="jsonObject._hraDetails.length == 0"
+                  style="vertical-align: top;border: 1px solid #000;padding: 5px;">1.</td>
+                <td style="border-bottom: none !important;border: 1px solid #000;padding: 5px;"> House
+                  Rent
+                  Allowance: </td>
+                <td style="border-bottom: none !important;border: 1px solid #000;padding: 5px;"> &nbsp;
+                </td>
+                <td style="border-bottom: none !important;border: 1px solid #000;padding: 5px;"> &nbsp;
+                </td>
+              </tr>
+
+              <ng-container *ngFor="let hra of jsonObject._hraDetails">
+                <tr>
+                  <td style="border: 1px solid #000;padding: 5px;"> <i> (i)</i> Rent paid to the
+                    landlord</td>
+                  <td style="border: 1px solid #000;padding: 5px;"> {{hra.DeclaredAmount}}</td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #000;padding: 5px;"><i>(ii)</i> Name of the landlord
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;"> <span>{{hra.NameOfLandlord}}
+                    </span></td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #000;padding: 5px;"> <i>(iii)</i> Address of the
+                    landlord</td>
+                  <td style="border: 1px solid #000;padding: 5px;"> <span>{{hra.RentHouseAddress}}
+                    </span> </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td style="border: 1px solid #000;padding: 5px;">
+
+                    <p style="font-size: 12px;
+                                        color: #000;"> <i>(iv)</i> [<i>Permanent Account Number or
+                        AadhaarNumber</i>] of the landlord </p>
+
+                    <span style="margin-top: 10px"> <b> Note : </b> [<i>Permanent Account Number or
+                        Aadhaar Number</i>] shall
+                      be furnished if the aggregate rent paid during the previous year
+                      exceeds one lakh rupees
+                    </span>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;"> <span>{{hra.PAN}}
+                    </span></td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+              </ng-container>
+              <tr>
+                <td [attr.rowspan]=ltaRowspan style="vertical-align: top;border: 1px solid #000;padding: 5px;">2.
+                </td>
+                <td style="border: 1px solid #000;padding: 5px;">{{sec10NameForForm12BB}}</td>
+                <td style="border: 1px solid #000;padding: 5px;"></td>
+                <td style="border: 1px solid #000;padding: 5px;"> &nbsp; </td>
+              </tr>
+              <!-- <tr *ngIf="exceptionList &&exceptionList.length>0">
+                                    <td>
+                                        <ul style="margin-left: 20px;" type="none">
+                                            <li *ngFor="let expList of exceptionList" style='list-style-type: disc;'>{{expList.Name}}
+                                            </li>
+                                        </ul>
+
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li *ngFor="let expList of exceptionList" style='list-style-type: none;'>
+                                                {{expList.amount}} </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr> -->
+              <ng-container *ngIf="jsonObject._exemptionDetails && jsonObject._exemptionDetails.length>0">
+                <tr *ngFor="let exemption of jsonObject._exemptionDetails">
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul style="margin-left: 20px;" type="a">
+                      <li style='list-style-type: disc;'>{{exemption.ProductName}}
+                      </li>
+
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul>
+                      <li style='list-style-type: none;'>
+                        {{exemption.DeclaredAmount}}
+                      </li>
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+              </ng-container>
+
+
+              <tr>
+                <td [attr.rowspan]="gethprowspan()" style="vertical-align: top;border: 1px solid #000;padding: 5px;"> 3.
+                </td>
+                <td style="border: 1px solid #000;padding: 5px;"> Deduction of interest on borrowing:
+                </td>
+                <td style="border: 1px solid #000;padding: 5px;"> </td>
+                <td style="border: 1px solid #000;padding: 5px;"> &nbsp; </td>
+              </tr>
+              <ng-container *ngFor="let hp of jsonObject._hpDetails">
+                <tr>
+                  <td style="border: 1px solid #000;padding: 5px;"> <i> (i)</i> Interest payable/paid
+                    to
+                    the lender <b *ngIf="hp.IsOtherSectionAvailable">/ {{hp.SectionName}} </b>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;"><span
+                      *ngIf="jsonObject._hpDetails">{{hp.InterestPaid}} <span *ngIf="hp.IsOtherSectionAvailable">/
+                        {{hp.SectionDeclaredAmount}}</span>
+                    </span>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+                <tr>
+
+                  <td style="border: 1px solid #000;padding: 5px;"><i> (ii) </i> Name of the lender
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;"><span
+                      *ngIf="jsonObject._hpDetails">{{hp.NameOfLender}}</span>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+                <tr>
+
+                  <td style="border: 1px solid #000;padding: 5px;"> <i>(iii) </i>Address of the lender
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;"><span *ngIf="jsonObject._hpDetails ">
+                      {{hp.addressOfLender}}</span> </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+                <tr>
+
+                  <td style="border: 1px solid #000;padding: 5px;"> <i>(iv) </i> [<i>Permanent Account
+                      Number or
+                      Aadhaar Number</i>] of the lender</td>
+                  <td style="border: 1px solid #000;padding: 5px;"><span *ngIf="jsonObject._hpDetails ">
+                      {{hp.PANofLender}}</span> </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+              </ng-container>
+              <tr>
+                <td style="border: 1px solid #000;padding: 5px;"> <i> (a) </i> Financial Institutions
+                  (if available)
+                </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp; </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000;padding: 5px;"> <i>(b)</i> Employer (if available)
+                </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp; </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000;padding: 5px;"> <i>(c)</i> Others</td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp; </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td [attr.rowspan]=jsonObject.rowSpan style="vertical-align: top;border: 1px solid #000;padding: 5px;">
+                  4.</td>
+                <td style="border: 1px solid #000;padding: 5px;"> Deduction under Chapter VI-A </td>
+                <td style="border: 1px solid #000;padding: 5px;"> &nbsp;</td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000;padding: 5px;"> <i>(A) </i>Sections 80C, 80CCC and
+                  80CCD</td>
+                <td style="border: 1px solid #000;padding: 5px;"> &nbsp; </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000;padding: 5px;"> <i>(i)</i> Section 80C</td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp; </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+
+              <!-- <tr *ngIf="dynamicPFInvestments &&dynamicPFInvestments.length>0">
+
+                                    <td>
+                                        <ul style="margin-left: 20px;" type="none">
+                                            <li *ngFor="let pfObj of dynamicPFInvestments" style='list-style-type: disc;'>{{pfObj.Name}}
+                                            </li>
+                                        </ul>
+                                        <ul style="margin-left: 20px;" type="none" *ngIf=" _section80C && _section80C.length>0">
+                                            <li *ngFor="let invObj of _section80C" style='list-style-type: disc;'>{{invObj.Name}} </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li *ngFor="let pfObj of dynamicPFInvestments" style='list-style-type: none;'>
+                                                {{pfObj.AmtInvested}} </li>
+                                        </ul>
+                                        <ul *ngIf=" _section80C && _section80C.length>0">
+                                            <li *ngFor="let invObj of _section80C" style='list-style-type: none;'>{{invObj.AmtInvested}}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr> -->
+
+              <ng-container *ngIf="jsonObject._section80CPFPT && jsonObject._section80CPFPT.length > 0">
+                <tr *ngFor="let sec of jsonObject._section80CPFPT">
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul style="margin-left: 20px;" type="a">
+                      <li style='list-style-type: disc;'>{{sec.Name}}
+                      </li>
+
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul>
+                      <li style='list-style-type: none;'>
+                        {{sec.AmtInvested}}
+                      </li>
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+              </ng-container>
+
+              <ng-container *ngIf="jsonObject.Section80C_Output && jsonObject.Section80C_Output.length > 0">
+                <tr *ngFor="let sec of jsonObject.Section80C_Output">
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul style="margin-left: 20px;" type="a">
+                      <li style='list-style-type: disc;'>{{sec.ProductName}}
+                      </li>
+
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul>
+                      <li style='list-style-type: none;'>
+                        {{sec.DeclaredAmount}}
+                      </li>
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+              </ng-container>
+
+
+              <tr>
+                <td style="border: 1px solid #000;padding: 5px;"> <i>(ii) </i> Section 80CCC</td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp; </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+
+              <tr *ngIf=" jsonObject.Section80CCC_Output && jsonObject.Section80CCC_Output.length>0">
+                <td style="border: 1px solid #000;padding: 5px;">
+                  <ul style="margin-left: 20px;" type="none">
+                    <li *ngFor="let sec of jsonObject.Section80CCC_Output" style='list-style-type: disc;'>
+                      {{sec.ProductName}}
+                    </li>
+
+                  </ul>
+                </td>
+                <td style="border: 1px solid #000;padding: 5px;">
+                  <ul>
+                    <li *ngFor="let sec of jsonObject.Section80CCC_Output" style='list-style-type: none;'>
+                      {{sec.DeclaredAmount}}
+                    </li>
+                  </ul>
+                </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000;padding: 5px;"> <i> (iii) </i>Section 80CCD</td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp; </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+
+              <!-- <tr *ngIf="  && _section80CcD.length>0">
+
+                                    <td>
+                                        <ul style="margin-left: 20px;" type="none">
+                                            <li *ngFor="let invObj of _section80CcD" style='list-style-type: disc;'>{{invObj.Name}}
+                                            </li>
+
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li *ngFor="let invObj of _section80CcD" style='list-style-type: none;'>
+                                                {{invObj.AmtInvested}}
+                                            </li>
+
+                                        </ul>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr> -->
+              <ng-container *ngIf=" jsonObject.Section80CCD_Output && jsonObject.Section80CCD_Output.length>0">
+                <tr *ngFor="let invObj of jsonObject.Section80CCD_Output">
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul style="margin-left: 20px;" type="a">
+                      <li style='list-style-type: disc;'>{{invObj.ProductName}}
+                      </li>
+
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul>
+                      <li style='list-style-type: none;'>
+                        {{invObj.DeclaredAmount}}
+                      </li>
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+              </ng-container>
+              <tr>
+                <td style="border: 1px solid #000;padding: 5px;"> <i> (B)</i> Other sections
+                  (<i>e.g.</i> 80E, 80G,
+                  80TTA, etc.) under Chapter VI-A
+                </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp; </td>
+                <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+              </tr>
+
+              <!-- <tr *ngIf=" _otherSecDetails && _otherSecDetails.length>0">
+
+                                    <td>
+                                        <ul style="margin-left: 20px;" type="a">
+                                            <li *ngFor="let otherObj of _otherSecDetails" style='list-style-type: disc;'>{{otherObj.Name}}
+                                            </li>
+
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li *ngFor="let otherObj of _otherSecDetails" style='list-style-type: none;'>
+                                                {{otherObj.AmtInvested}}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr> -->
+
+              <ng-container *ngIf=" jsonObject.NotSection80C_Output && jsonObject.NotSection80C_Output.length>0">
+                <tr *ngFor="let otherObj of jsonObject.NotSection80C_Output">
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul style="margin-left: 20px;" type="a">
+                      <li style='list-style-type: disc;'>{{otherObj.ProductName}}
+                      </li>
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">
+                    <ul>
+                      <li style='list-style-type: none;'>
+                        {{otherObj.DeclaredAmount}}
+                      </li>
+                    </ul>
+                  </td>
+                  <td style="border: 1px solid #000;padding: 5px;">&nbsp;</td>
+                </tr>
+              </ng-container>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="width: 100%;">
+        <h5 style="color: #000; text-align: center; font-size: 1.4em;font-style: italic;
+            font-weight: bold;"> <i> Verification </i></h5>
+        <p style="color: #000; font-size: 1.1em;">I,
+          <span> <strong *ngIf="employeedetails != null">{{employeedetails.FirstName}}</strong></span>
+          son/daughter of <span> <strong *ngIf="employeedetails != null">{{employeedetails.FatherName}}</strong>
+          </span> do hereby certify that the information given above is complete and correct
+        </p>
+      </div>
+      <div style=" width: 100%;">
+        <div class="tbl-place-sign-conainer">
+          <div style="display: flex;justify-content: space-between;font-style: italic;font-size: 1.0em;">Place
+            :
+            &nbsp;</div>
+          <div style="font-style: italic;font-size: 1.0em;color: #000;
+                font-size: 12px;"> </div>
+        </div>
+        <div style=" display: flex; justify-content: space-between;">
+          <div class="flex" style=" font-style: italic;font-size: 1.0em;">Date :&nbsp;
+            <span style="margin-bottom: auto;color: #000;
+                    font-size: 12px;" *ngIf="employeedetails != null">
+              {{Form12BBGeneratedDate}}
+            </span>
+          </div>
+          <div style="font-style: italic;font-size: 1.0em"><i> (Signature of the employee)</i></div>
+        </div>
+        <div style="display: flex;justify-content: space-between;">
+          <div class="tbl-desig flex" style="font-style: italic;font-size: 1.0em;">Designation :&nbsp;
+            <span style="margin-bottom: auto;color: #000;
+                    font-size: 12px;"
+              *ngIf="employeedetails != null && employeedetails.EmploymentContracts && employeedetails.EmploymentContracts.length>0">
+              {{employeedetails && employeedetails.EmploymentContracts &&
+              employeedetails.EmploymentContracts[0].Designation}}
+            </span>
+          </div>
+          <div class="tbl-name flex" style=" font-style: italic;font-size: 1.0em;">Full Name: &nbsp;
+            <span style="margin-bottom: auto;color: #000;
+                    font-size: 12px;" *ngIf="employeedetails != null">
+              {{employeedetails.FirstName}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 text-right">
+      <button class="btn btn-white" (click)="downloadForm12BB()" style="background: #146BA2;color: #FFF;"><i
+          class="mdi mdi-download"></i> &nbsp;Download Form 12BB </button>
+    </div>
+  </div>
+
+
+</nz-drawer>
+
+<div id="popup_Form12BBUpload" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_Form12BBUpload" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          Investment Confirmation
+          <div class="modal-close" (click)="close_slider_form12bbUpload()" style="margin-top: 0px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <label>Step 1: &nbsp;</label> -->
+              <!-- <button type="button" class="btn btn-primary col-3 btn-sm mr-2 " style="font-size: 14px;
+                        padding: 5px; float: right;" (click)="preview12BBForm('parent')">
+                                <i class="mdi mdi-eye m-r-xs" title="Preview" style="cursor:pointer"></i>
+                                Preview</button> -->
+
+              <button class="btn btn-blank" (click)="preview12BBForm('download')" style="color:  #146BA2 !important"> <i
+                  class="mdi mdi-download"></i> &nbsp;Download
+                Form 12BB</button>
+
+              <label class="form-label searchbar-label">(Please proceed to upload the signed Form 12BB, if
+                you have
+                already downloaded) </label>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <label>Step 2: &nbsp;</label> -->
+              <label class="upload control" style="float: left;">
+                <div class="upload-draggable is-primary mr-2" style="float:left;">
+                  <section class="section">
+                    <div class="has-text-centered">
+                      <span class="icon is-large">
+                        <span style="padding-left: 10px;">
+                          <i class="fa fa fa-cloud-upload" style="color: #9ba7ca;"></i>
+                          &nbsp; Choose File </span>
+                      </span>
+                    </div>
+                  </section>
+
+                </div>
+                <div style="float:left;">
+                  <label class="form-label searchbar-label">Upload Form 12BB <br> <span class="help-text m-l-5">
+                      <i style="font-size: 10px;"> (Max file
+                        size
+                        5MB)</i> </span> </label>
+
+                  <input type="file" accept="application/msword,  application/pdf, image/*"
+                    (change)="fileUpload_Form12BB($event,true)" (click)="$event.target.value=null"
+                    id="sTest-uploadFile-candidateAddResume">
+
+
+                </div>
+              </label>
+
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <p *ngIf="Form12BBFileName" style="border: 1px solid #e4e4e4;
+                                margin-top: 10px;
+                                /* display: inline; */
+                                border-radius: 5px;
+                                font-size: 12px;">
+                <span class="file-name">
+                  <button class="btn btn-danger c-btn" (click)="doDeleteForm12BBFile()"><a ngbTooltip="Delete file"
+                      id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                               display: block   ;margin-top: -5px;"><i
+                        class="fa fa-trash-o"></i></a>
+                  </button>
+                  <a target="blank" class="ahref" style="padding: 2px;">
+                    {{Form12BBFileName}}
+                  </a>
+                </span>
+              </p>
+            </div>
+          </div>
+          <br />
+          <br />
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-right">
+                <button type="button" class="btn btn-primary  btn-sm mr-3" [disabled]="!Form12BBFileName"
+                  (click)="ConfirmSubmit(Form12BBFileUrl,Form12BBFileName)">
+                  <i class="mdi mdi-file-upload-outline  m-r-xs"></i>
+                  Upload & Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAX SLIP MODAL  -->
+<nz-drawer [nzVisible]="showSliderForTaxSlip" [nzWidth]="1040" (nzOnClose)="close_slider_tax_slip()">
+  <div class="row print" id="print_tax_slip_id">
+    <div class="col-md-12">
+      <div class="text-center">
+        <h2 class="tbl-main-title"> TAX SLIP </h2>
+      </div>
+    </div>
+    <div class="col-md-12" *ngIf="EmployeeTaxSlipRecords != null">
+      <div style="border: 1px solid #d3d3d3; padding: 10px;  border-radius: 5px;">
+        <div class="row padding-10">
+          <div class="col-lg-12 col-xs-12 col-sm-12" style="padding: 20px;">
+            <div class="row row-border">
+              <div class="col-4">
+                <h6 class=" h6-font"> <b> Heads of Income </b>
+                  <br>
+                </h6>
+              </div>
+              <div class="col-2 text-right">
+                <h6 class=" h6-font"> <b> Monthly
+                    <br><span style="margin-right: 20px;">(A)</span> </b>
+                </h6>
+              </div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font"> <b> Actual YTD
+                    <br><span style="margin-right: 20px;">(B)</span> </b>
+                </h6>
+              </div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font"> <b> Projected
+                    <br><span style="margin-right: 20px;">(C)</span> </b>
+                </h6>
+              </div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font"> <b> Total
+                    <br><span style="margin-right: 0px;">(B+C)</span> </b>
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+            <div class="row">
+              <div class="col-4">
+                <h6 class="h6-font"> <b> Income from Salary </b>
+                  <br>
+                  <br>
+                  <p class=" p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                    {{getProductName(i.ProductId)}} </p>
+                </h6>
+              </div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font">
+                  <br>
+                  <br>
+                  <p class="p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                    {{i.LstTaxBreakUp[0].ActualAmount}} </p>
+                </h6>
+              </div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font">
+                  <br>
+                  <br>
+                  <p class=" p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                    {{i.LstTaxBreakUp[0].TillDateAmount}}
+                  </p>
+                </h6>
+              </div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font">
+                  <br>
+                  <br>
+                  <p class="p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                    {{i.LstTaxBreakUp[0].ProjectedAmount}}
+                  </p>
+                </h6>
+              </div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font">
+                  <br>
+                  <br>
+                  <p class=" p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                    {{i.LstTaxBreakUp[0].Amount}} </p>
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+            <div class="row">
+              <div class="col-4  pl-3">
+                <h6 class="thin-font"> Annual Gross Salary
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font">
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.GrossSalary" />
+                  <!-- <p class="p-line-space"> {{EmployeeTaxSlipRecords.GrossSalary}}</p> -->
+                </h6>
+              </div>
+            </div>
+            <div class="row" *ngIf="getAmount('PREVIOUSGROSSSALARY') > 0">
+              <div class="col-4 pl-3">
+                <h6 class="h6-font thin-font"> Previous Employer Income
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font">
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [ngModel]="getAmount('PREVIOUSGROSSSALARY')" />
+                  <!-- <p class="p-line-space">{{ getAmount('PREVIOUSGROSSSALARY') }} </p> -->
+                </h6>
+              </div>
+            </div>
+            <div class="row"
+              style="border-bottom: 1px solid #d3d3d3;margin-left: -10px;margin-right: -10px;padding-bottom: 10px;">
+              <div class="col-4 pl-2">
+                <h6 class="h6-font"> <b> Total Annual Gross Salary </b>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class=" col-2 text-right">
+                <h6 class="h6-font">
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [ngModel]="getTotalAmount('PREVIOUSGROSSSALARY')" />
+                  <!-- <p class="p-line-space bold-font"> {{getTotalAmount('PREVIOUSGROSSSALARY')}}
+                                       <i (click)="yearlyTaxDetails()" class="fa fa-info-circle pl-2"
+                                            style="font-size: 16px;color:#1890ff; cursor: pointer;"
+                                            title="yearly salary details"></i> 
+                                    </p> -->
+                </h6>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+            <div class="row">
+              <div class="col-4">
+                <h6 class="h6-font"> <b> (Less) Exemptions under Sec 10. </b>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-4">
+                <h6 class="thin-font"> HRA Exemption (least of below)
+                  <div *ngFor="let hra of GrossHRAExemption">
+                    <div style="padding-left: 30px;padding-top: 10px;">
+                      <p class="p-line-space thin-font">1. Actual Annual HRA</p>
+                      <p class="p-line-space thin-font">2. 40% or 50% of Basic</p>
+                      <p class="p-line-space thin-font">3. Rent Paid - 10% of Basic</p>
+                    </div>
+                  </div>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2">
+                <h6 class="h6-font">
+                  <br>
+                  <div *ngFor="let hra of GrossHRAExemption" class="text-right">
+                    <p class="p-line-space thin-font">{{hra.HRAReceived}} </p>
+                    <p class="p-line-space thin-font">{{hra.HRACityBasedAmount}} </p>
+                    <p class="p-line-space thin-font">{{hra.RentPaidLessBasic}} </p>
+                  </div>
+                </h6>
+              </div>
+              <div class="col-2 text-right" *ngFor="let hra of GrossHRAExemption">
+                <h6 class="h6-font"> {{hra.Amount}}</h6>
+              </div>
+            </div>
+            <div class="row" *ngFor="let hra of OtherExemption">
+
+              <div class="col-10">
+                <h6 class="h6-font thin-font"> {{hra.ProductCode}} </h6>
+              </div>
+
+              <div class="col-2 text-right">
+                <h6 class="h6-font"> {{hra.Amount}}</h6>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+            <div class="row" style="border-bottom: 1px solid #d3d3d3;margin-left: -10px;
+                        margin-right: -10px;padding-bottom: 10px;">
+              <div class="col-4">
+                <h6 class="h6-font"> <b> Total Exemptions </b>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                  [(ngModel)]="EmployeeTaxSlipRecords.Exemptions" />
+                <!-- <h6 class="h6-font"> {{EmployeeTaxSlipRecords.Exemptions}}</h6> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+            <div class="row">
+              <div class="col-4">
+                <h6 class="h6-font"> <b> (Less) Deductions under Sec 16. </b>
+                  <br> <br>
+                  <p class="p-line-space thin-font"> Standard Deduction</p>
+                  <p class="p-line-space thin-font"> Professional Tax</p>
+                  <p class=" p-line-space thin-font"> Professional Tax deducted by previous
+                    employer</p>
+                </h6>
+              </div>
+              <div class="col-2 text-right">
+                <br>
+                <!-- <p style="color: white;"> . </p>
+                                <p *ngFor="let j of LstDeductions"> {{j.Amount}}</p>
+                                <p> {{getAmount('PREVIOUSDEDUCTION')}}</p> -->
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font">
+                  <br><br>
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [ngModel]="getAmount('STANDARDDEDUCTION')" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [ngModel]="getTotalAmount('PT')-getTotalAmount('PREVIOUSDEDUCTION')" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [ngModel]="getTotalAmount('PREVIOUSDEDUCTION')" />
+                  <!-- <p class="p-line-space"> {{getAmount('STANDARDDEDUCTION')}} </p>
+                                    <p class="p-line-space">
+                                        {{getTotalAmount('PT')-getTotalAmount('PREVIOUSDEDUCTION')}} </p>
+                                    <p class="p-line-space"> {{getTotalAmount('PREVIOUSDEDUCTION')}} </p> -->
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+            <div class="row" style="border-bottom: 1px solid #d3d3d3;margin-left: -10px;
+                        margin-right: -10px;padding-bottom: 10px;">
+              <div class="col-4">
+                <h6 class="h6-font"> <b> Total Deductions </b>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                  [(ngModel)]="EmployeeTaxSlipRecords.Deductions" />
+                <!-- <h6 class="h6-font bold-font"> {{EmployeeTaxSlipRecords.Deductions}}</h6> -->
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <h6 class="h6-font"> <b>Annual Net Income Chargeable </b>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                  [(ngModel)]="EmployeeTaxSlipRecords.IncomeChargeable" />
+                <!-- <h6 class="h6-font bold-font"> {{EmployeeTaxSlipRecords.IncomeChargeable}} </h6> -->
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-4">
+                <h6 class="thin-font bold-font"> (Add/Less) Income from Other Sources
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                  [(ngModel)]="EmployeeTaxSlipRecords.OtherIncome" />
+                <!-- <h6 class="thin-font bold-font">
+                                    {{EmployeeTaxSlipRecords.OtherIncome}}
+                                </h6> -->
+              </div>
+            </div><br>
+            <div class="row">
+              <div class="col-4">
+                <h6 class="thin-font"> Income/Loss from House Property
+                  <div style="padding-left: 30px; padding-top: 10px;">
+                    <div *ngFor="let l of LstIncomeFromHouseProperty">
+                      <!-- <div *ngFor="let k of l.LstTaxBreakUp">
+                                                <p class="p-line-space" *ngIf="k.LetOut==true" style="font-weight: bold;">
+                                                    Rented
+                                                </p>
+                                                <p class="p-line-space" *ngIf="k.LetOut==false" style="font-weight: bold;">
+                                                    Self-occupied
+                                                </p>
+                                                <table>
+                                                    <tr style="line-height: 0px !important;">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> Additional Interest Amount</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="line-height: 0px !important;">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> Total Interest Paid</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> Annual Rental Value</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> House Repair/Depreciation</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> Annual Taxes Paid</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </div> -->
+                    </div>
+                  </div>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font">
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.IncomeFromHouseProperty" />
+                  <div *ngFor="let l of LstIncomeFromHouseProperty">
+                    <!-- <div *ngFor="let k of l.LstTaxBreakUp">
+                                            <p class="p-line-space" *ngIf="k.LetOut==true">
+                                                &nbsp;
+                                            </p>
+                                            <p class="p-line-space" *ngIf="k.LetOut==false">
+                                                &nbsp;
+                                            </p>
+                                            <table>
+                                                <tr style="line-height: 0px !important;">
+                                                    <td>
+                                                        <p class=" p-line-space thin-font"> {{k.Amount}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr style="line-height: 0px !important;">
+                                                    <td>
+                                                        <p class=" p-line-space thin-font"> {{k.InterestAmount}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                    <td>
+                                                        <p class=" p-line-space thin-font"> {{k.GrossAnnualRent}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                    <td>
+                                                        <p class=" p-line-space thin-font"> {{k.HouseMaintenanceAmount}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                    <td>
+                                                        <p class=" p-line-space thin-font"> {{k.MunicipalTaxAmount}}</p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                          
+                                        </div> -->
+                    <!-- <p> {{k.InterestAmount}}</p>
+                                            <p> {{k.GrossAnnualRent}}</p>
+                                            <p> {{k.HouseMaintenanceAmount}}</p>
+                                            <p> {{k.MunicipalTaxAmount}}</p> -->
+                  </div>
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+            <div class="row"
+              style="border-bottom: 1px solid #d3d3d3;margin-left: -10px;margin-right: -10px;padding-bottom: 10px;">
+              <div class="col-4">
+                <h6 class="h6-font"> <b> Total Other Income </b>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                  [(ngModel)]="EmployeeTaxSlipRecords.OtherIncome" />
+                <!-- <h6 class="h6-font bold-font"> {{EmployeeTaxSlipRecords.OtherIncome}}</h6> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+            <div class="row">
+              <div class="col-4">
+                <h6 class="h6-font"> <b> Gross Total Income </b>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                  [(ngModel)]="EmployeeTaxSlipRecords.GrossTotalIncome" />
+                <!-- <h6 class="h6-font"> {{EmployeeTaxSlipRecords.GrossTotalIncome}}
+                                </h6> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+            <div class="row">
+              <div class="col-8">
+                <h6 class="h6-font"> <b> (Less) Deductions under Chapter VI A </b>
+                  <br><br>
+                  <div *ngIf="LstSavingsWithGroupBy.length > 0">
+                    <table class="table table-borderless">
+                      <tr style="line-height: 0px !important;" *ngFor="let p of LstSavingsWithGroupBy">
+                        <td>
+                          <p class=" p-line-space thin-font">
+                            {{getDeductionUnderChapter(p.TaxCodeId)}}
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </h6>
+              </div>
+              <div class="col-1"></div>
+              <div class="col-1"></div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font">
+                  <br><br>
+                  <div *ngIf="LstSavingsWithGroupBy.length > 0">
+                    <table class="table table-borderless text-right">
+                      <tr style="line-height: 0px !important;" *ngFor="let p of LstSavingsWithGroupBy">
+                        <td>
+                          <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                            [(ngModel)]="p.TaxAmount" />
+                          <!-- <p class=" p-line-space thin-font">{{p.TaxAmount}}</p> -->
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row padding-5">
+          <div class="col-lg-12 col-xs-12 col-sm-12">
+            <div class="row">
+              <div class="col-4">
+                <h6 class="h6-font"> <b> Total Deductions under VI A </b>
+                  <br><br><br>
+                  <p class=" p-line-space"> <b> Total Taxable Income </b></p>
+                  <br>
+                  <p class=" p-line-space thin-font"> Tax on Total Income</p>
+                  <p class="p-line-space thin-font"> Surcharge</p>
+                  <p class="p-line-space thin-font"> Health and Education Cess @4%</p>
+                  <p class="p-line-space thin-font"> Tax Rebate under sec 89</p>
+                  <p class="p-line-space"><b> Total Tax Payable</b></p>
+                  <br>
+                  <p class="p-line-space thin-font"> Tax Deducted Till Date</p>
+                  <p class="p-line-space thin-font"> Tax Deducted by previous employer</p>
+                  <p class="p-line-space"> <b>Net Tax Payable </b></p>
+                  <br>
+                  <p class="p-line-space thin-font"> Current Month TDS </p>
+                  <p class="p-line-space thin-font"> Number of remaining months</p>
+                  <p class="p-line-space"> <b> Tax Per Month </b></p>
+                </h6>
+              </div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2"></div>
+              <div class="col-2 text-right">
+                <h6 class="h6-font bold-font">
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.Savings" />
+                  <!-- <br><br>-->
+                  <br>
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.TaxableIncome" />
+                  <!-- <p class="p-line-space bold-font"> {{EmployeeTaxSlipRecords.TaxableIncome }}</p> -->
+                  <!-- <br> -->
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.TaxOnIncome" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.Surcharge" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.EducationCess" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.TaxRebate" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.TotalIncomeTax" />
+                  <!-- <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.TaxOnIncome}} </p>
+                                    <p class="p-line-space thin-font">{{EmployeeTaxSlipRecords.Surcharge}}</p>
+                                    <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.EducationCess}}</p>
+                                    <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.TaxRebate}}</p>
+                                    <p class="p-line-space bold-font"> {{EmployeeTaxSlipRecords.TotalIncomeTax}}</p> -->
+                  <br>
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.TaxPaid" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [ngModel]="getAmount('TAXDEDUCTED')" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.TaxBalance" />
+                  <!-- <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.TaxPaid}}</p>
+                                    <p class="p-line-space thin-font"> {{getAmount('TAXDEDUCTED')}} </p>
+                                    <p class="p-line-space bold-font"> {{EmployeeTaxSlipRecords.TaxBalance}}</p> -->
+                  <br>
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.TDS" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input" [(ngModel)]="diffDuration" />
+                  <input type="text" disabled class="p-0 m-0 form-control disabled-input"
+                    [(ngModel)]="EmployeeTaxSlipRecords.TDS" />
+                  <!-- <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.TDS}}</p>
+                                    <p class="p-line-space thin-font"> {{diffDuration}}</p>
+                                    <p class="p-line-space bold-font"> {{EmployeeTaxSlipRecords.TDS}} </p> -->
+                </h6>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <br>
+      <br>
+      <br>
+      <div #content class="card" style="padding:10px" id="contentToConvert">
+        <br>
+        <br>
+        <h6 class="h6-font"> HRA Exemption</h6>
+        <div style="border: 1px solid #d3d3d3;padding: 10px;border-radius: 5px;">
+          <div class="row padding-10">
+            <div class="col-lg-12 col-xs-12 col-sm-12" style="padding: 20px;">
+              <div class="row row-border">
+                <div class="col-2">
+                  <h6 class="h6-font" style="font-size: 13px !important;"> <b> Month & Year </b>
+                    <br>
+                  </h6>
+                </div>
+                <div class="col-1">
+                  <h6 class="h6-font" style="font-size: 13px !important;"> <b> Metro (Yes/No) </b>
+                  </h6>
+                </div>
+                <div class="col-1">
+                  <h6 class="h6-font" style="font-size: 13px !important;"><b>Rent Paid </b>
+                  </h6>
+                </div>
+                <div class="col-1">
+                  <h6 class="h6-font " style="font-size: 13px !important;"><b>HRA Received </b>
+                  </h6>
+                </div>
+                <div class="col-1">
+                  <h6 class="h6-font " style="font-size: 13px !important;"><b>Basic </b>
+                  </h6>
+                </div>
+                <div class="col-2">
+                  <h6 class="h6-font " style="font-size: 13px !important;"><b>40% / 50% of Basic </b>
+                  </h6>
+                </div>
+                <div class="col-2">
+                  <h6 class="h6-font" style="font-size: 13px !important;"><b>Rent Paid - 10% of Basic
+                    </b>
+                  </h6>
+                </div>
+                <div class="col-2">
+                  <h6 class="h6-fontt" style="font-size: 13px !important;"> <b>HRA Exemption </b>
+                  </h6>
+                </div>
+              </div>
+              <div class="row row-border" *ngFor="let item of HRAExemption">
+                <div class="col-2">
+                  <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                    {{item.RentMonthYear}}
+                    <br>
+                  </h6>
+                </div>
+                <div class="col-1">
+                  <h6 class="h6-font bold-font" style="font-size: 13px !important;" *ngIf="item.IsMetro">Yes
+                  </h6>
+                  <h6 class="h6-font bold-font" style="font-size: 13px !important;" *ngIf="!item.IsMetro">No
+                  </h6>
+                </div>
+                <div class="col-1 ">
+                  <h6 class="h6-font bold-font" style="font-size: 13px !important;">{{item.RentPaid}}
+                  </h6>
+                </div>
+                <div class="col-1 ">
+                  <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                    {{item.HRAReceived}}
+                  </h6>
+                </div>
+                <div class="col-1 ">
+                  <h6 class="h6-font bold-font" style="font-size: 13px !important;">{{item.Basic}}
+                  </h6>
+                </div>
+                <div class="col-2 ">
+                  <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                    {{item.HRACityBasedAmount}}
+                  </h6>
+                </div>
+                <div class="col-2 ">
+                  <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                    {{item.RentPaidLessBasic}}
+                  </h6>
+                </div>
+                <div class="col-2 ">
+                  <h6 class="h6-font bold-font" style="font-size: 13px !important;"> {{item.Amount}}
+                  </h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <br>
+        <h6 class="h6-font"> Deductions under Chapter VI A</h6>
+
+        <div style="border: 1px solid #d3d3d3;padding: 10px;border-radius: 5px;">
+          <div class="row padding-10">
+            <div class="col-lg-12 col-xs-12 col-sm-12" style="padding: 20px;">
+              <div class="row row-border">
+                <div class="col-2">
+                  <h6 class="h6-font"> <b> Section Code </b>
+                    <br>
+                  </h6>
+                </div>
+                <div class="col-4">
+                  <h6 class="h6-font"> <b>Section Description </b>
+                  </h6>
+                </div>
+                <div class="col-3">
+                  <h6 class="h6-font"><b>Contribution Amount </b>
+                  </h6>
+                </div>
+                <div class="col-3">
+                  <h6 class="h6-font"><b>Deductible Amount </b></h6>
+                </div>
+              </div>
+              <ng-container>
+                <ng-container *ngFor="let item1 of LstSavings">
+                  <div class="row row-border" style="padding-top: 12px;">
+                    <div class="col-2">
+                      <!-- <h6 class="h6-font bold-font1">{{ getTaxCodeSec(item1.TaxCodeId)}}
+                                                <br>
+                                            </h6> -->
+                      <input disabled class="p-0 m-0 form-control disabled-input text-left"
+                        [ngModel]="getTaxCodeSec(item1.TaxCodeId)" />
+                    </div>
+                    <div class="col-4">
+                      <!-- <h6 class="h6-font bold-font1">{{getTaxCodeName(item1.TaxCodeId)}}
+                                            </h6> -->
+                      <input disabled class="p-0 m-0 form-control disabled-input text-left"
+                        [ngModel]="getTaxCodeName(item1.TaxCodeId)" />
+                    </div>
+                    <div class="col-3 ">
+                      <!-- <h6 class="h6-font bold-font1">{{item1.ProposedAmount}}</h6> -->
+                      <input disabled class="p-0 m-0 form-control disabled-input text-left"
+                        [(ngModel)]="item1.ProposedAmount" />
+                    </div>
+                    <div class="col-3 ">
+                      <!-- <h6 class="h6-font bold-font1">{{item1.Amount}} </h6> -->
+                      <input disabled class="p-0 m-0 form-control disabled-input text-left"
+                        [(ngModel)]="item1.Amount" />
+                    </div>
+                    <div style="width: 100%;padding: 13px;"
+                      *ngIf="item1.LstTaxBreakUp.length > 0 && doCheckValidProductId(item1)">
+                      <table class="table table-bordered table-container">
+                        <thead>
+                          <tr class="document_table_tr"
+                            style="line-height: 10px !important;min-height: 10px !important;">
+                            <th class="text-left">
+                              Product Name
+                            </th>
+                            <th class="text-left">
+                              Amount
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container *ngFor="let i of item1.LstTaxBreakUp">
+                            <tr *ngIf="i.Amount != 0" style="font-weight: 400!important; font-size: 13px;">
+                              <td *ngIf="i.PayTransactionHead == 'PrevSavings'">
+                                Previous PF
+                              </td>
+                              <td *ngIf="i.PayTransactionHead != 'PrevSavings'">
+                                <!-- {{getProductName(i.ProductId)}} -->
+                                <input disabled class="p-0 m-0 form-control disabled-input text-left"
+                                  [ngModel]="getProductName(i.ProductId)" />
+                              </td>
+
+                              <td>
+                                <!-- {{i.Amount}} -->
+                                <input disabled class="p-0 m-0 form-control disabled-input text-left"
+                                  [(ngModel)]="i.Amount" />
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 text-right">
+      <!-- <button class="btn btn-white" (click)="doDownloadTaxSlipBtn()" style="background: #146BA2;color: #FFF;"><i
+                    class="mdi mdi-download"></i> &nbsp;Download Tax Slip </button> -->
+    </div>
+  </div>
+</nz-drawer>

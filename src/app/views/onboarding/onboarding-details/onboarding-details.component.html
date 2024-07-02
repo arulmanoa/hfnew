@@ -1,0 +1,558 @@
+<div class="page-wrapper">
+
+
+
+  <div class="page-content">
+    <div class="content m-b report-content">
+
+      <!-- <div class="row" >
+        <div class="col-12 col-md-12 col-lg-12 text-right">
+           <div class="pull-right">
+               <button type="button" class="btn btn-primary" (click)="CTCPopUP()">
+                   <i class="mdi-library-books m-r-xs"></i> CTC</button>
+                   &nbsp; &nbsp;
+                   <button type="button" class="btn btn-primary" (click)="CTCPopUP()">
+                    <i class="mdi-library-books m-r-xs"></i> Letter</button>
+           </div>
+
+          <br>
+
+       </div>
+    </div> -->
+    <br>
+    <div class="content m-b report-content">
+
+      <div id="overlay">
+          <div class="w-100 d-flex justify-content-center align-items-center">
+              <div class="spinner"></div>
+          </div>
+      </div>
+
+      
+      <div class="form-group">
+        <span class="qcheader"> Candidate Name :
+        </span>
+        <label class="qcsummarylabel form-text text-muted">
+            {{objCandidateOnboardingDetails?.CandidateName}}
+        </label>
+    </div>
+
+          <div>
+
+          </div>
+          <div class="row">
+
+          <div class="col-md-3">
+            <div class="form-group">
+                <small class="form-text text-muted">Email: </small>
+                <label class="qcsummarylabel form-text text-muted">
+                    {{objCandidateOnboardingDetails?.PrimaryEmail}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <small>Mobile:</small>
+                <label class="qcsummarylabel form-text text-muted">
+                    {{objCandidateOnboardingDetails?.ContactNumber}}</label>
+
+            </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+              <small>Date Of Birth:</small>
+              <label class="qcsummarylabel form-text text-muted">
+                  {{objCandidateOnboardingDetails?.DateOfBirth}}</label>
+
+          </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+            <small>Gender:</small>
+            <label class="qcsummarylabel form-text text-muted">
+                {{objCandidateOnboardingDetails?.Gender}}</label>
+
+        </div>
+    </div>
+      </div>
+      <hr />
+
+
+      <div style="margin-top:1em;" class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <span class="qcheader">Client Name: 
+              </span>
+              <label class="qcsummarylabel form-text text-muted">
+                  {{objCandidateOnboardingDetails?.ClientName}}
+              </label>
+          </div>
+        
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+              <div class="form-group">
+                  <small>Client Contract:</small>
+                  <label class="qcsummarylabel form-text text-muted">
+                      {{objCandidateOnboardingDetails?.ClientContract}}</label>
+
+              </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+                <small>Client SPOC: </small>
+                <label class="qcsummarylabel form-text text-muted">
+                    {{objCandidateOnboardingDetails?.ClientSPOC}}</label>
+
+            </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+              <small>Client Contact: </small>
+              <label class="qcsummarylabel form-text text-muted">
+                  {{objCandidateOnboardingDetails?.ClientContact}}</label>
+
+          </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+            <small>Client Location: </small>
+            <label class="qcsummarylabel form-text text-muted">
+                {{objCandidateOnboardingDetails?.LocationName}}</label>
+
+        </div>
+    </div>
+        </div>
+
+        <hr />
+        <div style="margin-top:1em;" class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <span class="qcheader">Offer Deatils: 
+              </span>             
+          </div>
+        
+          </div>
+        </div>
+        <div class="row">       
+          <div class="col-md-3">
+            <div class="form-group">
+                <small>Designation: </small>
+                <label class="qcsummarylabel form-text text-muted">
+                    {{objCandidateOnboardingDetails?.OfferedDesignation}}</label>
+
+            </div>
+        </div> 
+     
+      <div class="col-md-3">
+        <div class="form-group">
+            <small>Location: </small>
+            <label class="qcsummarylabel form-text text-muted">
+                {{objCandidateOnboardingDetails?.LocationName}}</label>
+
+        </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+          <small>Expected DateOfJoining: </small>
+          <label class="qcsummarylabel form-text text-muted">
+              {{objCandidateOnboardingDetails?.DateOfJoining}}</label>
+  
+      </div>
+  </div>   
+        <div class="col-md-3">
+          <div class="form-group">
+              <small>Actual DateOfJoining: </small>
+              <label class="qcsummarylabel form-text text-muted">
+                  {{objCandidateOnboardingDetails?.ActualDOJ}}</label>
+        
+          </div>
+        </div>       
+    
+    <div class="col-md-3">
+      <div class="form-group">
+          <small>CTC: </small>
+          <label class="qcsummarylabel form-text text-muted">
+              {{objCandidateOnboardingDetails?.CTC}}</label>
+
+      </div>
+  </div>
+</div> 
+  <!-- ---- -->
+       
+        <div class="row" >
+          <div class="col-12 col-md-12 col-lg-12 text-right">
+             <div class="pull-right">
+                 <!-- <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#multiCollapse1" aria-expanded="false" aria-controls="multiCollapse1">
+                     <i class="social-icon text-xs-center" ></i> View More</button> -->
+                     <a class="social-icon text-xs-center" href="JavaScript:Void(0);" data-toggle="collapse" data-target="#multiCollapse1" aria-expanded="false" aria-controls="multiCollapse1">
+                      <i>View more...</i>
+                  </a>
+             </div>
+         </div>
+        </div>
+     
+        <hr />
+          <div style="margin-top:1em;" class="row">
+            <div class="col-md-12">
+              <div class="collapse multi-collapse" id="multiCollapse1">
+                
+                <div style="margin-top:1em;" class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <span class="qcheader">Candidate Qualification: 
+                      </span>
+                      
+                  </div>
+                
+                  </div>
+                </div>
+                <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group">
+                      <small>Graduation: </small>
+                      <label class="qcsummarylabel form-text text-muted">
+                          {{objCandidateOnboardingDetails?.Graduation}}</label>
+            
+                  </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group">
+                    <small>Education Degree: </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                        {{objCandidateOnboardingDetails?.EducationDegree}}</label>
+          
+                </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                  <small>Institution: </small>
+                  <label class="qcsummarylabel form-text text-muted">
+                      {{objCandidateOnboardingDetails?.Institution}}</label>
+        
+              </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+                <small>University: </small>
+                <label class="qcsummarylabel form-text text-muted">
+                    {{objCandidateOnboardingDetails?.University}}</label>
+      
+            </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+              <small>Year Of Passing: </small>
+              <label class="qcsummarylabel form-text text-muted">
+                  {{objCandidateOnboardingDetails?.YearOfPassing}}</label>
+    
+          </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+            <small>Scoring Type: </small>
+            <label class="qcsummarylabel form-text text-muted">
+                {{objCandidateOnboardingDetails?.ScoringType}}</label>
+  
+        </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+          <small>Scoring Value: </small>
+          <label class="qcsummarylabel form-text text-muted">
+              {{objCandidateOnboardingDetails?.ScoringValue}}</label>
+
+      </div>
+  </div>
+      
+    </div>
+    <hr />
+    <div style="margin-top:1em;" class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <span class="qcheader">Work Experience: 
+          </span>
+         
+      </div>
+    
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+            <small>Previous Company: </small>
+            <label class="qcsummarylabel form-text text-muted">
+                {{objCandidateOnboardingDetails?.ExCompany}}</label>
+  
+        </div> 
+    </div>
+
+    <div class="col-md-3">
+      <div class="form-group">
+          <small>Previous Designation: </small>
+          <label class="qcsummarylabel form-text text-muted">
+              {{objCandidateOnboardingDetails?.ExDesignation}}</label>
+
+      </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="form-group">
+        <small>Previous Company Work Location: </small>
+        <label class="qcsummarylabel form-text text-muted">
+            {{objCandidateOnboardingDetails?.ExWorklocation}}</label>
+
+    </div>
+</div>
+
+<div class="col-md-3">
+  <div class="form-group">
+      <small>Year Of Experience: </small>
+      <label class="qcsummarylabel form-text text-muted">
+          {{objCandidateOnboardingDetails?.YearOfExperiance}}</label>
+
+  </div>
+</div>
+<div class="col-md-3">
+  <div class="form-group">
+      <small>Last Drawn Salary: </small>
+      <label class="qcsummarylabel form-text text-muted">
+          {{objCandidateOnboardingDetails?.LastDrawnSalary}}</label>
+
+  </div>
+</div>
+<div class="col-md-3">
+<div class="form-group">
+    <small>Year Of Passing: </small>
+    <label class="qcsummarylabel form-text text-muted">
+        {{objCandidateOnboardingDetails?.ClientSpocDetails}}</label>
+
+</div>
+</div>
+<div class="col-md-3">
+<div class="form-group">
+  <small>Stat Date: </small>
+  <label class="qcsummarylabel form-text text-muted">
+      {{objCandidateOnboardingDetails?.ExStartDate}}</label>
+
+</div>
+</div>
+<div class="col-md-3">
+<div class="form-group">
+<small>End Date: </small>
+<label class="qcsummarylabel form-text text-muted">
+    {{objCandidateOnboardingDetails?.ExEndDate}}</label>
+
+</div>
+</div>
+
+</div>
+
+<hr />
+<div style="margin-top:1em;" class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <span class="qcheader">Skill Details: 
+      </span>
+  </div>
+
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="form-group">
+        <small>Primary Skill: </small>
+        <label class="qcsummarylabel form-text text-muted">
+            {{objCandidateOnboardingDetails?.PrimarySkillName}}</label>
+
+    </div> 
+</div>
+
+<div class="col-md-3">
+  <div class="form-group">
+      <small>Specialization: </small>
+      <label class="qcsummarylabel form-text text-muted">
+          {{objCandidateOnboardingDetails?.Specialization}}</label>
+
+  </div>
+</div>
+
+<div class="col-md-3">
+<div class="form-group">
+    <small>Skill Experience: </small>
+    <label class="qcsummarylabel form-text text-muted">
+        {{objCandidateOnboardingDetails?.SkillExperience}}</label>
+
+</div>
+</div>
+
+</div>
+<hr />
+
+<div style="margin-top:1em;" class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <span class="qcheader"> Work Permit: 
+      </span>
+  </div>
+
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="form-group">
+        <small>Work Permit Type: </small>
+        <label class="qcsummarylabel form-text text-muted">
+            {{objCandidateOnboardingDetails?.WorkPermitType}}</label>
+
+    </div> 
+</div>
+
+<div class="col-md-3">
+  <div class="form-group">
+      <small>Work Permit Country: </small>
+      <label class="qcsummarylabel form-text text-muted">
+          {{objCandidateOnboardingDetails?.WorkPermitCountry}}</label>
+
+  </div>
+</div>
+
+<div class="col-md-3">
+<div class="form-group">
+    <small>Valid From : </small>
+    <label class="qcsummarylabel form-text text-muted">
+        {{objCandidateOnboardingDetails?.WorkPermitValidFrom}}</label>
+
+</div>
+</div>
+
+<div class="col-md-3">
+  <div class="form-group">
+      <small>Valid Till : </small>
+      <label class="qcsummarylabel form-text text-muted">
+          {{objCandidateOnboardingDetails?.WorkPermitValidTill}}</label>
+  
+  </div>
+  </div>
+
+</div>
+<hr />
+<div style="margin-top:1em;" class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <span class="qcheader"> Candidate Bank Details: 
+      </span>
+  </div>
+
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="form-group">
+        <small>Bank: </small>
+        <label class="qcsummarylabel form-text text-muted">
+            {{objCandidateOnboardingDetails?.BankName}}</label>
+
+    </div> 
+</div>
+
+<div class="col-md-3">
+  <div class="form-group">
+      <small>Bank Branch: </small>
+      <label class="qcsummarylabel form-text text-muted">
+          {{objCandidateOnboardingDetails?.BankBranchName}}</label>
+
+  </div>
+</div>
+
+<div class="col-md-3">
+<div class="form-group">
+    <small>Bank Account Number: </small>
+    <label class="qcsummarylabel form-text text-muted">
+        {{objCandidateOnboardingDetails?.AccountNumber}}</label>
+
+</div>
+</div>
+
+<div class="col-md-3">
+  <div class="form-group">
+      <small>Account Holder Name : </small>
+      <label class="qcsummarylabel form-text text-muted">
+          {{objCandidateOnboardingDetails?.AccountHolderName}}</label>
+  
+  </div>
+  </div>
+
+</div>
+<hr />
+<div style="margin-top:1em;" class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <span class="qcheader"> Candidate Other Data: 
+      </span>
+  </div>
+
+  </div>
+</div>
+<div class="row">
+
+<div class="col-md-3">
+  <div class="form-group">
+      <small> Is Previously Employed: </small>
+      <label class="qcsummarylabel form-text text-muted">
+          {{objCandidateOnboardingDetails?.IsPreviouslyEmployed}}</label>
+
+  </div>
+</div>
+
+<div class="col-md-3">
+<div class="form-group">
+    <small>PF Number: </small>
+    <label class="qcsummarylabel form-text text-muted">
+        {{objCandidateOnboardingDetails?.PFNumber}}</label>
+
+</div>
+</div>
+
+<div class="col-md-3">
+  <div class="form-group">
+      <small>UAN: </small>
+      <label class="qcsummarylabel form-text text-muted">
+          {{objCandidateOnboardingDetails?.UAN}}</label>
+  
+  </div>
+  </div>
+  <div class="col-md-3">
+    <div class="form-group">
+        <small>ESIC Number: </small>
+        <label class="qcsummarylabel form-text text-muted">
+            {{objCandidateOnboardingDetails?.ESICNumber}}</label>
+    
+    </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+          <small>PAN: </small>
+          <label class="qcsummarylabel form-text text-muted">
+              {{objCandidateOnboardingDetails?.PAN}}</label>
+      
+      </div>
+      </div>
+
+</div>
+
+
+            </div>
+          </div>
+
+          </div>
+       
+  </div>
+</div>
+</div>
+</div>

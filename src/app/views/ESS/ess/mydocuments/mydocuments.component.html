@@ -1,0 +1,297 @@
+<div class="page-wrapper ff" *ngIf="isESSLogin == true">
+  <div class="page-content">
+
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;">
+      <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" [fullScreen]="true">
+                <p style="color: #0a609eeb"> Loading... </p>
+            </ngx-spinner> -->
+      <app-loading-screen></app-loading-screen>
+
+      <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+      </div>
+      <div class="row" *ngIf="!spinner">
+        <div class="col-lg-12 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(false)">
+                  <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!spinner">
+
+        <ng-container *ngTemplateOutlet="mydocumentTemplate">
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isESSLogin == false && !spinner">
+  <ng-container *ngTemplateOutlet="mydocumentTemplate">
+  </ng-container>
+</div>
+
+<ng-template #mydocumentTemplate>
+  <ngb-tabset style="width: 100%;">
+    <ngb-tab id="personal">
+      <ng-template ngbTabTitle><i class="fa fa-window-maximize" aria-hidden="true"></i>&nbsp;&nbsp; Document Types
+      </ng-template>
+      <ng-template ngbTabContent>
+        <div class="row" style="width: 100%;">
+          <div class="col-12" *ngIf="documentTbl?.length > 0">
+            <table class="table table-bordered table-container">
+              <thead>
+                <tr class="document_table_tr">
+                  <th scope="col" style="width:30%;font-weight: 500 !important;">
+                    Document Name</th>
+                  <th scope="col" style="width:18%;font-weight: 500;">
+                    Document no
+                  </th>
+                  <th scope="col" style="width:5%;font-weight: 500;">
+                    Status
+                  </th>
+                  <th scope="col" style="width:20%;font-weight: 500;">
+                    Category Type
+                  </th>
+                  <th scope="col" style="width:22%;font-weight: 500;">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let item of documentTbl; let i = index" id="{{item.DocumentName}}_border">
+
+                  <td class="document_table_docName table-vertical-align">
+                    <b> {{item.DocumentName}} <span class="help-text-c" *ngIf="item.IsMandatory == 'True'">
+                        *</span> <i class="mdi mdi-file-download-outline" style="cursor: pointer;background: #c8d5eb;
+                        padding: 5px;
+                        border-radius: 5px;" *ngIf="item.DownloadDocumentId > 0" matTooltip="Download sample form"
+                        (click)="downloadTemplateForm(item)"></i>
+
+                    </b>
+                  </td>
+                  <td class="txt-align table-vertical-align">
+                    <span style="font-family: cursive;">{{item.DocumentNumber}}
+                    </span>
+                  </td>
+                  <td class="txt-align table-vertical-align">
+                    <label *ngIf="item.Status == null"> - </label>
+                    <span class="badge badge-warning" *ngIf="item.Status == 0">Pending</span>
+                    <span class="badge badge-danger" *ngIf="item.Status == 2">Rejected</span>
+                    <span class="badge badge-success" *ngIf="item.Status == 1">Approved</span>
+                  </td>
+
+                  <td class="txt-align table-vertical-align">
+                    <label *ngIf="item.CategoryType == null"> - </label>
+
+                    <label *ngIf="item.CategoryType != null">
+
+                      <small class="tab-item__subheading"
+                        style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);">
+                        <label class="font-12">
+                          {{ arrayJoin(getFilteredCatType(item.CategoryType),
+                          'Code') }} </label>
+                      </small>
+
+                      <!-- <small *ngFor="let i of item.CategoryType">
+                        <label *ngIf="i.isChecked" class="font-12">
+                          {{i.Code}}, </label>
+                      </small> -->
+                    </label>
+                  </td>
+                  <td class="document_table_docName " style="text-align: center">
+
+                    <button *ngIf="item.FileName == null && allowedToSave" class="btn btn-default btn-sm m-r-sm "
+                      style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                      (click)="document_file_upload(item)"><i class="fa fa-upload m-r-xs"></i> Upload
+                    </button>
+                    <button *ngIf="item.FileName != null && allowedToSave" class="btn btn-default btn-sm m-r-sm "
+                      style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                      (click)="document_file_edit(item)" [disabled]="item.Status == 1 ? true : null"><i
+                        class="fa fa-pencil-square-o m-r-xs"></i>
+                      Edit
+                    </button>
+                    <button *ngIf="item.FileName != null && allowedToSave" class="btn btn-default btn-sm m-r-sm "
+                      style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                      (click)="document_file_delete(item)" [disabled]="item.Status == 1 ? true : null"><i
+                        class="fa fa-trash-o m-r-xs"></i> Delete
+                    </button>
+                    <!-- <button *ngIf="item.FileName != null" class="btn btn-default btn-sm m-r-sm " style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="viewDocs(item, 'Documents')"><i class="fa fa-eye m-r-xs"></i> View </button> -->
+
+                    <!-- New Change -->
+
+                    <button *ngIf="item.FileName != null && checkIsZipFile(item, 'Documents') == true"
+                      class="btn btn-default btn-sm m-r-sm "
+                      style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" [ngbPopover]="popContent1"
+                      [popoverTitle]="popTitle1" placement="left" (click)="getFileList(item, 'DocumentDetails')"><i
+                        class="fa fa-file-image-o m-r-xs"></i> Document </button>
+
+                    <button *ngIf="item.FileName != null && checkIsZipFile(item, 'Documents') == false"
+                      class="btn btn-default btn-sm m-r-sm "
+                      style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                      (click)="viewDocs(item,'Document')"><i class="fa fa-file-image-o m-r-xs"></i> Document </button>
+
+                    <a *ngIf="item.FileName != null && checkIsZipFile(item, 'Documents') == true"
+                      style="float: right;margin-right: 45px;margin-top: -3px;" class="btn btn-default btn-sm m-r-sm "
+                      style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" download="employeedocuments.zip"
+                      [href]="zipFileUrl">Download</a>
+                    <!-- New Change -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- #region JSZip  -->
+            <!-- JSZIP -->
+
+
+            <ng-template #popContent1>
+              <div class="row" *ngIf="docList.length == 0">
+                <strong style="margin-left: 20px;" class="text-center"> Loading...&nbsp;</strong>
+                <div style="margin-right: 45px;" class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+              </div>
+              <div class="row" *ngFor="let i of docList" style="padding-bottom: 5px;">
+                <div class="col-lg-6">
+                  {{i.name}}
+                </div>
+                <div class="col-lg-6 text-right">
+                  <button class="btn btn-default btn-sm m-r-sm " (click)="document_file_view(i, 'Documents')"
+                    style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;">
+                    <i class="fa fa-eye m-r-xs"></i> View </button>
+
+
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #popTitle1> Preview Document Details</ng-template>
+            <!-- JSZIP -->
+            <!-- #endregion -->
+          </div>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="official" *ngIf="employeedetails && employeedetails.Id > 0">
+      <ng-template ngbTabTitle><i class="fa fa-window-maximize" aria-hidden="true"></i>&nbsp;&nbsp; Official
+      </ng-template>
+      <ng-template ngbTabContent>
+
+        <div class="row" *ngIf="employeeLetterTransactions.length == 0">
+          <div class="col-lg-12">
+            <p class="text-center">No letter transactions found!</p>
+          </div>
+        </div>
+        <div *ngFor="let item of employeeLetterTransactions">
+          <div *ngIf="item.Status == 1">
+            <h6 class="header-pretitle" style="font-size: .625rem;margin-bottom: 10px;margin-top: 10px;">
+              {{item.CreatedOn | date:'dd MMM, yyyy'}}
+            </h6>
+            <div class="list-group-item list-group_shadow m-b-05">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <a href="javascript:;" class="avatar">
+                    <img src="assets/Images/{{clientLogoLink}}" alt="..." class="avatar-img rounded" style="width:40px">
+                  </a>
+                </div>
+                <div class="col ml-n2">
+                  <h4 class="font-h4 mb-1">{{item.TemplateCategroyCode}}
+                  </h4>
+                  <small class="text-muted">
+                    {{item.TemplateCategroyDescription}} </small>
+                </div>
+                <div class="col-auto">
+                  <div class="media-right">
+                    <button class="btn btn-default btn-sm m-r-sm"
+                      style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                      (click)="downloadDocs(item)">
+                      Download </button>
+                    <button class="btn btn-default btn-sm m-r-sm"
+                      style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                      (click)="viewDocs(item, 'official')"> View
+                    </button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</ng-template>
+
+
+
+<div id="popup_viewDocs1" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_viewDocs1" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                Employee Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+            </h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="modal_dismiss_docs()" style="margin-top: -15px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+
+            <div style="float: right;margin-right: 45px;margin-top: -3px;">
+              <app-filedownload [documentId]="documentURLId">
+              </app-filedownload>
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="modal-body">
+          <div class="iframe-container" *ngIf="documentURL == null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <img src="assets/Images/logo_menu.png" style="opacity: .5;">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <div class="iframe-container" *ngIf="documentURL != null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 350px;">
+
+            <iframe [src]="documentURL" frameborder="0" scrolling="yes" height="100%"
+              style="width: 100%;height: 100%;"></iframe>
+            <img style="top: 0 !important; 
+                right: 0px !important;
+                position: absolute !important;
+                z-index: 9;
+                height: 55px !important;
+                vertical-align: top;
+                opacity: inherit;
+                bottom: unset !important;
+                left: unset !important;" src="../../../../assets/Images/logo_menu.png">
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

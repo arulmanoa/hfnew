@@ -1,0 +1,15 @@
+<div class="text-center ma-5" *ngIf="spinner">
+  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+      <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+          role="status" aria-hidden="true"></span>
+      Please wait...
+  </button>
+</div>
+<div class="row" *ngIf="!spinner">
+  <div class="col-lg-12">
+    <angular-slickgrid gridId="grdInBucket1" [columnDefinitions]="inBucketColumnDefinitions1" 
+    (sgOnSelectedRowsChanged)="onSelectedRowsSeparated($event.detail.eventData, $event.detail.args)"
+    [gridOptions]="inBucketGridOptions1" [dataset]="inBucketList1" (onAngularGridCreated)="inBucketGridReady1($event)" gridWidth="100%">
+    </angular-slickgrid> 
+  </div>
+</div>

@@ -1,0 +1,83 @@
+
+
+
+
+<div class="modal fade show" style="display: block;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="dfc100 overflow-y-auto">
+
+        <div  id="overlay">
+          <div class="w-100 d-flex justify-content-center align-items-center">
+            <div  class="spinner"></div>
+          </div>
+        </div>
+
+        <div class="modal-header">
+          <h5 class="modal-title pull-left">Column Details</h5>
+          <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()" ><i class="mdi mdi-close font-size-md icon-close"></i></a>
+        </div>
+
+        <div class="modal-body no-padder builtin-calling-wrapper">
+          <div class="flex-column">
+            
+            <div *ngIf="column">
+              <div class="clearfix">
+
+                <div class="row m-b"> 
+
+                  <span class="col">
+                    <label for="ColSpan" class="form-label"> Column Width: </label>  
+                    <input id="ColSpan" type="text" class="form-control" [(ngModel)]="column.ColSpan">
+                  </span>
+
+                  <span class="col">
+                    <label for="DataSource-Type" class="form-label"> Column Contains?</label>
+                    <ng-select   [clearable]="false" [items]="elementTypeNames" bindValue="value" 
+                    bindLabel="label" [(ngModel)]="column.ElementType">
+                    </ng-select>
+                  </span>
+                
+                </div>
+                
+                <div *ngIf="column.ElementType === 1">
+
+                  <div class="row">
+                    <div class="col">
+                      <label for="DataSource-Type" class="form-label"> Group Style?</label>
+                      <ng-select   [clearable]="false" [items]="groupTypeNames" bindValue="value" 
+                      bindLabel="label" [(ngModel)]="column.GroupElement.Type">
+                      </ng-select>
+                    </div>
+                    <div class="col">
+                      <label for="ColSpan" *ngIf="column.GroupElement.Type !== 1" class="form-label"> Group Label: </label>  
+                      <input id="ColSpan" *ngIf="column.GroupElement.Type !== 1" type="text" class="form-control" [(ngModel)]="column.GroupElement.Label">
+                    </div>
+                  </div>
+
+                </div>
+                
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-default pull-right" type="button" data-dismiss="modal" (click)="closeModal()">Close</button>
+  
+          <!-- <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+              <div>
+                  <div>
+                      <button class="btn  btn-primary " type="Submit" name="btnSubmit"  id="btnSubmit" (click)="onSave()">
+                          <div class="pos-rlt sm-btn-component" > <span> Save </span></div>
+                      </button>
+                  </div>
+              </div>
+          </div> -->
+        </div>
+    
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,708 @@
+<span class="pull-left text-overflow" style="font-size: 20px;width: 100%;margin-top: -15px;">{{objStorageJson.empName}}</span>
+<!-- <span class="emp-id-label">Emp. Email: {{objStorageJson.email}}</span> -->
+<p></p>
+
+<div *ngIf="whichCategory == 'investment'">
+    <nz-descriptions [nzColumn]="2" nzTitle="" *ngIf="categoryJson.b[0].Code != 'Sec80C'">
+        <nz-descriptions-item nzTitle="Name" [nzSpan]="1.8"> <b>{{getLetterSpace(categoryJson.ProductName)}}  </b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Section & Desc." [nzSpan]="1.8"> <b> {{categoryJson.b[0].Code}}  | {{categoryJson.b[0].Description}} </b></nz-descriptions-item>
+
+        <nz-descriptions-item nzTitle="Qualifying Limit" [nzSpan]="1.8"> <b>{{categoryJson.b[0].ThresholdLimit}} </b></nz-descriptions-item>
+    </nz-descriptions>
+
+
+    <nz-descriptions [nzColumn]="2" nzTitle="" *ngIf="categoryJson.b[0].Code == 'Sec80C'">
+        <nz-descriptions-item nzTitle="Name" [nzSpan]="1.8"> <b>{{getLetterSpace(categoryJson.ProductName)}}  </b></nz-descriptions-item>
+
+        <nz-descriptions-item nzTitle="Section & Desc." [nzSpan]="1.8"> <b> {{categoryJson.b[0].Code}}  | {{categoryJson.b[0].Description}} </b></nz-descriptions-item>
+
+        <nz-descriptions-item nzTitle="Qualifying Limit of Section 80C" [nzSpan]="1.8"> <b>{{categoryJson.b[0].ThresholdLimit}} </b></nz-descriptions-item>
+    </nz-descriptions>
+
+    <!-- <div class="row"> 
+
+
+  <div class="col-12" style="padding: 0px;">
+    <div class="pull-right">
+      <button class="btn btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+        (click)="addInvestmentCategory()">
+        <div class="pos-rlt sm-btn-component">
+          <span> <i class="mdi mdi-vector-union" style="font-size: 13px;"></i> &nbsp;
+            History</span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div> -->
+
+    <!-- <div class="row">
+  <div class="col-12">
+    <div class="pull-left">
+    </div>
+    <div class="pull-right">
+      <div class="blob"><i class="mdi mdi-information-outline blob_center_i"></i>
+      </div>
+    </div>
+  </div>
+</div> -->
+    <hr>
+
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label searchbar-label">Amount</label>
+                <label class="qcsummarylabel form-text text-muted">
+          <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" [(ngModel)]="KeyAmount"
+            name="amount" placeholder="1,50,000" autocomplete="off"
+            [ngClass]="{ 'is-invalid': btnsaved && (KeyAmount == null || KeyAmount == '' )}">
+
+        </label>
+                <label *ngIf="btnsaved && (KeyAmount == null || KeyAmount == '')" class="form-label searchbar-label" style="color: #dc3545 !IMPORTANT;FONT-SIZE: 10px !important;">Amount is
+          required / You have entered amount is invalid</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="whichCategory == 'duduction'">
+    <nz-descriptions [nzColumn]="2" nzTitle="">
+        <nz-descriptions-item nzTitle="Name" [nzSpan]="1.8"> <b>{{getLetterSpace(categoryJson.ProductName)}}  </b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Section & Desc." [nzSpan]="1.8"> <b> {{categoryJson.b[0].Code}}  | {{categoryJson.b[0].Description}} </b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Annual Basic" [nzSpan]="1"> <b>{{Annual_Basic}}</b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Annual HRA" [nzSpan]="1"> <b>{{Annual_HRA}}</b></nz-descriptions-item>
+    </nz-descriptions>
+    <hr>
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label searchbar-label">Entry Type</label>
+                <label class="qcsummarylabel form-text text-muted">
+          <ng-select #select [items]="EntryTypeList" bindValue="Id" [clearable]="false" bindLabel="Name" 
+            placeholder="Select an option" (change)="onChangeEntryType($event)"  [(ngModel)]="EntryType">
+          </ng-select>
+        </label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- <div class="form-group" *ngIf="EntryType === 3">
+                <a (click)="addHRA(null)" href="javascript:;" class="btn btn_fc">Add new</a>
+            </div> -->
+        </div>
+    </div>
+
+    <table class="table table-bordered table-container" style="font-size: 12px !important;">
+        <thead>
+            <tr class="document_table_tr">
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th style="text-align: center">Is Metro
+                </th>
+                <th style="width: 25%;">City <i class="fa fa-info-circle" placement="top" ngbTooltip="Please enter the name of the city if it is non-metro"></i> </th>
+                <th>Amount</th>
+                <!-- <th>PAN</th> -->
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of LstHRA; let i = index" (change)='onChangeHRA_table()'>
+                <td class="table-td-center">
+                    {{item.StartDate | date:'dd-MM-yyyy'}}
+                </td>
+                <td class="table-td-center">
+                    {{item.EndDate | date:'dd-MM-yyyy'}}
+                </td>
+                <td class="table-td-center" style="text-align: center !important;">
+
+                    <div class="custom-control custom-checkbox chkbox_custom">
+                        <input type="checkbox" class="custom-control-input" id="isaddress_{{item.Id}}" [(ngModel)]="item.isChecked" [ngModelOptions]="{standalone:
+            true}" (change)="onChangeIsMetroCity(item, $event)" [checked]="item.isChecked">
+                        <label class="custom-control-label" for="isaddress_{{item.Id}}"></label>
+                    </div>
+                </td>
+                <td style="text-align: center" class="table-td-center" *ngIf="item.isChecked">
+                    <select #s class="form-control" id="financialYear" [(ngModel)]="item.NameofCity" placeholder="Select an option">
+              <option *ngFor="let city of CityList" [ngValue]="city.Id"
+                class="ng-star-inserted">{{city.Code}}</option>
+         
+        </select>
+                </td>
+                <td style="text-align: center" class="table-td-center" *ngIf="!item.isChecked">
+                    <div class="row">
+                        <div class="col-10" style="padding-right: 0px !important;">
+                            <input type="text" style="text-align:left" maxlength="12" [(ngModel)]="item.NameofCity" class="form-control">
+
+                        </div>
+                        <div class="col-lg-2" style="padding-top: 12px !important;">
+
+
+                            <ng-template #tipContent>
+                                <p>
+                                    Please enter the name of the city
+                                </p>
+                            </ng-template>
+
+                            <i class="fa fa-info-circle" style="float: right;" placement="top" ngbTooltip="Please enter the name of the city"></i>
+
+                        </div>
+                    </div>
+
+                </td>
+                <td>
+                    <input type="number" style="text-align:right" maxlength="12" onkeypress="return /^[0-9]+$/i.test(event.key)" [(ngModel)]="item.RentAmountPaid" class="form-control">
+
+                </td>
+                <!-- <td class="txt-align document_table_validFrom table-td-center">
+              <input type="text"   [(ngModel)]="item.PAN" class="form-control">
+          </td> -->
+
+                <td class="txt-align document_table_validFrom table-td-center" *ngIf="item.EntryType !=3">
+                    <button type="button" class="btn" *ngIf="i==0" (click)="fillBelow(item)">fill below</button>
+                    <button type="button" class="btn" *ngIf="i==0" (click)="deleteAll(item)">delete all</button>
+
+                </td>
+                <td class="txt-align document_table_validFrom table-td-center" *ngIf="item.EntryType ===3">
+
+                    <button type="button" class="btn" (click)="editHRA(item)">Edit</button>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+    <div class="row" *ngIf="EntryType == '2' || EntryType =='1'">
+        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+            <label class="form-label"> Rental House Address </label>
+            <textarea class="form-control" rows="2" spellcheck="false" id="Remarks" [(ngModel)]="RentalHouseAddress" [ngClass]="{ 'is-invalid': btnsaved && (RentalHouseAddress == null || RentalHouseAddress == '')}"></textarea>
+            <label *ngIf="btnsaved && (RentalHouseAddress == null || RentalHouseAddress == '')" class="form-label searchbar-label" style="color: #dc3545 !IMPORTANT;FONT-SIZE: 10px !important;">Rental House Address is required</label>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+            <label class="form-label">  Address of Landlord</label>
+            <textarea class="form-control" rows="2" spellcheck="false" id="Remarks" [(ngModel)]="LandlordAddress" [ngClass]="{ 'is-invalid': btnsaved && (LandlordAddress == null || LandlordAddress == '')}"></textarea>
+            <label *ngIf="btnsaved && (LandlordAddress == null || LandlordAddress == '')" class="form-label searchbar-label" style="color: #dc3545 !IMPORTANT;FONT-SIZE: 10px !important;"> Address of Landlord is required</label>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-6  col-sm-6">
+            <label class="form-label ">Name of Landlord<span class="required"> *</span></label>
+            <input class="form-control" type="text" name="NameofLandlord" placeholder="" [(ngModel)]="NameofLandlord" [ngClass]="{ 'is-invalid': btnsaved && (NameofLandlord == null || NameofLandlord == '')}" autocomplete="off">
+            <label *ngIf="btnsaved && (NameofLandlord == null || NameofLandlord == '')" class="form-label searchbar-label" style="color: #dc3545 !IMPORTANT;FONT-SIZE: 10px !important;">Name of Landlord is required</label>
+        </div>
+        <div class="form-group form-group-vertical col-xs-6  col-sm-6">
+            <label class="form-label ">PAN of Landlord<span class="required" *ngIf="isPanMandatoryForHRA"> *</span></label>
+            <input class="form-control" type="text" name="PANofLandlord" placeholder="ABCPD1234E" maxlength="10" pattern="^([a-zA-Z]){3}([pPcCHhaAbBgGlLfFTtjJ]){1}([a-zA-Z]){1}([0-9]){4}([a-zA-Z]){1}?$" [(ngModel)]="PANofLandlord" [ngClass]="isPanMandatoryForHRA ? { 'is-invalid': btnsaved && (PANofLandlord == null || PANofLandlord == '')} : ''"
+                autocomplete="off" #panOfLandlord="ngModel">
+            <label *ngIf="isPanMandatoryForHRA && btnsaved && (PANofLandlord == null || PANofLandlord == '')" class="form-label searchbar-label" style="color: #dc3545 !IMPORTANT;FONT-SIZE: 10px !important;">
+                PAN of Landlord is required
+            </label>
+            <div [hidden]="panOfLandlord.valid || panOfLandlord.pristine" class="help-block">
+                Please match the requested format. (Ex: ABCPD1234E)
+            </div>
+        </div>
+    </div>
+    <!-- 
+  <nz-table #editRowTable nzBordered [nzData]="LstHRA">
+    <thead>
+      <tr>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>City</th>
+        <th>Amount</th>
+        <th>PAN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of editRowTable.data" class="editable-row">
+        <td>
+          <div class="editable-cell" [hidden]="editId === data.Id" (click)="startEdit(data.Id)">
+            {{ data.StartDate }}
+          </div>
+          <input [hidden]="editId !== data.id" type="text" nz-input [(ngModel)]="data.StartDate" (blur)="stopEdit()" />
+        </td>
+        <td>{{ data.EndDate }}</td>
+        <td>{{ data.City }}</td>
+        <td>
+          <a nz-popconfirm nzPopconfirmTitle="Sure to delete?" (nzOnConfirm)="deleteRow(data.id)">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table> -->
+
+    <!-- 
+  <div class="_3t1Gt" *ngIf="LstHRA.length  > 0">
+    <ul class="_2HpLs" *ngFor="let item of LstHRA">
+      <div class="_1hbdR">{{item.StartDate | date: 'dd MMM yyyy'}} - {{item.EndDate | date: 'dd MMM yyyy'}}</div>
+      <li class="_7egSr"><span class="_3wt2z _340si"
+          style="background-image:url(https://image.flaticon.com/icons/svg/2922/2922393.svg);background-size:40px;"></span>
+        <div class="_2mpuf">
+          <div class="_2b_tX"><span class="UhTNa">{{item.NameofCity}}</span><span> </span><span class="_2D30v Uf9Yn"> |
+              {{ item.NameofLandlord}}</span><span> </span></div>
+          <div class="_3vjfJ">{{item.StartDate | date: 'dd MMM yyyy'}}</div><span class="WuNPZ"><span> </span><span
+              class="_2XWcV"></span><span> </span></span><span> </span><span></span>
+        </div><span class="_2JOG_">₹ {{item.RentAmountPaid  | number : '1.2-2'}}</span><span class="_8V6m8">
+          <a (click)="editHRA(item)" class="hover_icon">Edit </a></span>
+      </li>
+    </ul>
+
+  </div> -->
+
+    <br>
+
+
+</div>
+
+<div *ngIf="whichCategory == 'duduction_Additional'">
+
+
+    <!-- <div class="row">
+        <div class="col-lg-12">
+            <div class="request-loader">
+                <span>👋</span>
+            </div>
+        </div>
+    </div> -->
+    <nz-descriptions [nzColumn]="2" nzTitle="">
+        <nz-descriptions-item nzTitle="Name" [nzSpan]="1.8"> <b>{{getLetterSpace(categoryJson.ProductName)}}  </b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Section & Desc." [nzSpan]="1.8"> <b> {{categoryJson.b[0].Code}}  | {{categoryJson.b[0].Description}} </b></nz-descriptions-item>
+
+    </nz-descriptions>
+    <hr>
+    <div class="">
+
+        <form [formGroup]="lhpForm">
+
+            <div class="col-12 col-md-12 col-sm-12" style="padding: 0px;">
+                <div class="">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label searchbar-label">First-Time Homeowner (Yes/No)</label>
+                                <label class="qcsummarylabel form-text text-muted">
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="isFirstTime" formControlName="isFirstTime"
+                        [ngClass]="{ 'is-invalid': submitted && g.isFirstTime.errors }" />
+                      <span class="el-switch-style"></span>
+                    </label>
+                            </div>
+
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label searchbar-label">Occupancy Type</label>
+                            <label class="qcsummarylabel form-text text-muted">
+                  <div class="pretty p-icon p-round">
+                    <input type="radio" name="occupanyType" (change)="OnChangeoccupanyType('1')" value="rentedOut" formControlName="occupanyType" />
+                    <div class="state p-info">
+                      <i class="icon mdi mdi-check"></i>
+                      <label>Rented Out</label>
+                        </div>
+                    </div>
+                    <div class="pretty p-icon p-round">
+                        <input type="radio" name="occupanyType" (change)="OnChangeoccupanyType('2')" value="selfOccupied" formControlName="occupanyType" />
+                        <div class="state p-info">
+                            <i class="icon mdi mdi-check"></i>
+                            <label>Self-Occupied</label>
+                        </div>
+                    </div>
+
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Address of Property</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <textarea class="form-control" rows="3" spellcheck="false" id="Remarks"
+                    formControlName="addressOfProperty" placeholder="Type you address here..."
+                    [ngClass]="{ 'is-invalid': submitted && g.addressOfProperty.errors }"></textarea>
+                </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Ownership (%) </label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <input class="form-control" type="number" name="ownership" placeholder="70" formControlName="ownership"
+                    [ngClass]="{ 'is-invalid': submitted && g.ownership.errors }" autocomplete="off">
+                </label>
+                </div>
+            </div>
+
+            <div class="col-md-6" *ngIf="this.lhpForm.controls.occupanyType.value ==='rentedOut'">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Annual Rent</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <input class="form-control" type="number" name="AnnualRent" placeholder="12000"
+                    formControlName="AnnualRent" [ngClass]="{ 'is-invalid': submitted && g.AnnualRent.errors }"
+                    autocomplete="off">
+                </label>
+                </div>
+            </div>
+            <div class="col-md-6" *ngIf="this.lhpForm.controls.occupanyType.value ==='rentedOut'">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Municipal Taxes Paid</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <input class="form-control" type="number" name="MunicipalTaxesPaid" placeholder="5000"
+                    formControlName="MunicipalTaxesPaid"
+                    [ngClass]="{ 'is-invalid': submitted && g.MunicipalTaxesPaid.errors }" autocomplete="off">
+                </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Loan Availed Date <span class="help-text m-l-5">(DD-MM-YYYY)</span></label>
+                    <label class="qcsummarylabel form-text text-muted">
+                 
+
+                    <input class="form-control" type="text" name="LoanAvailedDate"  bsDatepicker placement="left"  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="" formControlName="LoanAvailedDate"
+                    [ngClass]="{ 'is-invalid': submitted && g.LoanAvailedDate.errors }" (ngModelChange)="doChangeHomeLoanAvailedDate($event)">
+                </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Property Possession Date <span class="help-text m-l-5">(DD-MM-YYYY)</span></label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <!-- <input class="form-control" type="date" name="PropertyPossessionDate" placeholder="31-01-2019"
+                    formControlName="PropertyPossessionDate"
+                    [ngClass]="{ 'is-invalid': submitted && g.PropertyPossessionDate.errors }" autocomplete="off"> -->
+                    <input class="form-control" type="text" name="PropertyPossessionDate"  bsDatepicker placement="left"  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="" formControlName="PropertyPossessionDate"
+                    [ngClass]="{ 'is-invalid': submitted && g.PropertyPossessionDate.errors }" autocomplete="off" (ngModelChange)="doChangeHomeLoanPossessionDate($event)">
+                </label>
+                </div>
+            </div>
+
+            <div class="col-md-6" *ngIf="IsValidToTakeHomeLoanAmount">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Additional Interest Amount - <b *ngIf="ValidHomeLoanObject_HPD"> {{ValidHomeLoanObject_HPD.b[0].Code}} </b> </label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <input class="form-control" type="number" name="Sec24ChildProductAmount" placeholder="6000"
+                    formControlName="Sec24ChildProductAmount" (change)="doChangeHomeLoanAvailAmount($event)" [ngClass]="{ 'is-invalid': submitted && g.Sec24ChildProductAmount.errors }"
+                    autocomplete="off">
+                </label>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Interest Paid</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <input class="form-control" type="number" name="InterestPaid" placeholder="6000"
+                    formControlName="InterestPaid" [ngClass]="{ 'is-invalid': submitted && g.InterestPaid.errors }"
+                    autocomplete="off">
+                </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Principal Amount</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <input class="form-control" type="number" name="PrincipalAmount" placeholder="40000"
+                    formControlName="PrincipalAmount"
+                    [ngClass]="{ 'is-invalid': submitted && g.PrincipalAmount.errors }" autocomplete="off">
+                </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Pre-Construction Interest</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <input class="form-control" type="number" name="Pre_ConstructionInterest" placeholder="1500"
+                    formControlName="Pre_ConstructionInterest"
+                    [ngClass]="{ 'is-invalid': submitted && g.Pre_ConstructionInterest.errors }" autocomplete="off">
+                </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Installment Number</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <input class="form-control" type="number" name="InstallmentNumber" placeholder="5"
+                    formControlName="InstallmentNumber"
+                    [ngClass]="{ 'is-invalid': submitted && g.InstallmentNumber.errors }" autocomplete="off">
+                </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Name of Lender</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <input class="form-control" type="text" name="NameOfLender" placeholder="Name of Lender"
+                    formControlName="NameOfLender" [ngClass]="{ 'is-invalid': submitted && g.NameOfLender.errors }"
+                    autocomplete="off">
+                </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">PAN of Lender</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                    <input class="form-control" type="text" name="PANofLender" placeholder="ABCPD1234E"
+                        pattern="^([a-zA-Z]){3}([pPcCHhaAbBgGlLfFTtjJ]){1}([a-zA-Z]){1}([0-9]){4}([a-zA-Z]){1}?$" maxlength="10"
+                        formControlName="PANofLender" [ngClass]="{ 'is-invalid': submitted && g.PANofLender.errors }"
+                        autocomplete="off">
+                    </label>
+                    <div class="help-block">
+                        <span *ngIf="lhpForm.get('PANofLender').errors?.pattern || lhpForm.get('PANofLender').errors?.invalid">
+                            Please  match the requested format. (Ex: ABCPD1234E)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label searchbar-label">Address of Lender</label>
+                    <label class="qcsummarylabel form-text text-muted">
+                  <textarea class="form-control" rows="2" spellcheck="false" placeholder="Type your lender address here..." formControlName="addressOfLender"
+                    [ngClass]="{ 'is-invalid': submitted && g.addressOfLender.errors }" id="AddressofLender"></textarea>
+                </label>
+
+                </div>
+            </div>
+    </div>
+</div>
+</div>
+</form>
+
+</div>
+</div>
+
+
+<div *ngIf="whichCategory == 'duduction_Medical'">
+    <!-- <div class="row">
+        <div class="col-lg-12">
+            <div class="request-loader">
+                <span>👋</span>
+            </div>
+        </div>
+    </div> -->
+    <nz-descriptions [nzColumn]="2" nzTitle="">
+        <nz-descriptions-item nzTitle="Name" [nzSpan]="1.8"> <b>{{getLetterSpace(categoryJson.ProductName)}}  </b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Section & Desc." [nzSpan]="1.8"> <b> {{categoryJson.b[0].Code}}  | {{categoryJson.b[0].Description}} </b></nz-descriptions-item>
+
+    </nz-descriptions>
+    <nz-descriptions [nzColumn]="2" nzTitle="">
+        <!-- <nz-descriptions-item nzTitle="Investment Name" [nzSpan]="1"> <b>{{categoryJson.name}} </b></nz-descriptions-item> -->
+        <nz-descriptions-item nzTitle="Qualifying Limit" [nzSpan]="1"> <b>{{categoryJson.b[0].ThresholdLimit}} </b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Qualifying Limit for Senior" [nzSpan]="1"> <b>{{categoryJson.b[0].ThresholdLimitSenior}}  </b></nz-descriptions-item>
+
+    </nz-descriptions>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <a (click)="addDependent(null)" href="javascript:;" class="btn btn_fc">  Add Dependent Details</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="_3t1Gt" style="width: 100%;">
+            <ul class="_2HpLs" *ngFor="let item of LstMedical">
+                <!-- <div class="_1hbdR">{{item.DependentTypes}}</div> -->
+                <li class="_7egSr"><span class="_3wt2z _340si" style="background-image:url(assets/Images/engagement.png);background-size:40px;"></span>
+                    <div class="_2mpuf">
+                        <div class="_2b_tX"><span class="UhTNa">{{item.NameofDependent}}</span><span> </span></div>
+                        <div class="_3vjfJ">{{item.DOB | date: 'dd MMM yyyy'}}</div><span class="WuNPZ"><span> </span><span class="_2XWcV"></span><span> </span></span><span> </span><span></span>
+                    </div><span class="_2JOG_">₹ {{item.Amount  | number : '1.2-2'}}</span><span class="_8V6m8">
+            <a href="javascript:;" 
+            class="btn action-edit pull-right"
+            style="margin-right: 20px;
+            margin-top: 10px;"
+           (click)="editDependent(item)">
+            <i class="fa fa-pencil"
+                aria-hidden="true"
+                style="font-size: 16px;color: #838383;"></i>
+        </a>
+           </span>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<div *ngIf="whichCategory == 'deduction_Loan'">
+    <nz-descriptions [nzColumn]="2" nzTitle="">
+        <nz-descriptions-item nzTitle="Name" [nzSpan]="1.8"> <b>{{getLetterSpace(categoryJson.ProductName)}}  </b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="" [nzSpan]="1.8"> <b> Section : {{categoryJson.b[0].Section}} |  {{categoryJson.b[0].Description}} </b></nz-descriptions-item>
+
+    </nz-descriptions>
+    <nz-descriptions [nzColumn]="2" nzTitle="">
+        <!-- <nz-descriptions-item nzTitle="Investment Name" [nzSpan]="1"> <b>{{categoryJson.name}} </b></nz-descriptions-item> -->
+        <nz-descriptions-item nzTitle="Qualifying Limit" [nzSpan]="1"> <b>{{categoryJson.b[0].ThresholdLimit}} </b></nz-descriptions-item>
+    </nz-descriptions>
+
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label searchbar-label">Amount</label>
+                <label class="qcsummarylabel form-text text-muted">
+          <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" [(ngModel)]="KeyAmount"
+            name="amount" placeholder="150000" autocomplete="off"
+            [ngClass]="{ 'is-invalid': btnsaved && (KeyAmount == null || KeyAmount == '' )}">
+
+        </label>
+                <label *ngIf="btnsaved && (KeyAmount == null || KeyAmount == '' )" class="form-label searchbar-label" style="color: #dc3545 !IMPORTANT;FONT-SIZE: 10px !important;">Amount is
+          required / You have entered amount is invalid</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="whichCategory == 'deduction_Self'">
+    <nz-descriptions [nzColumn]="2" nzTitle="">
+        <nz-descriptions-item nzTitle="Name" [nzSpan]="1.8"> <b>{{getLetterSpace(categoryJson.ProductName)}}  </b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Section & Desc." [nzSpan]="1.8"> <b> {{categoryJson.b[0].Code}}  | {{categoryJson.b[0].Description}} </b></nz-descriptions-item>
+
+    </nz-descriptions>
+    <nz-descriptions [nzColumn]="2" nzTitle="">
+        <!-- <nz-descriptions-item nzTitle="Investment Name" [nzSpan]="1"> <b>{{categoryJson.name}} </b></nz-descriptions-item> -->
+        <nz-descriptions-item nzTitle="Qualifying Limit" [nzSpan]="1"> <b>{{categoryJson.b[0].ThresholdLimit}} </b></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Qualifying Limit for Senior" [nzSpan]="1"> <b>{{categoryJson.b[0].ThresholdLimitSenior}}  </b></nz-descriptions-item>
+
+    </nz-descriptions>
+
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label searchbar-label">Claiming Severe Disability? (Yes/No)</label>
+                <label class="qcsummarylabel form-text text-muted">
+          <div class="p-t-10">
+            <label class="el-switch el-switch-green">
+              <input type="checkbox" name="isFirstTime" id="checkbox"  [(ngModel)]="checkClaiming"  />
+              <span class="el-switch-style"></span>
+            </label>
+            </div>
+
+            </label>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="form-label searchbar-label">Amount</label>
+            <label class="qcsummarylabel form-text text-muted">
+          <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" [(ngModel)]="KeyAmount"
+            name="amount" placeholder="1,50,000" autocomplete="off"
+            [ngClass]="{ 'is-invalid': btnsaved && (KeyAmount == null || KeyAmount == '' )}">
+
+        </label>
+            <label *ngIf="btnsaved && (KeyAmount == null || KeyAmount == '' )" class="form-label searchbar-label" style="color: #dc3545 !IMPORTANT;FONT-SIZE: 10px !important;">Amount is
+          required / You have entered amount is invalid</label>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="form-label searchbar-label">Remarks</label>
+            <label class="qcsummarylabel form-text text-muted">
+        <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="KeyRemarks"></textarea>
+      </label>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex align-items-center" *ngIf="!isLoading">
+    <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+</div>
+
+<div class="row" *ngIf="!Mode">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="form-label searchbar-label" *ngIf="isLoading">Attachment <span class="help-text m-l-5">(Max file size
+          2MB)</span></label>
+            <label class="qcsummarylabel form-text text-muted">
+        <label class="upload control" style="width: 100%; float: left;" *ngIf="isLoading">
+          <div class="upload-draggable is-primary">
+            <section class="section">
+              <div class="has-text-centered">
+                <span class="icon is-large">
+                  <span style="padding-left: 10px;">
+                    <i class="fa fa fa-cloud-upload" style="color: #9ba7ca;"></i>
+                    &nbsp; Upload </span>
+                </span>
+              </div>
+            </section>
+          </div>
+          <input type="file" accept="application/msword,  application/pdf, image/*" (change)="onFileUpload($event)"
+            id="sTest-uploadFile-candidateAddResume">
+        </label>
+
+            <p class="control" *ngFor="let item of LstmultipleDocs" style="float: left;
+        padding: 10px;">
+                <span class="file-name">
+            <button class="btn btn-danger c-btn" (click)="doDeleteFile(item)" [disabled]="!isLoading"><a ngbTooltip="Delete Photo"
+                id="sTest-deleteFile-candidateAddResume"
+                style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block   ;margin-top: -5px;"><i
+                  class="fa fa-trash-o"></i></a>
+            </button>
+
+            <a target="blank" class="ahref" style="padding: 2px;">
+              {{item.FileName}}
+            </a>
+          </span>
+                <span class="badge badge-warning" style="display: inline;color:white !important;" *ngIf="item.Status == 0">
+            Saved
+          </span>
+                <span class="badge badge-danger" style="display: inline;color:white !important;" *ngIf="item.Status == 2">
+            Rejected 
+          </span>
+                <span class="badge badge-success" style="display: inline;color:white !important;" *ngIf="item.Status == 1">
+            Approved 
+          </span>
+            </p>
+            </label>
+        </div>
+    </div>
+
+</div>
+<br>
+<br>
+<br>
+<div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+    <div class="col-lg-6">
+        <ul class="list-inline">
+            <!-- <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="history()">
+          <i class="fa mdi-history" aria-hidden="true"></i> &nbsp;
+          History</button>
+      </li> -->
+        </ul>
+    </div>
+    <div class="col-lg-6 text-right">
+        <div class="text-right">
+            <ul class="list-inline">
+
+                <li class="list-inline-item"> <button class="btn btn-default" type="button" [disabled]=!isLoading (click)="cancel()">
+            <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+            Cancel</button>
+                </li>
+                <li class="list-inline-item"> <button class="btn  btn-primary" [disabled]=!isLoading type="Submit" name="btnSubmit" id="btnSubmit" (click)="save()">
+            <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+              </span></div>
+          </button></li>
+
+            </ul>
+        </div>
+    </div>
+</div>

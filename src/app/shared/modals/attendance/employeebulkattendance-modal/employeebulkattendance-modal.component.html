@@ -1,0 +1,292 @@
+<div class="ff">
+    <div class="row employee_header" *ngIf="chosenEmployeeObject">
+        <div class="col-lg-1 col-sm-1 col-md-2 col-xs-1">
+            <img src="assets/Images/user-white.png" style="width: 25px;margin-top: 10px;">
+        </div>
+        <div class="col-lg-11 col-sm-11 col-md-11 col-xs-11" style="color: white;">
+            <div class="row">
+                <div class="col-lg-4">
+                    <p class="f-s-12 m-b-2" style="text-transform: uppercase;
+        color: #d6d6d6;"> Employee Name </p>
+                    <span class="f-s-12" style="font-weight: 600;
+        font-size: 14px;"> {{chosenEmployeeObject.EmployeeName}}</span>
+                </div>
+                <div class="col-lg-4">
+                    <p class="f-s-12 m-b-2" style="text-transform: uppercase;
+        color: #d6d6d6;"> Employee Code </p>
+                    <span class="f-s-12" style="font-weight: 600;
+        font-size: 14px;"> {{chosenEmployeeObject.EmployeeCode}} </span>
+                </div>
+                <div class="col-lg-4">
+                    <p class="f-s-12 m-b-2" style="text-transform: uppercase;
+        color: #d6d6d6;"> Date of Joining </p>
+                    <span class="f-s-12" style="font-weight: 600;
+        font-size: 14px;"> {{chosenEmployeeObject.DOJ}} </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <div class="row" style="    margin-left: -30px;
+  margin-right: -30px;" *ngIf="!isrendering_spinner">
+        <div class="col-lg-6">
+            <ul class="list-inline">
+                <li class="list-inline-item" *ngIf="EADetails.length > 0">
+                    <button class="btn  btn-danger" [disabled]="selectedAttendanceObject.length == 0" type="Submit" name="btnSubmit" id="btnSubmit" (click)="onClickMarkAsAbsent()">
+            <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Mark
+                as Absent </span></div>
+          </button>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-6 text-right">
+            <div class="text-right">
+                <ul class="list-inline">
+
+                    <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="cancel()">
+              <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+              Close </button>
+                    </li>
+                    <li class="list-inline-item" *ngIf="IsSubmitted == '0' && EADetails.length > 0"> 
+                        <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="submitEABreakup()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                </span></div>
+            </button></li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="d-flex align-items-center" *ngIf="isrendering_spinner">
+        <strong class="text-center"> Loading... &nbsp;&nbsp;&nbsp;</strong>
+        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+    </div>
+
+    <div class="row" *ngIf="!isrendering_spinner" style="    margin-left: -30px;
+  margin-right: -30px;margin-top: 11px;">
+        <div class="col-lg-12">
+
+            <table class="table table-bordered" style="font-size: 12px;">
+                <thead>
+                    <tr style="background-color: #eef5fa !important;font-size: 11px;">
+
+
+                        <th style="width: 5%;"></th>
+                        <th style="width: 5%;">
+                            <input type="checkbox" [(ngModel)]="selectAll" (click)="selectAllEADetails($event)"> <span style="padding-top: 1px; padding-left: 5px;"> </span>
+                        </th>
+                        <th scope="col" style="width: 20%;text-align: center;">ATTEND. DATE</th>
+                        <th scope="col" style="width: 20%;">FIRST CHECK IN</th>
+                        <th scope="col" style="width: 20%;"> LAST CHECK OUT</th>
+                        <th scope="col" style="width: 15%;"> TOTAL SUBMITTED HRS</th>
+
+                        <th scope="col" style="width: 15%;"> TOTAL APPROVED HRS</th>
+                        <th scope="col" style="width: 10%;"> STATUS </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- [ngClass]="{'fa fa-angle-down': item.IsOpened == false, 'fa fa-angle-up' : item.IsOpened == true }" -->
+                    <ng-container *ngFor="let item of EADetails; let i = index">
+                        <tr>
+
+                            <td style="width: 0%;padding: 5px !important;" class="text-center" *ngIf="item.LstEmployeeAttendancePunchInDetails != null && item.LstEmployeeAttendancePunchInDetails.length > 0" data-toggle="collapse" [attr.data-target]="'#demo'+ item.Id" class="accordion-toggle">
+
+                                <button type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm" (click)="clickexpand(item)" style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i
+                      class="fa fa-pencil" aria-hidden="true" style="padding-right: 5px;"></i></span></button>
+                            </td>
+
+                            <!-- <td *ngIf="item.LstEmployeeAttendancePunchInDetails.length == 1"></td> -->
+                            <td *ngIf="item.LstEmployeeAttendancePunchInDetails == null"></td>
+                            <!-- <td style="width: 5%;cursor: pointer;">
+                <i *ngIf="item.LstEmployeeAttendancePunchInDetails != null && item.LstEmployeeAttendancePunchInDetails.length > 0 && !item.IsLeaveRequest"
+                  (click)="expandPunches(item,i)" class="mdi mdi-menu-right-outline"
+                  [ngClass]="{'mdi-menu-right-outline': item.Expandable, 'mdi-menu-right-outline' : !item.Expandable }"
+                  aria-hidden="true" style="font-size: 20px;"></i>
+              </td> -->
+                            <td style="width: 5%;cursor: pointer;">
+                                <input type="checkbox" *ngIf="!item.IsLeaveRequest && !item.IsHoliday" [(ngModel)]="item.isSelected" (click)="change(item, i, $event)" style="cursor: pointer;margin-top: 10px;">
+                            </td>
+                            <td scope="row" style="width: 20%;">
+
+                                <span style="padding-top: 5px;text-align: center;
+        display: block;"> {{item.AttendanceDate | date:'dd-MM-yyyy'}}
+
+                  <span *ngIf="item.EntitlementType != null && item.LeaveStatus == '400' && (item.EntitlementType != 'WO' && item.EntitlementType != 'Week Off')" style="color: red;
+    font-weight: 600;
+    padding-left: 10px;">
+                    ( {{item.EntitlementType}} )</span>
+
+                                <span *ngIf="item.EntitlementType != null && item.LeaveStatus == '400' && (item.EntitlementType == 'WO' || item.EntitlementType == 'Week Off')" style="color: #c9c3b2;
+    font-weight: 600;
+    padding-left: 10px;">
+                    ( {{item.EntitlementType}} )</span>
+
+
+                                <span *ngIf="item.EntitlementType != null  && item.LeaveStatus == '100'" style="color: #f3c74d;
+    font-weight: 600;
+    padding-left: 10px;">
+                    ( {{item.EntitlementType}} ) </span>
+
+
+                                <span *ngIf="item.IsHoliday && !item.IsLeaveRequest " style="color: #428ff6;
+    font-weight: 600;
+    padding-left: 10px;">
+                    ( H ) </span>
+                                <span *ngIf="item.IsHoliday && item.IsLeaveRequest && item.EntitlementType == 'LOP'" style="color: #428ff6;
+    font-weight: 600;
+    padding-left: 10px;">
+                    ( H ) </span>
+
+
+                                </span>
+                                <!-- <span *ngIf="item.IsHalfDay"> : 0.5 </span> -->
+
+                            </td>
+                            <td style="width: 20%;"> <input type=time class="form-control" name="StartTime" value={{item.FirstCheckIn}} step="1" disabled style="cursor: pointer;height: 30px;padding: 0px !important;padding-left: 9px !important;font-size: 12px !important;" (change)="OnChangePunchInTime($event,item, i)"></td>
+                            <td style="width: 20%;"> <input type=time class="form-control" name="EndTime" [(ngModel)]="item.LastCheckedOut" step="1" disabled style="cursor: pointer;height: 30px;padding: 0px !important;padding-left: 9px !important;font-size: 12px !important;"
+                                    (change)="OnChangePunchOutTime($event,item, i)"></td>
+                            <td style="width: 15%;">
+                                <span style="padding-top: 5px;text-align: center;
+      display: block;" *ngIf="item.TotalSubmittedHours != 'NaN'">
+                  {{item.TotalSubmittedHours}} hrs </span>
+                            </td>
+
+                            <td style="width: 15%;"> <span style="padding-top: 5px;text-align: center;
+          display: block;">
+                  {{item.TotalApprovedHours}} hrs </span></td>
+                            <td style="width: 10%;">
+                                <!-- <span *ngIf="item.Status == '600'" style="padding-top: 5px;text-align: center;color: green;
+                    display: block;">
+                  Approved </span>
+                <span *ngIf="item.Status == '500'" style="padding-top: 5px;text-align: center;color: red;
+                  display: block;">
+                  Rejected </span> -->
+                                <span *ngIf="item.EntitlementType != null && item.LeaveStatus !=  'null' && item.LeaveStatus == '100'">
+                  <button type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                    (click)="onClickRegularize(item.LeaveObject)"
+                    style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-check-circle"
+                        aria-hidden="true" style="padding-right: 5px;"></i></span>Approve </button>
+                                </span>
+                                <!-- <span *ngIf="item.EntitlementType != null && item.LeaveStatus != '100' && item.IsHalfDay == 'true'">  {{getStatusName(item.Status)}} </span> -->
+                                <span *ngIf="item.EntitlementType != null && item.LeaveStatus != '100' && item.IsHalfDay == 'false'">
+                  --- </span>
+                                <span *ngIf="item.EntitlementType == null && item.Status != '500' && item.Status != '600' && item.LeaveStatus != '100'">
+                  {{getStatusName(item.Status)}} </span>
+                                <!-- <span *ngIf="item.EntitlementType != null && item.IsHalfDay">  {{getStatusName(item.Status)}} </span> -->
+
+                            </td>
+
+                        </tr>
+                        <tr *ngIf="item.Iserror">
+                            <td colspan="12">
+                                <div class="text-center invalid-formcontrolvalue">
+                                    Please specified punch in/out time is invalid or the time is out of valid range
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.LstEmployeeAttendancePunchInDetails != null && item.LstEmployeeAttendancePunchInDetails.length > 0 && item.Status <= '300'">
+                            <td colspan="12" class="hiddenRow" style="padding: 0px !important; ">
+                                <div class="accordian-body  collapse" id="demo{{item.Id}}" [ngClass]="{'collapse' : item.Expandable == false, 'show' : item.Expandable == true }" style="padding: 10px;font-size: 12px;">
+
+                                    <table style="margin-top: 20px;
+                margin-bottom: 25px;">
+                                        <thead>
+                                            <tr style="background-color: #eef5fa !important;font-size: 11px;">
+
+                                                <th scope="col" style="width:20%;text-align: center;">ATTEND. DATE</th>
+                                                <th scope="col" style="width: 20%;">PUNCH IN</th>
+                                                <th scope="col" style="width: 20%;"> PUNCH OUT</th>
+                                                <th scope="col" style="width: 15%;"> SUBMITTED HRS</th>
+                                                <th scope="col" style="width: 15%;"> APPROVED HRS</th>
+                                                <th scope="col" style="width: 10%;"> REMARKS / IMAGE</th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <ng-container *ngFor="let ii of item.LstEmployeeAttendancePunchInDetails;  let j = index">
+                                                <tr>
+
+                                                    <td scope="row" style="width: 20%;"> <span style="padding-top: 5px;text-align: center;
+            display: block;"> {{ii.Attendancedate | date:'dd-MM-yyyy'}}</span></td>
+                                                    <td style="width: 20%;"> <input type=time class="form-control" name="StartTime" [(ngModel)]="ii.Starttime" step="1" style="cursor: pointer;height: 30px;padding: 0px !important;padding-left: 9px !important;font-size: 12px !important;"
+                                                            (change)="OnChangePunchInTimeChild($event,ii, j, item)"></td>
+                                                    <td style="width: 20%;"> <input type=time class="form-control" name="EndTime" [(ngModel)]="ii.FinishTime" step="1" style="cursor: pointer;height: 30px;padding: 0px !important;padding-left: 9px !important;font-size: 12px !important;"
+                                                            (change)="OnChangePunchOutTimeChild($event,ii, j,item)"></td>
+                                                    <td style="width: 15%;">
+                                                        <span style="padding-top: 5px;text-align: center;
+          display: block;">
+                              {{ii.SubmittedHours}} hrs </span>
+                                                    </td>
+
+                                                    <td style="width: 15%;"> <span style="padding-top: 5px;text-align: center;
+              display: block;">
+                              {{ii.ApprovedHours}} hrs </span></td>
+
+                                                    <td style="width: 10%;">
+
+                                                        <i *ngIf="ii.PunchInPhotoId > 0 || ii.PunchOutPhotoId > 0" class="mdi mdi-eye" matTooltip="View Punch In/Out Image and Remarks" (click)="viewPunchInOutImage(ii)" style="cursor: pointer;font-size: 18px;
+                            text-align: center;
+                            display: block;
+                            margin: 0 auto;">  </i>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="ii.Iserror">
+                                                    <td colspan="12">
+                                                        <div class="text-center invalid-formcontrolvalue">
+                                                            Please specified punch in/out time is invalid or the time is out of valid range
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    </ng-container>
+
+                </tbody>
+            </table>
+            <br>
+
+            <div style="text-align: center;" *ngIf="EADetails.length == 0">There is no attendance in/out log</div>
+
+            <br>
+
+        </div>
+    </div>
+
+
+    <!-- <div class="row" style="position: absolute;bottom: 15px;width: 100%;padding: 10px;">
+    <div class="col-lg-6">
+      <ul class="list-inline">
+
+      </ul>
+    </div>
+    <div class="col-lg-6 text-right">
+      <div class="text-right">
+        <ul class="list-inline">
+
+          <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="cancel()">
+              <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+              Cancel</button>
+          </li>
+          <li class="list-inline-item" *ngIf="IsSubmitted == '0' && EADetails.length > 0"> <button
+              class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="submitEABreakup()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                </span></div>
+            </button></li>
+
+        </ul>
+      </div>
+    </div>
+  </div> -->
+
+</div>

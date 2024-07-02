@@ -1,0 +1,37 @@
+<app-banner-top [title]="'Ruleset List'" [titleIcon]="'fa fa-object-group'"></app-banner-top>
+
+<div class="row toolbar">
+    <button class="toolbar-button add" (click)="addRuleSet()"><i
+            class="fa fa-plus">&nbsp;</i>Add RuleSet</button>|
+    <button class="toolbar-button add" (click)="editRuleSet(true)"><i class="fa fa-edit">&nbsp;</i>Duplicate RuleSet</button>|
+    <button class="toolbar-button edit" (click)="editRuleSet(false)"><i class="fa fa-edit">&nbsp;</i>Edit RuleSet</button>|
+    <button class="toolbar-button view" (click)="viewRules()"><i class="fa fa-eye">&nbsp;</i>View Rules</button>|
+    <button class="toolbar-button delete" (click)="deleteRuleSet()"><i class="fa fa-trash">&nbsp;</i>Delete RuleSet</button>
+</div>
+
+<!-- <p-toolbar>
+    <div class="ui-toolbar-group-left">
+        <button pButton type="button" label="New" icon="pi pi-plus"></button>
+        <button pButton type="button" label="Upload" icon="pi pi-upload" class="ui-button-success"></button>
+            
+        <i class="pi pi-bars"></i>
+        
+        <p-splitButton label="Save" icon="pi pi-check" [model]="items" styleClass="ui-button-warning"></p-splitButton>
+    </div>
+    
+    <div class="ui-toolbar-group-right">
+        <button pButton type="button" icon="pi pi-search"></button>
+        <button pButton type="button" icon="pi pi-calendar" class="ui-button-success"></button>
+        <button pButton type="button" icon="pi pi-times" class="ui-button-danger"></button>
+    </div>
+</p-toolbar> -->
+
+<div class="container" id="grid-container" style="margin-top: 3rem;">
+    <fieldset>
+        <div class="col-sm-12">
+            <angular-slickgrid gridId="grdRulesetList" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                gridWidth="100%">
+            </angular-slickgrid>
+        </div>
+    </fieldset>
+</div>

@@ -1,0 +1,104 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate" class="mat-progress-bar-fill" style="z-index: 1000;">
+</mat-progress-bar>
+<div class="wrapper">
+    <app-menu></app-menu>
+</div>
+
+<div id="modalunauthoriseduser" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalunauthoriseduser" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header paddingTopBottom-5 ">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalunauthoriseduser">Unauthorized Access</h4>
+            </div>
+            <div class="modal-body alert-danger">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-warning fa-3x "></i>
+                    </div>
+                    <div class="col-xs-10">
+                        <div>
+                            <h5>
+                                Please contact Integrum Support team for any other queries
+                            </h5>
+                            <p>You do not have permission to access this resource.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-sm" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalsessionexpired" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalsessionexpired" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Information!</h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="logout()"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+
+            <div class="modal-body alert-info">
+                <div class="row">
+                    <div class="col-xs-2 center-icon">
+                        <i class="fa fa-warning fa-3x "></i>
+                    </div>
+                    <div class="col-xs-10 text-center padding-20">
+                        <div>
+                            <h5>
+                                Your session expired.!
+                            </h5>
+                            <p>
+                                Any confirmed transaction are saved. but you will need to restart any searches or unfinished transactions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer padding0 ">
+                <button class="btn btn-default btn-block" data-dismiss="modal" (click)="logout()" title="Signin">
+                    Back to Login
+                </button>
+            </div>
+        </div>
+    </div>
+</div>   
+
+<div id="modalbadrequest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalbadrequest" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header paddingTopBottom-5 ">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalbadrequest">Information!</h4>
+            </div>
+            <div class="modal-body alert-danger">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-info fa-3x "></i>
+                    </div>
+                    <div class="col-xs-10">
+                        <div>
+                            <h5>
+                                Something went wrong. Please try again after somettimes.!
+                            </h5>
+                            <p id="modalbadrequestcontent">
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer padding0">
+                <button class="btn btn-default btn-sm" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

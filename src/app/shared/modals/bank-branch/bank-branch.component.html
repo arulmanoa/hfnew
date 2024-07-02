@@ -1,0 +1,159 @@
+<div  style="display: block;" class="modal fade show">             
+    <div class="modal-dialog modal-lg">
+
+    <div class="modal-content">                  
+        <div class="modal-header">
+            <div class="col-xs-11">
+                <h4 class="modal-title">Bank Branch</h4>                          
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="close" data-dismiss="modal" (click)="closeModal()"aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+
+<form [formGroup]="BankBranchForm" >
+
+
+  <div class="modal-body">  
+                  
+         
+          
+            <div class="row">
+
+                <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-5">
+                    <label>Bank <span class="required">*</span> </label>                         
+                    <ng-select #select2  [items]="listOfbank" [searchable]="true" autocomplete="off"
+                    placeholder="----Select----" bindValue="Id"                        
+                    bindLabel="Name" formControlName="bank" 
+                    [ngClass]="{ 'is-invalid': submitted && f.bank.errors }">
+  
+                        <ng-template ng-header-tmp>
+                            <input placeholder="Search bank" autocomplete="off" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select2.filter($event.target.value)" />
+                        </ng-template>
+                    </ng-select>  
+  
+                    <div *ngIf="submitted && f.bank.invalid" class="help-block">
+                      <div *ngIf="f.bank.errors.required">Bank Name is required</div>
+                    </div>
+                  </div> -->
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-5">
+                      <label> Name <span class="required">*</span> </label>
+                      <input type="text" placeholder="Branch Name" class="form-control"
+                        formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+                      <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Branch Name is required</div>
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-5">
+                        <label class="form-label"> FinancialSystem Code <span class="required">*</span> </label>
+                        <input type="text" placeholder="Code" class="form-control" formControlName="fscode"
+                          [ngClass]="{ 'is-invalid': submitted && f.fscode.errors }">
+          
+                        <div *ngIf="submitted && f.fscode.errors" class="invalid-feedback">
+                          <div *ngIf="f.fscode.errors.required"> FinancialSystem Code is required</div>
+                          <div *ngIf="f.fscode.errors.minlength">FinancialSystem Code must be at least 3 characters</div>
+                        </div>
+                      </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-2">
+                        <label class="form-label">Status</label>
+                        &nbsp;
+                        &nbsp;
+                        <div class="pretty p-switch p-fill padding-top-10">
+                          <input type="checkbox" formControlName="status" checked enabled />
+                          <div class="state p-success">
+                            <label></label>
+                          </div>
+                        </div>
+                      </div>
+
+                
+             
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-5">
+                      <label class="form-label"> Swift Code <span class="required">*</span> </label>
+                      <input type="text" class="form-control" formControlName="scode"
+                        [ngClass]="{ 'is-invalid': submitted && f.scode.errors }">
+        
+                      <div *ngIf="submitted && f.scode.errors" class="invalid-feedback">
+                        <div *ngIf="f.scode.errors.required"> FinancialSystem Code is required</div>
+                        <div *ngIf="f.scode.errors.minlength">FinancialSystem Code must be at least 3 characters</div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-5" >
+                        <label class="form-label">Email <span class="required" >*</span></label>
+                        <input class="form-control" type="email" formControlName="email"
+                         [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                          placeholder="example@domain.com" autocomplete="off">
+                        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                            <div *ngIf="f.email.errors.required">E-Mail is required
+                            </div>
+                        </div>
+                    </div>  
+                    
+                    
+                  
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-5">
+                        <label>Country <span class="required">*</span> </label>                         
+                        <ng-select #select1  [items]="listOfcountry" [searchable]="true" autocomplete="off"
+                        placeholder="----Select----" bindValue="Id" 
+                       
+                        bindLabel="Name" formControlName="country" 
+                        [ngClass]="{ 'is-invalid': submitted && f.country.errors }">
+      
+                            <ng-template ng-header-tmp>
+                                <input placeholder="Search country" autocomplete="off" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select1.filter($event.target.value)" />
+                            </ng-template>
+                        </ng-select>  
+      
+                        <div *ngIf="submitted && f.country.invalid" class="help-block">
+                          <div *ngIf="f.country.errors.required">Country Name is required</div>
+                        </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-5">
+                          <label class="form-label"> Location <span class="required">*</span> </label>
+                          <input type="text" class="form-control" formControlName="location"
+                            [ngClass]="{ 'is-invalid': submitted && f.location.errors }">
+            
+                          <div *ngIf="submitted && f.location.errors" class="invalid-feedback">
+                            <div *ngIf="f.location.errors.required"> Location is required</div>                   
+                          </div>
+                        </div>
+
+                                  
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-10">
+                            <label>Address <span class="required">*</span> </label>
+                            <textarea class="form-control" rows="3" spellcheck="false" id="address" onkeypress="return /^[a-zA-Z0-9 !@#$()&*+./,]+$/i.test(event.key)"
+                              formControlName="address" [ngClass]="{ 'is-invalid': submitted && f.address.errors }"></textarea>                            
+                            <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                              <div *ngIf="f.address.errors.required">Branch address is required</div>
+                            </div>
+                          </div>
+
+            </div>
+              
+
+        
+        
+                                  
+
+</div>
+<div class="modal-footer">
+<div class="pull-right">       
+<!-- <button class="btn btn-primary" data-dismiss="modal">Cancel</button> &nbsp; -->
+<button  class="btn btn-success" type="submit" prevent-double-submit id="btnSubmit"  (click)="saveBankBranchbutton()" >
+  Save
+</button> &nbsp;
+<button class="btn btn-primary " type="button" (click)="closeModal()">Cancel</button>    
+<!-- [disabled]="GenericForm.invalid" -->
+</div>
+</div>
+</form>
+</div>
+
+</div> 
+</div>

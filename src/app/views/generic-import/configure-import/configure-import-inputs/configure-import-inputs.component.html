@@ -1,0 +1,43 @@
+<div class="page-wrapper">
+  <div class="page-content">
+
+    <div class="row " style="text-align: right;">
+      <div class="col-12">
+        <div class="pull-right">
+         <button class="btn btn-primary" >Done</button>
+        </div>
+      </div>
+    </div>
+    <br>
+
+    <div class="content m-b report-content" *ngIf="node">
+      
+      <button class="btn upgrade-btn" (click)="onClickingAddControlElementButton(node)">Add Input</button>
+      
+      <br>
+
+      <ngb-accordion  class="panel" [closeOthers]="true">
+        <ngb-panel class="panel" [title]="controlElement.FieldName" 
+        *ngFor="let controlElement of node.ControlElementsList; let i = index">
+          <ng-template ngbPanelContent>
+            <div class="row">
+
+              <div class="col">
+                <div class="row">
+                  <button class="btn upgrade-btn m-b" (click)="onClickingEditButton(node , i)">Edit</button>
+                </div>
+                <div class="row">
+                  <button class="btn btn-danger m-b" (click)="onClickingDeleteButton(node , i)">Delete</button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+      
+
+     
+
+    </div>
+  </div>
+</div>

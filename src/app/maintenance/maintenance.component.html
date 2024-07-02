@@ -1,0 +1,111 @@
+<!-- <div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="error-template">
+        <h1>
+          :) Oops!</h1>
+        <h2>
+          Temporarily down for maintenance</h2>
+        <h1>
+          We’ll be back soon!</h1>
+        <div>
+          <p>
+            Sorry for the inconvenience but we’re performing some maintenance at the moment.
+            we’ll be back online shortly!</p>
+          <p>
+            — The Jennifer Team</p>
+        </div>
+         <div class="error-actions">
+          <a href="#" style="margin-top: 10px;" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-home">
+            </span>Take Me Home </a>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div>
+  <label>Producer Type </label>
+  <select class="form-control form-group form-group-vertical col-xs-12 col-sm-6" name="value"
+    [(ngModel)]="producertype">
+    <option value="1">URI</option>
+    <option value="2">Query</option>
+    <option value="3">Body</option>
+  </select>
+  <label> Http Verb </label>
+  <select class="form-control form-group form-group-vertical col-xs-12 col-sm-6" name="value"
+    [(ngModel)]="verbType">
+    <option value="1">Get</option>
+    <option value="2">Post</option>
+    <option value="3">Put</option>
+  </select>
+  <label>Payload</label>
+  <textarea rows="10" class="form-control form-group form-group-vertical col-xs-12 col-sm-6" placeholder="payload"
+    type="text" [(ngModel)]="payload"></textarea>
+  <label>end point</label>
+  <input class="form-control form-group form-group-vertical col-xs-12 col-sm-6" placeholder="endpoint" type="text"
+    [(ngModel)]="endpoint">
+
+  <button class="btn btn-primary form-group-vertical col-xs-12 col-sm-6" (click)="apiCall()"> Api Call </button>
+
+
+</div>
+
+<!-- <div class="fallback">
+  <div class="custom-file">
+
+      <input type="file" class="custom-file-input" (change)="onbrowseFile($event)" #inputFile accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" id="projectCoverUploads">
+      <label class="custom-file-label" for="projectCoverUploads">Choose file</label>
+  </div>
+  <button class="btn btn-primary form-group-vertical col-xs-12 col-sm-6" (click)="callvalues()"> Call API </button>
+
+</div> -->
+
+
+
+<div>
+  <div>
+    <select class="form-control form-group form-group-vertical col-xs-12 col-sm-6" name="value"
+      [(ngModel)]="methodtype">
+      <option value="1">Encrypt</option>
+      <option value="2">Decrypt</option>
+
+    </select>
+    <label>input value</label>
+    <input class="form-control form-group form-group-vertical col-xs-12 col-sm-6" placeholder="inputvalue" type="text"
+      [(ngModel)]="inputvalue">
+    <label>URL</label>
+    <input class="form-control form-group form-group-vertical col-xs-12 col-sm-6" placeholder="URL" type="text"
+      [(ngModel)]="URL">
+    <button class="btn btn-primary form-group-vertical col-xs-12 col-sm-6" (click)="validate()"> validate </button>
+
+    <label class="form-group form-group-vertical col-xs-12 col-sm-12">OUTPUT 1</label>
+    <textarea placeholder="outputvalue" class="form-group form-group-vertical col-xs-12 col-sm-6"
+      [(ngModel)]="outputvalue"></textarea>
+
+    <label class="form-group form-group-vertical col-xs-12 col-sm-12">OUTPUT 2</label>
+
+    <textarea placeholder="outputvalue1" class="form-group form-group-vertical col-xs-12 col-sm-6 "
+      [(ngModel)]="outputvalue1"></textarea>
+
+  </div>
+</div>
+
+<div>
+  <input class="form-control form-group form-group-vertical col-xs-12 col-sm-6" placeholder="inputvalue" type="text"
+    [(ngModel)]="encryptedText">
+
+  <input class="form-control form-group form-group-vertical col-xs-12 col-sm-6" placeholder="inputvalue" type="text"
+    [(ngModel)]="key">
+  <input class="form-control form-group form-group-vertical col-xs-12 col-sm-6" placeholder="inputvalue" type="text"
+    [(ngModel)]="vector">
+  <input class="form-control form-group form-group-vertical col-xs-12 col-sm-6" placeholder="inputvalue" type="text"
+    [(ngModel)]="token">
+
+  <textarea placeholder="outputvalue1" class="form-group form-group-vertical col-xs-12 col-sm-6 "
+    [(ngModel)]="output_originalvalue"></textarea>
+  <button class="btn btn-primary form-group-vertical col-xs-12 col-sm-6" (click)="button2()"> button2 </button>
+
+</div>
+
+

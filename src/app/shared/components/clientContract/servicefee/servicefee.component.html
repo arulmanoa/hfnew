@@ -1,0 +1,439 @@
+<div class="backgroundsvg">
+  <p class="font-14">Transaction Type</p>
+  <div class="page-links">
+    <input id="tab-1" type="radio" name="tab" class="payroll_radio" checked><label
+      style="color: black;padding-left: 6px;" for="tab-1" class="tab" >Payroll</label> &nbsp;
+    <input id="tab-2" type="radio" name="tab" class="payroll_radio"><label style="color: black;padding-left: 6px"
+      for="tab-2" class="tab" >Non-Payroll</label>
+  </div>
+
+  <!-- <button class="btn btn-primary" (click)="saveTEMP()">Save Temp</button> -->
+  <div class="container">
+    <!-- <div class="flag">
+                <img style="width: 50px;float: right;display: block;" src="https://brand.mastercard.com/content/dam/mccom/brandcenter/thumbnails/mastercard_vrt_rev_92px_2x.png" alt="mastercard">
+                </div> -->
+    <div class="row" *ngIf="beforeLoad">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-img skeleton">
+            </div>
+            <div class="card-body">
+              <h2 class="card-title skeleton">
+              </h2>
+              <p class="card-intro skeleton">
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-img skeleton">
+            </div>
+            <div class="card-body">
+              <h2 class="card-title skeleton">
+              </h2>
+              <p class="card-intro skeleton">
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-img skeleton">
+            </div>
+            <div class="card-body">
+              <h2 class="card-title skeleton">
+              </h2>
+              <p class="card-intro skeleton"></p>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-img skeleton">
+            </div>
+            <div class="card-body">
+              <h2 class="card-title skeleton">
+              </h2>
+              <p class="card-intro skeleton">
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="row" *ngIf="!beforeLoad">
+      <div class="col-lg-6">
+        <div class="card section">
+          <div class="card-body scroll">
+            <h2 class="card-title">
+              Salary  ({{LstSalaryMarkup.length}})
+              <a href="javascript:;" class="text-sm leading-5 font-medium" (click)="addnewMarkup('salary')">Add New</a>
+            </h2>
+            
+              <div class="card-intro" *ngFor="let item of LstSalaryMarkup | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize"   >
+                <div >
+                <div class="ruleHeader" >
+                  <div class="label">Rule Description</div>
+                  <span>{{item.markupRuleName}} • {{item.markupValue}}  &nbsp; <i class="fa fa-edit" (click)="editMarkup('salary',item)"></i> </span>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == true">• Active</a>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == false">• InActive</a>
+  
+                </div>
+                <div class="ruleSubHeader">
+                  <div class="name">
+                    <div class="label">Effective From</div>
+                    <div class="value">{{item.effectiveFrom | date : 'd MMMM, y'}}</div>
+                  </div>
+                  <div class="validate">
+                    <div class="label">Start From</div>
+                    <div class="value">{{item.startFromName}}</div> 
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <br>
+              </div>
+              <ng-container *ngIf="LstSalaryMarkup.length == 0">
+              <div class="card-intro" *ngFor="let item of LstOfAnyProcessCategory">
+                <div >
+                <div class="ruleHeader" >
+                  <div class="label">Rule Description</div>
+                  <span>{{item.markupRuleName}} • {{item.markupValue}}  &nbsp;  </span>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == true">• Active</a>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == false">• InActive</a>
+  
+                </div>
+                <div class="ruleSubHeader">
+                  <div class="name">
+                    <div class="label">Effective From</div>
+                    <div class="value">{{item.effectiveFrom | date : 'd MMMM, y'}}</div>
+                  </div>
+                  <div class="validate">
+                    <div class="label">Start From</div>
+                    <div class="value">{{item.startFromName}}</div> 
+                  </div>
+                </div>
+              </div>
+              </div>
+            </ng-container>
+            
+            <!-- <ngb-pagination style=" font-size: 12px !important;float: right !important;" [pageSize]="pageSize" [collectionSize]="10" [(page)]="page"  [directionLinks]="false"></ngb-pagination>             -->
+
+            <div>
+              <!-- <ngb-pagination [collectionSize]="LstSalaryMarkup.length" [(page)]="page" [maxSize]="5" ></ngb-pagination>   -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card section2">
+          <div class="card-body scroll">
+            <h2 class="card-title">
+              Full and Final Settlement   ({{LstFnFMarkup.length}})
+              <a href="javascript:;" class="text-sm leading-5 font-medium" (click)="addnewMarkup('fnf')">Add New</a>
+            </h2>
+            <div class="card-intro" *ngFor="let item of LstFnFMarkup">
+
+              <div class="ruleHeader">
+                <div class="label">Rule Description</div>
+                <span>{{item.markupRuleName}} • {{item.markupValue}}  &nbsp; <i class="fa fa-edit" (click)="editMarkup('fnf',item)"></i> </span>
+                <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == true">• Active</a>
+                <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == false">• InActive</a>
+
+              </div>
+              <div class="ruleSubHeader">
+                <div class="name">
+                  <div class="label">Effective From</div>
+                  <div class="value">{{item.effectiveFrom | date : 'd MMMM, y'}}</div>
+                </div>
+                <div class="validate">
+                  <div class="label">Start From</div>
+                  <div class="value">{{item.startFromName}}</div>
+                </div>
+              </div>
+              <hr>
+              <br>
+            </div>
+          
+            <ng-container *ngIf="LstFnFMarkup.length == 0">
+              <div class="card-intro" *ngFor="let item of LstOfAnyProcessCategory">
+                <div >
+                <div class="ruleHeader" >
+                  <div class="label">Rule Description</div>
+                  <span>{{item.markupRuleName}} • {{item.markupValue}}  &nbsp; </span>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == true">• Active</a>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == false">• InActive</a>
+  
+                </div>
+                <div class="ruleSubHeader">
+                  <div class="name">
+                    <div class="label">Effective From</div>
+                    <div class="value">{{item.effectiveFrom | date : 'd MMMM, y'}}</div>
+                  </div>
+                  <div class="validate">
+                    <div class="label">Start From</div>
+                    <div class="value">{{item.startFromName}}</div> 
+                  </div>
+                </div>
+              </div>
+              </div>
+            </ng-container>
+            <div>
+              <!-- <app-integrum-pagination [items]="LstFnFMarkup" (changePage)="onChangePageLstFnFMarkup($event)"></app-integrum-pagination> -->
+           </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card section3">
+          <div class="card-body scroll">
+            <h2 class="card-title">
+              Reimbursement   ({{LstReimbursmentMarkup.length}})
+              <a href="javascript:;" class="text-sm leading-5 font-medium" (click)="addnewMarkup('reimbursement')">Add New</a>
+            </h2>
+            <div class="card-intro" *ngFor="let item of LstReimbursmentMarkup">
+              <div class="ruleHeader">
+                <div class="label">Rule Description</div>
+                <span>{{item.markupRuleName}} • {{item.markupValue}}  &nbsp; <i class="fa fa-edit" (click)="editMarkup('reimbursement',item)"></i> </span>
+                <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == true">• Active</a>
+                <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == false">• InActive</a>
+
+              </div>
+              <div class="ruleSubHeader">
+                <div class="name">
+                  <div class="label">Effective From</div>
+                  <div class="value">{{item.effectiveFrom | date : 'd MMMM, y'}}</div>
+                </div>
+                <div class="validate">
+                  <div class="label">Start From</div>
+                  <div class="value">{{item.startFromName}}</div>
+                </div>
+              </div>
+              <hr>
+              <br>
+            </div>
+            
+
+            <ng-container *ngIf="LstReimbursmentMarkup.length == 0">
+              <div class="card-intro" *ngFor="let item of LstOfAnyProcessCategory">
+                <div >
+                <div class="ruleHeader" >
+                  <div class="label">Rule Description</div>
+                  <span>{{item.markupRuleName}} • {{item.markupValue}}  &nbsp; </span>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == true">• Active</a>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == false">• InActive</a>
+  
+                </div>
+                <div class="ruleSubHeader">
+                  <div class="name">
+                    <div class="label">Effective From</div>
+                    <div class="value">{{item.effectiveFrom | date : 'd MMMM, y'}}</div>
+                  </div>
+                  <div class="validate">
+                    <div class="label">Start From</div>
+                    <div class="value">{{item.startFromName}}</div> 
+                  </div>
+                </div>
+              </div>
+              </div>
+            </ng-container>
+            <div>
+                           <app-integrum-pagination [items]="LstReimbursmentMarkup" (changePage)="onChangePageLstReimbursmentMarkup($event)"></app-integrum-pagination>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card section4">
+          <div class="card-body scroll">
+            <h2 class="card-title">
+              Adhoc Payments   ({{LstAdhocMarkup.length}})
+              <a href="javascript:;" class="text-sm leading-5 font-medium" (click)="addnewMarkup('adhoc')">Add New</a>
+            </h2>
+            <div class="card-intro" *ngFor="let item of LstAdhocMarkup">
+
+              <div class="ruleHeader">
+                <div class="label">Rule Description</div>
+                <span>{{item.markupRuleName}} • {{item.markupValue}}  &nbsp; <i class="fa fa-edit" (click)="editMarkup('adhoc',item)"></i> </span>
+                <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == true">• Active</a>
+                <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == false">• InActive</a>
+
+              </div>
+              <div class="ruleSubHeader">
+                <div class="name">
+                  <div class="label">Effective From</div>
+                  <div class="value">{{item.effectiveFrom | date : 'd MMMM, y'}}</div>
+                </div>
+                <div class="validate">
+                  <div class="label">Start From</div>
+                  <div class="value">{{item.startFromName}}</div>
+                </div>
+              </div>
+              <hr>
+              <br>
+            </div>
+           
+            
+            <ng-container *ngIf="LstAdhocMarkup.length == 0">
+              <div class="card-intro" *ngFor="let item of LstOfAnyProcessCategory">
+                <div >
+                <div class="ruleHeader" >
+                  <div class="label">Rule Description</div>
+                  <span>{{item.markupRuleName}} • {{item.markupValue}}  &nbsp;</span>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == true">• Active</a>
+                  <a href="javascript:;" class="text-sm leading-5 font-medium" *ngIf="item.status == false">• InActive</a>
+  
+                </div>
+                <div class="ruleSubHeader">
+                  <div class="name">
+                    <div class="label">Effective From</div>
+                    <div class="value">{{item.effectiveFrom | date : 'd MMMM, y'}}</div>
+                  </div>
+                  <div class="validate">
+                    <div class="label">Start From</div>
+                    <div class="value">{{item.startFromName}}</div> 
+                  </div>
+                </div>
+              </div>
+              </div>
+            </ng-container>
+            <div>
+              <app-integrum-pagination [items]="LstAdhocMarkup" (changePage)="onChangePageLstAdhocMarkup($event)"></app-integrum-pagination>
+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDER LOOKUP -->
+  <nz-drawer [nzVisible]="markup_Slider" [nzClosable]="false" [nzWidth]="640" nzTitle="Markup Mapping Template"  >
+
+    <div class="flex-column">
+        
+      <form [formGroup]="markupForm">
+
+        <div class="col-12 col-md-12 col-sm-12">
+          
+          <div class="clearfix">
+            <div class="row">
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                <label class="form-label"> Choose Markup Rule  </label>
+                <ng-select #select [items]="MarkupList" bindValue="Id" formControlName="markupRule"
+                  bindLabel="DisplayName" placeholder="Choose Markup Rule" >
+                </ng-select>
+                <div *ngIf="submitted && g.markupRule.invalid" class="help-block">
+                  <div *ngIf="g.markupRule.errors.required">Markup Rule is required
+                  </div>
+                </div>
+              </div>
+                     
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <label class="form-label ">Markup Value <span class="required"> *</span></label>
+                <input class="form-control" onkeypress="return /^[a-zA-Z0-9]+$/i.test(event.key)" type="text" name="markupValue" placeholder="Specify Markup Value"
+                  formControlName="markupValue"
+                  [ngClass]="{ 'is-invalid': submitted && g.markupValue.errors }" autocomplete="off">
+                <div *ngIf="submitted && g.markupValue.invalid" class="help-block">
+                  <div *ngIf="g.markupValue.errors.required">Markup Value is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label"> Source Type  </label>
+                <ng-select #select [items]="sourceTypes" bindValue="id" formControlName="sourceType"
+                  bindLabel="name" placeholder="Specify your Source Type">
+                </ng-select>
+                <div *ngIf="submitted && g.sourceType.invalid" class="help-block">
+                  <div *ngIf="g.sourceType.errors.required">Source Type is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <label class="form-label ">Effective From<span class="required"> *</span></label>
+                <input class="form-control" type="text" name="effectiveFrom" bsDatepicker placement="bottom" readonly
+                 [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" [minDate]="EFminDate" [maxDate]="EFmaxDate"
+                  placeholder="12-12-1970" formControlName="effectiveFrom" [ngClass]="{ 'is-invalid': submitted && g.effectiveFrom.errors }"
+                  autocomplete="off">
+                <div *ngIf="submitted && g.effectiveFrom.invalid" class="help-block">
+                  <div *ngIf="g.effectiveFrom.errors.required">Effective From is required
+                  </div>
+                </div>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label"> Start From  </label>
+                <ng-select #select [items]="PayPeriodList" bindValue="Id" formControlName="startFrom"
+                  bindLabel="PayCyclePeriodName" placeholder="Jan 2020">
+                </ng-select>
+                <div *ngIf="submitted && g.startFrom.invalid" class="help-block">
+                  <div *ngIf="g.startFrom.errors.required">Start From is required
+                  </div>
+                </div>
+              </div>
+
+             
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label"> Service Fee to be applied per pay period </label>
+                <div class="p-t-10">
+                  <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="isServiceFee" formControlName="isServiceFee" />
+                      <span class="el-switch-style"></span>
+                  </label>
+              </div>
+                <div *ngIf="submitted && g.isServiceFee.invalid" class="help-block">
+                  <div *ngIf="g.isServiceFee.errors.required">Service Fee is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label"> Status </label>
+                <div class="p-t-10">
+                  <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="status" formControlName="status" />
+                      <span class="el-switch-style"></span>
+                  </label>
+              </div>
+                <div *ngIf="submitted && g.status.invalid" class="help-block">
+                  <div *ngIf="g.status.errors.required">Status is required
+                  </div>
+                </div>
+              </div>
+             </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+      <div class="col-lg-6">
+        <ul class="list-inline">
+        </ul>
+      </div>
+      <div class="col-lg-6 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item"> <button class="btn btn-default" type="button"
+                (click)="close_markup_Slider()">
+                <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                Cancel</button>
+            </li>
+            <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="save_Markup()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                  </span></div>
+              </button>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </nz-drawer>

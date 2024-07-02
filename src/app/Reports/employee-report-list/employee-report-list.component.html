@@ -1,0 +1,133 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+        <div class="row">
+
+            <div class="col-lg-6 text-left">
+                <div class="text-left" *ngIf="!spinner">
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="newDownload()"><i class="mdi mdi-download m-r-xs"></i> Download Data
+                            </button></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 text-right">
+                <div class="text-right">
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="newClickHere()"><i class="mdi mdi-animation m-r-xs"></i> Get Data
+                            </button></li>
+
+                        <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="newMigrate()"><i class="mdi mdi-checkbox-marked-outline m-r-xs"></i> Confirm Migration</button></li>
+
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+        <br>
+
+        <div class="content m-b report-content">
+
+            <div style="height:100%;">
+
+                <div class="text-center ma-5" *ngIf="spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+                                          Please wait...
+                                        </button>
+                </div>
+                <div *ngIf="!spinner">
+                    <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions1" [gridOptions]="gridOptions" [dataset]="datasetview1" (onAngularGridCreated)="angularGridReady1($event)" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                        gridWidth="100%">
+                    </angular-slickgrid>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
+<div id="popup_ReportMigrate" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_ReportMigrate" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 700px !important">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-xs-11">
+                        <h4 class="modal-title" id="popup_ReportMigrate"></h4>
+                    </div>
+
+                </div>
+                <div class="modal-body"style="padding:2rem">
+                    <div id="overlay">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="text-Center" style="width:100%; text-align: center;" >
+                            <label>The following Candidate's will be migrated</label>
+                        </div>                       
+                        <br>
+
+                        <div *ngFor="let item of selectedmigrationRecords" class="al-list">
+
+                            <div class="media al-list">
+                                <div class="media-body align-self-center">
+                                    <h6 class="font-5 m-0"><b> {{item.Name }}, </b> </h6>
+                                </div>
+
+                                <span class="badge badge-success" style="width: 15%;" *ngIf="item.Status == 1"> Success</span>
+                                <span class="badge badge-danger" style="width: 15%;" *ngIf="item.Status == 0 || item.Status == 2"> Failed </span>
+
+
+                            </div>
+
+                            <p style="text-align: center;color: #1ecab8;font-style: italic;" class="help-text" *ngIf="item.Message && item.Status == 1">( {{item.Message}} ) </p>
+                            <p style="text-align: center;color: #f1646c;font-style: italic;" class="help-text" *ngIf="item.Message && item.Status == 0 || item.Status == 2">( {{item.Message}} ) </p>
+
+                            <!-- <hr> -->
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <div class="pull-right">
+                            <button class="btn btn-default pull-right" type="button" (click)="modal_dismiss()"> <i
+                                    class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel</button>
+
+                            <button class="btn btn-primary" (click)="confirmMigrate()"> <i
+                                    class="mdi mdi-clipboard-check" style="cursor:pointer"></i> Confirm</button> &nbsp;
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="pull-right">
+
+                            <!-- <button class="btn btn-primary" (click)="Continue()"> <i
+                                        class="mdi mdi-checkbox-multiple-marked-circle" style="cursor:pointer"></i> Ok, Continue</button> &nbsp; -->
+                        </div>
+                    </div>
+
+                    <!-- <div class="d-flex align-items-center pull-right">
+                        <strong class="text-right"> Processing... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

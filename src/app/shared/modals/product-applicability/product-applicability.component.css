@@ -1,0 +1,32 @@
+.fixTableHead {
+  overflow: auto;
+  height: auto;
+  max-height: 350px;
+  color: #000 !important;
+}
+
+.fixTableHead thead th {
+  position: sticky;
+  top: 0;
+}
+
+.fixTableHead th,
+.fixTableHead td {
+  padding: 8px 15px;
+  border: 1px solid #dee2e6;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.fixTableHead th {
+  background: #f0f7ff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.captionHeader {
+  display: block !important;
+  font-weight: 500;
+  font-size: 16px;
+}

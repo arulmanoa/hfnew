@@ -1,0 +1,157 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>Reference Details</b></small>
+            <h6 class="modal-title subheader_h6"> (Employment) </h6>
+          </div>
+          <div class="modal-close" (click)="confirmExit()" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+
+
+        <div class="modal-body no-padder">
+
+          <div id="overlay">
+            <div class="w-100 d-flex justify-content-center align-items-center">
+              <div class="spinner"></div>
+            </div>
+          </div>
+
+
+          <div class="flex-column">
+            <form [formGroup]="referenceForm">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                      <label class="form-label ">Reference Type <span class="required"> *</span>
+                      </label>
+                      <ng-select [items]="ReferenceTypeList" placeholder="Internal/External" formControlName="Type"
+                        [ngClass]="{ 'ng-touched': submitted && g.Type.invalid }" bindLabel="name" bindValue="id">
+                      </ng-select>
+                      <div *ngIf="submitted && g.Type.invalid" class="help-block">
+                        <div *ngIf="g.Type.errors.required">Reference Type is required
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                      <label class="form-label" for="Name">Reference Name <span class="required"> *</span></label>
+                      <input type="text" id="Name" class="form-control" formControlName="Name"
+                        [ngClass]="{'is-invalid': submitted && g.Name.errors }"  onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" pattern="[\x00-\x7F]+" placeholder="John Smith">
+                        <div *ngIf="submitted && g.Name.errors" class="help-block">
+                          <div *ngIf="g.Name.errors.required">Reference Name is required
+                          </div>
+                          
+                        </div>                        
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                      <label class="form-label" for="Organization">Organization</label>
+                      <input type="text" id="Organization" class="form-control" formControlName="Organization"
+                        [ngClass]="{'is-invalid': submitted && g.Organization.errors }" placeholder="Ciel HR">
+                        <div *ngIf="submitted && g.Organization.invalid" class="help-block">
+                          <div *ngIf="g.Organization.errors.required">Organization is required
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                      <label class="form-label" for="Designation">Ref. Designation</label>
+                      <input type="text" id="Designation" class="form-control" formControlName="Designation"
+                        [ngClass]="{'is-invalid': submitted && g.Designation.errors }" placeholder="Ciel HR">
+                        <div *ngIf="submitted && g.Designation.invalid" class="help-block">
+                          <div *ngIf="g.Designation.errors.required">Designation is required
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                      <label class="form-label" for="Email">Reference Email <span class="required"> *</span></label>
+                      <input type="text" id="Email" class="form-control" formControlName="Email"
+                        [ngClass]="{'is-invalid': submitted && g.Email.errors }" placeholder="Email">
+                      <div class="help-block" *ngIf="submitted&&formControls.Email.errors?.required">Email is required.
+                      </div>
+                      <div class="help-block" *ngIf="submitted&&formControls.Email.errors?.email">Enter a valid email
+                        address.
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                      <label class="form-label" for="ContactNumber">Reference Contact Number <span class="required"> *</span></label>
+                      <input class="form-control" minlength="10"
+                      style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;" type="text"
+                      onkeypress="return /^[0-9]+$/i.test(event.key)" name="ContactNumber" formControlName="ContactNumber"
+                      [ngClass]="{'is-invalid': submitted && g.ContactNumber.errors }" placeholder="Contact Number"
+                      autocomplete="none|false|no"
+                      (input)="mobileNumberLengthRestrict($event, referenceForm.get('ContactNumber'))" numbersOnly>
+                      <!-- <div class="help-block" *ngIf="submitted&&g.ContactNumber.errors">Contact Number is
+                        required.</div> -->
+                      <!-- <div class="help-block" *ngIf="submitted&&formControls.ContactNumber.errors?.pattern">
+                        Enter a valid numeric contact number.
+                      </div> -->
+                      <!-- <span class="help-block" *ngIf="referenceForm.get('ContactNumber').errors.minlength"> Contact Number
+                        should be minimum/maximum 10 characters
+                      </span> -->
+                      <div *ngIf="referenceForm.get('ContactNumber').errors && referenceForm.get('ContactNumber').touched "
+                      class="help-block">
+                      <div *ngIf="g.ContactNumber.errors">Contact Number is required
+                      </div>
+                      <span *ngIf="referenceForm.get('ContactNumber').errors.minlength">Contact Number
+                        should be minimum 10 characters
+                      </span>
+      
+                    </div>
+      
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                      <label class="form-label" for="Department">Department</label>
+                      <input type="text" id="Department" class="form-control" formControlName="Department"
+                        [ngClass]="{'is-invalid': submitted && g.Department.errors }" placeholder="Department">
+                    </div>
+
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                      <label class="form-label" for="Location">Location</label>
+                      <input type="text" id="Location" class="form-control" formControlName="Location"
+                        [ngClass]="{'is-invalid': submitted && g.Location.errors }" placeholder="Location">
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+        <div class="modal-footer">
+          <div>
+            <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban"
+                aria-hidden="true"></i> &nbsp; Cancel</button>
+            <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+              <div>
+                <div>
+                  <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                    (click)="submitForm()">
+                    <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                        Save </span></div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

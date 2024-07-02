@@ -1,0 +1,374 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <small class="header-pretitle" *ngIf="Id == 0"><b>Upload Document</b></small>
+        <small class="header-pretitle" *ngIf="Id > 0"><b>Edit Document</b></small>
+
+      </div>
+
+
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;">
+
+        <div class="d-flex align-items-center" *ngIf="spinner"
+          style=" margin: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);z-index: 999;">
+          <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+        <br />
+
+        <div class="row">
+          <div class="col-lg-12">
+            <nz-steps [nzCurrent]="index">
+              <nz-step nzTitle="Client Document" [nzStatus]="index == 0 ? 'process' : 'finish'"
+                nzIcon="usergroup-add"></nz-step>
+              <nz-step nzTitle="Client Document Setting" [nzStatus]="index == 1 ? 'process' : 'finish'"
+                nzIcon="solution"></nz-step>
+            </nz-steps>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="index == 0">
+          <div class="col-lg-12">
+            <br />
+            <br />
+            <form [formGroup]="clientDocumentFormGroup">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <div class="row">
+
+                    <div *ngIf="BusinessType == 3"
+                      class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentFormGroup.controls['clientId']" [label]="'Client'">
+                        <label class="form-label">Client <span class="required"> *</span></label>
+                        <ng-select [items]="clientsList" [searchable]="true" autocomplete="off"
+                          placeholder="-- select on option --" bindValue="Id" bindLabel="Name"
+                          formControlName="clientId" [ngClass]="{ 'ng-touched': submitted && g.clientId.errors }">
+                        </ng-select>
+                      </form-errors-wrapper>
+
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentFormGroup.controls['Code']" [label]="'Code'">
+                        <label class="form-label">Code <span class="required">*</span></label>
+                        <input class="form-control" type="text" spellcheck="false"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" maxlength="25" name="Code"
+                          formControlName="Code" [ngClass]="{ 'is-invalid': submitted && g.code.errors }"
+                          placeholder="ACO" autocomplete="off">
+                      </form-errors-wrapper>
+                    </div>
+                    <!-- </div>
+                  <div class="row"> -->
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentFormGroup.controls['Name']" [label]="'Name'">
+                        <label class="form-label">Name <span class="required">*</span></label>
+                        <input class="form-control" type="text" spellcheck="false"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="Name" formControlName="Name"
+                          [ngClass]="{ 'is-invalid': submitted && g.name.errors }" placeholder="Bangalore"
+                          autocomplete="off">
+                      </form-errors-wrapper>
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentFormGroup.controls['Extension']"
+                        [label]="'Extension'">
+                        <label class="form-label">Extension <span class="required">*</span></label>
+                        <ng-select [items]="extensionsList" [searchable]="true" autocomplete="off"
+                          [disabled]="!extensionsList.length" placeholder="-- select an extension --" bindValue="Value"
+                          bindLabel="Name" formControlName="Extension"
+                          [ngClass]="{ 'ng-touched': submitted && g.Extension.errors }">
+                        </ng-select>
+                        <!-- <input class="form-control" type="text" spellcheck="false"
+                           maxlength="25" name="Extension"
+                          formControlName="Extension" [ngClass]="{ 'is-invalid': submitted && g.name.errors }"
+                          placeholder="pdf" autocomplete="off"> -->
+                      </form-errors-wrapper>
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentFormGroup.controls['DisplayName']"
+                        [label]="'Display Name'">
+                        <label class="form-label">Display Name <span class="required">*</span></label>
+                        <input class="form-control" type="text" spellcheck="false"
+                          onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="DisplayName"
+                          formControlName="DisplayName" [ngClass]="{ 'is-invalid': submitted && g.displayName.errors }"
+                          placeholder="Bangalore" autocomplete="off">
+                      </form-errors-wrapper>
+                    </div>
+                    <!-- </div>
+                  <div class="row"> -->
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentFormGroup.controls['DocumentCategoryId']"
+                        [label]="'Document Category'">
+                        <label class="form-label">Document Category <span class="required"> *</span></label>
+                        <ng-select [items]="documentCategoryList" [searchable]="true" autocomplete="off"
+                          placeholder="-- select a category --" bindValue="Id" bindLabel="Name"
+                          formControlName="DocumentCategoryId"
+                          [ngClass]="{ 'ng-touched': submitted && g.DocumentCategoryId.errors }">
+                        </ng-select>
+                      </form-errors-wrapper>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentFormGroup.controls['FolderId']"
+                        [label]="'Folder Category'">
+                        <label class="form-label">Folder Name</label>
+                        <ng-select [items]="ClientDocumentsFolder" [searchable]="true" autocomplete="off"
+                          placeholder="-- select a folder --" bindValue="Id" bindLabel="Name"
+                          formControlName="FolderId">
+                        </ng-select>
+                      </form-errors-wrapper>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <!-- <label class="form-label">Mandatory To View </label> -->
+                      <div class="p-t-10 d-flex">
+                        <span class="pt-0.5 mr-2">Mandatory To View </span>
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="IsMandatorytoView" formControlName="IsMandatorytoView" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <!-- <label class="form-label">Skip Allowable </label> -->
+                      <div class="p-t-10 d-flex">
+                        <span class="pt-0.5 mr-2">Skip Allowable</span>
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="IsSkipAllowable" formControlName="IsSkipAllowable" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- </div>
+                  <div class="row justify-content-between"> -->
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <!-- <label class="form-label">Visible </label> -->
+                      <div class="p-t-10 d-flex">
+                        <span class="pt-0.5 mr-2">Visible</span>
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="IsVisible" formControlName="IsVisible" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <!-- <label class="form-label">Dowload Applicable </label> -->
+                      <div class="p-t-10 d-flex">
+                        <span class="pt-0.5 mr-2">Download Applicable</span>
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="IsDowloadApplicable" formControlName="IsDowloadApplicable" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <br />
+            <br />
+            <br />
+
+          </div>
+
+        </div>
+
+        <div class="row" *ngIf="index == 1">
+          <div class="col-lg-12">
+            <br />
+            <br />
+            <form [formGroup]="clientDocumentSettingForm">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <div class="row">
+                    <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Select DocumentID </label>
+                  <ng-select [items]="[]" placeholder="-- select an option --" formControlName="ClientDocumentId"
+                    [multiple]="false">
+                  </ng-select>
+                </div> -->
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentSettingForm.controls['VersionNo']"
+                        [label]="'Version Number'">
+                        <label class="form-label">Version Number <span class="required">*</span></label>
+
+                        <input class="form-control" type="text" name="VersionNo" formControlName="VersionNo"
+                          placeholder="V1.0" maxlength="10" autocomplete="off">
+                      </form-errors-wrapper>
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentSettingForm.controls['DisplayName']"
+                        [label]="'Name Of Document'">
+                        <label class="form-label">Name Of Document <span class="required">*</span></label>
+                        <input class="form-control" type="text" name="DisplayName" formControlName="DisplayName"
+                          autocomplete="off">
+                      </form-errors-wrapper>
+                    </div>
+                  </div>
+
+                  <div class="row">
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentSettingForm.controls['EffectiveDate']"
+                        [label]="'Effective Date'">
+                        <label class="form-label">Effective Date <span class="required">*</span></label>
+                        <input class="form-control" bsDatepicker [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+          containerClass:'theme-default'}" (bsValueChange)="onChangeDate($event)" type="text" name="EffectiveDate"
+                          formControlName="EffectiveDate" placement="bottom left" autocomplete="off">
+                      </form-errors-wrapper>
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentSettingForm.controls['ValidTill']"
+                        [label]="'Valid Till'">
+                        <label class="form-label">Valid Till <span class="required">*</span></label>
+                        <input class="form-control" bsDatepicker [minDate]="minDate" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+        containerClass:'theme-default'}" type="text" name="ValidTill" formControlName="ValidTill"
+                          placement="bottom left" autocomplete="off">
+                      </form-errors-wrapper>
+                    </div>
+                  </div>
+                  <!-- <div class="row">
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Allowed Groups </label>
+                  <ng-select [items]="groupsList" placeholder="-- select an option --" formControlName="AllowedGroups" bindLabel="Name" bindValue="Id"
+                    [multiple]="true">
+                  </ng-select>
+                </div>
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Exclude Groups </label>
+                  <ng-select [items]="groupsList" placeholder="-- select an option --" formControlName="ExcludeGroupIds" bindLabel="Name" bindValue="Id"
+                    [multiple]="true">
+                  </ng-select>
+                </div>
+              </div> -->
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <label class="form-label">Exclude Employees </label>
+                      <ng-select [items]="employeeList" placeholder="-- select an option --"
+                        formControlName="ExcludeEmployeeIds" bindLabel="EmployeeName" bindValue="Id" [multiple]="true">
+                      </ng-select>
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentSettingForm.controls['DisplayOrder']"
+                        [label]="'Display Order'">
+                        <label class="form-label searchbar-label">Display Order <span class="required">*</span></label>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <input class="form-control" type="number" name="" min="0"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)" placeholder="40000"
+                            formControlName="DisplayOrder" autocomplete="off">
+                        </label>
+                      </form-errors-wrapper>
+                    </div>
+                  </div>
+                  <div class="row">
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <form-errors-wrapper [control]="clientDocumentSettingForm.controls['TriggeringActionType']"
+                        [label]="'Trigger Action Type'">
+                        <label class="form-label">Trigger Action Type <span class="required">*</span></label>
+                        <ng-select [items]="triggeringActionTypeList" placeholder="-- select an option --"
+                          formControlName="TriggeringActionType" bindLabel="name" bindValue="id" [multiple]="false">
+                        </ng-select>
+                      </form-errors-wrapper>
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <label class="form-label">Document <span class="required">*</span> <span
+                          class="help-text m-l-5">(Max file
+                          size {{getMaxFileSizeToUpload}} MB)</span> </label>
+                      <label class="upload control">
+                        <div class="upload-draggable is-primary">
+                          <section class="section">
+                            <div class="has-text-centered">
+                              <span class="icon is-large">
+                                <span> <i class="mdi mdi-cloud-upload "></i> Upload </span>
+                              </span>
+                              <app-file-uploader #documentUploader (filesUploaded)="onFileUpload($event, 'document')"
+                                (err)="showAlertErr($event)" style="display:none"
+                                [ALLOWED_FILE_TYPES]="getAllowedFileTypes()"
+                                [MAX_FILE_SIZE_MB]="getMaxFileSizeToUpload"></app-file-uploader>
+                            </div>
+                          </section>
+                        </div>
+                      </label>
+                      <p *ngIf="!isObjectEmpty(documentFileObj)" class="control mt-3">
+                        <span class="file-name">
+                          <button class="btn btn-danger c-btn" (click)="doDeleteFile('document')"><a
+                              ngbTooltip="Delete Document" id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                   display: block   ;margin-top: -5px;"><i
+                                class="fa fa-trash-o"></i></a> </button>
+
+
+                          <a target="blank" class="ahref" style="padding: 2px;">
+                            {{documentFileObj.filename}}
+                          </a>
+
+                        </span>
+
+                      </p>
+                      <p *ngIf="editMode" class="mt-3">
+                        <span class="file-name">
+                          <button class="btn btn-danger c-btn" (click)="deleteEditFile()"><a ngbTooltip="Delete Document"
+                              id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                               display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                          </button>
+
+
+                          <a target="blank" class="ahref" style="padding: 2px;">
+                            {{documentDetailsObj.DisplayName}}
+                          </a>
+
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+
+            </form>
+
+            <br />
+            <br />
+            <br />
+
+          </div>
+
+        </div>
+        <div class="row footr">
+
+          <div class="col-md-6 text-left ">
+
+            <button class="btn btn-link" type="button"
+              style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="closeModal()">
+              &nbsp; &nbsp; Close &nbsp; &nbsp;
+            </button>
+
+          </div>
+
+          <div class="col-md-6 text-right ">
+
+            <button class="btn btn-primary-border" (click)="previous()" *ngIf="index == 1">
+              <i class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Back &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-primary-border" (click)="next()" *ngIf="index == 0"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Next &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-primary" (click)="uploadDocument()" *ngIf="index == 1"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Save &nbsp; &nbsp;
+            </button>
+
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>

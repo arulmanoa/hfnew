@@ -1,0 +1,253 @@
+<div class="page-wrapper">
+  <div class="page-content pr-0">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="content m-b pl-0 pr-0 pt-0 report-content transparent-background"
+      style="margin-top: -10px;box-shadow: none;">
+      <div class="row" *ngIf="mode.toLowerCase() == 'new' && !spinner && !showNoDataAvailable">
+        <div class="col-lg-12 text-center">
+          <ngb-alert [dismissible]="false">
+            <strong> The FBP submission date will close on {{this.FBPConfig[0].RP[0].PeriodTo | date:'dd-MM-yyyy'}}
+            </strong>
+          </ngb-alert>
+        </div>
+        <br />
+        <br />
+      </div>
+      <div class="container-parent" *ngIf="!spinner && !showNoDataAvailable">
+        <div class="col-child col-8">
+          <div class="w-100">
+            <!-- header -->
+            <div class="row">
+              <div class="col-lg-12">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <h4 class="mt-0 p-l-5">Flexible Benefits Plan Declaration</h4>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- other info/view pay structure button -->
+            <div class="row">
+              <div class="col-md-1 mt-2">
+                <div class="clearfix">
+                  <img class="d-flex pull-left" src="assets/Images/useravatar.png" style="width: 40px;height: 40px;" />
+                </div>
+              </div>
+              <div class="col-md-2 mt-2 pl-1">
+                <h4 class="header-info-bold m-0 p-0 text-uppercase">{{employeeName}} </h4>
+                <small class="header-info text-uppercase p-0">{{employeeCode}}</small>
+              </div>
+              <!-- <div class="col-lg-4 col-sm-4 col-md-4 col-xs-4"></div>-->
+              <div class="col-lg-9 col-sm-9 col-md-9 col-xs-9 mt-2">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <table class="m-0 table transparent-background">
+                      <tr>
+                        <th class="header-info">
+                          Total Allocated Amount
+                        </th>
+                        <th class="header-info">
+                          Total FBP Declared Amount
+                        </th>
+                        <th class="header-info">
+                          Total Unallocated Amount
+                        </th>
+                      </tr>
+                      <tr>
+                        <td class="header-info-bold">
+                          <i class="fa fa-inr"></i> {{totalAllocatedAmount | number: '1.0-0'}}
+                        </td>
+                        <td class="header-info-bold">
+                          <i class="fa fa-inr"></i> {{totalFBPAmount | number: '1.0-0'}}
+                        </td>
+                        <td class="header-info-bold">
+                          <i class="fa fa-inr"></i> {{totalUnallocatedAmount | number: '1.0-0'}}
+                        </td>
+                      </tr>
+                    </table>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <hr />
+            <!-- table -->
+            <div class="row ml-1 mr-1">
+              <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                <div class="table-responsive table-height">
+                  <table class="table table-sticky table-bordered tble-row-height mb-0 fbp-table">
+                    <thead class="tbl-freezhead fbp-table-header">
+                      <tr>
+                        <th>Component Name</th>
+                        <th>Monthly</th>
+                        <th>Annually</th>
+                      </tr>
+                    </thead>
+                    <tbody class="tbl-scrollbody fbp-table-body">
+                      <tr *ngFor="let item of fbpComponents; let i=index;">
+                        <td style="display:inline-grid">{{item.DisplayName}}
+                          <span class="info">Max Amount: {{item.MaximumValue | number}}</span>
+                        </td>
+                        <td *ngIf="isManagerLogin || isViewMode" style="line-height:42px">
+                          <i class="fa fa-inr"></i>&nbsp;{{item.Value | number: '1.0-0'}}
+                        </td>
+                        <td *ngIf="!isManagerLogin && !isViewMode" style="width: 35%;">
+                          <div class="input-group input-currency">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">₹</span>
+                            </div>
+                            <input type="number" id="{{i}}_monthlyAmountId" class="form-control"
+                              onkeypress="return /^[0-9]+$/i.test(event.key)" autocomplete="none|false|no"
+                              name="{{i}}_monthlyAmount" placeholder="1000" [(ngModel)]="item.Value"
+                              [disabled]="!item.IsOveridable && item.DefaultValue > 0"
+                              (keyup)="onChangeMonthlyValue($event,item) && $event.stopPropagation()" />
+                          </div>
+                          <span class="d-none">{{(!item.IsOveridable == false) && (item.DefaultValue > 0)}}</span>
+                          <div id="{{i}}_monthlyAmountIdError" class="text-danger" *ngIf="item.showMsg">
+                            Please enter amount between {{item.MinimumValue}} and {{item.MaximumValue}}
+                          </div>
+                        </td>
+                        <td style="line-height:42px"><i class="fa fa-inr"></i>
+                          {{item.Value * 12 | number : '1.0-0'}}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- save and cancel buttons -->
+            <div class="row mt-3" style="margin-right: -5px;">
+              <div class="col-lg-6 text-left" style="padding-left: 2rem;">
+
+                <button id="saveFBPBtn" type="submit" class="btn btn-primary btn-sm m-r-sm" (click)="doTaxCalculator()">
+                  <i class="mdi mdi-calculator" aria-hidden="true"></i>  &nbsp;  Tax Calculator                  
+                </button>
+
+              </div>
+              <div class="col-lg-6 text-right">
+                <div class="text-right">
+                  <ul class="list-inline">
+                    <li class="list-inline-item">
+                      <button class="btn btn-default m-r-sm" (click)="cancelFBP()">
+                        Cancel
+                      </button>
+                    </li>
+                    <li class="list-inline-item" *ngIf="!isManagerLogin && !isViewMode">
+                      <!-- <button class="btn btn-primary m-r-sm" id="reCalculateInFbp" name="recalculateinfbp" 
+                        [disabled]="disableSaveBtn" (click)="doReCalculateCTCFn()">
+                        <div class="pos-rlt sm-btn-component">
+                          <span> Re-Calculate </span>
+                        </div>
+                      </button> -->
+                      <button id="saveFBPBtn" type="submit" class="btn btn-primary btn-sm m-r-sm"
+                        (click)="submitFbpFn('save')"
+                        [disabled]="disableSaveBtn || SpinnerShouldhideForSave || SpinnerShouldhide">
+                        <i class="fa fa-hdd-o" aria-hidden="true"></i> Save &nbsp; &nbsp;
+                        <span *ngIf="SpinnerShouldhideForSave" class="spinner-border spinner-border-sm" role="status"
+                          aria-hidden="true"></span>
+                      </button>
+                      <button id="submitFBPBtn" type="submit" class="btn btn-default btn-sm m-r-sm"
+                        [disabled]="disableSaveBtn || SpinnerShouldhideForSave || SpinnerShouldhide"
+                        (click)="doConfirmSubmit('submit')" style="background-color: #2DA05E;color: #fff !important;">
+                        <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> Submit &nbsp; &nbsp;
+                        <span *ngIf="SpinnerShouldhide" class="spinner-border spinner-border-sm" role="status"
+                          aria-hidden="true"></span>
+                      </button>
+                    </li>
+                    <li class="list-inline-item" *ngIf="isManagerLogin && !isViewMode">
+                      <button class="btn btn-default btn-sm m-r-sm" (click)="approveRejectFBP('approve')" style="background-color: #2DA05E;
+                        color: #fff !important;" [disabled]="SpinnerShouldhideForSave || SpinnerShouldhide">
+                        <i class="mdi mdi-check-circle-outline m-r-xs"></i> Approve&nbsp; &nbsp;
+                        <span *ngIf="SpinnerShouldhideForSave" class="spinner-border spinner-border-sm" role="status"
+                          aria-hidden="true"></span>
+                      </button>
+                      <button class="btn btn-danger btn-sm" (click)="approveRejectFBP('reject')"
+                        [disabled]="SpinnerShouldhideForSave || SpinnerShouldhide">
+                        <i class="mdi mdi-close-circle-outline m-r-xs"></i> Reject&nbsp; &nbsp;
+                        <span *ngIf="SpinnerShouldhide" class="spinner-border spinner-border-sm" role="status"
+                          aria-hidden="true"></span>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- pay structure -->
+        <div class="col-child col-4 background-white">
+          <div class="row">
+            <div class="pay-structure-wrap">
+              <h4>Pay Structure</h4>
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th>Components</th>
+                    <th class="text-end">Monthly(₹)</th>
+                    <th class="text-end">Annually(₹)</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let item of salaryComponents;">
+                  <tr *ngFor="let fixed of item.Fixed">
+                    <td>{{fixed.DisplayName}}</td>
+                    <td class="text-end">{{fixed.Value | number : '1.0-0'}}</td>
+                    <td class="text-end"> {{fixed.Value * 12 | number : '1.0-0'}}</td>
+                  </tr>
+                  <tr class="group-title" *ngFor="let fbp of item.FBPHeader">
+                    <td>{{fbp.DisplayName}}</td>
+                    <td class="text-end"></td>
+                    <td class="text-end"> </td>
+                  </tr>
+                  <tr class="" *ngFor="let fbp of item.FBPComponents">
+                    <td>{{fbp.DisplayName}}</td>
+                    <td class="text-end">{{fbp.Value | number : '1.0-0'}}</td>
+                    <td class="text-end"> {{fbp.Value * 12 | number : '1.0-0'}}</td>
+                  </tr>
+                  <tr class="group-title" *ngFor="let earn of item.GrossEarn">
+                    <td>{{earn.DisplayName}}</td>
+                    <td class="text-end">{{earn.Value | number : '1.0-0'}}</td>
+                    <td class="text-end"> {{earn.Value * 12 | number : '1.0-0'}}</td>
+                  </tr>
+                  <tr *ngFor="let dedn of item.Deductions">
+                    <td>{{dedn.DisplayName}}</td>
+                    <td class="text-end">{{dedn.Value | number : '1.0-0'}}</td>
+                    <td class="text-end"> {{dedn.Value * 12 | number : '1.0-0'}}</td>
+                  </tr>
+                  <tr class="group-title" *ngFor="let dednGross of item.GrossDedn">
+                    <td>{{dednGross.DisplayName}}</td>
+                    <td class="text-end">{{dednGross.Value | number : '1.0-0'}}</td>
+                    <td class="text-end"> {{dednGross.Value * 12 | number : '1.0-0'}}</td>
+                  </tr>
+                  <tr *ngFor="let ctc of item.other">
+                    <td>{{ctc.DisplayName}}</td>
+                    <td class="text-end">{{ctc.Value | number : '1.0-0'}}</td>
+                    <td class="text-end"> {{ctc.Value * 12 | number : '1.0-0'}}</td>
+                  </tr>
+                  <!-- <tr class="group-title" *ngFor="let ctc of item.CTC">
+                    <td>{{ctc.DisplayName}}</td>
+                    <td class="text-end">{{ctc.Value | number : '1.0-0'}}</td>
+                    <td class="text-end"> {{ctc.Value * 12 | number : '1.0-0'}}</td>
+                  </tr> -->
+                  <tr *ngFor="let netpay of item.NetPay" class="highlightNetPay">
+                    <td>{{netpay.DisplayName}}</td>
+                    <td class="text-end">{{netpay.Value | number : '1.0-0'}}</td>
+                    <td class="text-end"> {{netpay.Value * 12 | number : '1.0-0'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content m-b text-center report-content" *ngIf="showNoDataAvailable">
+        <h4> {{showNoDataAvailableMsg}} </h4>
+      </div>
+    </div>
+  </div>
+</div>

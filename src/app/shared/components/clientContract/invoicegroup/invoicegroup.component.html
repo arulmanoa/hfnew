@@ -1,0 +1,318 @@
+<!-- <button class="btn btn-primary" (click)="saveTEMP()">Save Temp</button> -->
+
+
+<br>
+
+
+
+
+<div class="tableWrapper">
+  <div class="row" *ngIf="beforeSkeleton">
+    <div class="col-lg-6">
+      <div class="row">
+        <div class="col-lg-1">
+          <div class="loading">
+            <div class="bar" style="width: 100%;float: left;"></div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="loading">
+            <div class="bar" style="width: 100%;float: left;"></div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="loading">
+            <div class="bar" style="width: 100%;float: left;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="loading">
+        <div class="bar" style="width: 40%;float: right;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="!beforeSkeleton">
+    <div class="col-lg-6">
+      <h5><b *ngIf="!isProductWiseGrouping" >Sale Order Grouping</b> <b *ngIf="isProductWiseGrouping" >Productwise Grouping</b> </h5>
+      <!-- <div class="page-links">
+        <input id="tab-1" type="radio" name="tab" class="payroll_radio" (click)="selectGrouptItems('product')" checked><label
+          style="color: black;padding-left: 6px;" for="tab-1" class="tab" >Product Wise Invoice Group</label> &nbsp;
+        <input id="tab-2" type="radio" name="tab" class="payroll_radio" (click)="selectGrouptItems('saleorder')"><label style="color: black;padding-left: 6px"
+          for="tab-2" class="tab">Client Sale Order Grouping</label>
+      </div> -->
+    </div>
+    
+    <div class="col-lg-6" style="text-align: right;font-weight: 600;">
+      <!-- <a href="javascript:;" (click)="selectGrouptItems()">{{groupingText}}</a> &nbsp;&nbsp; -->
+
+      <a *ngIf="!isProductWiseGrouping" href="javascript:;" (click)="addNewGroup()">Add new group</a>
+    </div>
+  </div>
+  <br>
+
+
+  <div class="row" *ngIf="!beforeSkeleton &&  isProductWiseGrouping">
+    <div class="col-lg-8">
+  
+      <table class="table">
+        <thead>
+          <tr>
+            <!-- <th style="width: 3%;text-align: center;"></th> -->
+            <th style="width: 30%;">Code</th>
+            <th style="width: 65%;">Applicable Products </th>
+            <th style="width: 5%;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of productwiseList; let i = index;" (change)="onChangeProductwiseGroup(product)">
+            <td>
+              <input class="form-control" [(ngModel)]="product.Code" disabled name="scoringValue" placeholder="Code" type="text" autocomplete="off">
+            </td>
+            <td>
+              <ng-select [multiple]="true" [closeOnSelect]="false" [searchable]="false" [(ngModel)]="product.ApplicableProductIds" [items]="LstApplicableProducts"
+                placeholder="select an option" bindLabel="Name" bindValue="Id" (change)="onChangeProductItem($event)">
+              </ng-select>
+            </td>
+            <td   class="text-center p-l-2rem" style="cursor: pointer;">
+              <i  ngbTooltip="delete" (click)="remove_productitem(product,i)" class="fa fa-trash delete_icon" aria-hidden="true"></i>
+            </td>
+          </tr>
+  
+        </tbody>
+      </table>
+      <div  style="
+            
+            font-size: 14px;
+            font-weight: 600;text-align: center;float: right;"> <a href="javascript:;" (click)="addNewProductGroup()">Add new
+                field</a></div>
+    </div>
+    <div class="col-lg-4">
+      <!-- <h6> Tips :::  </h6> -->
+    </div> 
+  </div>
+
+  <!-- <button (click)="setSessionStore()"> check</button> -->
+
+  <ng-template #dragHandleTmpl>
+    <svg class="bi bi-list handle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd"
+        d="M2.5 11.5A.5.5 0 013 11h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 7h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5zm0-4A.5.5 0 013 3h10a.5.5 0 010 1H3a.5.5 0 01-.5-.5z"
+        clip-rule="evenodd" />
+    </svg>
+  </ng-template>
+
+  <div class="row" *ngIf="!beforeSkeleton && !isProductWiseGrouping">
+    <div class="col-lg-8">
+    <div *ngFor='let group of LstGroupingItems'>
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 5%;"></th>
+            <!-- <th style="width: 3%;text-align: center;"></th> -->
+            <th style="width: 20%;">Field</th>
+            <!-- <th style="width: 20%;">Field Type</th> -->
+            <th style="width: 20%;">Operator</th>
+            <th style="width: 20%;">Values</th>
+            <th style="width: 5%;"></th>
+            <!-- <th style="width: 17%;">Grouping Order </th> -->
+          </tr>
+        </thead>
+        <tbody cdkDropList (cdkDropListDropped)="onDrop($event,group)">
+          <tr *ngFor="let child of group; let i = index;let first = first;" cdkDrag cdkDragLockAxis="y" (change)="onChangeSaleOrderGrouping(child)">
+            <td style="width: 5%;padding-top: 15px;
+            padding-left: 20px;
+            font-size: 16px;" class="grabbable">
+              <ng-container [ngTemplateOutlet]="dragHandleTmpl">
+              </ng-container>
+            </td>
+            <td  [ngClass]="{'p-l-2rem' : !first}">
+              <ng-select [items]="LstFieldSet" [clearable]="false" [(ngModel)]="child.FieldName" (change)="onChangeFieldSet($event, child, group); "  placeholder="select an option"
+                bindLabel="Field" bindValue="Field">
+              </ng-select>
+            </td>
+            <!-- <td>
+              <ng-select [items]="LstFieldType" [(ngModel)]="child.fieldType" placeholder="select an option"
+                bindLabel="name" bindValue="id">
+              </ng-select>
+            </td> -->
+            <td>
+              <ng-select [items]="LstOperators" [clearable]="false" [(ngModel)]="child.Operator" placeholder="select an option" (change)="onChangeOperator($event,child)"
+                bindLabel="name" bindValue="id">
+              </ng-select>
+            </td>
+            <td>
+              <input class="form-control" name="scoringValue" onpaste="return false;" (change)="onChangeValue(child,$event)"  placeholder="Value" [(ngModel)]="child.FieldValues" [disabled]="child.Operator == 0" [type]="getType(child)" autocomplete="off">
+            </td> 
+            <td   class="text-center p-l-2rem" style="cursor: pointer;">
+              <i ngbTooltip="delete" (click)="remove_item(child,group,i)" class="fa fa-trash delete_icon" aria-hidden="true"></i>
+            </td>
+            <!-- <td>
+              <ng-select [items]="LstGroupingOrder" placeholder="select an option" bindLabel="Code" bindValue="id">
+              </ng-select>
+            </td> -->
+          </tr>
+          <tr>
+            <td></td>
+            <!-- <td></td>
+            <td></td> -->
+            <td></td>
+            <td></td>
+          
+            <td style="
+            padding-right: 14px;
+            font-size: 14px;
+            font-weight: 600;text-align: center;"> <a href="javascript:;" (click)="addNewField(group)">Add new
+                field</a></td>  <td></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <!-- <h6> Tips :::</h6> -->
+  </div>
+  </div>
+
+  <div class="row" *ngIf="!beforeSkeleton">
+    <div class="col-lg-12" style="text-align: right;font-weight: 600;">
+      <a href="javascript:;" (click)="selectGrouptItems()">{{groupingText}}</a> 
+    </div>
+  </div>
+
+  <table class="table" *ngIf="beforeSkeleton">
+    <thead>
+      <tr>
+        <th style="width: 3%;text-align: center;"></th>
+        <th style="width: 20%;">Field</th>
+        <!-- <th style="width: 20%;">Field Type</th> -->
+        <th style="width: 20%;">Operator</th>
+        <th style="width: 20%;">Values</th>
+        <!-- <th style="width: 17%;">Grouping Order </th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let number of [0,1,2,3]">
+        <td class="loading skeleton" style="min-width: 50px;">
+          <div class="bar"></div>
+        </td>
+        <!-- <td class="loading skeleton">
+          <div class="bar"></div>
+        </td> -->
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+        <td class="loading skeleton">
+          <div class="bar"></div>
+        </td>
+        <!-- <td class="loading skeleton">
+          <div class="bar"></div>
+        </td> -->
+      </tr>
+
+    </tbody>
+
+    <tbody *ngIf="!beforeSkeleton">
+
+      <!-- <div class="row" *ngFor="let row of LstGroupingItems;let i = index;">
+        <div class="row" *ngFor="let i of row">
+          {{i | json}}
+        </div>
+      </div>
+      <tr *ngFor="let row of LstGroupingItems;let i = index;">
+        <td>{{i}}</td>
+        <td *ngFor="let c of row">
+          {{c | json}}
+        </td>
+      </tr> -->
+
+      <!-- <tr *ngFor="let row of LstGroupingItems;let i = index;"  data-toggle="collapse" data-target="#demo1" class="accordion-toggle"> -->
+      <!-- <td><span class="fa fa-plus-square-o"></span></td>
+        <td>Team</td>
+        <td>Sting</td>
+        <td>3</td>
+        <td>[1,2,4]</td>
+        <td>{{i}}</td> -->
+
+
+      <!-- </tr> -->
+      <tr>
+        <td colspan="12" class="hiddenRow">
+          <div class="accordian-body collapse" id="demo1">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <td><a href="WorkloadURL">Workload link {{row | json}}</a></td>
+                  <td>Bandwidth: Dandwidth Details</td>
+                  <td>OBS Endpoint: end point</td>
+                </tr>
+                <tr>
+                  <th>Access Key</th>
+                  <th>Secret Key</th>
+                  <th>Status </th>
+                  <th> Created</th>
+                  <th> Expires</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>access-key-1</td>
+                  <td>secretKey-1</td>
+                  <td>Status</td>
+                  <td>some date</td>
+                  <td>some date</td>
+                  <td><a href="#" class="btn btn-default btn-sm">
+                      <i class="glyphicon glyphicon-cog"></i></a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+
+
+
+      <!-- <ng-container *ngFor="let group of LstGroupingItems"> -->
+      <!-- <tr *ngFor="let post of LstGroupingItems">
+        <td><span class="fa fa-plus-square-o"></span></td>
+        <td>
+          <ng-select [items]="LstFieldSet" placeholder="select an option" bindLabel="name" bindValue="id">
+          </ng-select>
+        </td>
+        <td>
+          <table>
+            <tbody>
+              <tr *ngFor="let i of post">
+                <td>
+                  {{i | json}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td>
+          <ng-select [items]="LstOperators" placeholder="select an option" bindLabel="name" bindValue="id">
+          </ng-select>
+        </td>
+        <td>
+          <input class="form-control" name="scoringValue" placeholder="Markup Value" type="text" autocomplete="off">
+
+        </td>
+        <td>
+          <ng-select [items]="LstGroupingOrder" placeholder="select an option" bindLabel="Code" bindValue="id">
+          </ng-select>
+        </td>
+
+      </tr> -->
+      <!-- </ng-container> -->
+
+    </tbody>
+  </table>
+</div>

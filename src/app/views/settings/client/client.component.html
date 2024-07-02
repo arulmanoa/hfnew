@@ -1,0 +1,906 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <small class="header-pretitle"><b>Create new client</b></small>
+        <!-- <h6 class="modal-title subheader_h6">To fill essential information of client. Please skip, if the client already
+          exists.</h6> -->
+        <!-- <a *ngIf="isLoading" class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="confirmExit()"><i
+  class="mdi mdi-close font-size-md icon-close"></i></a> -->
+
+      </div>
+
+
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;">
+
+        <!-- <app-loading-screen></app-loading-screen> -->
+
+        <div class="d-flex align-items-center" *ngIf="spinner"
+          style=" margin: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+          <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+        <br />
+
+        <div class="row">
+          <div class="col-lg-12">
+
+            <!-- <nz-steps [nzCurrent]="index" (click)="onIndexChange($event)" *ngIf="hasClientId > 0">
+
+              <nz-step nzTitle="Client Details" [nzStatus]="index == 0 ? 'process' : 'finish'" [nzIcon]="'user-delete'"
+                nzDescription="Step 1">
+              </nz-step>
+              <nz-step *ngIf="hasClientId > 0" nzTitle="Client Location" [nzStatus]="index == 1 ? 'process' : 'finish'"
+                [nzIcon]="'calendar'" nzDescription="Step 2">
+              </nz-step>
+              <nz-step *ngIf="hasClientId > 0" nzTitle="Client Contact" [nzStatus]="index == 2 ? 'process' : 'finish'"
+                [nzIcon]="'dollar'" nzDescription="Step 3">
+              </nz-step>
+
+            </nz-steps>  -->
+
+
+
+            <nz-steps [nzCurrent]="index" *ngIf="isNewClientActivity">
+              <nz-step nzTitle="Client Details" [nzStatus]="index == 0 ? 'process' : 'finish'"
+                nzIcon="usergroup-add"></nz-step>
+              <nz-step nzTitle="Client Location" [nzStatus]="index == 1 ? 'process' : 'finish'"
+                nzIcon="solution"></nz-step>
+              <nz-step nzTitle="Client Contact" [nzStatus]="index == 2 ? 'process' : 'finish'" nzIcon="team"></nz-step>
+            </nz-steps>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="row" *ngIf="!spinner && index == 0">
+          <div class="col-lg-12">
+            <br />
+            <br />
+            <form [formGroup]="clientForm">
+              <div class="row">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Organization <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="OrganizationList" placeholder="-- Select an Organization --"
+                    formControlName="OrganizationId" [ngClass]="{'ng-touched': submitted && g.OrganizationId.errors }"
+                    bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.OrganizationId.invalid" class="help-block">
+                    <div *ngIf="g.OrganizationId.errors.required">Organization is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Name <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" name="Name" maxlength="100" #Name
+                    formControlName="Name" [ngClass]="{ 'is-invalid': submitted && g.Name.errors }"
+                    placeholder="ABC Technologies Pvt Ltd." autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.Name.errors" class="invalid-feedback">
+                    <div *ngIf="g.Name.errors.required">Client Name is required
+                    </div>
+                  </div>
+                  <!-- <div *ngIf="clientForm.get('Name').errors || clientForm.get('Name').touched" class="help-block">
+                    <span *ngIf="clientForm.get('Name').errors.minlength">
+                      Client Name should be minimum 5 characters
+                    </span>
+                  </div> -->
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="Id  == 0">
+                  <label class="form-label">Code <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" style="text-transform:uppercase"
+                    name="Code" maxlength="100" #Code formControlName="Code"
+                    [ngClass]="{ 'is-invalid': submitted && g.Code.errors }" placeholder="ABCD001"
+                    autocomplete="none|false|no" [disabled]="hasClientId > 0">
+                  <div *ngIf="submitted && g.Code.errors" class="invalid-feedback">
+                    <div *ngIf="g.Code.errors.required">Client Code is required
+                    </div>
+                  </div>
+                  <!-- <div *ngIf="clientForm.get('Code').errors || clientForm.get('Code').touched" class="help-block">
+                    <span *ngIf="clientForm.get('Code').errors.minlength">
+                      Client Code should be minimum 5 characters
+                    </span>
+                  </div> -->
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="Id > 0">
+                  <label class="form-label">Code <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" style="text-transform:uppercase"
+                    name="Code" maxlength="100" #Code formControlName="Code" disabled
+                    [ngClass]="{ 'is-invalid': submitted && g.Code.errors }" placeholder="ABCD001"
+                    autocomplete="none|false|no" [disabled]="hasClientId > 0">
+                  <div *ngIf="submitted && g.Code.errors" class="invalid-feedback">
+                    <div *ngIf="g.Code.errors.required">Client Code is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Short Code
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false"
+                    onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="ShortCode" maxlength="100" #ShortCode
+                    formControlName="ShortCode" [ngClass]="{ 'is-invalid': submitted && g.ShortCode.errors }"
+                    placeholder=" ShortCode" autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.ShortCode.errors" class="invalid-feedback">
+                    <div *ngIf="g.ShortCode.errors.required">Short Code is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Industry
+                  </label>
+                  <ng-select [items]="IndustryList" placeholder="-- Select an Industry --" formControlName="IndustryId"
+                    [ngClass]="{'ng-touched': submitted && g.IndustryId.errors }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.IndustryId.invalid" class="help-block">
+                    <div *ngIf="g.IndustryId.errors.required">Industry is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-3 col-xs-3 col-lg-3 col-md-3 col-sm-3">
+                  <label class="form-label"> Status <span class="required">*</span> </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" formControlName="Status">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-3 col-xs-3 col-lg-3 col-md-3 col-sm-3">
+                  <label class="form-label">Is NAP Based </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" formControlName="Isnapbased">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                  <label class="form-label"> Notes </label>
+                  <textarea class="form-control" rows="3" spellcheck="false" id="Notes" formControlName="Notes"
+                    pattern="[\x00-\x7F]+" [ngClass]="{ 'is-invalid': submitted && g.Notes.errors }"></textarea>
+                  <div *ngIf="submitted && g.Notes.invalid" class="help-block">
+                    <div *ngIf="g.Notes.errors.required">Notes is required</div>
+                  </div>
+                  <div *ngIf="clientForm.get('Notes').errors && clientForm.get('Notes').touched" class="help-block">
+                    <span *ngIf="clientForm.get('Notes').errors.pattern"> Entered special characters are not allowed
+                    </span>
+                  </div>
+                </div>
+
+
+
+
+
+                <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">` <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" name="Website" maxlength="100" #Website
+                    formControlName="Website" [ngClass]="{ 'is-invalid': submitted && g.Website.errors }"
+                    placeholder="https://domain.com" autocomplete="none|false|no"
+                    pattern="[Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:[a-zA-Z\u00a1-\uffff0-9]+-?)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]+-?)*[a-zA-Z\u00a1-\uffff0-9]+)*(?:\.(?:[a-zA-Z\u00a1-\uffff]{2,}))(?::\d{2,5})?(?:\/[^\s]*)?">
+                  <div *ngIf="submitted && g.Website.errors" class="invalid-feedback">
+                    <div *ngIf="g.Website.errors.required">Website is required
+                    </div>
+                  </div>
+                  <div *ngIf="clientForm.get('Website').errors && clientForm.get('Website').touched" class="help-block">
+                    <span *ngIf="clientForm.get('Website').errors.pattern">
+                      Please match the requested format (Ex: https://domain.com)
+                    </span>
+                  </div>
+                </div> -->
+
+
+
+                <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Logo <span class="required" *ngIf="BusinessType != 3"> *</span> <span
+                      class="help-text m-l-5">(Max
+                      file size 1MB)</span></label>
+                  <label class="upload control" style="width: 50%; float: left;"
+                    *ngIf="!clientForm.controls.ClientLogoFileName.value">
+                    <div class="upload-draggable is-primary">
+                      <section class="section">
+                        <div class="has-text-centered">
+                          <span class="icon is-large">
+                            <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                style="color: #9ba7ca;"></i> Upload </span>
+                          </span>
+                        </div>
+                      </section>
+                    </div>
+                    <input type="file" accept="image/png" (change)="onFileUpload($event, 'logo')"
+                      id="sTest-uploadFile-candidateAddResume">
+                  </label>
+                  <div *ngIf="submitted && !clientForm.controls.ClientLogoFileName.valid" class="help-block">
+                    Logo is required
+                  </div>
+                  <p class="control" *ngIf="clientForm.controls.ClientLogoFileName.value">
+                    <span class="file-name">
+                      <button class="btn btn-danger c-btn" (click)="doDeleteFile('logo')">
+                        <a ngbTooltip="Delete Attachment" id="sTest-deleteFile-candidateAddResume"
+                          style="padding-left: 10px;font-size: 15px;cursor: pointer;                                                                 display: block   ;margin-top: -5px;">
+                          <i class="fa fa-trash-o"></i>
+                        </a>
+                      </button>
+                      <a target="blank" class="ahref" style="padding: 2px;font-size: 10px;">
+                        {{clientForm.controls.ClientLogoFileName.value}}
+                      </a>
+                    </span>
+
+                  </p>
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Mini Logo<span class="required" *ngIf="BusinessType != 3"> *</span> <span
+                      class="help-text m-l-5">(Max
+                      file size 1MB)</span></label>
+                  <label class="upload control" style="width: 50%; float: left;"
+                    *ngIf="!clientForm.controls.ClientMiniLogoFileName.value">
+                    <div class="upload-draggable is-ClientMiniLogoFileName">
+                      <section class="section">
+                        <div class="has-text-centered">
+                          <span class="icon is-large">
+                            <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                style="color: #9ba7ca;"></i> Upload </span>
+                          </span>
+                        </div>
+                      </section>
+                    </div>
+                    <input type="file" accept="image/png" (change)="onFileUpload($event, 'miniLogo')"
+                      id="sTest-uploadFile-candidateAddResume">
+
+                  </label>
+                  <div *ngIf="submitted && !clientForm.controls.ClientMiniLogoFileName.valid" class="help-block">
+                    Mini Logo is required
+                  </div>
+                  <p class="control" *ngIf="clientForm.controls.ClientMiniLogoFileName.value">
+                    <span class="file-name">
+                      <button class="btn btn-danger c-btn" (click)="doDeleteFile('miniLogo')">
+                        <a ngbTooltip="Delete Attachment" id="sTest-deleteFile-candidateAddResume"
+                          style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block; margin-top: -5px;">
+                          <i class="fa fa-trash-o"></i>
+                        </a>
+                      </button>
+                      <a target="blank" class="ahref" style="padding: 2px;font-size: 10px;">
+                        {{clientForm.controls.ClientMiniLogoFileName.value}}
+                      </a>
+                    </span>
+
+                  </p>
+                </div> -->
+
+
+                <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+                  <label class="form-label"> Is Naps Based </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" disabled formControlName="Status">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div> -->
+
+
+              </div>
+            </form>
+
+            <br />
+            <br />
+            <br />
+
+          </div>
+
+        </div>
+
+        <div class="row" *ngIf="!spinner && index == 1">
+          <br />
+          <div class="col-lg-12 text-right" style="margin-top: 5px;"
+            *ngIf="LstClientLocation.length > 0 && !isNewLocation">
+            <button class="btn btn-primary" (click)="doAddNewLocation()" *ngIf="!spinner"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; New Location &nbsp; &nbsp;
+            </button>
+          </div>
+
+          <div class="col-lg-12" *ngIf="LstClientLocation.length > 0 && !isNewLocation">
+
+
+            <div class="row" style="margin-top: 1rem;padding-left: 5px;padding-right: 15px;">
+              <div class="col-md-2">
+                <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                  Location Name - Code</p>
+              </div>
+              <div class="col-md-2">
+                <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                  Last Updated At
+                </p>
+              </div>
+              <div class="col-md-2">
+                <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                  Type
+                </p>
+              </div>
+              <div class="col-md-3">
+                <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                  GST
+                </p>
+              </div>
+              <div class="col-md-1">
+                <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                  Status
+                </p>
+              </div>
+              <div class="col-md-2">
+              </div>
+
+            </div>
+            <div class="row" style="margin-top: 2rem;margin-bottom: 20px;" *ngIf="LstClientLocation.length ==0">
+              <div class="col-md-12 text-center">
+                <span style="font-weight: 600;
+              color: #000;">No records found </span>
+              </div>
+            </div>
+
+            <div class="card tab-item"
+              style="border: 1px solid #ece9e9 !important;margin: 0px;box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;margin-bottom: 0rem!important;border-radius: 0px;"
+              *ngFor="let item of LstClientLocation;">
+
+              <div class="card-body" style="padding: 10px;">
+                <div class="row">
+
+                  <div class="text-left col-md-2">
+                    <h6 class="h6-content tab-item__subheading" style="font-size: 11px;font-weight: 600;">
+                      {{item.LocationName}} </h6>
+                    <small class="small-content tab-item__subheading">{{item.LocationCode}}</small>
+                  </div>
+
+                  <div class="col-md-2">
+                    <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                      class="tab-item__subheading">
+                      {{item.LastUpdatedOn | date}}
+                    </p>
+                  </div>
+
+                  <div class="col-md-2">
+                    <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                      class="tab-item__subheading">
+                      {{getMasterName(item, 'LocationType')}}
+                    </p>
+                  </div>
+
+                  <div class="col-md-3">
+                    <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                      class="tab-item__subheading">
+                      {{item.GSTNumber}}
+                    </p>
+                    <small class="small-content tab-item__subheading"> {{getMasterName(item, 'State')}}</small>
+                  </div>
+
+
+                  <div class="col-md-1">
+                    <p
+                      style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);">
+                      <span class="badge badge-danger1" *ngIf="item.Status == 0">
+                        In Active </span>
+                      <span class="badge badge-success1" *ngIf="item.Status == 1">
+                        Active
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="col-md-2 text-right">
+
+                    <div (click)="deleteClientLocation(item)" *ngIf="item.Status == 1"
+                      style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Delete">
+                      <i class="mdi mdi-trash-can-outline" title="Delete"
+                        style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                    </div>
+
+                    <div (click)="editClientLocation(item)" *ngIf="item.Status == 1"
+                      style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Edit">
+                      <i class="mdi mdi-pencil" title="Edit"
+                        style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-lg-12" *ngIf="LstClientLocation.length ==0 || isNewLocation">
+            <br />
+            <br />
+            <form [formGroup]="clientLocationForm">
+              <div class="row">
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Location Code <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" name="LocationCode" maxlength="100"
+                    #LocationCode formControlName="LocationCode"
+                    [ngClass]="{ 'is-invalid': submitted && h.LocationCode.errors }" placeholder="BGR"
+                    autocomplete="none|false|no" style="text-transform:uppercase">
+                  <div *ngIf="submitted && h.LocationCode.errors" class="invalid-feedback">
+                    <div *ngIf="h.LocationCode.errors.required">Location Code is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Location Name <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" name="LocationName" maxlength="100"
+                    #LocationName formControlName="LocationName"
+                    [ngClass]="{ 'is-invalid': submitted && h.LocationName.errors }" placeholder="Bengaluru"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && h.LocationName.errors" class="invalid-feedback">
+                    <div *ngIf="h.LocationName.errors.required">Location Name is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Location Type <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="LocationType" placeholder="-- Select an Location Type --"
+                    formControlName="LocationType" [ngClass]="{'ng-touched': submitted && h.LocationType.errors }"
+                    bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && h.LocationType.invalid" class="help-block">
+                    <div *ngIf="h.LocationType.errors.required">Location Type is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">GST Number </label>
+                  <input class="form-control" type="text" spellcheck="false" name="GST" maxlength="100" #GST
+                    formControlName="GST" [ngClass]="{ 'is-invalid': submitted && h.GST.errors }"
+                    placeholder="22AAAAA0000A1Z5" autocomplete="none|false|no">
+                  <div *ngIf="clientLocationForm.get('GST').errors && clientLocationForm.get('GST').touched"
+                    class="help-block">
+                    <span *ngIf="clientLocationForm.get('GST').errors.pattern">
+                      Please match the requested format (Ex: 22AAAAA0000A1Z5)
+                    </span>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                  <label class="form-label"> Address <span class="required">*</span></label>
+                  <textarea class="form-control" rows="3" spellcheck="false" id="Address" formControlName="Address"
+                    pattern="[\x00-\x7F]+" [ngClass]="{ 'is-invalid': submitted && h.Address.errors }"></textarea>
+                  <div *ngIf="submitted && h.Address.invalid" class="help-block">
+                    <div *ngIf="h.Address.errors.required">Address is required</div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Country <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="CountryList" placeholder="-- Select Country --" formControlName="Country"
+                    [ngClass]="{'ng-touched': submitted && h.Country.errors }" bindLabel="Name" bindValue="Id"
+                    (change)="onChangeCountry($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && h.Country.invalid" class="help-block">
+                    <div *ngIf="h.Country.errors.required">Country is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">State <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="StateList" placeholder="-- Select State --" formControlName="State"
+                    [ngClass]="{'ng-touched': submitted && h.State.errors }" bindLabel="Name" bindValue="Id"
+                    (change)="onChangeState($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && h.State.invalid" class="help-block">
+                    <div *ngIf="h.State.errors.required">State is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">City <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="CityList" placeholder="-- Select City --" formControlName="City"
+                    [ngClass]="{'ng-touched': submitted && h.City.errors }" bindLabel="Name" bindValue="Id"
+                    (change)="onChangeCity($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && h.City.invalid" class="help-block">
+                    <div *ngIf="h.City.errors.required">City is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Pincode <span class="required">*</span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" minlength="6"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" name="Pincode" maxlength="6" #Pincode
+                    formControlName="Pincode" [ngClass]="{ 'is-invalid': submitted && h.Pincode.errors }"
+                    placeholder="560001" autocomplete="none|false|no">
+                  <div *ngIf="submitted && h.Pincode.errors" class="invalid-feedback">
+                    <div *ngIf="h.Pincode.errors.required">Pincode is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+                  <label class="form-label"> Is Billing Address </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" formControlName="IsBillingAddress">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+                  <label class="form-label"> Is Shipping Address </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" formControlName="IsShippingAddress">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+
+
+              </div>
+            </form>
+
+            <br />
+            <br />
+            <br />
+
+          </div>
+
+        </div>
+
+        <div class="row" *ngIf="!spinner && index == 2">
+
+          <br />
+          <div class="col-lg-12 text-right" style="margin-top: 16px;"
+            *ngIf="LstClientContact.length > 0 && !isNewContact">
+            <button class="btn btn-primary" (click)="doAddNewContact()" *ngIf="!spinner"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; New Contact &nbsp; &nbsp;
+            </button>
+          </div>
+
+          <div class="col-lg-12" *ngIf="LstClientContact.length > 0 && !isNewContact">
+
+            <div class="row" style="margin-top: 1rem;padding-left: 5px;padding-right: 15px;">
+              <div class="col-md-3">
+                <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                  Name - Designation </p>
+              </div>
+
+              <div class="col-md-3">
+                <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                  Primary EMail
+                </p>
+              </div>
+              <div class="col-md-2">
+                <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                  Mobile No.
+                </p>
+              </div>
+              <div class="col-md-2">
+                <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                  Status
+                </p>
+              </div>
+              <div class="col-md-2"> &nbsp;
+              </div>
+
+            </div>
+            <div class="row" style="margin-top: 2rem;margin-bottom: 20px;" *ngIf="LstClientContact.length ==0">
+              <div class="col-md-12 text-center">
+                <span style="font-weight: 600;
+              color: #000;">No records found </span>
+              </div>
+            </div>
+
+            <div class="card tab-item"
+              style="border: 1px solid #ece9e9 !important;margin: 0px;box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;margin-bottom: 0rem!important;border-radius: 0px;"
+              *ngFor="let item of LstClientContact;">
+
+              <div class="card-body" style="padding: 10px;">
+                <div class="row">
+
+                  <div class="text-left col-md-3">
+                    <h6 class="h6-content tab-item__subheading" style="font-size: 11px;font-weight: 600;">
+                      {{getMasterName(item, 'Salutation')}}. {{item.Name}} </h6>
+                    <small class="small-content tab-item__subheading">{{item.Designation}}</small>
+                  </div>
+
+                  <div class="col-md-3">
+                    <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                      class="tab-item__subheading">
+                      {{getMasterName(item, 'PrimaryEmail')}}
+                    </p>
+                  </div>
+
+                  <div class="col-md-2">
+                    <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                      class="tab-item__subheading">
+                      {{getMasterName(item, 'PrimaryMobile')}}
+                    </p>
+                    <!-- <small class="small-content tab-item__subheading"> {{getMasterName(item, 'State')}}</small> -->
+                  </div>
+
+
+                  <div class="col-md-2">
+                    <p
+                      style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);">
+                      <span class="badge badge-danger1" *ngIf="item.Status == 0">
+                        In Active </span>
+                      <span class="badge badge-success1" *ngIf="item.Status == 1">
+                        Active
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="col-md-2 text-right">
+
+                    <div (click)="deleteClientContact(item)" *ngIf="item.Status == 1"
+                      style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Delete">
+                      <i class="mdi mdi-trash-can-outline" title="Delete"
+                        style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                    </div>
+
+                    <div (click)="editClientContact(item)" *ngIf="item.Status == 1"
+                      style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Edit">
+                      <i class="mdi mdi-pencil" title="Edit"
+                        style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-lg-12" *ngIf="LstClientContact.length == 0 || isNewContact">
+            <br />
+            <br />
+
+            <form [formGroup]="clientContactForm">
+              <div class="row">
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Client Location<span class="required">*</span></label>
+
+                  <ng-select #select1 [closeOnSelect]="true" [searchable]="false" [items]="LstClientLocation"
+                    placeholder="---" formControlName="ClientLocation"
+                    [ngClass]="{ 'is-invalid': submitted && f.ClientLocation.errors }" bindLabel="LocationName"
+                    bindValue="Id">
+                    <ng-template ng-header-tmp>
+                      <input placeholder="Search Client Location" type="text" class="form-control"
+                        style="border: none;border-radius: 0px !important;background: white"
+                        (input)="select1.filter($event.target.value)" />
+                    </ng-template>
+                    <!-- <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                      <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                        <span class="ng-value-label">{{item.LocationName}}</span>
+                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                      </div>
+                      <div class="ng-value" *ngIf="items.length > 2">
+                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                      </div>
+                    </ng-template> -->
+                  </ng-select>
+                  <div *ngIf="submitted && f.ClientLocation.invalid" class="help-block">
+                    <div *ngIf="f.ClientLocation.errors.required">Client Location is required
+                    </div>
+                  </div>
+
+
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+
+                </div>
+
+
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Salutation <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="SalutationType" placeholder="-- Select Salutation --" formControlName="Salutation"
+                    [ngClass]="{'ng-touched': submitted && f.Salutation.errors }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && f.Salutation.invalid" class="help-block">
+                    <div *ngIf="f.Salutation.errors.required">Salutation is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label"> Name <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" name="Name" maxlength="100" #Name
+                    formControlName="Name" [ngClass]="{ 'is-invalid': submitted && f.Name.errors }" placeholder="Name"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && f.Name.errors" class="invalid-feedback">
+                    <div *ngIf="f.Name.errors.required">Name is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Designation <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" name="Designation" maxlength="100"
+                    #Designation formControlName="Designation"
+                    [ngClass]="{ 'is-invalid': submitted && f.Designation.errors }" placeholder="Designation"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && f.Designation.errors" class="invalid-feedback">
+                    <div *ngIf="f.Designation.errors.required">Designation is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label"> Email <span class="required">*</span></label>
+                  <input class="form-control" type="text" spellcheck="false" name="PrimaryEmail" maxlength="100"
+                    #PrimaryEmail formControlName="PrimaryEmail"
+                    pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                    [ngClass]="{ 'is-invalid': submitted && f.PrimaryEmail.errors }" placeholder=" PrimaryEmail"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && f.PrimaryEmail.errors" class="invalid-feedback">
+                    <div *ngIf="f.PrimaryEmail.errors.required"> Email Address is required
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="clientContactForm.get('PrimaryEmail').errors && clientContactForm.get('PrimaryEmail').touched "
+                    class="help-block">
+                    <span *ngIf="clientContactForm.get('PrimaryEmail').errors.pattern"> Please enter valid email
+                      (pattern mismatch)
+                    </span>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Mobile No. <span class="required">*</span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" minlength="10" maxlength="10"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" name="PrimaryMobile" #PrimaryMobile
+                    formControlName="PrimaryMobile" [ngClass]="{ 'is-invalid': submitted && f.PrimaryMobile.errors }"
+                    placeholder=" PrimaryMobile" autocomplete="none|false|no"
+                    (input)="mobileNumberLengthRestrict($event, candidatesForm.get('mobile'))" numbersOnly>
+                  <div *ngIf="submitted && f.PrimaryMobile.errors" class="invalid-feedback">
+                    <div *ngIf="f.PrimaryMobile.errors.required">Mobile No. is required
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="clientContactForm.get('PrimaryMobile').errors && clientContactForm.get('PrimaryMobile').touched "
+                    class="help-block">
+                    <span *ngIf="clientContactForm.get('PrimaryMobile').errors.minlength"> Mobile No should be minimum
+                      10 characters
+                    </span>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+                  <label class="form-label"> Is Single Point Of Contact </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" disabled
+                        formControlName="IsSinglePointOfContact">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+
+
+
+              </div>
+            </form>
+
+            <br />
+            <br />
+            <br />
+
+          </div>
+
+        </div>
+        <div class="row footr">
+
+          <div class="col-md-6 text-left ">
+
+
+            <button class="btn btn-link" type="button" *ngIf="index == 0"
+              style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="close()">
+              &nbsp; &nbsp; Close &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-link" type="button" *ngIf="index == 1 && this.LstClientLocation.length > 0"
+              style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="close()">
+              &nbsp; &nbsp; Close &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-link" type="button" *ngIf="index == 2 && this.LstClientContact.length > 0"
+              style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="close()">
+              &nbsp; &nbsp; Close &nbsp; &nbsp;
+            </button>
+
+          </div>
+
+          <div class="col-md-6 text-right ">
+
+            <button class="btn btn-primary-border" (click)="previous()"
+              *ngIf="!spinner && isNewClientActivity && (index == 1 || index ==2)">
+              <i class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Back &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-primary-border" (click)="next()"
+              *ngIf="!spinner  && isNewClientActivity &&  (index == 0 && hasClientId > 0)"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Next &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-primary-border" (click)="next()"
+              *ngIf="!spinner && isNewClientActivity && (index == 1)"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Next &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-primary" (click)="doSaveClient(0)" *ngIf="!spinner && index == 0"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Save &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-primary" (click)="doSaveClient(1)"
+              *ngIf="!spinner  && isNewClientActivity && index == 1 && (LstClientLocation.length == 0 || isNewLocation == true)"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Save &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-primary" (click)="doSaveClient(2)"
+              *ngIf="!spinner  && isNewClientActivity && index == 2 && (LstClientContact.length == 0 || isNewContact)"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Save &nbsp; &nbsp;
+            </button>
+
+
+
+
+
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>

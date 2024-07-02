@@ -1,0 +1,186 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg modal-dialog-centered animated fadeInDownBig">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Employee(s) for Pay Run</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL" *ngIf="BehaviourObject_Data && BusinessType == 3">
+            {{BehaviourObject_Data.ClientName}} | {{BehaviourObject_Data.ContractCode}} |
+            {{BehaviourObject_Data.PayPeriod}}</h6>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL" *ngIf="BehaviourObject_Data && BusinessType != 3">
+            Pay Period : {{BehaviourObject_Data.PayPeriod}}</h6>
+        </div>
+
+        <div class="modal-close" (click)="closeModal()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+      <div *ngIf="shouldhide">
+        <div class="row animated fadeInDown" style="padding: 17px;background-color: #e2e2e2d6;color: black;"
+          *ngFor="let status of overallStatus">
+          <div class="col-lg-12">
+            <p> <b> {{status.TeamName}} : </b></p>
+            <b> {{status.OverallStatus}} </b>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="row" style="margin-bottom: 10px;" *ngIf="pageLayout  && !spinner">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+            <a href="javascript:;" class="text-sm leading-5 font-medium" (click)="showteams()" style="color: #337ab7;">
+              <b><i class="fa fa-info-circle"></i> <i>&nbsp; {{summaryText}}</i></b></a>
+
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+
+            <div class="text-right">
+              <ul class="list-inline">
+
+                <li class="list-inline-item" *ngIf="isEnableForSME_Process"><button class="btn btn-sm btn-primary"
+                    (click)="processEmployee()"> <i class="mdi mdi-play"></i> &nbsp; Re-Process
+                    Billing</button>
+                </li>
+                <li class="list-inline-item"><button class="btn btn-sm btn-primary" (click)="getDataset()"> <i
+                      class="mdi mdi-refresh"></i> Refresh</button>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <div class="text-center ma-5" *ngIf="spinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+
+        <div class="row" *ngIf="!spinner">
+
+          <div class="col-lg-6 col-xs-6  col-sm-6">
+            <b> Include employee(s) with following Process Category : Termination</b>
+            <div class="p-t-10">
+              <label class="el-checkbox el-checkbox-green">
+                <input type="checkbox" name="Status" [(ngModel)]="isFnFEmployee"
+                  (change)="onChangeFnFCheckmark($event, 'FnF')" />
+                <span class="el-checkbox-style"></span> &nbsp; FnF Employee(s)
+              </label>
+            </div>
+          
+          </div>
+
+
+
+          <div class="col-lg-6 col-xs-12" style="text-align: right;">
+            <label> <b> No. Of Employee(s) : <b> {{inEmployeesInitiateList.length}}</b> &nbsp; &nbsp; &nbsp; Selected
+                Employee(s) : <b> {{inEmployeesInitiateSelectedItems.length}}</b></b></label>
+          </div>
+        </div>
+        <div class="row" *ngIf="!spinner">
+          <div class="col-lg-12">
+            <angular-slickgrid gridId="grdinEmployeesInitiate"
+              [columnDefinitions]="inEmployeesInitiateColumnDefinitions" [gridOptions]="inEmployeesInitiateGridOptions"
+              [dataset]="inEmployeesInitiateList" (onAngularGridCreated)="inEmployeesInitiateGridReady($event)"
+              gridWidth="100%"
+              (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+            </angular-slickgrid>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="modal-footer">
+        <div class="pull-left left-margin-btn">
+
+        </div>
+        <div class="pull-right m-r-sm">
+          <div>
+            <div>
+              <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="closeModal()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+              </button>
+
+
+
+
+              <button class="btn upgrade-btn pull-right" type="button" [disabled]="isActionInProgress" (click)="Confirm()" > <i
+                  class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Confirm</button>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="popup_processingbilling" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  style="background: rgb(57 62 71 / 48%) !important;" data-keyboard="false" aria-labelledby="popup_processingbilling"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content" style="border: 2px solid #aea9a9 !important;">
+
+        <div class="modal-header" style="padding: 15px !important;">
+
+
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>Processing Status (Employee) </b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> -- </h6>
+          </div>
+
+          <div class="modal-close" (click)="modal_dismiss_processBilling()" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12  col-sm-12  p-r-50">
+              <div class="job-box ">
+                <div class="inbox-message">
+                  <ul>
+                    <li *ngFor="let i of processedEMP" style="width: 100% !important;">
+                      <a href="javascript:;">
+                        <div class="message-avatar">
+                          <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                        </div>
+                        <div class="message-body">
+                          <div class="message-body-heading">
+                            <h5>{{i.EmployeeName}} - <b *ngIf="i.IsPushedtoQueue" style="color: green;">Success</b>
+                              <b style="color: red;" *ngIf="!i.IsPushedtoQueue">Failed</b> </h5>
+                          </div>
+                          <p>{{i.Remarks}}</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left left-margin-btn">
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

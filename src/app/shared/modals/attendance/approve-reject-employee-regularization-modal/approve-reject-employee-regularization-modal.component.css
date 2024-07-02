@@ -1,0 +1,379 @@
+.modal .modal-dialog-aside {
+  height: 100%;
+  margin: 0;
+  transform: translate(0);
+  transition: transform 0.2s;
+}
+
+.modal .modal-dialog-aside .modal-content {
+  height: inherit;
+  border: 0 !important;
+  border-radius: 0;
+  padding-top: 1.5rem;
+}
+
+.modal .modal-dialog-aside .modal-content .modal-body {
+  overflow-y: auto;
+}
+
+.modal_header {
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #1c1e24;
+}
+
+.sub_header {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #7b8193;
+}
+
+.modal.fixed-left .modal-dialog-aside {
+  margin-left: auto;
+  transform: translateX(100%);
+}
+
+.modal.fixed-right .modal-dialog-aside {
+  margin-right: auto;
+  transform: translateX(-100%);
+}
+
+.modal.show .modal-dialog-aside {
+  transform: translateX(0);
+}
+
+.small-text {
+  color: #1c1e24 !important;
+  /* font-weight: 500 !important; */
+  font-size: 13px;
+}
+
+@media (min-width: 576px) {
+  .modal-dialog-set-width {
+    max-width: 932px !important;
+    margin: 1.75rem auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .modal-lg.modal-dialog-set-width {
+    max-width: 740px !important;
+  }
+  .modal-dialog-set-width {
+    max-width: 740px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .pt-md-8 {
+    padding-top: 8rem !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mb-xl-0 {
+    margin-bottom: 0 !important;
+  }
+}
+
+.modal-fixed-custom-footer {
+  position: fixed;
+  height: 66px;
+  background-color: white;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  margin-bottom: 0px !important;
+  box-shadow: 3px -3px 5px 0px #f1f1f1;
+}
+
+.pending-color {
+  color: #ee9a15 !important;
+}
+
+.pending-status {
+  background: #ffe9c7;
+  border-radius: 4px;
+  text-align: center;
+  color: #ee9a15 !important;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.holiday-status {
+  background: #8E44AD33;
+  border-radius: 4px;
+  text-align: center;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+  color: #8E44AD !important;
+  border: 1px solid #8E44AD;
+}
+
+.holiday-color {
+  color: #8E44AD;
+}
+
+.approved-color {
+  color: #2da05e !important;
+}
+
+.approved-status {
+  text-align: center;
+  background: #e2feee;
+  border-radius: 4px;
+  color: #2da05e !important;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.rejected-color {
+  color: #e74c3c !important;
+}
+
+.rejected-status {
+  text-align: center;
+  background: #ffe4e1;
+  border-radius: 4px;
+  color: #e74c3c !important;
+  font-style: normal;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.with-bg-grey {
+  background-color: #f6f6f6 !important;
+}
+
+.with-bg-white {
+  box-shadow: 0px 2px 6px 0px #00000040;
+  background-color: #fff;
+}
+
+.nameLabel {
+  color: #1c1e24;
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 23px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.subLabel {
+  color: #7b8193;
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.fw-400 {
+    font-weight: 400 !important;
+}
+
+.color-grey {
+  color: #808080 !important;
+}
+
+.modal_header_view {
+  font-family: Roboto;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21px;
+  text-align: left;
+}
+
+.kt-header__topbar-user {
+  padding: 0px !important;
+  height: 45px;
+  width: 45px;
+  cursor: pointer !important;
+  border-radius: 4px;
+  color: #fff;
+  background: #146ba2 !important;
+  border-radius: 100%;
+  margin-right: 0.9em;
+}
+
+.kt-header__topbar-user > a {
+  padding: 0.8rem;
+}
+
+.kt-badge.kt-badge--unified-success {
+  color: #fff !important;
+}
+
+.icon-lg {
+  font-size: 25px !important;
+}
+
+.emp-regularize-table {
+  width: 100%;
+  background-color: #ffff;
+  text-align: left;
+  font-size: 13px !important;
+  border: 0 !important;
+  font-family: Roboto;
+  font-weight: 500;
+  line-height: 15px;
+  color: #1c1e24;
+}
+
+.emp-regularize-table-header tr th {
+  /* width: 20%; */
+  background-color: inherit;
+  text-transform: capitalize;
+  font-weight: 600 !important;
+  line-height: 13px;
+  border: 0 !important;
+  width: 20%;
+}
+.emp-regularize-table-body {
+  max-height: 30px;
+  overflow-y: auto !important;
+  border: 1px solid #e7e7e7 !important;
+}
+
+.emp-regularize-table-body tr {
+    border: 1px solid #E7E7E7 !important;
+}
+
+.emp-regularize-table-body tr td {
+  width: inherit;
+  vertical-align: middle;
+  font-weight: 400 !important;
+  padding-top: 0.75rem;
+  border: 0 !important;
+  color: #333333;
+}
+
+.btn-reject {
+  color: #fff !important;
+  background-color: #ff7062 !important;
+  border-color: #ff7062 !important;
+}
+
+.btn-approve {
+  color: #fff !important;
+  background-color: #42c178 !important;
+  border-color: #42c178 !important;
+}
+
+.modal_title {
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #333333;
+}
+
+.label-title {
+  font-family: Roboto;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 15px;
+  text-align: left;
+  color: #7b8193 !important;
+}
+
+.label-value {
+  font-family: Roboto;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 16px;
+  text-align: left;
+  color: #1c1e24 !important;
+}
+
+.custom-popover-class .arrow::after,
+.custom-popover-class .arrow::before {
+  border-left-color: #eee;
+}
+
+.custom-popover-class .popover-header {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 19.5px;
+  background: white;
+  padding-right: 1em;
+  padding-left: 1em;
+  border: 0 !important;
+}
+
+.custom-popover-class .popover-body {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  color: #1c1e24;
+}
+
+.label-remarks {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 15px;
+  text-align: left;
+  color: #7b8193 !important;
+}
+
+.text-remarks {
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: left;
+  color: #333333 !important;
+}
+
+.default-status {
+  text-align: center;
+  background: #179DF833;
+  border-radius: 4px;
+  border: 1px solid #2506E2;
+  color: #2506E2 !important;
+  font-style: normal;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 11px;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+

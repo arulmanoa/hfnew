@@ -1,0 +1,89 @@
+<div class="page-wrapper">
+  <div class="page-content" >
+    <div class="">
+      <div class="row m-t-b-10" id="navbar">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+          <ul class="list-inline">
+
+            <!-- <div class="showGirdActionButtons" *ngIf="this.selected_Unclaimed_ModuleProcessTransactionsIds?.length">
+              <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                <div class="massOperationsPanel d-i-b">
+
+
+                  <button class="btn btn-default btn-sm m-r-sm " (click)="claimRequest()">
+                    <i class="mdi mdi-thumb-up-outline"></i> Claim Requests
+                  </button>
+                </div>
+              </div>
+            </div> -->
+          </ul>
+        </div>
+        <div class="col-lg-6 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+              <!-- <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="addCandidates()"><i class="mdi mdi-library-plus m-r-xs"></i> New
+                              Request</button></li> -->
+
+              <!-- <li *ngIf="this.activeTabName!='search'" class="list-inline-item"><button type="button"
+                  class="btn btn-primary" (click)="refreshCurrentTab()"><i class="mdi mdi-refresh m-r-xs"></i>
+                  Refresh</button></li> -->
+
+            </ul>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="content m-b report-content">
+        <ngb-tabset (tabChange)="loadData($event)" [(activeId)]="activeTabName">
+          <ngb-tab id="claimed">
+            <ng-template ngbTabTitle><i class="mdi mdi-thumb-up-outline" aria-hidden="true"></i>&nbsp;&nbsp;{{AlternativeText}}
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+              <div *ngIf="!spinner">
+                <angular-slickgrid gridId="grdclaimed" [columnDefinitions]="claimedColumnDefinitions"
+                  [gridOptions]="claimedGridOptions" [dataset]="claimedList"
+                  (onAngularGridCreated)="claimedGridReady($event)" gridWidth="100%">
+                </angular-slickgrid>
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+          <ngb-tab id="unclaimed" *ngIf="IsExtraTabRequired">
+            <ng-template ngbTabTitle><i class="fa fa-bitbucket" aria-hidden="true"></i>&nbsp;&nbsp;{{AlternativeText1}}
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+              <div *ngIf="!spinner">
+
+
+                <angular-slickgrid gridId="grdUnclaimed" [columnDefinitions]="unclaimedColumnDefinitions"
+                  [gridOptions]="unclaimedGridOptions" [dataset]="unclaimedDataset"
+                  (onAngularGridCreated)="unClaimedGridReady($event)"
+                  (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  gridWidth="100%">
+                </angular-slickgrid> 
+              </div>
+            </ng-template>
+          </ngb-tab>
+          
+        </ngb-tabset>
+      </div>
+    </div>
+  </div>
+</div>
+
+

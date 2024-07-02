@@ -1,0 +1,562 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="row" style="margin-bottom: 15px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="padding-top: 10px;">
+          <h6 class="h6_c"> Attendance Report </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-right"></div>
+    </div>
+
+
+    <div class="content m-b report-content" style="margin-top: 10px;" *ngIf="!spinner">
+
+
+      <div class="row" style="padding-left: 10px;">
+        <div class="form-group-vertical col-xs-12 col-sm-3 col-md-3">
+
+          <label class="form-label searchbar-label">District Name <span class="required">*</span></label>
+          <div class="form-group m-t-m5" style="margin-left: -10px">
+            <div class="input-group">
+              <ng-select [items]="districtList" [clearable]="false" (change)="OnChangeDistrict($event)"
+                [(ngModel)]="districtId" placeholder="Select an option" bindLabel="DistrictName" bindValue="DistrictId"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group-vertical col-xs-12 col-sm-3 col-md-3">
+
+          <label class="form-label searchbar-label">Branch Name <span class="required">*</span></label>
+          <div class="form-group m-t-m5" style="margin-left: -10px">
+            <div class="input-group">
+              <ng-select [items]="branchList" [clearable]="false" (change)="OnChangeBranch($event)"
+                [(ngModel)]="branchId" placeholder="Select an option" bindLabel="BranchName" bindValue="BranchId"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important" [disabled]="districtId == null">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group-vertical col-xs-12 col-sm-3 col-md-3">
+
+          <label class="form-label searchbar-label">Distributor Name <span class="required">*</span></label>
+          <div class="form-group m-t-m5" style="margin-left: -10px">
+            <div class="input-group">
+              <ng-select [items]="distributorList" [clearable]="false" (change)="OnChangeDistributor($event)"
+                [(ngModel)]="distributorId" placeholder="Select an option" bindLabel="DistributorName" bindValue="DistributorId"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important" [disabled]="branchId == null">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="form-group-vertical col-xs-12 col-sm-3 col-md-3" >
+
+          <label class="form-label searchbar-label">Manager Name </label>
+          <div class="form-group m-t-m5" style="margin-left: -10px">
+            <div class="input-group">
+              <ng-select [items]="managerList" [clearable]="false" (change)="OnChangeManager($event)"
+                [(ngModel)]="managerId" placeholder="Manager" bindLabel="Name" bindValue="Id"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important" [disabled]="distributorId == null">
+              </ng-select>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="form-group-vertical col-xs-12 col-sm-3 col-md-3"
+          *ngIf="RoleCode != 'PayrollOps' || (managerId != -100 && managerId != null)">
+          <label class="form-label searchbar-label">Employee Name <span class="required">*</span></label>
+          <div class="form-group m-t-m5" style="margin-left: -10px">
+            <div class="input-group">
+              <ng-select [items]="employeeList" [clearable]="false" (change)="OnChangeEmpName($event)"
+                [(ngModel)]="empId" placeholder="Employee Name" bindLabel="Name" bindValue="EmployeeId"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group-vertical col-xs-12 col-sm-3 col-md-3" *ngIf="this.empId != null && !PayPeriodtoBeHidden">
+          <label class="form-label searchbar-label"> Attendance Date <span class="required">*</span></label>
+          <div class="form-group m-t-m5" style="margin-left: -10px">
+            <div class="input-group">
+              <input type="text" onkeydown="return (event.keyCode!=13);" [(ngModel)]="attendanceDate"
+                class="form-control" (ngModelChange)="onChangeAttendanceDate($event)" bsDatepicker placement="bottom"
+                [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                name="attendanceDate" placeholder="12-12-2020" autocomplete="none|false|no" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="form-group-vertical col-xs-12 col-sm-3 col-md-3" *ngIf="this.empId != null && PayPeriodtoBeHidden">
+
+          <label class="form-label searchbar-label" >Pay Period <span class="required">*</span> </label>
+          <div class="form-group m-t-m5" style="margin-left: -10px">
+            <div class="input-group">
+              <ng-select [items]="payPeriodList" [clearable]="false" (change)="OnChangePayPeriod($event)"
+                [(ngModel)]="payperiodId" placeholder="March 2022" bindLabel="Name" bindValue="Id"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="row" style="margin-top: -25px;
+          margin-right: -20px;">
+        <div class="form-group-vertical col-xs-12 col-sm-12 col-md-12">
+          <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+            <div class="input-group">
+              <button type="button" (click)="doSearch()" class="btn btn-primary mr-2 float-right"
+                style="display: inline;margin: 0 auto;">
+                <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-2" style="padding-left: 5px;padding-right: 5px;" (click)="onClickBox('1')">
+          <a href="javascript:;">
+            <div class="grid simple border-2px"
+              [ngStyle]="selectedBoxAttr == '1' ?{'border-color': '#d3bdf7'} : {'border-color': '#f3f3f3'}">
+              <div class="grid-body">
+                <p class="m-b-0" style="height: 15px;font-size: 12px !important;" *ngIf="!PayPeriodtoBeHidden">Total
+                  Employees</p>
+                <p class="m-b-0" style="height: 15px;font-size: 12px !important;" *ngIf="PayPeriodtoBeHidden">Total Days
+                </p>
+                <div class="nowrap">
+                  <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #a063e5"></i>
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #a063e5; opacity: 0.3"></i>
+                    </span></div>
+                  <span class="size-28 semi-bold" style="margin-top: 5px;">
+                    {{totalCount}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-2" style="padding-left: 5px;padding-right: 5px;" (click)="onClickBox('2')">
+          <a href="javascript:;">
+            <div class="grid simple border-2px"
+              [ngStyle]="selectedBoxAttr == '2' ?{'border-color': '#ffebb4'} : {'border-color': '#f3f3f3'}">
+              <div class="grid-body">
+                <p class="m-b-0" style="height: 15px;font-size: 12px !important;" *ngIf="!PayPeriodtoBeHidden">Employees
+                  Punched In</p>
+                <p class="m-b-0" style="height: 15px;font-size: 12px !important;" *ngIf="PayPeriodtoBeHidden">Total
+                  Punched In</p>
+                <div class="nowrap">
+                  <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #63E59F"></i>
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #63E59F; opacity: 0.3"></i>
+                    </span></div>
+                  <span class="size-28 semi-bold" style="margin-top: 5px;">
+                    {{PunchedInOutCount}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-2" style="padding-left: 5px;padding-right: 5px;" (click)="onClickBox('3')">
+          <a href="javascript:;">
+            <div class="grid simple border-2px"
+              [ngStyle]="selectedBoxAttr == '3' ? {'border-color': '#c6f5d7'} : {'border-color': '#f3f3f3'}">
+              <div class="grid-body">
+                <p class="m-b-0" style="height: 15px;font-size: 12px !important;" *ngIf="!PayPeriodtoBeHidden">Employees
+                  Not Punched In</p>
+                <p class="m-b-0" style="height: 15px;font-size: 12px !important;" *ngIf="PayPeriodtoBeHidden">Not
+                  Punched In</p>
+
+                <!-- <span class="muted nowrap">This week</span> -->
+                <div style="clear: both"></div>
+                <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                    <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #FF945B"></i>
+                    <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #FF945B; opacity: 0.3"></i>
+                  </span></div>
+                <span class="size-28 semi-bold" style="margin-top: 5px;">
+                  {{NotPunchedOutCount}}
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-2" style="padding-left: 5px;padding-right: 5px;" (click)="onClickBox('4')">
+          <a href="javascript:;">
+            <div class="grid simple border-2px"
+              [ngStyle]="selectedBoxAttr == '4' ?{'border-color': '#D8ECFF'} : {'border-color': '#f3f3f3'}">
+              <div class="grid-body">
+                <p class="m-b-0 mb-3" style="height: 15px;font-size: 12px !important;" *ngIf="!PayPeriodtoBeHidden">Employees
+                  On Leave <small> (Applied/Approved) </small> </p>
+
+                <p class="m-b-0" style="height: 15px;font-size: 12px !important;" *ngIf="PayPeriodtoBeHidden">On Leave
+                  <small> (Applied/Approved) </small></p>
+                <div class="nowrap">
+                  <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #f44336"></i>
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #f44336; opacity: 0.3"></i>
+                    </span></div>
+                  <span class="size-28 semi-bold" style="margin-top: 5px;">
+                    {{LeaveRequestCount}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-2" style="padding-left: 5px;padding-right: 5px;" (click)="onClickBox('5')">
+          <a href="javascript:;">
+            <div class="grid simple border-2px"
+              [ngStyle]="selectedBoxAttr == '5' ?{'border-color': '#ffd8f8'} : {'border-color': '#f3f3f3'}">
+              <div class="grid-body">
+                <p class="m-b-0" style="height: 15px;font-size: 12px !important;">Employees WeekOff </p>
+
+                <div class="nowrap">
+                  <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #e336f4"></i>
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #e336f4; opacity: 0.3"></i>
+                    </span></div>
+                  <span class="size-28 semi-bold" style="margin-top: 5px;">
+                    {{LeaveWeekOffCount}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+
+
+      </div>
+
+
+
+      <div class="row" style="margin-bottom: 0.4rem;" *ngIf="!spinner_table">
+        <div class="col-12 col-xs-12 col-lg-5 col-md-5 col-sm-5 text-left" style="margin-top: 25px">
+
+          <ul class="list-inline" *ngIf="!PayPeriodtoBeHidden">
+
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="prevDate()">
+                <i class="mdi mdi-arrow-left m-r-xs"></i>Prev Date
+              </button>
+            </li>
+            <li class="list-inline-item"> {{attendanceDate | date :'dd-MM-yyyy'}}
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="nextDate()">
+                <i class="mdi mdi-arrow-right  m-r-xs"></i>Next Date
+              </button>
+            </li>
+          </ul>
+
+
+          <ul class="list-inline" *ngIf="PayPeriodtoBeHidden">
+
+
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="prevperiod()">
+                <i class="mdi mdi-arrow-left m-r-xs"></i>Prev Period
+              </button>
+            </li>
+            <li class="list-inline-item"> {{payperiodName}}
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="nextperiod()">
+                <i class="mdi mdi-arrow-right  m-r-xs"></i>Next Period
+              </button>
+            </li>
+          </ul>
+
+        </div>
+        <div class="col-12 col-xs-12 col-lg-4 col-md-4 col-sm-4 text-right" style="padding-right: 0px;">
+          <div class="col-lg-12" style="float: left;">
+            <label class="form-label" style="text-align: left;">Start searching for employee code, name
+            </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+              placeholder="Start searching for employee code, name">
+          </div>
+        </div>
+        <div class="col-12 col-xs-12 col-lg-3 col-md-3 col-sm-3 text-right"
+          style="padding-right: 0px;margin-top: 25px;">
+          <div class="col-lg-12" style="float: left;"><button type="button" (click)="doExport()"
+              class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;">
+              <i class="mdi mdi-file-excel font-size-md" style="margin-right: 5px;"></i> Export Excel
+            </button> </div>
+        </div>
+      </div>
+
+
+      <br>
+
+
+      <div class="text-center ma-5" *ngIf="spinner_table">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please Wait
+        </button>
+      </div>
+
+
+      <div class="row" *ngIf="LstEmployee.length == 0 && !spinner_table">
+        <div class="col-12 text-center">
+          <b>No records found!</b>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 10px;" *ngIf="!spinner_table">
+        <div class="col-xs-12 col-sm-12" style="padding-bottom: 10px;"
+          *ngFor="let item of LstEmployee | filter: searchText ; let i = index">
+          <div class="card" style="border-radius: 0px;">
+            <div class="card-body" style="padding: 5px !important;height: 125px !important">
+
+              <div class="row">
+                <div class="col-md-6 text-left">
+                  <label style="font-size: 12px;font-weight: 600;padding: 5px;"> Date : {{item.AttendanceDate | date
+                    :'dd-MM-yyyy'}}
+                    <!-- checks week off is true -->
+                    <span class="present_bg" *ngIf=" (item.FirstHalfEntitlementCode =='WeekOff'
+                                          || item.FirstHalfEntitlementCode =='WO' || item.IsWeekOff)">
+                      WO
+                    </span>
+                    <!-- checks holiday is true -->
+                    <span class="present_bg" *ngIf="(item.IsHoliday || item.IsHoliday ==  1)">H</span>
+                    <!-- checks if first half half-day applicable and shows first half -->
+                    <span class="present_bg"
+                      *ngIf="!item.IsWeekOff && (!item.IsHoliday || item.IsHoliday == 0) &&  item.FirstHalf !='WeekOff'
+                                          && item.FirstHalf !='WO' && item.FirstHalf !='' && item.IsHalfDayApplicable_FirstHalf">
+                      {{item.FirstHalf}}
+                    </span>
+                    <!-- checks first half & second half values are same and shows it when weekoff and holiday is false -->
+                    <span class="present_bg" *ngIf="item.FirstHalf !='' && !item.IsWeekOff && (!item.IsHoliday || item.IsHoliday ==  0)
+                                          && item.FirstHalf !='WeekOff' && item.FirstHalf !='WO'
+                                          && item.FirstHalf != null && item.SecondHalf != null 
+                                          && item.FirstHalf == item.SecondHalf">
+                      {{item.FirstHalf}}
+                    </span>
+                    <!-- checks first half & second half values are same and shows it when weekoff is true and holiday is false -->
+                    <span class="present_bg" *ngIf="item.FirstHalf !='' && item.IsWeekOff && (!item.IsHoliday || item.IsHoliday ==  0)
+                                          && item.FirstHalf !='WeekOff' && item.FirstHalf !='WO'
+                                          && item.FirstHalf != null && item.SecondHalf != null 
+                                          && item.FirstHalf == item.SecondHalf">
+                      {{item.FirstHalf}}
+                    </span>
+                    <!-- checks first half & second half values are same and shows it when weekoff is false and holiday is true -->
+                    <span class="present_bg" *ngIf="item.FirstHalf !='' && !item.IsWeekOff && (item.IsHoliday || item.IsHoliday ==  1)
+                                          && item.FirstHalf !='WeekOff' && item.FirstHalf !='WO'
+                                          && item.FirstHalf != null && item.SecondHalf != null 
+                                          && item.FirstHalf == item.SecondHalf">
+                      {{item.FirstHalf}}
+                    </span>
+                    <!-- checks if first half and second half is different when weekoff and holiday is false -->
+                    <span class="present_bg" *ngIf="item.FirstHalf !='' && !!item.IsWeekOff 
+                                          && (!item.IsHoliday || item.IsHoliday ==  0) && item.FirstHalf !='WeekOff' 
+                                          && item.FirstHalf !='WO' && item.FirstHalf != null
+                                          && item.SecondHalf != null && item.FirstHalf != item.SecondHalf">
+                      {{item.FirstHalf}} | {{item.SecondHalf}}
+                    </span>
+
+                  </label>
+
+                </div>
+                <div class="col-md-6 text-right" style="padding: 5px;
+                              padding-right: 12px;">
+                  <button class="btn btn-default btn-sm m-r-sm " matTooltip="View Images"
+                    style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                    (click)="viewPunchInOutImage(item, 'Documents')"><i class="fa fa-eye m-r-xs"></i> View </button>
+                </div>
+              </div>
+              <div class="row" style="margin-bottom: -10px;">
+                <div class="col-md-4">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Code : <span class="spanlabel"> {{item.EmployeeCode}} </span> </label>
+
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Punch In : <span class="spanlabel"> {{item.PunchInTime}} </span></label>
+
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Punch Out : <span class="spanlabel"> {{item.PunchOutTime}} </span></label>
+
+                  </div>
+                </div>
+
+
+
+              </div>
+              <div class="row" style="margin-bottom: -10px;height: 35px;">
+                <div class="col-md-4">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Name : <span class="spanlabel"> {{item.EmployeeName}} </span> </label>
+
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <span class="form-label">Punch In Address : <span style=" height: 16px;
+                                          width: 220px;
+                                          padding: 0;
+                                          overflow: hidden;
+                                          position: relative;
+                                          display: inline-block;
+                                          margin: 0 0px 0 0px;
+                                          text-align: left;
+                                          text-decoration: none;
+                                          text-overflow: ellipsis;
+                                          white-space: nowrap; 
+                                          color: #000;cursor: pointer;"
+                        *ngIf="item.PunchInAddress == '' || item.PunchInAddress == null">---</span> <span style=" height: 16px;
+                                          width: 220px;
+                                          padding: 0;
+                                          overflow: hidden;
+                                          position: relative;
+                                          display: inline-block;
+                                          margin: 0 0px 0 0px;
+                                          text-align: left;
+                                          text-decoration: none;
+                                          text-overflow: ellipsis;
+                                          white-space: nowrap; 
+                                          color: #000;cursor: pointer;"
+                        matTooltip="{{item.PunchInAddress}}">{{item.PunchInAddress}} </span> </span>
+
+
+
+
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <span class="form-label">Punch Out Address : <span style=" height: 16px;
+                                          width: 220px;
+                                          padding: 0;
+                                          overflow: hidden;
+                                          position: relative;
+                                          display: inline-block;
+                                          margin: 0 0px 0 0px;
+                                          text-align: left;
+                                          text-decoration: none;
+                                          text-overflow: ellipsis;
+                                          white-space: nowrap; 
+                                          color: #000;cursor: pointer;"
+                        *ngIf="item.PunchOutAddress == '' || item.PunchOutAddress == null">---</span> <span style="height: 16px;
+                                          width: 220px;
+                                          padding: 0;
+                                          overflow: hidden;
+                                          position: relative;
+                                          display: inline-block;
+                                          margin: 0 0px 0 0px;
+                                          text-align: left;
+                                          text-decoration: none;
+                                          text-overflow: ellipsis;
+                                          white-space: nowrap; 
+                                          color: #000;cursor: pointer;"
+                        matTooltip="{{item.PunchOutAddress}}">{{item.PunchOutAddress}} </span> </span>
+
+
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="row" style="margin-bottom: -10px;height: 35px;">
+                <div class="col-md-4">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Manager : <span class="spanlabel"> {{item.ManagerName}} </span> </label>
+
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <span class="form-label">Punch In Remarks : <span style=" height: 16px;
+                                          width: 220px;
+                                          padding: 0;
+                                          overflow: hidden;
+                                          position: relative;
+                                          display: inline-block;
+                                          margin: 0 0px 0 0px;
+                                          text-align: left;
+                                          text-decoration: none;
+                                          text-overflow: ellipsis;
+                                          white-space: nowrap; 
+                                          color: #000;cursor: pointer;"
+                        *ngIf="item.PunchInRemarks == '' || item.PunchInRemarks == null">---</span>
+                      <span style=" height: 16px;
+                                          width: 220px;
+                                          padding: 0;
+                                          overflow: hidden;
+                                          position: relative;
+                                          display: inline-block;
+                                          margin: 0 0px 0 0px;
+                                          text-align: left;
+                                          text-decoration: none;
+                                          text-overflow: ellipsis;
+                                          white-space: nowrap; 
+                                          color: #000;cursor: pointer;"
+                        matTooltip={{item.PunchInRemarks}}>{{item.PunchInRemarks}} </span> </span>
+
+                  </div>
+                </div>
+
+
+                <div class="col-md-4">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <span class="form-label">Punch Out Remarks : <span style=" height: 16px;
+                                          width: 220px;
+                                          padding: 0;
+                                          overflow: hidden;
+                                          position: relative;
+                                          display: inline-block;
+                                          margin: 0 0px 0 0px;
+                                          text-align: left;
+                                          text-decoration: none;
+                                          text-overflow: ellipsis;
+                                          white-space: nowrap; 
+                                          color: #000;cursor: pointer;"
+                        *ngIf="item.PunchOutRemarks == '' || item.PunchOutRemarks == null">---</span>
+                      <span style="height: 16px;
+                                          width: 220px;
+                                          padding: 0;
+                                          overflow: hidden;
+                                          position: relative;
+                                          display: inline-block;
+                                          margin: 0 0px 0 0px;
+                                          text-align: left;
+                                          text-decoration: none;
+                                          text-overflow: ellipsis;
+                                          white-space: nowrap; 
+                                          color: #000;cursor: pointer;"
+                        matTooltip={{item.PunchOutRemarks}}>{{item.PunchOutRemarks}} </span> </span>
+
+
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+</div>

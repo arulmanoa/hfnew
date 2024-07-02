@@ -1,0 +1,235 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="padding-top: 10px;">
+          <h6 class="h6_c"> My OD Requests </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item" *ngIf="_entitlementList && _entitlementList.length > 0">
+              <button type="button" class="btn btn-primary" (click)="do_applyLeave()">
+                <i class="mdi mdi-spellcheck  m-r-xs"></i> Apply OD
+              </button>
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <div class="row hidden-sm" style="width: 102%;" *ngIf="!spinner  && !IsMusterroll">
+      <div class="col-lg-12">
+        <angular-slickgrid gridId="grdinEmployeesInitiate" [columnDefinitions]="inEmployeesInitiateColumnDefinitions"
+          [gridOptions]="inEmployeesInitiateGridOptions" [dataset]="inEmployeesInitiateList"
+          (onAngularGridCreated)="inEmployeesInitiateGridReady($event)" gridWidth="100%"
+          (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+        </angular-slickgrid>
+      </div>
+    </div>
+
+
+
+
+  </div>
+</div>
+
+<div id="popup_edit_attendance" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-8" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">My OD Request</small>
+          </div>
+
+          <div class="modal-close" (click)="close_leaverequest_slider()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row" style="margin-bottom: -16px;">
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <form [formGroup]="leaveForm" #formDirective="ngForm">
+                    <div class="row">
+                      <ng-container *ngIf="employeeEntitlement && !employeeEntitlement.Entitlement.IsOptionalHoliday">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                          <label class="form-label ">Applied From <span class="required"> *</span></label>
+                          <input *ngIf="leaveForm.get('Id').value == 0" class="form-control" type="text"
+                            name="AppliedFrom" bsDatepicker placement="bottom" readonly [minDate]="_from_minDate"
+                            [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            placeholder="12-12-1970" formControlName="AppliedFrom"
+                            [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off"
+                            (ngModelChange)="onChange_FromDate($event)">
+
+                          <span *ngIf="leaveForm.get('Id').value > 0"
+                            style="font-size: 12px;">{{leaveForm.get('AppliedFrom').value | date :'dd-MM-yyyy'}}
+                          </span>
+
+                          <div *ngIf="submitted && g.AppliedFrom.invalid" class="help-block">
+                            <div *ngIf="g.AppliedFrom.errors.required">Applied From is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;" *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <div *ngIf="(tabName != null && getEntitlementDefintionCode(tabName) != 'COMP') || !isSameDate">
+                            <label class="form-label"> First Half </label>
+                            <div class="">
+                              <label class="el-checkbox el-checkbox-red">
+                                <input type="checkbox" name="IsAppliedForFirstHalf"
+                                  (change)="onChange_firstHalf($event)" [disabled]="tobeDisabledCheckbox"
+                                  formControlName="IsAppliedForFirstHalf" />
+                                <span class="el-checkbox-style"></span>
+                              </label>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;" *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <div *ngIf="(tabName != null && getEntitlementDefintionCode(tabName) != 'COMP') || !isSameDate">
+                            <label class="form-label"> Second Half</label>
+                            <div class="">
+                              <label class="el-checkbox el-checkbox-red">
+                                <input type="checkbox" name="IsAppliedFromSecondHalf"
+                                  (change)="onChange_secondHalf($event)" formControlName="IsAppliedFromSecondHalf"
+                                  [disabled]="isDisabledFromSecondHalf" />
+                                <span class="el-checkbox-style"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                          <label class="form-label ">Applied Till<span class="required"> *</span></label>
+                          <input *ngIf="leaveForm.get('Id').value == 0" class="disabled-prop form-control" type="text"
+                            name="AppliedTill" [minDate]="_till_minDate" bsDatepicker placement="bottom" readonly
+                            [disabled]="isDisabledTillDate" (ngModelChange)="onChange_TillDate($event)"
+                            [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            placeholder="12-12-1970" formControlName="AppliedTill"
+                            [ngClass]="{ 'is-invalid': submitted && g.AppliedTill.errors }" autocomplete="off">
+
+                          <span *ngIf="leaveForm.get('Id').value > 0"
+                            style="font-size: 12px;">{{leaveForm.get('AppliedTill').value | date :'dd-MM-yyyy'}}
+                          </span>
+
+                          <div *ngIf="submitted && g.AppliedTill.invalid" class="help-block">
+                            <div *ngIf="g.AppliedTill.errors.required">Applied Till is required
+                            </div>
+                          </div>
+                          <div *ngIf="isinvalidDate == true" class="help-block">
+                            <div>Note: The till date has to be greater than or equal to the from date.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-12 col-xs-6 col-sm-3" style="margin-top: 5px;"
+                          *ngIf="!isSameDate && employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <label class="form-label"> First Half</label>
+                          <div class="">
+                            <label class="el-checkbox el-checkbox-red">
+                              <input type="checkbox" name="IsAppliedTillFirstHalf"
+                                (change)="onChange_tillfirstHalf($event)" formControlName="IsAppliedTillFirstHalf"
+                                [disabled]="isDisabledTillFirstHalf" />
+                              <span class="el-checkbox-style"></span>
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-12 col-xs-6 col-sm-3" style="margin-top: 5px;"
+                          *ngIf="!isSameDate && employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <label class="form-label"> Second Half</label>
+                          <div class="">
+                            <label class="el-checkbox el-checkbox-red">
+                              <input type="checkbox" name="IsAppliedTillSecondHalf" [disabled]="tobeDisabledCheckbox"
+                                (change)="onChange_tillSecondHalf($event)" formControlName="IsAppliedTillSecondHalf" />
+                              <span class="el-checkbox-style"></span>
+                            </label>
+                          </div>
+                        </div>
+
+                      </ng-container>
+                      <div class="d-flex align-items-center" style="text-align:center;padding-left: 1rem;"
+                        *ngIf="isLoading">
+                        <strong class="text-right"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                        <label class="form-label"> Comments <span class="required"> *</span> </label>
+                        <textarea class="form-control" rows="3" spellcheck="false" id="ApplierRemarks"
+                          formControlName="ApplierRemarks" placeholder="Include comments for your approver"
+                          [ngClass]="{ 'is-invalid': submitted && g.ApplierRemarks.errors }"></textarea>
+                        <div *ngIf="submitted && g.ApplierRemarks.invalid" class="help-block">
+                          <div *ngIf="g.ApplierRemarks.errors.required">Comments is required</div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <div>
+
+          <div class="modal-footer" *ngIf="leaveForm.get('Id').value == 0">
+            <div class="pull-left left-margin-btn" style="width: 65%;">
+              <!-- SHOW AVAILABLE BALANCE -->
+              <div class="col-lg-6">
+                <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;"
+                  *ngIf="!IsLossOfPay && IsShowBalanceInUI == true">
+                  Available Balance : <b style="color: black;"> {{availableDays}} </b>
+                </div>
+              </div>
+              <!-- NO.OF DAYS LEAVE APPLIED -->
+              <div class="col-lg-6" *ngIf="leaveDaysApplied && leaveDaysApplied != ''">
+                <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;">
+                  {{leaveDaysApplied}}
+                </div>
+              </div>
+            </div>
+            <div class="pull-right m-r-sm">
+              <div>
+                <button type="submit" [disabled]="isLoading" (click)="saveEntitlementRequest()"
+                  style="border-radius: 20px;" class="btn btn-primary"
+                  [ngStyle]="leaveForm.get('Id').value > 0 ?{'width': '50%'} : {'width': '100%'}"> Submit Request
+                </button>
+                <button [disabled]="isLoading" type="button" class="btn btn-danger" id="btn_qc_reject"
+                  *ngIf="leaveForm.get('Id').value > 0" style="width: 50%;border-radius: 20px;"
+                  (click)="do_popup_cancelAppliedRequest(leaveForm.get('Id').value)">
+                  <i class="mdi mdi-cancel  m-r-xs"></i> Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

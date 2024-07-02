@@ -1,0 +1,1044 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left" style="margin-top :10px;">
+        <div class="text-left">
+          <h6 class="h6_c" style="font-size: 16px;
+          font-weight: 600;">My Team Attendance </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="content m-b report-content" style="margin-top: -5px;" *ngIf="!spinner">
+
+
+      <div class="row">
+        <div class="col-lg-6">
+
+          <div class="headerbar-right">
+            <div class="media" style="width: 100% !important;">
+              <div class="media-body">
+                <label>Attendance Period</label>
+                <h6 style="font-size: 15px;"> {{selectTeamAttendanceStartDate | date :'MMM d'}} -
+                  {{selectTeamAttendanceEndDate | date :'MMM d'}}
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 pull-right" style="margin-top: 15px;text-align: right; padding-bottom: 25px;">
+
+          <span style="background-color: #28a745!important;           
+              padding-right: 10px;margin-right: 10px;font-size: 10px;"></span> Present &nbsp;
+
+          <span style="background-color: #da0000 !important;           
+padding-right: 10px;margin-right: 10px;font-size: 10px"></span> Day Off &nbsp;
+
+          <span style="background-color: #f3c74d !important;           
+padding-right: 10px;margin-right: 10px;font-size: 10px"></span> Applied Leave &nbsp;
+
+          <span style="background-color: #428ff6 !important;           
+             padding-right: 10px;margin-right: 10px;font-size: 10px"></span> Holiday &nbsp;
+
+          <span style="background-color: #D3D3D3 !important;           
+ padding-right: 10px;margin-right: 10px;font-size: 10px"></span> WeekOff &nbsp;
+
+<!--  
+<span style="background-color: #fad7d7 !important;           
+padding-right: 10px;margin-right: 10px;font-size: 10px"></span> Day Off -->
+
+
+        </div>
+
+      </div>
+      <div class="row" *ngIf="LstTeam.length > 1">
+        <div class="col-lg-4">
+
+        </div>
+        <div class="col-lg-4">
+
+        </div>
+        <div class="col-lg-4">
+          <div class="form-group form-group-vertical col-xs-12">
+            <label class="form-label ">Team Name</label>
+
+            <ng-select [items]="LstTeam" (change)="onChangeTeam($event)" placeholder="-- select on option --"
+              [(ngModel)]="SelectedTeamId" bindLabel="TeamName" bindValue="Id">
+            </ng-select>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+
+
+
+        <!-- <div class="col-lg-12">
+        <div class="row">
+
+          <div class="col-lg-12" *ngFor="let m of records">
+
+            <span *ngIf="m.EmployeeList.length > 0" colspan="10" class="text-center" data-toggle="collapse"
+              [attr.data-target]="'#demo'+ m.Id" class="accordion-toggle"> {{m.Name}} <i class="fa fa-pencil"
+                aria-hidden="true" style="padding-right: 5px;"></i>
+
+            </span>
+            <div class="accordian-body collapse" id="demo{{m.Id}}" style="padding: 10px;font-size: 12px;">
+
+              <table>
+                <thead>
+                  <tr *ngFor="let n of m.EmployeeList">
+                    <th>
+                      f
+                    </th>
+                    <th>
+
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td *ngFor="let item of i.AttendanceList">
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+              <div *ngFor="let n of m.EmployeeList">
+                <span>
+                  {{n.EmployeeName}}
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div> -->
+
+        <!-- <div class="col-lg-8">
+
+
+
+      </div> -->
+
+
+
+
+
+        <!-- <table class="table  table-container customborder">
+          <thead>
+            <tr>
+              <th scope="col" style="width: 3%; text-align: center !important"></th>
+              <th scope="col" style="width: 8%; text-align: center !important">Emp COde</th>
+              <th scope="col" style="width: 17%;text-align: center !important; ">emp name </th>
+              <th scope="col" style="width: 10%;text-align: center !important" *ngIf="!showAction">Action
+              </th>
+              <th scope="col" style="width: 10%;text-align: center !important" *ngIf="!showAction">
+              </th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of i.SOList;let ii = index; let last = last">
+              <tr style="font-size: 12px;">
+                <td style="width: 3%;text-align: center !important" class="text-center"><input type="checkbox"
+                    [(ngModel)]="item.isSelected" (click)="change(item, i, $event)"> </td>
+                <td style="width: 8%;text-align: center !important" class="text-center"> {{item.Number}}
+                </td>
+                <td style="width: 17%;text-align: right !important;" class="text-center">
+                  {{item.BillableAmount | number : '1.2-2'}}</td>
+                <td style="width: 17%;text-align: right !important;" class="text-center">
+                  {{item.TotalServiceTax | number : '1.2-2'}}</td>
+                <td style="width: 17%;text-align: right !important;" class="text-center">
+                  {{item.TotalMarkup | number : '1.2-2' }}</td>
+                <td style="width: 17%;text-align: right !important;" class="text-center">
+                  {{item.TotalBillAmount | number : '1.2-2' }}</td>
+                <td style="width: 17%;text-align: center !important;" class="text-center"> {{item.Status}}
+                </td>
+                <td *ngIf="!showAction" style="width: 17%;padding: 5px !important;" class="text-center"
+                  data-toggle="collapse" [attr.data-target]="'#demo'+ item.Id" class="accordion-toggle">
+                  <button type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                    style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-pencil"
+                        aria-hidden="true" style="padding-right: 5px;"></i>Edit</span></button>
+                </td>
+                <td *ngIf="!showAction" style="width: 17%;padding: 5px !important;" class="text-center">
+                  <button (click)="previewSaleOrderInvoice(item,'singleItem')" type="button"
+                    class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                    style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-eye"
+                        aria-hidden="true" style="padding-right: 5px;"></i>Preview Invoice</span></button>
+                </td>
+
+
+              </tr>
+              <tr *ngIf="!showAction">
+                <td colspan="12" class="hiddenRow" style="padding: 0px;">
+                  <div class="accordian-body collapse" id="demo{{item.Id}}" style="padding: 10px;font-size: 12px;">
+                    <div class="row">
+
+
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                        <label class="form-label ">Shipping Despatch To </label>
+                        <ng-select [items]="ClientContactList" placeholder="-- select an option --"
+                          [(ngModel)]="item.ShipToClientContactId" bindLabel="Name" bindValue="Id"
+                          (change)="onChange_Despatch(item, $event, i, 'normal');">
+                        </ng-select>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                        <label class="form-label ">Purchase Order No </label>
+                        <input class="form-control" type="text" spellcheck="false" name="PurchaseOrderNo"
+                          [(ngModel)]="item.PurchaseOrderNo" placeholder="INT00034" autocomplete="off">
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                        <label class="form-label ">Company Bank </label>
+                        <ng-select [items]="companyBankList" placeholder="-- select an option --"
+                          [(ngModel)]="item.CompanyBankAccountId" (change)="onChangeBank(item, $event, i, 'normal')"
+                          bindLabel="Details" bindValue="Id">
+                        </ng-select>
+                      </div>
+
+
+                      <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                        <label class="form-label"> Shipping Address </label>
+                        <textarea class="form-control" rows="2" spellcheck="false"
+                          [(ngModel)]="item.ShipToAddressDetails.Address1" id="ShipToAddressDetails"></textarea>
+
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                        <label class="form-label"> Narration </label>
+                        <textarea class="form-control" rows="2" spellcheck="false" [(ngModel)]="item.Narration"
+                          id="Narration"></textarea>
+
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                        <label class="form-label">Remarks</label>
+                        <textarea class="form-control" rows="2" spellcheck="false" [(ngModel)]="item.Remarks"
+                          id="Remarks"></textarea>
+
+                      </div>
+
+
+
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="showAction && last">
+                <td colspan="12" class="hiddenRow" style="padding: 0px;">
+                  <div class="" style="padding: 10px;font-size: 12px;">
+                    <div class="row">
+
+
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                        <label class="form-label ">Shipping Despatch To </label>
+                        <ng-select [items]="ClientContactList" placeholder="-- select an option --"
+                          [(ngModel)]="item.ShipToClientContactId" bindLabel="Name" bindValue="Id"
+                          (change)="onChange_Despatch(item, $event, i, 'lastIndex');">
+                        </ng-select>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                        <label class="form-label ">Purchase Order No </label>
+                        <input class="form-control" type="text" spellcheck="false" name="PurchaseOrderNo"
+                          [(ngModel)]="item.PurchaseOrderNo" (keyup)="onKeyUp($event,'PurchaseOrderNo',i)"
+                          placeholder="INT00034" autocomplete="off">
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                        <label class="form-label ">Company Bank </label>
+                        <ng-select [items]="companyBankList" placeholder="-- select an option --"
+                          [(ngModel)]="item.CompanyBankAccountId" (change)="onChangeBank(item, $event, i, 'lastIndex')"
+                          bindLabel="Details" bindValue="Id">
+                        </ng-select>
+                      </div>
+
+
+                      <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                        <label class="form-label"> Shipping Address </label>
+                        <textarea class="form-control" rows="2" spellcheck="false"
+                          [(ngModel)]="item.ShipToAddressDetails.Address1"
+                          (keyup)="onKeyUp($event,'ShipToAddressDetails',i)" id="ShipToAddressDetails"></textarea>
+
+                      </div>
+                    
+
+                      <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                        <label class="form-label"> Narration </label>
+                        <textarea class="form-control" rows="2" spellcheck="false" [(ngModel)]="item.Narration"
+                          (keyup)="onKeyUp($event,'Narration',i)" id="Narration"></textarea>
+
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-3 col-sm-4">
+                        <label class="form-label">Remarks</label>
+                        <textarea class="form-control" (keyup)="onKeyUp($event,'Remarks',i)" rows="2" spellcheck="false"
+                          [(ngModel)]="item.Remarks" id="Remarks"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+
+          </tbody>
+        </table> -->
+
+        <table class="tree table table-condensed table-hover table-bordered table-responsive watchlist bordered"
+          id="treegridTable" style="font-size: 10px !important;display: block;">
+          <thead>
+            <tr>
+              <th style="font-size: 12px;width: 180px !important;display: block;" class="text-center">Employee Name </th>
+              <th *ngFor="let date of attendanceTableHeader" style="padding: 0.4rem 0.9rem !important;">
+                <div class="row">
+                  <div class="col-lg-12">
+                    {{date.date | date :'d'}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                    {{date.date | date :'MMM'}}
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let it of LstManager;let inx= index">
+
+              <tr class="treegrid-1 root-node" style="border-bottom: 1px solid #e1e5eb;width: 100% !important;">
+                <td colspan="6" style="border-right: 0px !important;padding: 10px;">
+                  <div class="row">
+                    <div class="col-lg-6 text-left" style="font-size: 12px;"
+                      [ngStyle]="{'padding-left':(it.Level == 1) ? '30px' : '10px' }">
+                      {{it.UserDetails.Name}}
+                    </div>
+                    <div class="col-lg-6 text-right">
+                      <span class="text-center" data-toggle="collapse" (click)="doCheckManagerLevel(it,inx)"
+                        matTooltip="See all">
+                        <i class="fa fa-chevron-right" aria-hidden="true" aria-expanded="false"
+                          style="padding-right: 5px;cursor: pointer;"> </i>
+
+                      </span>
+
+                      <div class="spinner-border spinner-border-sm" *ngIf="inx == index && flag" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+
+                    </div>
+                    <!-- <div class="col-lg-6 text-right" *ngIf="it.Level == 1"> 
+                      <span  class="text-center" data-toggle="collapse" (click)="doCheckManagerLevel(it,inx)"   matTooltip="See all Employees"
+                      >
+                        <i class="fa fa-chevron-right" *ngIf="inx == index && !flag"   aria-hidden="true" aria-expanded="false"
+                        style="padding-right: 5px;cursor: pointer;"> </i>
+
+                      </span>
+
+                      <div class="spinner-border spinner-border-sm" *ngIf="inx == index && flag"  role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+
+                    </div> -->
+                  </div>
+
+
+                </td>
+                <!-- <td *ngIf="it.EmployeeList.length > 0" colspan="10" class="text-center" data-toggle="collapse"
+              [attr.data-target]="'#demo1'+ it.Id" class="accordion-toggle">
+              <button type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-pencil"
+                    aria-hidden="true" style="padding-right: 5px;"></i>Edit</span></button>
+            </td> -->
+              </tr>
+
+
+              <!-- <div class="accordian-body collapse" id="demo{{a.Id}}" style="padding: 10px;font-size: 12px;"> -->
+              <ng-container *ngIf="inx == index && !flag">
+
+                <tr class="treegrid-2 treegrid-parent-1 node" *ngFor="let itt of it.EmployeeList">
+
+
+
+
+                  <td  class="dottext" style="font-size: 12px;padding: 5px;text-align: right !important;">{{itt.EmployeeName}}</td>
+
+                  <td *ngFor="let ittt of itt.Attendance" style="padding: 0px !important;">
+
+                    <div *ngIf="ittt.IsWeekOff && ittt.FirstHalf == ittt.SecondHalf && ittt.FirstHalf == 'P'">
+                      <div class="row" style="margin: 0px !important;
+                  background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                  background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div *ngIf="ittt.IsWeekOff && ittt.FirstHalf != ittt.SecondHalf && ittt.FirstHalf == 'P' ">
+                      <div class="row" style="margin: 0px !important;
+                  background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                  background: #D3D3D3 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div *ngIf="ittt.IsWeekOff && ittt.FirstHalf != ittt.SecondHalf && ittt.SecondHalf == 'P' ">
+                      <div class="row" style="margin: 0px !important;
+                  background: #D3D3D3 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                  background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div *ngIf="ittt.IsWeekOff && ittt.FirstHalf != 'P' && ittt.SecondHalf != 'P'">
+                      <div class="row" style="margin: 0px !important;
+                  background: #D3D3D3 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                  background: #D3D3D3 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      *ngIf="(!ittt.IsWeekOff && ittt.FirstHalfApplied == 'EMPTY' && ittt.SecondHalfApplied == 'EMPTY' && ittt.FirstHalf == 'EMPTY' && ittt.SecondHalf == 'EMPTY')">
+                      <div class="row" style="margin: 0px !important;
+                  background: #D3D3D3 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                  background: #D3D3D3 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    <div
+                      *ngIf="(!ittt.IsWeekOff && ittt.FirstHalfApplied != 'null' && ittt.SecondHalfApplied != 'null' &&  ittt.FirstHalfApplied == ittt.SecondHalfApplied  && ittt.FirstHalfApplied !='EMPTY' && ittt.SecondHalf != 'EMPTY')">
+                      <div class="row" style="margin: 0px !important;
+                    background: #f3c74d !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                    background: #f3c74d !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div
+                      *ngIf="(!ittt.IsWeekOff && ittt.FirstHalfApplied != 'null' && ittt.SecondHalfApplied != 'null' && ittt.FirstHalfApplied != ittt.SecondHalfApplied)">
+                      <div class="row" style="margin: 0px !important;
+                    background: #f3c74d !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                background: #f3c74d !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div
+                      *ngIf="( !ittt.IsWeekOff && ittt.FirstHalfApplied != 'null' && ittt.SecondHalfApplied == 'null')">
+                      <div class="row" style="margin: 0px !important;
+                    background: #f3c74d !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="ittt.SecondHalf != 'P'" style="margin: 0px !important;
+                background: #dc3545 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="ittt.SecondHalf == 'P'" style="margin: 0px !important;
+                background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div
+                      *ngIf="(!ittt.IsWeekOff && ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied != 'null')">
+                      <div class="row" style="margin: 0px !important;
+                    background: #dc3545 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="ittt.SecondHalf == 'P'" style="margin: 0px !important;
+                background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="ittt.SecondHalf != 'P'" style="margin: 0px !important;
+                background: #dc3545 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div
+                      *ngIf="(!ittt.IsWeekOff && ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf == ittt.SecondHalf &&  ittt.SecondHalf == 'P')">
+                      <div class="row" style="margin: 0px !important;
+                    background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div
+                      *ngIf="(!ittt.IsWeekOff && ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf == ittt.SecondHalf &&  ittt.SecondHalf != 'P')">
+                      <div class="row" style="margin: 0px !important;
+                    background: #dc3545 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                background: #dc3545 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+
+                    </div>
+                    <div
+                      *ngIf="(!ittt.IsWeekOff && ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf != ittt.SecondHalf && ittt.FirstHalf == 'P' && ittt.SecondHalf != 'P')">
+                      <div class="row" style="margin: 0px !important;
+                    background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                background: #dc3545 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div
+                      *ngIf="(!ittt.IsWeekOff && ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf != ittt.SecondHalf && ittt.FirstHalf != 'P' && ittt.SecondHalf == 'P')">
+                      <div class="row" style="margin: 0px !important;
+                    background: #dc3545 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                background: #28a745 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div
+                      *ngIf="(!ittt.IsWeekOff && ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf != ittt.SecondHalf && ittt.FirstHalf != 'P' && ittt.SecondHalf != 'P')">
+                      <div class="row" style="margin: 0px !important;
+                    background: #dc3545 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+                      <div class="row" style="margin: 0px !important;
+                background: #dc3545 !important;">
+                        <div class="col-lg-12">
+                          <span style="color: transparent;"> . </span>
+
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                    <!-- <div class="row" style="cursor: pointer;text-align: center;">
+                  <div class="col-lg-12">
+
+                    <span style="font-size: 12px;">
+
+
+
+                     
+
+
+
+
+
+
+
+
+                      <div
+                        *ngIf="(ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf == ittt.SecondHalf &&  ittt.SecondHalf == 'P')">
+                        <span class="badge badge-success"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{ittt.FirstHalf}}
+                        </span>
+                      </div>
+                      <div
+                        *ngIf="(ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf == ittt.SecondHalf &&  ittt.SecondHalf != 'P')">
+                        <span class="badge badge-danger"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{ittt.FirstHalf}} </span>
+                      </div>
+                      <div
+                        *ngIf="(ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf != ittt.SecondHalf && ittt.FirstHalf == 'P' && ittt.SecondHalf != 'P')">
+                        <span class="badge badge-success"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{ittt.FirstHalf}} </span> | <span class="badge badge-danger"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{ittt.SecondHalf}}
+                        </span>
+                      </div>
+                      <div
+                        *ngIf="(ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf != ittt.SecondHalf && ittt.FirstHalf != 'P' && ittt.SecondHalf == 'P')">
+                        <span class="badge badge-danger"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{ittt.FirstHalf}} </span> | <span class="badge badge-success"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{ittt.SecondHalf}}
+                        </span>
+                      </div>
+
+
+
+
+                      <div
+                        *ngIf="(ittt.FirstHalfApplied == 'null' && ittt.SecondHalfApplied == 'null' && ittt.FirstHalf != ittt.SecondHalf && ittt.FirstHalf != 'P' && ittt.SecondHalf != 'P')">
+                        <span class="badge badge-danger"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{ittt.FirstHalf}} </span> | <span class="badge badge-danger"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          {{ittt.SecondHalf}}
+                        </span>
+                      </div>
+                     
+                    </span>
+
+
+                  </div>
+                </div> -->
+
+                  </td>
+                </tr>
+              </ng-container>
+
+              <!-- </div> -->
+            </ng-container>
+          </tbody>
+
+        </table>
+
+        <!-- 
+
+
+    <table class="tree table table-condensed table-hover table-bordered table-responsive" id="treegridTable">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Q3 2016</th>
+          <th>Q2 2016</th>
+          <th>Q1 2016</th>
+          <th>Q4 2015</th>
+          <th>Q3 2015</th>
+          <th>Q2 2015</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="treegrid-1 root-node">
+          <td>Assets</td>
+        </tr>
+        <tr class="treegrid-2 treegrid-parent-1 node">
+          <td>Current Assets</td>
+          <td>72,088</td>
+          <td>99,127</td>
+          <td>106,744</td>
+          <td>209,245</td>
+          <td>208,533</td>
+          <td>224,877</td>
+        </tr>
+        <tr class="treegrid-parent-2">
+          <td>Cash and cash equivalents</td>
+          <td>33,774</td>
+          <td>68,896</td>
+          <td>53,365</td>
+          <td>148,013</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-2">
+          <td>Revenue receivable</td>
+          <td>11,850</td>
+          <td>6,452</td>
+          <td>7,318</td>
+          <td>6,476</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-2">
+          <td>Joint interest billing receivable</td>
+          <td>22,217</td>
+          <td>18,560</td>
+          <td>38,665</td>
+          <td>49,374</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-2">
+          <td>Derivative asset</td>
+          <td></td>
+          <td></td>
+          <td>1,277</td>
+          <td>1,508</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-2">
+          <td>Other current assets</td>
+          <td>4,247</td>
+          <td>5,219</td>
+          <td>6,119</td>
+          <td>3,874</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-3 treegrid-parent-1 node">
+          <td>Plant and equipment (less depriciation)</td>
+          <td>96,735</td>
+          <td>102,923</td>
+          <td>138,616</td>
+          <td>168,444</td>
+          <td>223,509</td>
+          <td>272,667</td>
+        </tr>
+        <tr class="treegrid-parent-3">
+          <td>Oil and gas properties, net</td>
+          <td>95,682</td>
+          <td>101,686</td>
+          <td>136,289</td>
+          <td>165,952</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-3">
+          <td>Other property and equipment net</td>
+          <td>1,053</td>
+          <td>1,237</td>
+          <td>2,327</td>
+          <td>2,492</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-4 treegrid-parent-1 node">
+          <td>Other assets (less depriciation)</td>
+          <td>5,546</td>
+          <td>6,674</td>
+          <td>1,533</td>
+          <td>1,630</td>
+          <td>4,929</td>
+          <td>4,929</td>
+        </tr>
+        <tr class="treegrid-parent-1 table-footer">
+          <td>Total Assets</td>
+          <td>$174,369</td>
+          <td>$208,724</td>
+          <td>$246,893</td>
+          <td>$379,319</td>
+          <td>$436,971</td>
+          <td>$503,072</td>
+        </tr>
+        <tr class="treegrid-5 root-node">
+          <td>LIABILITIES AND STOCKHOLDERS’ EQUITY</td>
+        </tr>
+        <tr class="treegrid-6 treegrid-parent-5 node">
+          <td>Current liabilities</td>
+          <td>85,687</td>
+          <td>99,380</td>
+          <td>116,422</td>
+          <td>158,784</td>
+          <td>139,439</td>
+          <td>139,439</td>
+        </tr>
+        <tr class="treegrid-parent-6">
+          <td>Accounts payable to vendors</td>
+          <td>46,166</td>
+          <td>54,379</td>
+          <td>76,815</td>
+          <td>97,999</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-6">
+          <td>Advances from co-owners</td>
+          <td>377</td>
+          <td>577</td>
+          <td>4,097</td>
+          <td>16,118</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-6">
+          <td>Oil and gas revenue payable</td>
+          <td>29,906</td>
+          <td>29,386</td>
+          <td>23,108</td>
+          <td>18,911</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-6">
+          <td>Accrued interest and preffered stock divident</td>
+          <td>397</td>
+          <td>9,938</td>
+          <td>2,942</td>
+          <td>11,720</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-6">
+          <td>Asset retirement obligation</td>
+          <td>1,132</td>
+          <td>1,496</td>
+          <td>5,545</td>
+          <td>6,015</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-6">
+          <td>Derivative liability</td>
+          <td>228</td>
+          <td>473</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-6">
+          <td>Accrued acquisition costs</td>
+          <td>5,000</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-6">
+          <td>Other accrued liabilities</td>
+          <td>2,481</td>
+          <td>3,131</td>
+          <td>3,915</td>
+          <td>3,612</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-7 treegrid-parent-5 node">
+          <td>Long term liabilities (long term debt)</td>
+          <td>280,930</td>
+          <td>291,290</td>
+          <td>291,622</td>
+          <td>347,008</td>
+          <td>350,000</td>
+          <td>350,000</td>
+        </tr>
+        <tr class="treegrid-parent-7">
+          <td>10% Senior Notes due</td>
+          <td>280,930</td>
+          <td>291,290</td>
+          <td>291,622</td>
+          <td>347,008</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-8 treegrid-parent-5 node">
+          <td>Commitments and contingencies</td>
+          <td>280,930</td>
+          <td>291,290</td>
+          <td>291,622</td>
+          <td>347,008</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-9 treegrid-parent-5 node">
+          <td>Other long-term obligations</td>
+          <td>44,562</td>
+          <td>42,656</td>
+          <td>38,504</td>
+          <td>36,594</td>
+          <td>43,613</td>
+          <td>53,728</td>
+        </tr>
+        <tr class="treegrid-parent-9">
+          <td>Asset retirement obligation</td>
+          <td>40,593</td>
+          <td>39,986</td>
+          <td>37,155</td>
+          <td>36,541</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-parent-9">
+          <td>Other long-term liabilities</td>
+          <td>3,969</td>
+          <td>2,670</td>
+          <td>1,349</td>
+          <td>53</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="treegrid-10 treegrid-parent-5 node">
+          <td>Preferred stock</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr class="treegrid-11 treegrid-parent-5 node">
+          <td>Common stock</td>
+          <td>21</td>
+          <td>18</td>
+          <td>70</td>
+          <td>16</td>
+          <td>65</td>
+          <td>65</td>
+        </tr>
+        <tr class="treegrid-12 treegrid-parent-5 node">
+          <td>Paid-in capital</td>
+          <td>304,445</td>
+          <td>293,595</td>
+          <td>293,072</td>
+          <td>290,432</td>
+          <td>290,066</td>
+          <td>288,767</td>
+        </tr>
+        <tr class="treegrid-12 treegrid-parent-5 node">
+          <td>Other adjustments</td>
+          <td>-541277</td>
+          <td>-518216</td>
+          <td>-492798</td>
+          <td>-453516</td>
+          <td>-386213</td>
+          <td>-334293</td>
+        </tr>
+        <tr class="treegrid-parent-5 table-footer">
+          <td>Total liabilities and stockholders’ equity</td>
+          <td>174,369</td>
+          <td>208,724</td>
+          <td>246,893</td>
+          <td>379,319</td>
+          <td>436,971</td>
+          <td>503,072</td>
+        </tr>
+      </tbody>
+    </table> -->
+
+
+      </div>
+    </div>
+  </div>
+</div>

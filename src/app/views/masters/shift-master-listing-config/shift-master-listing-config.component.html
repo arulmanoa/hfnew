@@ -1,0 +1,153 @@
+<div class="page-wrapper">
+    <div class="page-content">
+      <app-loading-screen></app-loading-screen>
+      <div class="text-center ma-5" *ngIf="spinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+              <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+              Please wait...
+          </button>
+      </div>
+      <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="!spinner">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="headerbar">
+              <div><h5 class="">{{pageTitle}}</h5></div>
+            </div>
+          </div>
+          <div class="col-md-4 text-right">
+            <ul class="list-inline">
+              <li class="list-inline-item ng-star-inserted">
+                <button class="btn btn-sm btn-default" tooltip="Close" tooltip-placement="bottom" (click)="backToShiftList()">
+                  <i class="mdi mdi-close font-size-md"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="form-items" *ngIf="!spinner">
+            <form [formGroup]="shiftMasterForm">
+                <div class="row">
+                    <div class="col-md-4 mb-5">
+                        <label class="form-label "> Client <span class="required">*</span></label>
+                        <ng-select [items]="clientList" class="mt-1" (change)="onChangeClient($event)"
+                            placeholder="select a client" bindLabel="Name" bindValue="Id" formControlName="clientId"
+                            [searchable]="true" [closeOnSelect]="true" [clearable]="false" [readonly]="isEdit">
+                        </ng-select>
+                    </div>
+                    <div class="col-md-4 mb-5 text-right">
+                        <label class="form-label">Status</label>
+                        <div class="p-t-10">
+                            <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="statusActive" formControlName="statusActive" />
+                                <span class="el-switch-style"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group  col-xs-12 col-sm-4">
+                        <label class="form-label">Code <span class="required">*</span></label>
+                        <input class="form-control" type="text" name="Code" formControlName="Code"
+                            placeholder="Code " autocomplete="none|false|no" [readonly]="isEdit">
+
+                        <div *ngIf="shiftMasterForm.get('Code').errors && shiftMasterForm.get('Code').touched "
+                            class="invalid-feedback">
+                            <div *ngIf="g.Code.errors">Code is required
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group  col-xs-12 col-sm-4">
+                        <label class="form-label">Name <span class="required">* </span></label>
+                        <input class="form-control" type="text" name="Name" formControlName="Name"
+                            placeholder="Name" autocomplete="none|false|no">
+
+                        <div *ngIf="shiftMasterForm.get('Name').errors && shiftMasterForm.get('Name').touched "
+                            class="invalid-feedback">
+                            <div *ngIf="g.Name.errors">Name is required
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group  col-xs-12 col-sm-4">
+                        <label class="form-label">Description </label>
+                        <!-- <input class="form-control" type="text" name="Description" formControlName="Description" placeholder="Description"> -->
+                        <textarea id="desc" class="form-control" placeholder="Description"
+                            formControlName="Description" rows="3" style="height:4em;width: 97.5%"> </textarea>
+                        <div *ngIf="shiftMasterForm.get('Description').errors && shiftMasterForm.get('Description').touched "
+                            class="invalid-feedback">
+                            <div *ngIf="g.Description.errors">Description is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group  col-xs-12 col-sm-4">
+                        <label class="form-label">Start Time <span class="required">*
+                            </span></label>
+                        <input class="form-control timepicker" type="time" name="startTime"
+                            formControlName="startTime" placeholder="09:00 AM" (input)="onChangeStartTime($event)">
+
+                        <div *ngIf="shiftMasterForm.get('startTime').errors && shiftMasterForm.get('startTime').touched "
+                            class="invalid-feedback">
+                            <div *ngIf="g.startTime.errors">Start Time is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group  col-xs-12 col-sm-4">
+                        <label class="form-label">FirstHalf End Time <span class="required">*</span></label>
+                        <input class="form-control timepicker" type="time" name="firstHalfEndTime"
+                            formControlName="firstHalfEndTime" placeholder="01:00 PM">
+
+                        <div *ngIf="shiftMasterForm.get('firstHalfEndTime').errors && shiftMasterForm.get('firstHalfEndTime').touched "
+                            class="invalid-feedback">
+                            <div *ngIf="g.firstHalfEndTime.errors">FirstHalf End Time is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-xs-12 col-sm-4">
+                        <label class="form-label ">SecondHalf Start Time <span class="required">* </span></label>
+                        <input class="form-control timepicker" type="time" name="secondHalfStartTime"
+                            formControlName="secondHalfStartTime" placeholder="01:30 PM">
+
+                        <div *ngIf="shiftMasterForm.get('secondHalfStartTime').errors && shiftMasterForm.get('secondHalfStartTime').touched "
+                            class="invalid-feedback">
+                            <div *ngIf="g.secondHalfStartTime.errors">SecondHalf Start Time is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12 col-sm-4">
+                        <label class="form-label">End Time <span class="required">*</span></label>
+                        <input class="form-control timepicker" type="time" name="endTime" formControlName="endTime"
+                            placeholder="06:00 PM" (input)="onChangeEndTime($event)">
+
+                        <div *ngIf="shiftMasterForm.get('endTime').errors && shiftMasterForm.get('endTime').touched "
+                            class="invalid-feedback">
+                            <div *ngIf="g.endTime.errors">End Time is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group  col-xs-12 col-sm-4">
+                        <label class="form-label">Default working Hours </label>
+                        <input class="form-control" type="text" name="workingHours" formControlName="workingHours"
+                            placeholder="working Hours" disabled>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="row ml-1 mt-5">
+          <div class="ml-auto mr-3">
+            <button type="button" class="btn btn-default" style="margin-right: 8px;" (click)="backToShiftList()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="submitShiftMaster()" [disabled]="this.shiftMasterForm.invalid">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

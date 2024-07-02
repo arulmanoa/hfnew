@@ -1,0 +1,187 @@
+<form [formGroup]="additionalInfoForm" class="row">
+  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="IsCandidate">
+    <label class="form-label" for="MarriageDate">Marriage Date <span class="required" *ngIf="isFieldRequired('MarriageDate')">*</span>  </label>
+    <input type="text" id="MarriageDate" formControlName="MarriageDate" bsDatepicker placement="bottom"
+      class="form-control"
+      [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+      placeholder="12-12-1990" [ngClass]="{'is-invalid': submitted && g.MarriageDate.errors }" [maxDate]="currentDate">
+
+
+    <div *ngIf="submitted && additionalInfoForm.get('MarriageDate').invalid" class="help-block">
+      Marriage Date is required
+    </div>
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="IsCandidate">
+    <label class="form-label" for="Religion">Religion <span class="required" *ngIf="isFieldRequired('Religion')">*</span> </label>
+
+    <ng-select [items]="onboardingAdditionalInfo.LstReligion" placeholder="-- select an option --"
+      formControlName="Religion" [ngClass]="{'ng-touched': submitted && g.Religion.errors }" bindLabel="Name"
+      bindValue="Id">
+    </ng-select>
+
+    <div *ngIf="submitted && g.Religion.invalid" class="help-block">
+      <div *ngIf="g.Religion.errors.required"> Religion is required
+      </div>
+    </div>
+
+
+  </div> -->
+  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6" style="padding-top: 5px; padding-bottom: 5px;" *ngIf="shouldDisplayColumnName('Department')">
+    <label class="form-label" for="Department">Department <span class="required" *ngIf="isFieldRequired('Department')">*</span> </label>
+
+    <ng-select [items]="onboardingAdditionalInfo.LstEmployeeDepartment" placeholder="Select Department"
+      formControlName="Department" [ngClass]="{'ng-touched': submitted && g.Department.errors }" bindLabel="Name"
+      bindValue="Id">
+    </ng-select>
+
+    <div *ngIf="submitted && g.Department.invalid" class="help-block">
+      <div *ngIf="g.Department.errors.required"> Department is required
+      </div>
+    </div>
+
+  </div> -->
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"  style="padding-top: 5px; padding-bottom: 5px;" *ngIf="shouldDisplayColumnName('JobProfile')">
+    <label class="form-label" for="JobProfile">Profile / Job Role <span class="required" *ngIf="isFieldRequired('JobProfile')">*</span></label>
+    <!-- <input type="text" id="JobProfile" formControlName="JobProfile" class="form-control"
+      [ngClass]="{'is-invalid': submitted && g.JobProfile.errors }" placeholder=" Job Profile"> -->
+
+      <ng-select [items]="onboardingAdditionalInfo.LstJobProfile" placeholder="Job Profile"
+      formControlName="JobProfile" [ngClass]="{'ng-touched': submitted && g.JobProfile.errors }" bindLabel="Name"
+      bindValue="Id">
+     </ng-select>
+
+
+    <div *ngIf="submitted && g.JobProfile.invalid" class="help-block">
+      <div *ngIf="g.JobProfile.errors.required"> Job Profile is required
+      </div>
+    </div>
+
+
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"  style="padding-top: 5px; padding-bottom: 5px;" *ngIf="shouldDisplayColumnName('SubEmploymentType')">
+    <label class="form-label" for="SubEmploymentType">Sub Employment Type  <span class="required" *ngIf="isFieldRequired('SubEmploymentType')">*</span></label>
+
+
+    <ng-select [items]="onboardingAdditionalInfo.LstSubEmploymentType" placeholder="Select Sub Employment Type"
+      formControlName="SubEmploymentType" [ngClass]="{'ng-touched': submitted && g.SubEmploymentType.errors }"
+      bindLabel="Name" bindValue="Id">
+    </ng-select>
+
+
+
+    <div *ngIf="submitted && g.SubEmploymentType.invalid" class="help-block">
+      <div *ngIf="g.SubEmploymentType.errors.required"> Sub Employment Type is required
+      </div>
+    </div>
+
+
+  </div>
+  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6"  style="padding-top: 5px; padding-bottom: 5px;" *ngIf="shouldDisplayColumnName('Category')">
+    <label class="form-label" for="Category">Category <span class="required" *ngIf="isFieldRequired('Category')">*</span></label>
+
+
+
+    <ng-select [items]="onboardingAdditionalInfo.LstEmployeeCategory" placeholder="Select Category"
+      formControlName="Category" [ngClass]="{'ng-touched': submitted && g.Category.errors }" bindLabel="Name"
+      bindValue="Id">
+    </ng-select>
+
+
+    <div *ngIf="submitted && g.Category.invalid" class="help-block">
+      <div *ngIf="g.Category.errors.required"> Category is required
+      </div>
+    </div>
+
+
+  </div> -->
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"  style="padding-top: 5px; padding-bottom: 5px;" *ngIf="shouldDisplayColumnName('SubEmploymentCategory')">
+    <label class="form-label" for="SubEmploymentCategory">Sub Employment Category <span class="required" *ngIf="isFieldRequired('SubEmploymentCategory')">*</span></label>
+
+
+
+    <ng-select [items]="onboardingAdditionalInfo.LstSubEmploymentCategory" placeholder="Sub Employment Category"
+      formControlName="SubEmploymentCategory" [ngClass]="{'ng-touched': submitted && g.SubEmploymentCategory.errors }" bindLabel="Name"
+      bindValue="Id">
+    </ng-select>
+
+
+    <div *ngIf="submitted && g.SubEmploymentCategory.invalid" class="help-block">
+      <div *ngIf="g.SubEmploymentCategory.errors.required"> Sub Employment Category is required
+      </div>
+    </div>
+
+
+  </div>
+  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6"  style="padding-top: 5px; padding-bottom: 5px;" *ngIf="shouldDisplayColumnName('Division')">
+    <label class="form-label" for="Division">Division <span class="required" *ngIf="isFieldRequired('Division')">*</span></label>
+
+
+
+    <ng-select [items]="onboardingAdditionalInfo.LstEmployeeDivision" placeholder="Select Division"
+      formControlName="Division" [ngClass]="{'ng-touched': submitted && g.Division.errors }" bindLabel="Name"
+      bindValue="Id">
+    </ng-select>
+
+
+
+    <div *ngIf="submitted && g.Division.invalid" class="help-block">
+      <div *ngIf="g.Division.errors.required"> Division is required
+      </div>
+    </div>
+
+  </div> -->
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"  style="padding-top: 5px; padding-bottom: 5px;" *ngIf="shouldDisplayColumnName('Level')">
+    <label class="form-label" for="Level">Level <span class="required" *ngIf="isFieldRequired('Level')">*</span></label>
+
+    <ng-select [items]="onboardingAdditionalInfo.LstEmployeeLevel" placeholder="Select Level" formControlName="Level"
+      [ngClass]="{'ng-touched': submitted && g.Level.errors }" bindLabel="Name" bindValue="Id" disabled>
+    </ng-select>
+
+    <div *ngIf="submitted && additionalInfoForm.get('Level').invalid" class="help-block">
+      Level is required
+    </div>
+
+  </div>
+
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="CostCityCenter">Cost City Center <span class="required" *ngIf="isFieldRequired('CostCityCenter')">*</span></label>
+
+    <ng-select [items]="onboardingAdditionalInfo.LstCostCityCenter" placeholder="Cost City Center" formControlName="CostCityCenter"
+      [ngClass]="{'ng-touched': submitted && g.CostCityCenter.errors }" bindLabel="Name" bindValue="Id">
+    </ng-select>
+
+    <div *ngIf="submitted && additionalInfoForm.get('CostCityCenter').invalid" class="help-block">
+      Cost City Center is required
+    </div>
+ 
+  </div>
+
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="EmploymentZone"> Zone <span class="required" *ngIf="isFieldRequired('EmploymentZone')">*</span></label>
+
+    <ng-select [items]="onboardingAdditionalInfo.LstClientZone" placeholder="Zone" formControlName="EmploymentZone"
+      [ngClass]="{'ng-touched': submitted && g.EmploymentZone.errors }" bindLabel="Name" bindValue="Id">
+    </ng-select>
+
+    <div *ngIf="submitted && additionalInfoForm.get('EmploymentZone').invalid" class="help-block">
+      Zone is required
+    </div>
+
+  </div>
+
+  <!-- 
+
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="Building">Building/Campus <span class="required" *ngIf="isFieldRequired('Building')">*</span></label>
+
+    <ng-select [items]="onboardingAdditionalInfo.LstBuildings" placeholder="Building/Campus" formControlName="Building"
+      [ngClass]="{'ng-touched': submitted && g.Building.errors }" bindLabel="Name" bindValue="Id">
+    </ng-select>
+
+    <div *ngIf="submitted && additionalInfoForm.get('Building').invalid" class="help-block">
+      Building/Campus is required
+    </div>
+
+  </div> -->
+ 
+</form>

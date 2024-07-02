@@ -1,0 +1,61 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+        <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                Please wait...
+            </button>
+        </div>
+        <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="!spinner">
+            <div class="row">
+                <div class="col-12 d-flex">
+                    <div class="col-md-4 text-left" *ngIf="businessType == 3 ">
+                        <label class="form-label searchbar-label">Client Name </label>
+                        <ng-select [items]="clientList" (change)="onChangeClient($event)" [[searchable]="true"
+                            [closeOnSelect]="true" [clearable]="false" [multiple]="false" placeholder="Choose ..."
+                            bindLabel="Name" bindValue="Id" [(ngModel)]="clientId">
+                        </ng-select>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <label class="form-label searchbar-label">Project</label>
+                        <ng-select [items]="projectList" (change)="onChangeProject($event)" [searchable]="true"
+                            [closeOnSelect]="true" [clearable]="false" [multiple]="false" placeholder="Choose ..."
+                            bindLabel="Name" bindValue="Id" [(ngModel)]="projectId">
+                        </ng-select>
+                    </div>
+                    <div class="col-md-7 mt-4">
+                        <button type="submit" class="btn btn-primary" (click)="doSearch()"
+                            [disabled]="clientId == '' && projectId == ''">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-right mb-2">
+                    <button type="button" class="btn btn-primary" (click)="redirectToCreationPage()"
+                        style="border-radius: 6px;">
+                        <i class="mdi mdi-note-plus-outline m-r-xs"></i>
+                        Add Activity
+                    </button>
+                </div>
+
+                <div class="col-md-12 text-center mb-2" *ngIf="projectData && projectData.length === 0">
+                    No Records Found !
+                </div>
+                <div class="table m-2">
+                    <div class="w-100" *ngIf="projectData && projectData.length > 0">
+                        <angular-slickgrid gridId="grid1" [data]="projectData" [columnDefinitions]="columnDefinitions"
+                            [gridOptions]="gridOptions" [dataset]="projectData" gridWidth="100%"
+                            (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+                            (onAngularGridCreated)="angularGridReady($event)">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>

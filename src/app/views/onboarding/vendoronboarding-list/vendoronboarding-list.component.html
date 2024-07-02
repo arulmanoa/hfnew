@@ -1,0 +1,239 @@
+<div class="page-wrapper">
+  <div class="page-content">
+      <app-loading-screen></app-loading-screen>
+
+      <div class="row m-t-b-10">
+
+          <div class="col-lg-6">
+              <!-- <ul class="list-inline">
+
+                  <div class="showGirdActionButtons" *ngIf="!selectedmigrationRecords?.length && !convertedJSON?.length">
+                      <button class="btn btn-default btn-sm m-r-sm " (click)="import_data()">
+                          <i class="mdi mdi-file-export m-r-xs" style="color: #0a609eeb;"></i>
+                          Bulk Request
+                      </button>
+                  </div>
+                  <div class="showGirdActionButtons" *ngIf="selectedmigrationRecords?.length> 0">
+                      <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                          <div class="massOperationsPanel d-i-b">
+
+                              <button class="btn btn-default btn-sm m-r-sm " (click)="recall(selectedmigrationRecords)">
+                                  <i class="mdi mdi-thumb-up-outline m-r-xs"></i>
+                                  Claim Offer
+                              </button>
+                             
+                          </div>
+                      </div>
+                  </div>
+
+
+              </ul> -->
+
+          </div>
+
+          <!--end col-->
+          <div class="col-lg-6 text-right">
+              <div class="text-right">
+                  <ul class="list-inline">
+                      <li class="list-inline-item" *ngIf="!convertedJSON?.length"><button type="button" class="btn btn-primary" (click)="addCandidates()"><i class="mdi mdi-library-plus m-r-xs"></i> New
+                              Request</button></li>
+
+                      <li class="list-inline-item" *ngIf="!convertedJSON?.length">
+                          <button type="button" class="btn btn-primary" (click)="doRefresh()"><i class="mdi mdi-refresh m-r-xs"></i> Refresh</button>
+                      </li>
+
+                      <li class="list-inline-item" *ngIf="convertedJSON?.length > 0">
+                          <button type="button" class="btn btn-default" (click)="cancelRequest()"><i class="mdi mdi-close-circle-outline m-r-xs"></i> Close </button>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+          <!--end col-->
+      </div>
+      <!-- end row  -->
+      <br>
+
+      <div class="content m-b report-content" *ngIf="!convertedJSON?.length">
+          <ngb-tabset (tabChange)="loadData($event)" [(activeId)]="activeTabName">
+              <ngb-tab id="myBucket">
+                  <ng-template ngbTabTitle><i class="fa fa-bitbucket" aria-hidden="true"></i>&nbsp;&nbsp;{{AlternativeText}}
+                  </ng-template>
+                  <ng-template ngbTabContent>
+
+                      <ngb-tabset>
+
+                          <ngb-tab>
+                              <ng-template ngbTabTitle><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;&nbsp;Pending</ng-template>
+                              <ng-template ngbTabContent>
+
+                                  <div class="text-center ma-5" *ngIf="spinner">
+                                      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                          <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                                              role="status" aria-hidden="true"></span>
+                                          Please wait...
+                                      </button>
+                                  </div>
+
+                                  <div *ngIf="!spinner">
+                                      <angular-slickgrid gridId="grdInBucket" [columnDefinitions]="inBucketColumnDefinitions" [gridOptions]="inBucketGridOptions" [dataset]="inBucketList" (onAngularGridCreated)="inBucketGridReady($event)" gridWidth="100%">
+                                      </angular-slickgrid>
+                                  </div>
+                              </ng-template>
+                          </ngb-tab>
+
+                          <ngb-tab>
+                              <ng-template ngbTabTitle><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;&nbsp;Saved</ng-template>
+                              <ng-template ngbTabContent>
+                                  <div class="text-center ma-5" *ngIf="spinner">
+                                      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                          <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                                              role="status" aria-hidden="true"></span>
+                                          Please wait...
+                                      </button>
+                                  </div>
+
+                                  <div *ngIf="!spinner">
+                                      <angular-slickgrid gridId="grdInSavedBucket" [columnDefinitions]="inSavedBucketColumnDefinitions" [gridOptions]="inSavedBucketGridOptions" [dataset]="inSavedBucketList" (onAngularGridCreated)="inSavedBucketGridReady($event)" gridWidth="100%">
+                                      </angular-slickgrid>
+                                  </div>
+                              </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                              <ng-template ngbTabTitle><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;&nbsp;Rejected</ng-template>
+                              <ng-template ngbTabContent>
+                                  <div class="text-center ma-5" *ngIf="spinner">
+                                      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                          <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                                              role="status" aria-hidden="true"></span>
+                                          Please wait...
+                                      </button>
+                                  </div>
+
+                                  <div *ngIf="!spinner">
+                                      <angular-slickgrid gridId="grdInRejectedBucket" [columnDefinitions]="inRejectedBucketColumnDefinitions" [gridOptions]="inRejectedBucketGridOptions" [dataset]="inRejectedBucketList" (onAngularGridCreated)="inRejectedBucketGridReady($event)" gridWidth="100%">
+                                      </angular-slickgrid>
+                                  </div>
+                              </ng-template>
+                          </ngb-tab>
+
+
+                      </ngb-tabset>
+                      <!-- <angular-slickgrid 
+                  (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)" gridWidth="100%">
+              </angular-slickgrid> -->
+                  </ng-template>
+              </ngb-tab>          
+          </ngb-tabset>
+
+
+
+
+      </div>
+
+      <div class="content m-b report-content" *ngIf="convertedJSON?.length > 0">
+          <div class="pull-left" *ngIf="showFailed">
+              <div class="pretty p-switch p-fill">
+                  <input type="checkbox" [(ngModel)]="showFailed_item" (change)="showonlyFailedItems()" />
+                  <div class="state p-danger">
+                      <label>Show only failed</label>
+                  </div>
+
+              </div>
+
+
+          </div>
+          <div style="display: inline;" *ngIf="willDownload">
+              <a id="download" style="cursor:pointer;text-decoration: underline;" (click)="setDownload()"> Download Excel File (Export)</a>
+          </div>
+          <div class="pull-right">
+              <button class="btn btn-sm btn-default m-r-xs" (click)="Validate('false')"> <i
+                      class="mdi mdi-checkbox-marked-circle-outline"></i> Validate</button>
+              <button class="btn btn-sm btn-primary ng-binding" (click)="ValidateAndSubmit()"> <i
+                      class="mdi mdi-check-all"></i>
+                  Validate and Submit <span></span></button>
+          </div>
+          <br>
+          <br>
+
+          <div style="overflow-x:auto;width: 100%;">
+              <table *ngIf="convertedJSON?.length > 0" class="table table-bordered table-striped table-responsive-stack deallist-tbl" id="dataTable">
+                  <thead [style.width.px]="tblWidth">
+                      <tr>
+                          <th *ngFor="let head of convertedJSON[0] | keys" [style.width.px]="tblWidth" [ngStyle]="{'min-width':head == 'ValidationRemarks' ? '700px': '140px'}">{{getLetterSpace(head)}}</th>
+                      </tr>
+                  </thead>
+                  <tbody [style.width.px]="tblWidth">
+                      <tr *ngFor="let item of convertedJSON" [ngStyle]="{'color':item.IsValid == false ? 'red' : 'green' ,'min-width':item.ValidationRemarks != null || item.ValidationRemarks == null ? '700px': '140px', 'font-size': item.ValidationRemarks != null ? '10px': '12px'}">
+                          <td *ngFor="let list of item | keys"> {{item[list]}}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+
+
+      </div>
+
+
+  </div>
+</div>
+
+
+
+
+<div id="popup_import_data" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_import_data" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+      <div class="modal-dialog modal-sm modal-dialog-centered" style="max-width: 800px !important">
+          <div class="modal-content">
+              <div class="modal-header" style="padding: 15px !important;">
+                  <h4 class="modal-title pull-left">Bulk Request</h4>
+
+
+                  <div class="modal-close" (click)="modal_dismiss()"><span class="mdi mdi-close pull-left"></span>
+                  </div>
+
+
+              </div>
+
+
+              <div class="modal-body">
+                  <p>Import transfer into port from Excel files. Choose a file to upload</p>
+                  <p class="secondary-text m-b-lg"><a (click)="download_template()" href="assets/file/BulkImportTemplate.xlsx" style="color: #1f62ff;cursor: pointer;">Click here</a> to download a sample file </p>
+                  <div class="row">
+
+
+                      <div class="col-12">
+
+                          <input type="file" (change)="onFileChange($event)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" #inputFile/>
+
+                      </div>
+                      <br>
+                      <br>
+
+
+
+
+                      <div class="wrapper-lg bg-white tips-listing">
+                          <h3><i class="mdi mdi-lightbulb-on-outline m-r text-warning pull-left"></i>Tips for import</h3>
+                          <ul>
+                              <li> Import excel file first, Importing in this order will ensure that all records are related correctly.</li>
+                              <li> Setup <a>custom fields</a> before import.</li>
+                              <li> We support file limits upto 100. If your file limit is larger than 100, we suggest you break it up in to multiple files.</li>
+                              <li> The first row of your import file must be the column headers you wish to import.
+                              </li>
+                              <li hidden=""> Duplicate deals check will be performed on Email or Mobile Number. </li>
+                              <li> Unexpected errors may occur if XLS file do have any special styles, combo filters or images. </li>
+                              <li> By default, the character encoding is UTF-8 character set will be escaped. </li>
+                              <li> We suggest you to import a small set of sample data, before importing your actual data. </li>
+                              <li> Description field only supports 2000 characters max. </li>
+
+                          </ul>
+                      </div>
+
+
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  </div>
+</div>

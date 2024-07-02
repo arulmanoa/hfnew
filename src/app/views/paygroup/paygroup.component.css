@@ -1,0 +1,40 @@
+.bg-shadow {
+    box-shadow: 0 6px 15px rgba(0,0,0,.15);
+}
+
+#accordionParent .card-header::before {
+    font-family: "Material Icons";
+    content: "\e5cc";
+    font-weight: 600;
+    text-align: center;
+    transition: transform .25s;
+    transform: rotate(90deg);
+    background-color: rgba(96,97,102,.15);
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 50%;
+    font-size: 12px;
+    float: right;
+    position: static;
+    margin-top: 13px;
+    margin-right: 15px;
+    color: #000;
+}
+
+#accordionParent .card-header.collapsed::before {
+    transform: rotate(-90deg);
+}
+
+#pgOne {
+    border-bottom: none !important;
+}
+
+.card-header-title {
+    align-items: center;
+    color: #363636 !important;
+    display: flex;
+    flex-grow: 1;
+    font-weight: 600;
+}
+

@@ -1,0 +1,109 @@
+<div>
+
+
+    <div id="mySidenav" [ngClass]="menuClass" (window:resize)="onResize($event)">
+
+        <div style="background-color: white !important;" *ngIf="dynamicLogo == true">
+            <!-- <a href="javascript:;"  >
+            <img class="logo-size" *ngIf="dynamicLogo == false" src='assets/Images/clientlogo/{{clientLogoLink}}' alt="ciel" style="height: 48px;
+            text-align: center; padding-top: 5px;
+            display: block;
+            margin: 0 auto;"> -->
+
+            <a href="javascript:;">
+                <!-- <img *ngIf="dynamicLogo == false" src='assets/Images/clientlogo/{{clientLogoLink}}' alt="company logo"> -->
+
+                <img class="logo-size" *ngIf="dynamicLogo == true" src='assets/Images/clientlogo/{{clientminiLogoLink}}'
+                    alt="logo" style="height: 64px;text-align: center;    padding-top: 8px;display: block;margin: 0 auto;">
+            </a>
+        </div>
+
+        <div class="" style="background-color: white !important;" *ngIf="dynamicLogo == false">
+            <img src='assets/Images/clientlogo/{{clientLogoLink}}' alt="Company logo" style="width:100%;height: 64px;
+            "/>
+        </div>
+
+
+        <!-- <a *ngIf="!isDesktopView" href="javascript:void(0);" class="icon" (click)="expandMobileView()">
+            <i class="fa fa-bars"></i>
+        </a>
+        <a *ngIf="!isDesktopView" class="active">Integrum</a>
+        -->
+        <div id="myLinks">
+            <div id="links">
+                <app-menuitemloader [MenuItems]="Menu" [isCollapsed]="isCollapsed" [isDesktopView]="isDesktopView"
+                    [isFirstMenu]="isFirstMenu"></app-menuitemloader>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div id="main" *ngIf="isDesktopView;">
+        <div class="iconContainer">
+            <div class="row">
+                <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6 col-xxs-6 col-6" style="width: 20%">
+
+                    <i id="OpenCloseBar" style="padding-top: 1.5em;color: #858585;cursor: pointer;" class="menuicons"
+                        (click)='openNav()' [ngClass]="expIconClass"></i>
+                    <h5 class="mt-d">
+                        <app-breadcrumb></app-breadcrumb>
+                    </h5>
+
+
+                    <!-- <ul class="breadcrumbs">
+                        <li *ngFor="let crumb of crumbs">
+                          <a >{{crumb.text}}</a>
+                        </li>
+                      </ul> -->
+
+
+                    <!-- <div class="col">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item" 
+                            *ngFor="let item of breadcrumbList; let i = index"
+                            [class.active]="i===breadcrumbList.length-1">
+                            <a [routerLink]="item.path" *ngIf="i!==breadcrumbList.length-1">
+                              {{ item.name }}
+                            </a>
+                            <span *ngIf="i===breadcrumbList.length-1">{{ item.name }}</span>
+                          </li>
+                        </ol>
+                      </div> -->
+                </div>
+                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 col-xxs-6 col-6" style="width: 80%">
+                    <app-header (toggleRoleProvider)="onChangeUIRole($event)"
+                        (toggleClientlogoProvider)="onChangeClientName($event)"></app-header>
+                </div>
+            </div>
+        </div>
+
+
+        <main class="col-12 col-sm-12 col-lg-12 maincontent" style="padding-right:0;">
+            <div id="content">
+                <nav class="navbar navbar-default p-0" style="background-color: #ebeff3;">
+                <!-- <nav class="navbar navbar-default" style="padding-right:0;padding-left: 0px;
+              padding-top: 0px;background-color: #ebeff3;height: 100%;"> -->
+              <div class="" style="width:100%; overflow-x: auto; overflow-y:auto;padding-bottom:0">
+                    <!-- <div class="" style="width:100%; overflow-x: auto; overflow-y:auto;height: 100%;padding-bottom:0"> -->
+                        <div class="navbar-header">
+                            <!-- <button (click)="openJotForm()"  class="mat-fab-bottom-right" mat-fab matTooltip="Help Desk">
+                                <mat-icon class="icon">forum</mat-icon>
+                              </button>  -->
+                            <router-outlet (activate)="onActivate($event)"></router-outlet>
+
+                            <br />
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </main>
+
+        <!-- <ng-template #collapse><i id="OpenCloseBar" (click)=" closeNav()" class="fa fa-bars"></i></ng-template> -->
+    </div>
+
+
+
+
+</div>

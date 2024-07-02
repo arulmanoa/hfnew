@@ -1,0 +1,87 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-4 col-sm-4">         
+        <ul class="list-inline">
+          <div class="showGirdActionButtons">
+            <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+              <div class="massOperationsPanel d-i-b">                          
+                <div class="col-lg-12 col-xs-12">
+
+                  <div class="form-group">
+                    <!-- <label>Country</label> -->
+                    <ng-select #select [items]="country" (change)="onCountryChange($event)" [searchable]="true" bindValue="Id" bindLabel="Name" [(ngModel)]="countryId" placeholder="-- Choose Country --">
+                      <ng-template ng-header-tmp>
+                        <input placeholder="Search" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select.filter($event.target.value)" />
+                      </ng-template>
+                    </ng-select>               
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ul>
+      </div>
+      <!--end col-->
+
+      <div class="col-12 col-md-4 col-lg-4 col-sm-4">         
+        <ul class="list-inline">
+          <div class="showGirdActionButtons">
+            <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+              <div class="massOperationsPanel d-i-b">                          
+                <div class="col-lg-12 col-xs-12">
+
+                  <div class="form-group">
+                    <!-- <label>State</label> -->
+                    <ng-select #select [items]="ListOfstate"  (change)="onStateChange($event)"  [searchable]="true" bindValue="Id" bindLabel="Name" [(ngModel)]="stateId" placeholder="-- Choose State --">
+                      <ng-template ng-header-tmp>
+                        <input placeholder="Search" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select.filter($event.target.value)" />
+                      </ng-template>
+                    </ng-select>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ul>
+      </div>
+      <!--end col-->
+      
+      <div class="col-12 col-md-4 col-lg-4 col-sm-4 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <!-- 
+            <li class="list-inline-item"><button type="button" class="btn btn-primary"><i class="mdi mdi-google-assistant m-r-xs"></i>Add Role </button></li>
+            <li class="list-inline-item"><button type="button" class="btn btn-primary"><i class="mdi mdi-content-duplicate m-r-xs"></i>Duplicate </button></li> -->
+            <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="addCity()"><i class="mdi mdi-file-plus m-r-xs"></i> Add City</button></li>
+
+          </ul>
+        </div>
+      </div>
+      <!--end col-->
+
+    </div>
+    <!-- end row  -->
+    <br>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+         Please wait...
+      </button>
+    </div>
+
+    <!-- start slick grid data table   -->
+    <div class="content m-b report-content" *ngIf="isContent">
+
+      <!-- <angular-slickgrid gridId="grid1" [data]="ruleGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)" (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)"
+        (onAngularGridCreated)="angularGridReady($event)">
+      </angular-slickgrid> -->
+      <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+        (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged1($event.detail.eventData, $event.detail.args)">
+      </angular-slickgrid>
+    </div>
+  </div>
+</div>

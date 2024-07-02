@@ -1,0 +1,113 @@
+
+// warnign alert box start over here
+.alert.alert-light {
+    background: #fff;
+    border: 1px solid #fff;
+    color: #282a3c;
+}
+
+.alert.alert-elevate {
+    -webkit-box-shadow: 0 0 13px 0 rgba(82, 63, 105, 0.1);
+    box-shadow: 0 0 13px 0 rgba(82, 63, 105, 0.1);
+}
+
+.alert {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    padding: 1rem 2rem;
+    margin: 0 0 20px 0;
+    border-radius: 4px;
+}
+
+.alert-light {
+    color: #818182;
+    background-color: #fefefe;
+    border-color: #f3d9b3 !important;
+}
+
+.alert-light-danger {
+    color: #818182;
+    background-color: #fefefe;
+    border-color: #f1646c !important
+}
+
+.alert {
+    position: relative;
+}
+
+.alert .alert-icon {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    // align-items: center;
+    padding: 0 1.25rem 0 0;
+}
+
+.alert.alert-light .alert-text {
+    color: #282a3c;
+}
+
+.alert .alert-text {
+    -ms-flex-item-align: center;
+    align-self: center;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+}
+
+.alert.alert-light .alert-icon i {
+    color: #f8a01c;
+}
+
+.alert.alert-light-danger .alert-icon i {
+    color: #f1646c;
+}
+
+.alert .alert-icon i {
+    font-size: 2.4rem;
+}
+
+// warning alert box end here
+
+
+// input group
+.input-group-addon {
+    /* border-radius: 4px; */
+    box-shadow: none;
+    border: 1px solid #ced4da;
+}
+
+.form-control,
+.form-control-static,
+.input-group-addon {
+    // background-color: transparent;
+    color: #4a4a4a;
+    height: 38px;
+}
+
+.input-group-addon {
+    padding: 10px 23px 16px 10px;
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    border-radius: 0px 3px 3px 0px;
+}
+
+.input-group-addon,
+.input-group-btn {
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.input-group .form-control,
+.input-group-addon,
+.input-group-btn {
+    display: table-cell;  
+}

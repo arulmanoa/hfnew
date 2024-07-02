@@ -1,0 +1,89 @@
+.cursor-pointer {
+  cursor: pointer;
+ }
+ .custom-table {
+    border-collapse: collapse;
+    font-style: normal;
+    text-align: center;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 15px;
+    font-family: Roboto, sans-serif;
+  }
+  
+  .custom-table th {
+    border: none;
+    font-weight: 600 !important;
+  }
+  
+  .custom-table td {
+    border: none;
+    font-weight: 400 !important;
+    vertical-align: middle !important;
+  }
+  
+  .custom-table tbody tr {
+    text-align: center;
+    border: 1px solid #e7e7e7;
+  }
+  
+  .custom-table-pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+  }
+  
+  .custom-table-pagination span {
+    margin-right: 5px;
+    padding: 5px;
+    cursor: pointer;
+    background-color: #ddd;
+    line-height: 15px;
+    font-family: Roboto, sans-serif;
+  }
+  
+  .custom-table-pagination .prev, .custom-table-pagination .next {
+    font-style: normal;
+    font-weight: 400 !important;
+    font-size: 13px;
+    line-height: 15px;
+    color: #146BA2;
+    font-family: Roboto, sans-serif;
+  }
+  
+  .custom-table-pagination span.active {
+    background-color: #146BA2;
+    color: #fff;
+  }
+  
+  .custom-table-pagination .btn[disabled] {
+    opacity: 0.5 !important;
+    pointer-events: none;
+  }
+  
+  .custom-table-pagination .prev, .custom-table-pagination .next {
+    font-style: normal;
+    font-weight: 400 !important;
+    font-size: 13px;
+    line-height: 15px;
+    color: #146BA2;
+    font-family: Roboto, sans-serif;
+  }
+  
+
+  .text-color {
+    color: #146BA2 !important;
+    font-weight: 400;
+    font-size: 13px;
+  }
+
+  .action-btn {
+    background: #146BA2;
+    border-radius: 4px;
+    font-weight: 500 !important;
+    font-size: 12px;
+    line-height: 14px;
+    font-family: Roboto, sans-serif;
+  }
+  

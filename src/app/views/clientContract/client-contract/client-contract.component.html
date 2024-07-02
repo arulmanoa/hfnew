@@ -1,0 +1,3024 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="content m-b report-content" style="margin-top: -10px">
+      <div class="row">
+        <div class="col-lg-6">
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <h5 class="mt-0 p-l-5">Client Contract Details</h5>
+              <p class="p-l-5" *ngIf="!spinner && !IsNewActivity">
+                {{ clientcontractdetails.Name }} |
+                {{ clientcontractdetails.Code }}
+              </p>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-6 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+              <!-- <li class="list-inline-item">
+                <button type="button" class="btn btn-primary" (click)="discardchanges()">
+                  <i class="mdi mdi-lock-reset m-r-xs"></i> discard changes
+                </button>
+              </li> -->
+              <!-- <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="discardchanges()">     <i class="mdi mdi-lock-reset  m-r-xs"></i> discard changes
+                        </button></li> -->
+              <li class="list-inline-item" *ngIf="isSave">
+                <button type="button" class="btn btn-primary" (click)="doSave()">
+                  <i class="mdi mdi-content-save m-r-xs"></i> Save
+                </button>
+              </li>
+
+              <li class="list-inline-item" *ngIf="isClose">
+                <button class="btn btn-sm btn-default" tooltip="Close" (click)="confirmExit()"
+                  tooltip-placement="bottom" data-original-title="" title="">
+                  <i class="mdi mdi-close font-size-md"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <br />
+
+      <form [formGroup]="clientcontractForm">
+        <ngb-tabset (tabChange)="loadData($event)" [(activeId)]="activeTabName">
+          <ngb-tab id="Generaltab">
+            <ng-template ngbTabTitle><i class="fa fa-get-pocket" aria-hidden="true"></i>&nbsp; General
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+              <div class="col-12 col-md-12 col-sm-12" *ngIf="!spinner">
+                <div class="clearfix">
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-md-12 col-lg-12 col-sm-12">
+                      <!-- <div class="row" style="float: right;">
+                      <div
+                        class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6"
+                        style="padding-left: 10px !important;"
+                      >
+                        <label class="form-label">Status</label>
+                      </div>
+                      <div
+                        class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6"
+                        style="padding: 0px !important;"
+                      >
+                        <label class="el-switch el-switch-green">
+                          <input
+                            type="checkbox"
+                            formControlName="Status"
+                            checked
+                            enabled
+                          />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div> -->
+                      <p class="small mb-0" style="font-size: 16px; float: right">
+                        <span class="text-success" style="font-size: 16px">●</span>
+                        <b> Active</b>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top: 15px">
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="BusinessType == 3">
+                      <label class="form-label">Client <span class="required">*</span></label>
+                      <ng-select [items]="listOfclient" #select22 placeholder="Select an option"
+                        formControlName="Client" [ngClass]="{
+                          'ng-touched': submitted && g.Client.invalid
+                        }" bindLabel="Name" bindValue="Id">
+                        <ng-template ng-header-tmp>
+                          <input placeholder="Search Client" type="text" class="form-control" style="
+                              border: none;
+                              border-radius: 0px !important;
+                              background: white;
+                            " (input)="select22.filter($event.target.value)" />
+                        </ng-template>
+                      </ng-select>
+                      <div *ngIf="submitted && g.Client.invalid" class="help-block">
+                        <div *ngIf="g.Client.errors.required">
+                          Client is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="this.clientcontractForm.controls.Code">
+                      <label class="form-label">Code <span class="required"> * </span></label>
+                      <input type="text" class="form-control" placeholder="Code" formControlName="Code" [ngClass]="{
+                          'is-invalid': submitted && g.Code.invalid
+                        }" autocomplete="off" />
+                      <div *ngIf="submitted && g.Code.invalid" class="help-block">
+                        <div *ngIf="g.Code.errors.required">
+                          Code is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="this.clientcontractForm.controls.Name">
+                      <label class="form-label">Name <span class="required"> * </span></label>
+                      <input type="test" class="form-control" placeholder="Name" formControlName="Name" [ngClass]="{
+                          'is-invalid': submitted && g.Name.invalid
+                        }" autocomplete="off" />
+                      <div *ngIf="submitted && g.Name.invalid" class="help-block">
+                        <div *ngIf="g.Name.errors.required">
+                          Name is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12" *ngIf="this.clientcontractForm.controls.servicechosen">
+                        <label class="form-label">Service Chosen <span class="required">*</span></label>
+                        <ng-select [items]="clientservices" placeholder="-- select Service --" formControlName="servicechosen" [ngClass]="{'ng-touched': submitted && g.servicechosen.invalid }" bindLabel="name" bindValue="id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.servicechosen.invalid" class="help-block">
+                            <div *ngIf="g.servicechosen.errors.required">Service Chosen is required
+                            </div>
+                        </div>
+                      </div> -->
+
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="this.clientcontractForm.controls.servicechosen">
+                      <label class="form-label">Service Chosen <span class="required">*</span></label>
+                      <ng-select [multiple]="true" [closeOnSelect]="false" [searchable]="false" [items]="clientservices"
+                        placeholder="-- select an option --" formControlName="servicechosen"
+                        (change)="contractservicechange($event)" [ngClass]="{
+                          'ng-touched': submitted && g.servicechosen.invalid
+                        }" bindLabel="Name" bindValue="Id">
+                      </ng-select>
+                      <div *ngIf="submitted && g.servicechosen.invalid" class="help-block">
+                        <div *ngIf="g.servicechosen.errors.required">
+                          Client Services is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="this.clientcontractForm.controls.ContractType">
+                      <label class="form-label">Contract Type <span class="required">*</span></label>
+                      <ng-select [items]="contacttypes" placeholder="-- select Contract Type --"
+                        (change)="oncontractTypechange($event)" formControlName="ContractType" [ngClass]="{
+                          'ng-touched': submitted && g.ContractType.invalid
+                        }" bindLabel="name" bindValue="id">
+                      </ng-select>
+                      <div *ngIf="submitted && g.ContractType.invalid" class="help-block">
+                        <div *ngIf="g.ContractType.errors.required">
+                          Contract Type is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="this.contactTypename == 2">
+                      <label class="form-label">Value <span class="required"> * </span></label>
+                      <input type="text" class="form-control" onpaste="return false;"
+                        onkeypress="return /^[0-9]+$/i.test(event.key)" placeholder="Value" formControlName="Value"
+                        [ngClass]="{
+                          'is-invalid': submitted && g.Value.invalid
+                        }" autocomplete="off" />
+                      <div *ngIf="submitted && g.Value.invalid" class="help-block">
+                        <div *ngIf="g.Value.errors.required">
+                          Value is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="this.contactTypename == 3">
+                      <label class="form-label">Contract Start Date
+                        <span class="required"> * </span></label>
+
+                      <input type="text" class="form-control" onpaste="return false;" readonly bsDatepicker
+                        placement="top" [bsConfig]="{
+                          isAnimated: true,
+                          dateInputFormat: 'DD-MM-YYYY',
+                          containerClass: 'theme-default'
+                        }" name="ValidFrom" formControlName="ValidFrom" [ngClass]="{
+                          'is-invalid': submitted && g.ValidFrom.invalid
+                        }" placeholder="Contract Start Date" autocomplete="off"
+                        (bsValueChange)="onChangeStartDate($event)" />
+
+                      <div *ngIf="submitted && g.ValidFrom.invalid" class="help-block">
+                        <div *ngIf="g.ValidFrom.errors.required">
+                          Contract Start Date is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="this.contactTypename == 3">
+                      <label class="form-label">Contract End Date
+                        <span class="required"> * </span></label>
+
+                      <input type="text" class="form-control" onpaste="return false;" readonly bsDatepicker
+                        placement="top" [bsConfig]="{
+                          isAnimated: true,
+                          dateInputFormat: 'DD-MM-YYYY',
+                          containerClass: 'theme-default'
+                        }" name="ValidTo" formControlName="ValidTo" [ngClass]="{
+                          'is-invalid': submitted && g.ValidTo.invalid
+                        }" placeholder="Contract End Date" autocomplete="off" [minDate]="ContractminDate" />
+
+                      <div *ngIf="submitted && g.ValidTo.invalid" class="help-block">
+                        <div *ngIf="g.ValidTo.errors.required">
+                          Contract End Date is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12">
+                        <div class="row">
+                          <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" >
+                        <label class="form-label">Client Type<span class="required">*</span></label>
+                      </div>
+                      <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="text-align: left;">
+                            <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="ClientType" formControlName="clienttype" />
+                                <span class="el-switch-style"></span>
+                            </label>
+                        </div>
+                        </div>
+                    </div> -->
+
+                    <!-- <div
+                      class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                    >
+                      <label class="form-label"
+                        >Client Type<span class="required">*</span>
+                      </label>
+
+                      <div class="radio-tile-group">
+                        <div
+                          class="input-container"
+                          *ngFor="let ClientType of listOfClientType"
+                        >
+                          <input
+                            class="c-card"
+                            type="radio"
+                            formControlName="ClientType"
+                            class="radio-button"
+                            [value]="ClientType.ValueMember"
+                            [checked]="ClientType.checked"
+                          />
+
+                          <div class="radio-tile">
+                            <div class="card-state-icon"></div>
+
+                            <label for="{{ ClientType.ValueMember }}">
+                              <div class="image">
+                                <div class="icon walk-icon">
+                                  <i
+                                    class="mdi {{ ClientType.icon }}"
+                                    style="
+                                      font-size: 20px;
+                                      display: block;
+                                      margin: 0 auto;
+                                      text-align: center;
+                                    "
+                                  ></i>
+                                </div>
+                              </div>
+
+                              <label for="test" class="radio-tile-label">{{
+                                ClientType.DisplayMember
+                              }}</label>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
+
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12">
+                      <label class="form-label">Client Type<span class="required">*</span></label>
+                      <ng-select [items]="listOfClientType" placeholder="-- select an option --"
+                        formControlName="ClientType" [ngClass]="{
+                          'ng-touched': submitted && g.ClientType.invalid
+                        }" bindLabel="DisplayMember" bindValue="ValueMember">
+                      </ng-select>
+                      <div *ngIf="submitted && g.ClientType.invalid" class="help-block">
+                        <div *ngIf="g.ClientType.errors.required">
+                          Client Type is required
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="this.clientcontractForm.controls.Description">
+                      <label class="form-label"> Description </label>
+                      <textarea class="form-control" rows="2" spellcheck="false" id="description"
+                        formControlName="Description"></textarea>
+                    </div>
+
+                    <!-- IsNapBased  -->
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <label class="form-label">Is NAPS Based<span class="required">*</span>
+                      </label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="switch" (change)="isNapChecked($event)"
+                            formControlName="isNapBased" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- NapsOnBoardingType -->
+                    <div *ngIf="g.isNapBased.value"
+                      class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12">
+                      <label class="form-label">NAPS OnBoarding Type<span class="required">*</span></label>
+                      <ng-select [items]="napsOnBoardingTypes" bindLabel="name" bindValue="id"
+                        placeholder="-- select an option --" formControlName="napsOnBoardType" [ngClass]="{
+                          'ng-touched': submitted && g.napsOnBoardType.invalid
+                        }">
+                      </ng-select>
+                      <div *ngIf="submitted && g.ClientType.invalid" class="help-block">
+                        <div *ngIf="g.napsOnBoardType.errors.required">
+                          NAPS OnBoarding Type is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- NAPSLocation -->
+                    <div *ngIf="g.isNapBased.value"
+                      class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12">
+                      <label class="form-label">NAPS Location <span class="required"> * </span></label>
+                      <input type="test" class="form-control" placeholder="NAPS Location" formControlName="napsLocation"
+                        [ngClass]="{
+                          'is-invalid': submitted && g.napsLocation.invalid
+                        }" autocomplete="off" />
+                      <div *ngIf="submitted && g.napsLocation.invalid" class="help-block">
+                        <div *ngIf="g.napsLocation.errors.required">
+                          NAPS Location is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- NAPSPlantName -->
+                    <div *ngIf="g.isNapBased.value"
+                      class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12">
+                      <label class="form-label">NAPS Plant Name
+                        <span class="required"> * </span></label>
+                      <input type="test" class="form-control" placeholder="NAPS Plant Name"
+                        formControlName="napsPlantName" [ngClass]="{
+                          'is-invalid': submitted && g.napsPlantName.invalid
+                        }" autocomplete="off" />
+                      <div *ngIf="submitted && g.Name.invalid" class="help-block">
+                        <div *ngIf="g.napsPlantName.errors.required">
+                          NAPS Plant Name is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+          <ngb-tab id="InternalOperations" *ngIf="!IsNewActivity">
+            <ng-template ngbTabTitle><i class="fa fa-cube" aria-hidden="true"></i>&nbsp; Key
+              StakeHolders
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+              <br />
+              <br />
+
+              <div class="cards-container">
+                <div class="row">
+                  <div class="col-12 col-md-12 col-sm-12">
+                    <div *ngIf="isSummary_panel" class="">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <div class="card section">
+                            <div class="card-body">
+                              <h2 class="card-title">
+                                Account Manager
+                                <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                  (click)="addAccountManagerORKeyMember('isAccountManager')">Add New</a>
+                              </h2>
+                              <div class="card-intro" *ngFor="
+                                  let item of selectedManagers;
+                                  let isLast = last
+                                ">
+                                <div class="ruleHeader" style="display: block">
+                                  <div class="label">{{ item.Name }}</div>
+                                  <span>
+                                    Mobile : {{ item.MobileNumber }} | Email :
+                                    {{ item.EmailId }}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Client Contact -->
+                        <!-- <div class="col-lg-6">
+                          <div class="card section">
+                            <div class="card-body">
+                              <h2 class="card-title">
+                                Client Contact
+                                <a href="javascript:;" class="text-sm leading-5 font-medium" (click)="
+                                    addExternalAccountManagerORKeyMember()
+                                  ">Add New</a>
+                              </h2>
+                              <br />
+                              <div class="card-intro" *ngFor="
+                                  let item of selectedClientContacts;
+                                  let isLast = last
+                                ">
+                                <div>
+                                  <div class="ruleHeader" style="display: block">
+                                    <div class="label">{{ item.Name }}</div>
+                                    <span>
+                                      Mobile :
+                                      {{item.PrimaryMobileCountryCode + &nbsp; item?.PrimaryMobile }}
+                                      | Email : {{ item.PrimaryEmail }}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div> -->
+
+                        <!-- Key Member -->
+                        <div class="col-lg-6">
+                          <div class="card section">
+                            <div class="card-body">
+                              <h2 class="card-title">
+                                Key Members
+                                <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                  (click)="addAccountManagerORKeyMember('isKeyMember')">Add New</a>
+                              </h2>
+                              <div class="card-intro" *ngFor="
+                                  let item of selectedKeyMembers;
+                                  let isLast = last
+                                ">
+                                <div class="ruleHeader" style="display: block">
+                                  <div class="label">{{ item.Name }}</div>
+                                  <span>
+                                    Mobile : {{ item.MobileNumber }} | Email :
+                                    {{ item.EmailId }}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+          <!-- Contract Terms -->
+
+          <ngb-tab id="ContractTerms" *ngIf="!IsNewActivity">
+            <ng-template ngbTabTitle><i class="fa fa-coffee" aria-hidden="true"></i>&nbsp; Operations
+            </ng-template>
+            <ng-template ngbTabContent stye="height:10rem;">
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <br />
+                  <br />
+                  <div *ngIf="isSummary_panel">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Applicable Pay Cycles
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addOperations('PayCycle')">Add New</a>
+                            </h2>
+                            <div *ngIf="selectedPayCycles.length > 0" class="card-intro">
+                              <div class="ruleHeader" *ngFor="
+                                    let item of selectedPayCycles;
+                                    let isLast = last
+                                  ">
+                                <span>• {{ item.Name }}
+                                  {{ isLast ? "" : " | " }}</span>
+                              </div>
+                            </div>
+                            <div *ngIf="selectedPayCycles.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Applicable Attendance Cycle
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addOperations('AttendanceCycle')">Add New</a>
+                            </h2>
+                            <div *ngIf="selectedAttendanceCycle.length > 0" class="card-intro">
+                              <div class="ruleHeader" *ngFor="
+                                    let item of selectedAttendanceCycle;
+                                    let isLast = last
+                                  ">
+                                <span>
+                                  • {{ item.Code }}
+                                  {{ isLast ? "" : " | " }}</span>
+                              </div>
+                            </div>
+                            <div *ngIf="selectedAttendanceCycle.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Applicable Leave Groups
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addOperations('LeaveGroups')">Add New</a>
+                            </h2>
+                            <div class="card-intro" *ngIf="selectedLeaveGroups.length > 0">
+                              <div class="ruleHeader" *ngFor="
+                                    let item of selectedLeaveGroups;
+                                    let isLast = last
+                                  ">
+                                <span>{{ item.Code }}
+                                  {{ isLast ? "" : " | " }}</span>
+                              </div>
+                            </div>
+                            <div *ngIf="selectedLeaveGroups.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Applicable Holiday Calendars
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addOperations('HolidayCalendars')">Add New</a>
+                            </h2>
+                            <div *ngIf="selecteHolidayCalender.length > 0" class="card-intro">
+                              <div class="ruleHeader" *ngFor="
+                                    let item of selecteHolidayCalender;
+                                    let isLast = last
+                                  ">
+                                <span>{{ item.Code }}
+                                  {{ isLast ? "" : " | " }}</span>
+                              </div>
+                            </div>
+                            <div *ngIf="selecteHolidayCalender.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Applicable Notice Period Days<span class="required">*</span>
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addOperations('NoticePeriodDays')">Add New</a>
+                            </h2>
+                            <div *ngIf="selectedNoticePeriods.length > 0" class="card-intro">
+                              <div class="ruleHeader" *ngFor="
+                                    let item of selectedNoticePeriods;
+                                    let isLast = last
+                                  ">
+                                <span>{{ item.Name }}
+                                  {{ isLast ? "" : " | " }}</span>
+                              </div>
+                            </div>
+                            <div *ngIf="selectedNoticePeriods.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Applicable Insurance Plans<span class="required">*</span>
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addOperations('InsurancePlans')">Add New</a>
+                            </h2>
+                            <div *ngIf="selectedInsurancePlan.length > 0" class="card-intro">
+                              <div class="ruleHeader" *ngFor="
+                                    let item of selectedInsurancePlan;
+                                    let isLast = last
+                                  ">
+                                <span>{{ item.Name }}
+                                  {{ isLast ? "" : " | " }}</span>
+                              </div>
+                            </div>
+                            <div *ngIf="selectedInsurancePlan.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Applicable PayGroups<span class="required">*</span>
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addOperations('PayGroups')">Add New</a>
+                            </h2>
+                            <div *ngIf="selectedPayGroups.length > 0" class="card-intro">
+                              <div class="ruleHeader" *ngFor="
+                                    let item of selectedPayGroups;
+                                    let isLast = last
+                                  ">
+                                <span>{{ item.Code }}
+                                  {{ isLast ? "" : " | " }}</span>
+                              </div>
+                            </div>
+                            <div *ngIf="selectedPayGroups.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              MinimumWages Applicable Products
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addMinAppProd('MinimumWages')">Add New</a>
+                            </h2>
+                            <div *ngIf="minimumWagesAppProdList.length > 0" class="card-intro table-responsive-md"
+                              style="min-height: 100px; max-height: 130px; overflow-y: scroll">
+                              <table class="table text-xs mb-0">
+                                <thead class="thead-light" style="position: sticky;top: 0">
+                                  <th>Code</th>
+                                  <th>Name</th>
+                                  <th></th>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let item of minimumWagesAppProdList;let i = index">
+                                    <td>{{item.Code}}</td>
+                                    <td>{{item.Name}}</td>
+                                    <td><i _ngcontent-c10="" class="fa fa-edit mr-3" style="cursor: pointer;"
+                                        (click)="editMinAppProd(item, i)"></i><i class="fa fa-trash pointer delete-icon"
+                                        style="cursor: pointer" (click)="deleteMinAppProd(i)"></i></td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div *ngIf="minimumWagesAppProdList.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Statuatory Rules Details<span class="required">*</span>
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addStatutoryRules()">Add New</a>
+                            </h2>
+                            <div *ngIf="statuatoryRuleInfo.length > 0" class="card-intro table-responsive-md"
+                              style="min-height: 100px; max-height: 130px; overflow-y: scroll">
+                              <table class="table text-xs mb-0">
+                                <thead class="thead-light" style="position: sticky;top: 0">
+                                  <th>Statuatory Type</th>
+                                  <th>Date</th>
+                                  <th>Product Code</th>
+                                  <th></th>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let statuatory of statuatoryRuleInfo; let i=index">
+                                    <td>{{statuatory.StatutoryTypeName}}</td>
+                                    <td>{{statuatory.EffectiveDate}}</td>
+                                    <td>{{statuatory.ProductApplicabilityCode}}</td>
+                                    <td><i _ngcontent-c10="" class="fa fa-edit mr-3" style="cursor: pointer;"
+                                        (click)="editStatuatory(statuatory, i)"></i><i
+                                        class="fa fa-trash pointer delete-icon" (click)="deleteStatuatory(i)"></i>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div *ngIf="statuatoryRuleInfo.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Product Statuatory Scale Details
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addProductStatuatory()">Add New</a>
+                            </h2>
+                            <div *ngIf="productStatuatoryInfo.length > 0" class="card-intro table-responsive-md"
+                              style="min-height: 100px; max-height: 130px; overflow-y: scroll">
+                              <table class="table text-xs mb-0">
+                                <thead class="thead-light" style="position: sticky;top: 0">
+                                  <th>Product Name</th>
+                                  <th>Date</th>
+                                  <th></th>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let product of productStatuatoryInfo; let i=index">
+                                    <td>{{product.ProductName}}</td>
+                                    <td>{{product.EffectiveDate}}</td>
+                                    <td><i _ngcontent-c10="" class="fa fa-edit mr-3" style="cursor: pointer;"
+                                        (click)="editProductStatuatory(product, i)"></i><i
+                                        class="fa fa-trash pointer delete-icon"
+                                        (click)="deleteProductStatuatory(i)"></i></td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div *ngIf="productStatuatoryInfo.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Additional Applicable Product
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addApplicableProduct()">Add New</a>
+                            </h2>
+                            <div *ngIf="applicableProductInfo.length > 0" class="card-intro table-responsive-md"
+                              style="min-height: 100px; max-height: 130px; overflow-y: scroll">
+                              <table class="table text-xs mb-0">
+                                <thead class="thead-light" style="position: sticky;top: 0">
+                                  <th>Product Name</th>
+                                  <th>Payment Type</th>
+                                  <th>Billable Type</th>
+                                  <th></th>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let applicable of applicableProductInfo; let i=index">
+                                    <td>{{applicable.ProductName}}</td>
+                                    <td>{{RateTypeEnum[applicable.PaymentType]}}</td>
+                                    <td>{{RateTypeEnum[applicable.BillingType]}}</td>
+                                    <td><i _ngcontent-c10="" class="fa fa-edit mr-3" style="cursor: pointer;"
+                                        (click)="editAdditionalProduct(applicable, i)"></i><i
+                                        class="fa fa-trash pointer delete-icon" aria-hidden="true"></i></td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div *ngIf="applicableProductInfo.length == 0">
+                              <span class="text-xs" style="font-weight: 100; color: #000;">No records found
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Additional Consultant Details -->
+                      <div class="col-lg-6">
+                        <div class="card section">
+                          <div class="card-body">
+                            <h2 class="card-title">
+                              Additional Consultant Details <span class="required">*</span>
+                              <a href="javascript:;" class="text-sm leading-5 font-medium"
+                                (click)="addAccountManagerORKeyMember('isAddConsDetails')">Add New</a>
+                            </h2>
+                            <div class="card-intro" *ngFor="
+                                let item of selectedConsultantDetails;
+                                let isLast = last
+                              ">
+                              <div class="ruleHeader" style="display: block">
+                                <div class="label">{{ item.Name }}</div>
+                                <span>
+                                  Mobile : {{ item.MobileNumber }} | Email :
+                                  {{ item.EmailId }}
+                                </span>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-md-12 col-lg-12 col-sm-12">
+                      <div class="row">
+                        <!-- Payroll Input Mode -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Payroll Input Mode<span class="required">*</span></label>
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="PayrollInputMode" name="PayrollInputMode" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+                        <!-- Is Half Yearly PT Applicable -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Is Half Yearly PT Applicable<span class="required">*</span></label>
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="isHalfYearlyPTApplicable"
+                              name="isHalfYearlyPTApplicable" (change)="onHalfYealyPTChange($event)" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+
+                        <!-- .Is Admin Charges Not In Billable Amount -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Is Admin Charges Not In Billable Amount<span
+                              class="required">*</span></label>
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="isAdminChargesNotInBillableAmount"
+                              name="isAdminChargesNotInBillableAmount" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+
+                        <!-- Breakup Basedays -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Breakup Basedays</label>
+                          <input type="number" class="form-control" name="BreakupBasedays"
+                            formControlName="breakupBasedays" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                            placeholder="Enter Basedays" autocomplete="none|false|no" max maxlength="2" />
+                        </div>
+
+                        <!-- Breakup BaseHours -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Breakup BaseHours</label>
+                          <input type="number" class="form-control" name="BreakupBaseHours"
+                            formControlName="breakupBaseHours" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                            placeholder="Enter Basehours" autocomplete="none|false|no" minlength="1" maxlength="2" />
+                        </div>
+
+                        <!-- Wage Type -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Wage Type</label>
+                          <ng-select [items]="wageTypes" placeholder="-- select an option --" bindLabel="name"
+                            bindValue="id" formControlName="wageType">
+                          </ng-select>
+                        </div>
+
+                        <!-- Applicable Product -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Applicable Product<span class="required">*</span></label>
+                          <ng-select [multiple]="true" [items]="productList" bindLabel="Name" bindValue="ProductId"
+                            placeholder="-- select an option --" formControlName="applicableProductId">
+                          </ng-select>
+                          <div *ngIf="submitted && g.applicableProductId.invalid" class="help-block">
+                            <div *ngIf="g.applicableProductId.errors.required">
+                              Applicable product is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Tax Based On -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Tax Based On<span class="required">*</span></label>
+                          <ng-select [items]="taxBasedOnList" placeholder="-- select an option --" bindLabel="name"
+                            bindValue="id" formControlName="taxBasedOn">
+                          </ng-select>
+                          <div *ngIf="submitted && g.taxBasedOn.invalid" class="help-block">
+                            <div *ngIf="g.taxBasedOn.errors.required">
+                              Tax based on is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Is Time Sheet Applicable -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Is Time Sheet Applicable</label>
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="isTimeSheetApplicable"
+                              name="isTimeSheetApplicable" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+
+                        <!-- Is ESS Active Login Required -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Is Ess Active Login Required</label>
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="isEssActiveLoginRequired"
+                              name="isEssActiveLoginRequired" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+
+                        <!-- IsFBPApprovalRequired -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Is FBP Approval Required</label>
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="isFBPApprovalRequired"
+                              name="isFBPApprovalRequired" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+
+                        <!-- IsFBPApplicable -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Is FBP Applicable<span class="required">*</span></label>
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="isFBPApplicable" name="isFBPApplicable" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+
+                        <!-- productIdForFBPCalculation -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">FBP Component<span class="required"
+                              *ngIf="g.isFBPApplicable.value">*</span></label>
+                          <ng-select [items]="productFBPCalList" bindLabel="Name" bindValue="ProductId"
+                            placeholder="-- select an option --" formControlName="productIdForFBPCalculation"
+                            [ngClass]="{ 'is-invalid': g.productIdForFBPCalculation.invalid }">
+                          </ng-select>
+                          <div *ngIf="g.productIdForFBPCalculation.invalid" class="help-block">
+                            <div *ngIf="g.productIdForFBPCalculation.errors.required">
+                              FBP Component is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- PercentageForFBPCalculation -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Percentage For FBP Component<span class="required"
+                              *ngIf="g.isFBPApplicable.value">*</span></label>
+                          <input type="number" class="form-control" name="percentageForFBPCalculation"
+                            formControlName="percentageForFBPCalculation"
+                            placeholder="Enter Percentage For FBP Component" autocomplete="none|false|no"
+                            [ngClass]="{ 'is-invalid': g.percentageForFBPCalculation.invalid }" maxlength="2"
+                            minlength="2" />
+                          <div *ngIf="g.percentageForFBPCalculation.invalid" class="help-block">
+                            <div *ngIf="g.percentageForFBPCalculation.errors.required">
+                              Percentage FBP Component is required
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <!-- baseDaysTypeForNonOpenPeriodLOP -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Base Days Type For Non Open Period LOP<span
+                              class="required">*</span></label>
+                          <ng-select [items]="nonOpenPeriodLOPList" bindLabel="name" bindValue="id"
+                            placeholder="-- select an option --" formControlName="nonOpenPeriodLOP">
+                          </ng-select>
+                          <div *ngIf="submitted && g.nonOpenPeriodLOP.invalid" class="help-block">
+                            <div *ngIf="g.nonOpenPeriodLOP.errors.required">
+                              Non Open Period LOP is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- baseDaysTypeForLOPRevokal -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Base Days Type For LOP Revokal<span
+                              class="required">*</span></label>
+                          <ng-select [items]="lopRevokalList" bindLabel="name" bindValue="id"
+                            placeholder="-- select an option --" formControlName="lopRevokal">
+                          </ng-select>
+                          <div *ngIf="submitted && g.lopRevokal.invalid" class="help-block">
+                            <div *ngIf="g.lopRevokal.errors.required">
+                              LOP Revokal is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- baseDaysTypeForNewJoinerArrears -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Base Days Type For New Joiner Arrears<span
+                              class="required">*</span></label>
+                          <ng-select [items]="newJoinerArrearsList" bindLabel="name" bindValue="id"
+                            placeholder="-- select an option --" formControlName="newJoinerArrears">
+                          </ng-select>
+                          <div *ngIf="submitted && g.newJoinerArrears.invalid" class="help-block">
+                            <div *ngIf="g.newJoinerArrears.errors.required">
+                              New Joiner Arrears is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- IsDefaultMinimumWageFromMaster -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Is Default Minimum Wages From Master<span
+                              class="required">*</span></label>
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="isDefaultMinimumWageFromMaster"
+                              name="isDefaultMinimumWageFromMaster" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+
+                        <!-- IsCTCBasicAmountValidationNotRequired -->
+                        <div class="col-lg-3 col-3 col-md-3 col-sm-3 col-xs-3 col-xxs-3 mb-4">
+                          <label class="form-label">Is CTC Basic Amount Validation Not Required<span
+                              class="required">*</span></label>
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" formControlName="isCTCBasicAmountValidationNotRequired"
+                              name="isCTCBasicAmountValidationNotRequired" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="serviceFee" *ngIf="!IsNewActivity">
+            <ng-template ngbTabTitle><i class="fa fa-laptop" aria-hidden="true"></i>&nbsp; Service Fee
+            </ng-template>
+            <ng-template ngbTabContent>
+              <app-servicefee [coreObject]="coreObject" [MarkupList]="MarkupList"
+                [ClientDetails]="ClientDetails"></app-servicefee>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="billingRate" *ngIf="!IsNewActivity">
+            <ng-template ngbTabTitle><i class="fa fa-credit-card" aria-hidden="true"></i>&nbsp;
+              Billing
+            </ng-template>
+            <ng-template ngbTabContent>
+              <app-billingproduct [coreObject]="coreObject" [ClientDetails]="ClientDetails"
+                [productList]="productList"></app-billingproduct>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="invoiceGroup" *ngIf="!IsNewActivity">
+            <ng-template ngbTabTitle><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp; Invoicing
+            </ng-template>
+            <ng-template ngbTabContent>
+              <app-invoicegroup [coreObject]="coreObject"></app-invoicegroup>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="contractDocuments" *ngIf="!IsNewActivity">
+            <ng-template ngbTabTitle><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;
+              Documents
+            </ng-template>
+            <ng-template ngbTabContent>
+              <br />
+
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="text-right">
+                    <button class="btn btn-default btn-sm m-r-sm" (click)="uploadDocs()" style="
+                        font-size: 12px;
+                        border: 1px solid #d8d9dd;
+                        font-weight: 600 !important;
+                      ">
+                      <i class="mdi mdi-plus m-r-xs"></i> Upload Docs
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="LstClientContractDocuments.length > 0" class="row"
+                style="margin-top: 1rem; padding-left: 5px; padding-right: 15px">
+                <div class="col-md-3">
+                  <p style="
+                      font-weight: 600;
+                      font-size: 12px;
+                      line-height: 14px;
+                      color: #000;
+                    ">
+                    Document Name
+                  </p>
+                </div>
+                <div class="col-md-2">
+                  <p style="
+                      font-weight: 600;
+                      font-size: 12px;
+                      line-height: 14px;
+                      color: #000;
+                    ">
+                    Uploaded By
+                  </p>
+                </div>
+                <div class="col-md-2">
+                  <p style="
+                      font-weight: 600;
+                      font-size: 12px;
+                      line-height: 14px;
+                      color: #000;
+                    ">
+                    Signed On
+                  </p>
+                </div>
+                <div class="col-md-3">
+                  <p style="
+                      font-weight: 600;
+                      font-size: 12px;
+                      line-height: 14px;
+                      color: #000;
+                    ">
+                    Signed By / Center
+                  </p>
+                </div>
+                <div class="col-md-1">
+                  <p style="
+                      font-weight: 600;
+                      font-size: 12px;
+                      line-height: 14px;
+                      color: #000;
+                    ">
+                    Status
+                  </p>
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+
+              <div class="row" style="margin-top: 2rem; margin-bottom: 20px"
+                *ngIf="LstClientContractDocuments.length == 0">
+                <div class="col-md-12 text-center">
+                  <span style="font-weight: 600; color: #000">No records found
+                  </span>
+                </div>
+              </div>
+
+              <div class="card tab-item" style="
+                  border: 1px solid #ece9e9 !important;
+                  margin: 0px;
+                  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+                  margin-bottom: 1.5rem !important;
+                  border-radius: 0px;
+                " *ngFor="let item of LstClientContractDocuments; let i = index">
+                <!-- <div class="card-header"
+                  style="padding-top: 9px;padding-bottom: 5px;background: #1da1f2;  /* fallback for old browsers */">
+
+                  <div class="row">
+                    <div class="text-left col-md-4">
+                      <h6 class="h6-content tab-item__subheading"
+                        style="font-size: 14px;font-weight: 600;color: white;">{{item.DocumentName}} </h6>
+                      <small class="small-content tab-item__subheading">{{item.DocumentType}}</small>
+                    </div>
+                  </div>
+
+                </div> -->
+
+                <div class="card-body" style="padding: 10px">
+                  <div class="row">
+                    <div class="text-left col-md-3">
+                      <h6 class="h6-content tab-item__subheading" style="font-size: 11px; font-weight: 600">
+                        {{ item.FileName }}
+                      </h6>
+                      <small class="small-content tab-item__subheading">{{
+                        GetDocumentTypeName(item.DocumentType)
+                        }}</small>
+                    </div>
+
+                    <div class="col-md-2">
+                      <p style="
+                          font-weight: 500;
+                          font-size: 12px;
+                          line-height: 14px;
+                          transform: translatey(35%);
+                        " class="tab-item__subheading">
+                        {{ GetConsultantName(item, "CreatedBy") }}
+                      </p>
+                    </div>
+
+                    <div class="col-md-2">
+                      <p style="
+                          font-weight: 500;
+                          font-size: 12px;
+                          line-height: 14px;
+                          transform: translatey(35%);
+                        " class="tab-item__subheading">
+                        {{ item.SignedOn | date }}
+                      </p>
+                    </div>
+
+                    <div class="col-md-3">
+                      <p style="
+                          font-weight: 500;
+                          font-size: 12px;
+                          line-height: 14px;
+                          transform: translatey(35%);
+                        " class="tab-item__subheading">
+                        {{ GetConsultantName(item, "SignedBy") }}
+                      </p>
+                      <small class="small-content tab-item__subheading">{{
+                        GetSignUpCenter(item)
+                        }}</small>
+                    </div>
+
+                    <div class="col-md-1">
+                      <p style="
+                          font-weight: 500;
+                          font-size: 12px;
+                          line-height: 14px;
+                          color: #7b8193;
+                          transform: translatey(35%);
+                        ">
+                        <span class="badge badge-danger1" *ngIf="item.Status == 0">
+                          In Active
+                        </span>
+                        <span class="badge badge-success1" *ngIf="item.Status == 1">
+                          Active
+                        </span>
+                      </p>
+                    </div>
+
+                    <div class="col-md-1 text-right">
+                      <div (click)="downloadFile(item)" style="
+                          cursor: pointer;
+                          display: inline-block;
+                          padding-right: 5px;
+                        " matTooltip="Download">
+                        <i class="mdi mdi-download" title="Download" style="
+                            display: block;
+                            top: -3px;
+                            position: relative;
+                            color: #0d395f;
+                            font-size: 18px;
+                          "></i>
+                      </div>
+
+                      <div (click)="deleteFile(item)" *ngIf="isGuid(item.Id)" style="
+                          cursor: pointer;
+                          display: inline-block;
+                          padding-right: 5px;
+                        " matTooltip="Delete">
+                        <i class="mdi mdi-trash-can-outline" title="Delete" style="
+                            display: block;
+                            top: -3px;
+                            position: relative;
+                            color: #0d395f;
+                            font-size: 18px;
+                          "></i>
+                      </div>
+
+                      <div (click)="MarkAsInActive(item, 0)" *ngIf="!isGuid(item.Id) && item.Status == 1" style="
+                          cursor: pointer;
+                          display: inline-block;
+                          padding-right: 5px;
+                        " matTooltip="Mark as Inactive">
+                        <i class="mdi mdi-block-helper" style="
+                            display: block;
+                            top: -3px;
+                            position: relative;
+                            color: #0d395f;
+                            font-size: 18px;
+                          "></i>
+                      </div>
+
+                      <div (click)="MarkAsInActive(item, 1)" *ngIf="!isGuid(item.Id) && item.Status == 0" style="
+                          cursor: pointer;
+                          display: inline-block;
+                          padding-right: 5px;
+                        " matTooltip="Mark as Active">
+                        <i class="mdi mdi-checkbox-marked-circle" style="
+                            display: block;
+                            top: -3px;
+                            position: relative;
+                            color: #0d395f;
+                            font-size: 18px;
+                          "></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div id="popup_chooseCategory" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseCategory" aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px">
+              <small class="header-pretitle"><b>Account Manager </b></small>
+              <!-- <h6 class="modal-title subheader_h6" id="popup_release_AL">{{employeedetails.FirstName}} <span> - </span>
+                            {{employeedetails.Code}} </h6> -->
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss2()" style="margin-top: 5px">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body no-padder builtin-calling-wrapper">
+            <div class="flex-column">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <small class="form-text text-muted"> Name </small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <!-- {{label_EmployeeName}} Mohith -->
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <small>Reporting Manager </small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <!-- {{label_EmployeeCode}} abcdefg -->
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <small>Location </small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <!-- {{label_ClientName}} Bangalore -->
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <small>Cost Center</small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <!-- {{label_ClientContractCode}} hgfjghf -->
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <small>Mobile Number</small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <!-- {{label_ClientContractCode}} 9999999999 -->
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <small>Email Id</small>
+                        <label class="qcsummarylabel form-text text-muted">
+                          <!-- {{label_ClientContractCode}}mohammed.rafi@integrumsolutions.in -->
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <br />
+
+                  <div *ngIf="isSummary_panel" class="animated fadeInRight">
+                    <div class="row">
+                      <div class="col-12 col-xl-12">
+                        <!-- Projects -->
+
+                        <div class="card">
+                          <div class="card-header">
+                            <!-- Title -->
+                            <h4 class="card-header-title">
+                              Other Associated Client Contracts
+                            </h4>
+                          </div>
+                          <div class="card-body">
+                            <!-- List group -->
+                            <div class="list-group list-group-flush my-n3">
+                              <div class="list-group-item">
+                                <div class="row align-items-center">
+                                  <div class="col ml-n2">
+                                    <!-- Title -->
+                                    <h4 class="font-weight-normal mb-1">
+                                      <a href="javascript:;" style="
+                                          color: #5c5c5c;
+                                          font-weight: 700 !important;
+                                        ">Client Name(abcdefg)</a>
+                                    </h4>
+
+                                    <!-- Text -->
+                                    <small class="text-muted">
+                                      Contract Code : <b>CLI00001</b> | Start
+                                      Date : <b>12-2-2010</b> | End Date :
+                                      <b>12-2-2020</b> | Client SPOC:
+                                      <b>somthing</b> | NO.Of Employees:
+                                      <b>200</b>
+                                    </small>
+                                  </div>
+                                  <!-- <div class="col-auto"> -->
+
+                                  <!-- Dropdown -->
+                                  <!-- <span class="badge badge-soft-success mt-n1">
+                                                        Approved
+                                                      </span> -->
+
+                                  <!-- <a href="javascript:;" class="btn btn-sm btn-white" (click)="addInvestmentCategory()">
+                                                        View
+                                                      </a> -->
+
+                                  <!-- </div> -->
+                                </div>
+                                <!-- / .row -->
+                              </div>
+
+                              <div class="list-group-item">
+                                <div class="row align-items-center">
+                                  <div class="col ml-n2">
+                                    <!-- Title -->
+                                    <h4 class="font-weight-normal mb-1">
+                                      <a href="javascript:;" style="
+                                          color: #5c5c5c;
+                                          font-weight: 700 !important;
+                                        ">ClientName(mmmmmmmmm)</a>
+                                    </h4>
+
+                                    <!-- Text -->
+                                    <small class="text-muted">
+                                      Contract Code : <b>CLI00003</b> | Start
+                                      Date : <b>12-2-2010</b> | End Date :
+                                      <b>12-2-2020</b> | Client SPOC:
+                                      <b>somthing</b> | NO.Of Employees:
+                                      <b>200</b>
+                                    </small>
+                                  </div>
+                                  <!-- <div class="col-auto"> -->
+
+                                  <!-- Dropdown -->
+                                  <!-- <span class="badge badge-soft-danger mt-n1">
+                                                          Rejected
+                                                        </span> -->
+                                  <!-- <a href="javascript:;" class="btn btn-sm btn-white">
+                                                          View
+                                                        </a> -->
+
+                                  <!-- </div> -->
+                                </div>
+                                <!-- / .row -->
+                              </div>
+                            </div>
+                          </div>
+                          <!-- / .card-body -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-left left-margin-btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- account managers modal -->
+
+<div id="popup_chooseAccountManager" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseAccountManager" aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px">
+              <!-- <small class="header-pretitle"
+                ><b>Account Managers & Key Members List </b></small
+              > -->
+              <small class="header-pretitle" *ngIf="isAccountManager"><b>Account Managers List </b></small>
+              <small class="header-pretitle" *ngIf="isKeyMember"><b>Key Members List </b></small>
+              <small class="header-pretitle" *ngIf="isAddConsDetails"><b>Consultants List </b></small>
+              <h6 class="modal-title subheader_h6">
+                No. Of Member(s) : {{ internalAccountManagers.length }}
+              </h6>
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss1()" style="margin-top: 5px">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+          <div class="modal-header" style="padding: 0px !important">
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+              [placeholder]="isAccountManager ? 'Start searching for a Account Manager' : 'Start searching for a Key Member'"
+              style="margin-left: 15px; margin-right: 15px; margin-bottom: 15px" />
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body">
+            <div class="" id="page-content">
+              <div class="">
+                <div class="row justify-content-center">
+                  <div class="col-xl-12 col-md-12">
+                    <div class="card user-activity-card">
+                      <div class="card-header">
+                        <!-- <h5> Account Manager & Key Members</h5> -->
+                      </div>
+                      <div class="card-block" *ngIf="isAccountManager && !isKeyMember">
+                        <div class="row m-b-25" *ngFor="
+                            let i of accountManagersList
+                              | filter : searchText
+                          ">
+                          <div class="col-auto p-r-0">
+                            <div class="u-img">
+                              <img src="https://image.flaticon.com/icons/svg/747/747376.svg" alt="user image"
+                                class="img-radius cover-img" />
+                              <img src="assets/Images/success.svg" alt="user image" class="img-radius profile-img" />
+                            </div>
+                          </div>
+                          <div class="col">
+                            <h6 class="m-b-5">{{ i.Name }}</h6>
+                            <p class="text-muted m-b-0">{{ i.MobileNumber }}</p>
+                            <p class="text-muted m-b-0">
+                              <i class="mdi mdi-email-open-outline feather icon-clock m-r-10"></i>{{ i.EmailId }}
+                            </p>
+                          </div>
+                          <label class="label">
+                            <input class="label__checkbox" [checked]="doCheckItemExist(i, 'Account')"
+                              [disabled]="isAccountManager && selectedManagers.length == 1 && i.Id != selectedManagers[0].Id "
+                              type="checkbox" (click)="selectAccountManagers($event, i)" />
+                            <span class="label__text">
+                              <span class="label__check">
+                                <i class="fa fa-check icon"></i>
+                              </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="card-block" *ngIf="isKeyMember && !isAccountManager">
+                        <div class="row m-b-25" *ngFor="
+                            let i of internalAccountManagers
+                              | filter : searchText
+                          ">
+                          <div class="col-auto p-r-0">
+                            <div class="u-img">
+                              <img src="https://image.flaticon.com/icons/svg/747/747376.svg" alt="user image"
+                                class="img-radius cover-img" />
+                              <img src="assets/Images/success.svg" alt="user image" class="img-radius profile-img" />
+                            </div>
+                          </div>
+                          <div class="col">
+                            <h6 class="m-b-5">{{ i.Name }}</h6>
+                            <p class="text-muted m-b-0">{{ i.MobileNumber }}</p>
+                            <p class="text-muted m-b-0">
+                              <i class="mdi mdi-email-open-outline feather icon-clock m-r-10"></i>{{ i.EmailId }}
+                            </p>
+                          </div>
+                          <label class="label">
+                            <input class="label__checkbox" [checked]="doCheckItemExist(i, 'Keymember')" type="checkbox"
+                              (click)="selectKeyMembers($event, i)" />
+                            <span class="label__text">
+                              <span class="label__check">
+                                <i class="fa fa-check icon"></i>
+                              </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="card-block" *ngIf="!isAccountManager && !isKeyMember && isAddConsDetails">
+                        <div class="row m-b-25" *ngFor="
+                            let i of internalAccountManagers
+                              | filter : searchText
+                          ">
+                          <div class="col-auto p-r-0">
+                            <div class="u-img">
+                              <img src="https://image.flaticon.com/icons/svg/747/747376.svg" alt="user image"
+                                class="img-radius cover-img" />
+                              <img src="assets/Images/success.svg" alt="user image" class="img-radius profile-img" />
+                            </div>
+                          </div>
+                          <div class="col">
+                            <h6 class="m-b-5">{{ i.Name }}</h6>
+                            <p class="text-muted m-b-0">{{ i.MobileNumber }}</p>
+                            <p class="text-muted m-b-0">
+                              <i class="mdi mdi-email-open-outline feather icon-clock m-r-10"></i>{{ i.EmailId }}
+                            </p>
+                          </div>
+                          <label class="label">
+                            <input class="label__checkbox" [checked]="doCheckItemExist(i, 'ConsDetails')"
+                              type="checkbox" (click)="selectConsDetails($event, i)" />
+                            <span class="label__text">
+                              <span class="label__check">
+                                <i class="fa fa-check icon"></i>
+                              </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer no-padding">
+            <button class="btn upgrade-btn width-100" (click)="modal_dismiss1()">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- account managers modal -->
+
+<div id="popup_chooseExternalAccountManager" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseExternalAccountManager" aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px">
+              <small class="header-pretitle"><b>Client Contact </b></small>
+              <h6 class="modal-title subheader_h6">
+                No. Of Member(s) : {{ ExternalClientContacts.length }}
+              </h6>
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss5()" style="margin-top: 5px">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <div class="modal-header" style="padding: 0px !important">
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText1" autocomplete="none|false|no"
+              placeholder="Start searching for a Client Contact"
+              style="margin-left: 15px; margin-right: 15px; margin-bottom: 15px" />
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body">
+            <div class="" id="page-content">
+              <div class="">
+                <div class="row justify-content-center">
+                  <div class="col-xl-12 col-md-12">
+                    <div class="card user-activity-card">
+                      <div class="card-header">
+                        <!-- <h5> Account Manager & Key Members</h5> -->
+                      </div>
+                      <div class="card-block">
+                        <div class="row m-b-25" *ngFor="
+                            let i of ExternalClientContacts
+                              | filter : searchText1
+                          ">
+                          <div class="col-auto p-r-0">
+                            <div class="u-img">
+                              <img src="https://image.flaticon.com/icons/svg/747/747376.svg" alt="user image"
+                                class="img-radius cover-img" />
+                              <img src="assets/Images/success.svg" alt="user image" class="img-radius profile-img" />
+                            </div>
+                          </div>
+                          <div class="col">
+                            <h6 class="m-b-5">{{ i.Name }}</h6>
+                            <p class="text-muted m-b-0">
+                              {{ i.PrimaryMobileCountryCode }} &nbsp;
+                              {{ i.PrimaryMobile }}
+                            </p>
+                            <p class="text-muted m-b-0">
+                              <i class="mdi mdi-email-open-outline feather icon-clock m-r-10"></i>{{ i.PrimaryEmail }}
+                            </p>
+                          </div>
+                          <label class="label">
+                            <input class="label__checkbox" [checked]="doCheckItemExist(i, 'CC')" type="checkbox"
+                              (click)="selectedClientContact($event, i)" />
+                            <span class="label__text">
+                              <span class="label__check">
+                                <i class="fa fa-check icon"></i>
+                              </span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="flex-column">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <div *ngIf="isSummary_panel" class="animated fadeInRight">
+                    <div class="row">
+                      <div class="col-12 col-xl-12">
+                        <div class="row">
+                          <label class="form-label" style="margin-left: 15px; margin-right: 15px;">Start searching for a
+                            Client Contact
+                          </label>
+                          <input class="form-control" type="text" name="search" [(ngModel)]="searchText1"
+                            autocomplete="none|false|no" placeholder=" &#61442;  Start searching for a Client Contact"
+                            style="
+                              margin-left: 15px;
+                              margin-right: 15px;
+                              margin-bottom: 15px;
+                            " />
+
+                          <div class="col-md-12 transitions" style="padding: 0px;">
+                            <div class="job-box">
+                              <div class="card">
+                                <div class="card-header">
+                                  <h4 class="card-header-title">
+                                    Client Contacts
+                                  </h4>
+                                </div>
+                                <div class="inbox-message">
+                                  <ul>
+
+                                    <li *ngFor="
+                                        let i of ExternalClientContacts
+                                          | filter: searchText1
+                                      " style="width: 100% !important;">
+
+                                      <div class="card-body">
+                                        <div class="list-group list-group-flush my-n3">
+                                          <div class="list-group-item">
+                                            <div class="row align-items-center">
+                                              <div class="col ml-n2">
+                                                <h4 class="font-weight-normal mb-1">
+                                                  <a href="javascript:;" style="
+                                                      color: #5c5c5c;
+                                                      font-weight: 700 !important;
+                                                    ">{{ i.Name }}</a>
+                                                </h4>
+
+                                                <small class="text-muted">
+                                                  Location : <b>Bangalore</b> |
+                                                  EmailId:
+                                                  <b>{{ i.PrimaryEmail }}</b> |
+                                                  Mobile Number:
+                                                  <b>{{
+                                                    i.PrimaryMobileCountryCode +
+                                                      i.PrimaryMobile
+                                                  }}</b>
+                                                </small>
+                                              </div>
+                                              <div class="col-auto">
+                                                <a href="javascript:;" class="btn btn-sm btn-white" (click)="
+                                                    selectedClientContact(
+                                                      $event,
+                                                      i
+                                                    )
+                                                  ">
+                                                  Add
+                                                </a>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+          </div>
+          <div class="modal-footer no-padding">
+            <button class="btn upgrade-btn width-100" (click)="modal_dismiss5()">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- payCycle Modal popup -->
+
+<div id="popup_choosePayCycle" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_choosePayCycle" aria-hidden="true">
+  <div style="display: block" class="modal fade show">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11">
+              <small class="header-pretitle"><b>{{ nameOfOperationsTxt }} </b></small>
+            </div>
+            <div class="modal-close" (click)="cloe_modal_operations()">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+          <div class="modal-header" style="padding: 0px !important">
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText_operations"
+              autocomplete="none|false|no" [placeholder]="nameOfOperationsPlaceholderTxt"
+              style="margin-left: 15px; margin-right: 15px; margin-bottom: 15px" />
+          </div>
+          <div class="modal-body">
+            <div class="" id="page-content">
+              <div class="">
+                <div class="row justify-content-center">
+                  <div class="col-xl-12 col-md-12">
+                    <!-- <div class="row m-b-25" *ngIf="operationList.length > 0">
+                      <div class="col-auto p-r-0" style="width: 83%;"></div>
+                      <label class="label">
+                        Is Default
+                      </label>
+                   
+                    </div> -->
+                    <div class="" *ngIf="operationList.length == 0">
+                      <strong class="text-center">No results found!</strong>
+                    </div>
+
+                    <div class="card user-activity-card" *ngIf="operationList.length > 0">
+                      <div class="card-header"></div>
+                      <div class="card-block">
+                        <div class="row m-b-25" *ngFor="
+                            let i of operationList
+                              | filter : searchText_operations
+                          ">
+                          <div class="col-auto p-r-0" style="margin-right: -25px; margin-top: 7px">
+                            <label class="label">
+                              <!-- selected checkbox when value exits (Ananth) getCheckedOperationList-->
+                              <input class="label__checkbox" type="checkbox" [checked]="getCheckedOperationList(i)"
+                                (change)="selectedOperation($event, i)" />
+                              <span class="label__text">
+                                <span class="label__check">
+                                  <i class="fa fa-check icon"></i>
+                                </span>
+                              </span>
+                            </label>
+                          </div>
+                          <div class="col">
+                            <h6 class="m-b-5">{{ i.Code }}</h6>
+                            <p class="text-muted m-b-0">{{ i.Name }}</p>
+                          </div>
+
+                          <!-- <label class="label" style="margin-top: 15px;margin-right:15px;cursor: pointer;">
+                            <input type="checkbox" class="largerCheckbox" (change)="selectedisDefaultItem($event, i )" />
+                         
+                          </label> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer no-padding">
+            <button class="btn upgrade-btn width-100" (click)="cloe_modal_operations()">
+              <b *ngIf="operationList.length > 0">Confirm</b>
+              <b *ngIf="operationList.length == 0">Close</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_choosePayCycle1" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_choosePayCycle1  " aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11">
+              <small class="header-pretitle"><b> Applicable Pay Cycles </b></small>
+            </div>
+            <div class="modal-close">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body no-padder builtin-calling-wrapper">
+            <div class="flex-column">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <br />
+
+                  <div *ngIf="isSummary_panel" class="animated fadeInRight">
+                    <div class="row">
+                      <div class="col-12 col-xl-12">
+                        <div class="card">
+                          <div class="card-header">
+                            <!-- Title -->
+                            <h4 class="card-header-title">
+                              Applicable Pay Cycles
+                            </h4>
+                          </div>
+                          <div class="inbox-message">
+                            <ul>
+                              <li *ngFor="let i of paycyclesList" style="width: 100% !important">
+                                <!-- <a href="javascript:;" (click)="selectedEmployee($event, i)"> -->
+
+                                <!-- <div class="message-body" > -->
+                                <div class="card-body">
+                                  <!-- List group -->
+                                  <div class="list-group list-group-flush my-n3">
+                                    <div class="list-group-item">
+                                      <div class="row align-items-center">
+                                        <div class="col-auto">
+                                          <input type="checkbox" [checked]="i.checked" class="largerCheckbox" (change)="
+                                              SelectedPayCycle($event, i)
+                                            " />
+                                        </div>
+
+                                        <div class="col ml-n2">
+                                          <!-- Title -->
+                                          <h4 class="font-weight-normal mb-1">
+                                            <a href="javascript:;" style="
+                                                color: #5c5c5c;
+                                                font-weight: 700 !important;
+                                              ">{{ i.Code }}</a>
+                                          </h4>
+
+                                          <!-- Text -->
+                                          <small class="text-muted">
+                                            Name : <b>{{ i.Name }}</b> |
+                                            Description : <b>{{ i.Name }}</b>
+                                          </small>
+                                        </div>
+                                        <div class="col-auto">
+                                          <input type="checkbox" class="defaultCheckbox" (change)="
+                                              selectedPayCycledefult($event, i)
+                                            " name="example2" />&nbsp;
+                                          <label>Is Default</label>
+                                        </div>
+                                      </div>
+                                      <!-- / .row -->
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- </div> -->
+                                <!-- </a> -->
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right">
+              <button class="btn btn-default" type="button">
+                <i class="fa fa-ban" aria-hidden="true"></i>
+                &nbsp;Cancel</button>&nbsp;
+
+              <button class="btn btn-primary pull-right" type="submit" prevent-double-submit id="btnSubmit"
+                (click)="savepaycycles()">
+                <div class="pos-rlt sm-btn-component">
+                  <span>
+                    <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Attendance Cycle Modal popup -->
+
+<div id="popup_chooseAttendanceCycle" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseAttendanceCycle" aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11">
+              <small class="header-pretitle"><b>Applicable Attendance Cycles </b></small>
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss4()">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body no-padder builtin-calling-wrapper">
+            <div class="flex-column">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <br />
+
+                  <div *ngIf="isSummary_panel" class="animated fadeInRight">
+                    <div class="row">
+                      <div class="col-12 col-xl-12">
+                        <!-- Projects -->
+
+                        <div class="card">
+                          <div class="card-header">
+                            <!-- Title -->
+                            <h4 class="card-header-title">
+                              Applicable Attendance Cycles
+                            </h4>
+                          </div>
+
+                          <ul>
+                            <li *ngFor="let i of AttendanceCycleList" style="width: 100% !important">
+                              <div class="card-body">
+                                <!-- List group -->
+                                <div class="list-group list-group-flush my-n3">
+                                  <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                      <div class="col-auto">
+                                        <input type="checkbox" [checked]="i.checked" class="largerCheckbox" (change)="
+                                            selectedAttendance($event, i)
+                                          " />
+                                      </div>
+
+                                      <div class="col ml-n2">
+                                        <!-- Title -->
+                                        <h4 class="font-weight-normal mb-1">
+                                          <a href="javascript:;" style="
+                                              color: #5c5c5c;
+                                              font-weight: 700 !important;
+                                            ">{{ i.Code }}</a>
+                                        </h4>
+
+                                        <!-- Text -->
+                                        <small class="text-muted">
+                                          Description :
+                                          <b>{{ i.Description }}</b>
+                                        </small>
+                                      </div>
+                                      <div class="col-auto">
+                                        <input type="checkbox" name="example2" class="defaultCheckbox" />&nbsp;
+                                        <label>Is Default</label>
+                                        <!-- (change)="selectedattendanceCycledefult($event, i) -->
+                                      </div>
+                                    </div>
+                                    <!-- / .row -->
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right">
+              <button class="btn btn-default" type="button" (click)="modal_dismiss4()">
+                <i class="fa fa-ban" aria-hidden="true"></i>
+                &nbsp;Cancel</button>&nbsp;
+
+              <button class="btn btn-primary pull-right" type="submit" prevent-double-submit id="btnSubmit"
+                (click)="saveattendancecycles()">
+                <div class="pos-rlt sm-btn-component">
+                  <span>
+                    <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Applicable Leave Groups Modal popup -->
+
+<div id="popup_chooseLeaveGroup" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseLeaveGroup" aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px">
+              <small class="header-pretitle"><b>Applicable Leave Groups </b></small>
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss6()" style="margin-top: 5px">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body no-padder builtin-calling-wrapper">
+            <div class="flex-column">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <br />
+
+                  <div *ngIf="isSummary_panel" class="animated fadeInRight">
+                    <div class="row">
+                      <div class="col-12 col-xl-12">
+                        <!-- Projects -->
+
+                        <div class="card">
+                          <div class="card-header">
+                            <!-- Title -->
+                            <h4 class="card-header-title">
+                              Applicable Leave Groups
+                            </h4>
+                          </div>
+
+                          <ul>
+                            <li *ngFor="let i of LeaveGroupList" style="width: 100% !important">
+                              <div class="card-body">
+                                <!-- List group -->
+                                <div class="list-group list-group-flush my-n3">
+                                  <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                      <div class="col-auto">
+                                        <input type="checkbox" [checked]="i.checked" class="largerCheckbox" (change)="
+                                            selectedLeaveGroup($event, i)
+                                          " />
+                                      </div>
+
+                                      <div class="col ml-n2">
+                                        <!-- Title -->
+                                        <h4 class="font-weight-normal mb-1">
+                                          <a href="javascript:;" style="
+                                              color: #5c5c5c;
+                                              font-weight: 700 !important;
+                                            ">{{ i.Code }}</a>
+                                        </h4>
+
+                                        <!-- Text -->
+                                        <small class="text-muted">
+                                          Name : <b>{{ i.Name }}</b>
+                                        </small>
+                                      </div>
+                                      <div class="col-auto">
+                                        <input type="checkbox" class="defaultCheckbox" name="example2" />&nbsp;
+                                        <label>Is Default</label>
+                                      </div>
+                                    </div>
+                                    <!-- / .row -->
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right">
+              <button class="btn btn-default" type="button" (click)="modal_dismiss6()">
+                <i class="fa fa-ban" aria-hidden="true"></i>
+                &nbsp;Cancel</button>&nbsp;
+
+              <button class="btn btn-primary pull-right" type="submit" prevent-double-submit id="btnSubmit"
+                (click)="saveLeaveGroup()">
+                <div class="pos-rlt sm-btn-component">
+                  <span>
+                    <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Applicable Holiday Calenders Modal popup -->
+
+<div id="popup_chooseHolidayCalender" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseHolidayCalender" aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px">
+              <small class="header-pretitle"><b>Applicable Holiday Calenders </b></small>
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss7()" style="margin-top: 5px">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body no-padder builtin-calling-wrapper">
+            <div class="flex-column">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <br />
+
+                  <div *ngIf="isSummary_panel" class="animated fadeInRight">
+                    <div class="row">
+                      <div class="col-12 col-xl-12">
+                        <!-- Projects -->
+
+                        <div class="card">
+                          <div class="card-header">
+                            <!-- Title -->
+                            <h4 class="card-header-title">
+                              Applicable Holiday Calenders
+                            </h4>
+                          </div>
+
+                          <ul>
+                            <li *ngFor="let i of HolidayCalendarList" style="width: 100% !important">
+                              <div class="card-body">
+                                <!-- List group -->
+                                <div class="list-group list-group-flush my-n3">
+                                  <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                      <div class="col-auto">
+                                        <input type="checkbox" [checked]="i.checked" class="largerCheckbox" (change)="
+                                            selectedHolidayCalender($event, i)
+                                          " />
+                                      </div>
+
+                                      <div class="col ml-n2">
+                                        <!-- Title -->
+                                        <h4 class="font-weight-normal mb-1">
+                                          <a href="javascript:;" style="
+                                              color: #5c5c5c;
+                                              font-weight: 700 !important;
+                                            ">{{ i.Code }}</a>
+                                        </h4>
+
+                                        <!-- Text -->
+                                        <small class="text-muted">
+                                          Remarks : <b>{{ i.Remarks }}</b>
+                                        </small>
+                                      </div>
+                                      <div class="col-auto">
+                                        <input type="checkbox" class="defaultCheckbox" name="example2" />&nbsp;
+                                        <label>Is Default</label>
+                                      </div>
+                                    </div>
+                                    <!-- / .row -->
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right">
+              <button class="btn btn-default" type="button" (click)="modal_dismiss7()">
+                <i class="fa fa-ban" aria-hidden="true"></i>
+                &nbsp;Cancel</button>&nbsp;
+
+              <button class="btn btn-primary pull-right" type="submit" prevent-double-submit id="btnSubmit"
+                (click)="saveHolidayCalender()">
+                <div class="pos-rlt sm-btn-component">
+                  <span>
+                    <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Applicable Notice Period Days Modal popup -->
+
+<div id="popup_chooseNoticePeriodDays" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseNoticePeriodDays" aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px">
+              <small class="header-pretitle"><b>Applicable Notice Period Days
+                </b></small>
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss10()" style="margin-top: 5px">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body no-padder builtin-calling-wrapper">
+            <div class="flex-column">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <br />
+
+                  <div *ngIf="isSummary_panel" class="animated fadeInRight">
+                    <div class="row">
+                      <div class="col-12 col-xl-12">
+                        <!-- Projects -->
+
+                        <div class="card">
+                          <div class="card-header">
+                            <!-- Title -->
+                            <h4 class="card-header-title">
+                              Applicable Notice Period Days
+                            </h4>
+                          </div>
+
+                          <ul>
+                            <li *ngFor="let i of NoticePeriodDaysList" style="width: 100% !important">
+                              <div class="card-body">
+                                <!-- List group -->
+                                <div class="list-group list-group-flush my-n3">
+                                  <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                      <div class="col-auto">
+                                        <input type="checkbox" [checked]="i.checked" class="largerCheckbox" (change)="
+                                            selectedNoticePeriodDays($event, i)
+                                          " />
+                                      </div>
+
+                                      <div class="col ml-n2">
+                                        <!-- Title -->
+                                        <h4 class="font-weight-normal mb-1">
+                                          <a href="javascript:;" style="
+                                              color: #5c5c5c;
+                                              font-weight: 700 !important;
+                                            ">{{ i.Code }}</a>
+                                        </h4>
+
+                                        <!-- Text -->
+                                        <small class="text-muted">
+                                          Name : <b>{{ i.Name }}</b>
+                                        </small>
+                                      </div>
+                                      <div class="col-auto">
+                                        <input type="checkbox" class="defaultCheckbox" name="example2" />&nbsp;
+                                        <label>Is Default</label>
+                                      </div>
+                                    </div>
+                                    <!-- / .row -->
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right">
+              <button class="btn btn-default" type="button" (click)="modal_dismiss10()">
+                <i class="fa fa-ban" aria-hidden="true"></i>
+                &nbsp;Cancel</button>&nbsp;
+
+              <button class="btn btn-primary pull-right" type="submit" prevent-double-submit id="btnSubmit"
+                (click)="saveNoticePeriodDays()">
+                <div class="pos-rlt sm-btn-component">
+                  <span>
+                    <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Applicable paygroups Modal popup -->
+
+<div id="popup_choosePayGroups" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_choosePayGroups" aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px">
+              <small class="header-pretitle"><b>Applicable Pay Groups </b></small>
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss8()" style="margin-top: 5px">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body no-padder builtin-calling-wrapper">
+            <div class="flex-column">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <br />
+
+                  <div *ngIf="isSummary_panel" class="animated fadeInRight">
+                    <div class="row">
+                      <div class="col-12 col-xl-12">
+                        <!-- Projects -->
+
+                        <div class="card">
+                          <div class="card-header">
+                            <!-- Title -->
+                            <h4 class="card-header-title">
+                              Applicable Pay Groups
+                            </h4>
+                          </div>
+
+                          <ul>
+                            <li *ngFor="let i of PaygroupList" style="width: 100% !important">
+                              <div class="card-body">
+                                <!-- List group -->
+                                <div class="list-group list-group-flush my-n3">
+                                  <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                      <div class="col-auto">
+                                        <input type="checkbox" [checked]="i.checked" class="largerCheckbox"
+                                          (change)="selectedPayGroup($event, i)" />
+                                      </div>
+
+                                      <div class="col ml-n2">
+                                        <!-- Title -->
+                                        <h4 class="font-weight-normal mb-1">
+                                          <a href="javascript:;" style="
+                                              color: #5c5c5c;
+                                              font-weight: 700 !important;
+                                            ">{{ i.Code }}</a>
+                                        </h4>
+
+                                        <!-- Text -->
+                                        <small class="text-muted">
+                                          Name : <b>{{ i.Name }}</b>
+                                        </small>
+                                      </div>
+                                      <div class="col-auto">
+                                        <input type="checkbox" class="defaultCheckbox" name="example2" />&nbsp;
+                                        <label>Is Default</label>
+                                      </div>
+                                    </div>
+                                    <!-- / .row -->
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right">
+              <button class="btn btn-default" type="button" (click)="modal_dismiss8()">
+                <i class="fa fa-ban" aria-hidden="true"></i>
+                &nbsp;Cancel</button>&nbsp;
+
+              <button class="btn btn-primary pull-right" type="submit" prevent-double-submit id="btnSubmit"
+                (click)="savePayGroup()">
+                <div class="pos-rlt sm-btn-component">
+                  <span>
+                    <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Applicable statutory  Modal popup -->
+
+<div id="popup_chooseStatutoryRule" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseStatutoryRule" aria-hidden="true">
+  <div style="display: block" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px">
+              <small class="header-pretitle"><b>Statutory Rules Details </b></small>
+            </div>
+
+            <div class="modal-close" (click)="modal_dismiss9()" style="margin-top: 5px">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+
+          <!-- <div class="modal-body"> -->
+          <div class="modal-body no-padder builtin-calling-wrapper">
+            <div class="flex-column">
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <br />
+
+                  <div *ngIf="isSummary_panel" class="animated fadeInRight">
+                    <div class="row">
+                      <div class="col-12 col-xl-12">
+                        <!-- Projects -->
+                        <div class="card">
+                          <div class="table-responsive mb-0" data-toggle="lists"
+                            data-options='{"valueNames": ["project-project", "project-status", "project-progress", "project-date"]}'>
+                            <table class="table table-sm table-nowrap card-table table-hover">
+                              <thead>
+                                <tr>
+                                  <th>
+                                    <a href="javascript:;" class="text-muted sort" data-sort="project-project">
+                                      Statutory Type
+                                    </a>
+                                  </th>
+                                  <th>
+                                    <a href="javascript:;" class="text-muted sort" data-sort="project-status">
+                                      Product Code
+                                    </a>
+                                  </th>
+                                  <th style="width: 25rem">
+                                    <a href="javascript:;" class="text-muted sort" data-sort="project-progress">
+                                      Product Applicablity
+                                    </a>
+                                  </th>
+                                  <th>
+                                    <a href="javascript:;" class="text-muted sort" data-sort="project-date">
+                                      Effective Date
+                                    </a>
+                                  </th>
+                                  <th></th>
+                                </tr>
+                              </thead>
+                              <tbody class="list">
+                                <tr *ngFor="let i of StatutoryDetailsList">
+                                  <td class="project-project">
+                                    <!-- Heading -->
+                                    <h4 class="font-weight-normal mb-1">
+                                      {{ i.StatutoryTypeName }}
+                                    </h4>
+                                  </td>
+                                  <td class="project-project">
+                                    <!-- Heading -->
+                                    <h4 class="font-weight-normal mb-1">
+                                      {{ i.Code }}
+                                    </h4>
+                                  </td>
+                                  <!-- <td class="project-status">
+                        
+                                               
+                                                <span class="badge badge-soft-warning">Partially Approved</span>
+                        
+                                              </td> -->
+                                  <td class="project-progress">
+                                    <div class="d-flex align-items-center">
+                                      <ng-select [items]="i.ProductApplicabulityCodes"
+                                        placeholder="select Applicablity Code" style="width: 100%" bindLabel="Code">
+                                      </ng-select>
+                                    </div>
+                                  </td>
+                                  <td class="project-date">
+                                    <input type="text" class="form-control" bsDatepicker placement="top" [bsConfig]="{
+                                        isAnimated: true,
+                                        dateInputFormat: 'DD-MM-YYYY',
+                                        containerClass: 'theme-default'
+                                      }" placeholder="Date" autocomplete="off" />
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right">
+              <button class="btn btn-default" type="button" (click)="modal_dismiss9()">
+                <i class="fa fa-ban" aria-hidden="true"></i>
+                &nbsp;Cancel</button>&nbsp;
+
+              <button class="btn btn-primary pull-right" type="submit" prevent-double-submit id="btnSubmit"
+                (click)="saveStatutoryRules()">
+                <div class="pos-rlt sm-btn-component">
+                  <span>
+                    <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_minimumWages" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_minimumWages" aria-hidden="true">
+  <div style="display: block" class="modal fade show">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="dfc100 overflow-y-auto">
+          <div class="modal-header" style="padding: 15px !important">
+            <div class="col-xs-11">
+              <small class="header-pretitle"><b>{{ nameOfOperationsTxt }} </b></small>
+              <div class="modal-close" (click)="closeMinWageAppProd()">
+                <span class="mdi mdi-close pull-left"></span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="" id="page-content">
+
+              <div class="justify-content-center">
+                <div class="card user-activity-card">
+                  <form [formGroup]="minWageAppProdForm" (ngSubmit)="saveMinWageAppProd()">
+
+                    <div class="col p-15 mb-4">
+                      <label class="form-label">Code <span class="required"> *
+                        </span></label>
+                      <input type="text" class="form-control" placeholder="Code" formControlName="Code" [ngClass]="{
+                        'is-invalid':  minWageAppProdForm.controls['Code'].invalid && minWageAppProdForm.controls['Code'].touched 
+                      }" />
+                      <div *ngIf="minWageAppProdForm.controls['Code'].invalid" class="help-block">
+                        <div
+                          *ngIf="minWageAppProdForm.controls['Code'].invalid && minWageAppProdForm.controls['Code'].touched  || minWageAppProdForm.controls['Code'].invalid && onMinWageSubmit">
+                          Code is required
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col p-15 mb-4">
+                      <label class="form-label">Name<span class="required"> *
+                        </span></label>
+                      <input type="text" class="form-control" placeholder="Name" formControlName="Name" [ngClass]="{
+                        'is-invalid':  minWageAppProdForm.controls['Name'].invalid && minWageAppProdForm.controls['Name'].touched
+                      }" />
+                      <div *ngIf="minWageAppProdForm.controls['Name'].invalid" class="help-block">
+                        <div
+                          *ngIf="minWageAppProdForm.controls['Name'].invalid && minWageAppProdForm.controls['Name'].touched || minWageAppProdForm.controls['Name'].invalid && onMinWageSubmit ">
+                          Name is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col p-15 mb-4">
+                      <label class="form-label">Applicable Product List<span class="required">*</span> </label>
+                      <ng-select [multiple]="true" [items]="applicableProductList"
+                        placeholder="Select Applicable Product" formControlName="ApplicableProducts" bindValue="Id"
+                        bindLabel="Name" [ngClass]="{
+                          'is-invalid':  minWageAppProdForm.controls['ApplicableProducts'].invalid && minWageAppProdForm.controls['ApplicableProducts'].touched
+                        }">
+                      </ng-select>
+                      <div *ngIf="minWageAppProdForm.controls['ApplicableProducts'].invalid" class="help-block">
+                        <div
+                          *ngIf="minWageAppProdForm.controls['ApplicableProducts'].invalid && minWageAppProdForm.controls['ApplicableProducts'].touched || minWageAppProdForm.controls['ApplicableProducts'].invalid && onMinWageSubmit">
+                          Applicable Product is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col p-15 mb-4">
+                      <label class="form-label">Is Individual Based<span class="required">*</span></label>
+                      <label class="el-switch el-switch-green">
+                        <input type="checkbox" formControlName="IsIndividualbased" name="isIndividualBased" [ngClass]="{
+                          'is-invalid':  minWageAppProdForm.controls['IsIndividualbased'].invalid
+                        }" />
+                        <span class="el-switch-style"></span>
+                      </label>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer no-padding">
+            <button class="btn upgrade-btn width-100" (click)="saveMinWageAppProd()">
+              <b>Save</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nz-drawer [nzVisible]="slider" [nzWidth]="840" nzTitle="Account Manager" (nzOnClose)="close_invoiceSliderVisible()">
+  <nz-descriptions [nzColumn]="2"> </nz-descriptions>
+  <nz-divider></nz-divider>
+  <div>
+    <nz-table nzSize="small" [nzTemplateMode]="false" [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th>Contract Code</th>
+          <th>Client Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Client SPOC</th>
+          <th>No.of Employees</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <!-- <td>CLI0923</td>
+          <td style="text-align: right !important;">Integrum Tech</td>
+          <td style="text-align: right !important;">12/12/2020</td>
+          <td style="text-align: right !important;">13/12/2020</td>
+          <td style="text-align: right !important;">Integrum</td>
+          <td style="text-align: right !important;">12</td> -->
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</nz-drawer>
+
+<nz-drawer [nzVisible]="slider2" [nzWidth]="840" nzTitle="Key Member" (nzOnClose)="close_invoiceSliderVisible2()">
+  <nz-descriptions [nzColumn]="2">
+    <!-- <nz-descriptions-item nzTitle="Name" [nzSpan]="0.5"><b>Arul Mano</b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Reporting Manager" [nzSpan]="0.5">
+      <b>Sandeep </b></nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Location" [nzSpan]="0.5">
+      <b>Bangalore</b></nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Cost Centre" [nzSpan]="0.5"> Bangalore
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Mobile Number" [nzSpan]="0.5">9087675423
+    </nz-descriptions-item> -->
+  </nz-descriptions>
+  <nz-divider></nz-divider>
+  <div>
+    <!-- <nz-divider></nz-divider> -->
+    <nz-table nzSize="small" [nzTemplateMode]="false" [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th>Contract Code</th>
+          <th>Client Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Client SPOC</th>
+          <th>No.of Employees</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <!-- <td>CLI0923</td>
+          <td style="text-align: right !important;">Integrum Tech</td>
+          <td style="text-align: right !important;">12/12/2020</td>
+          <td style="text-align: right !important;">13/12/2020</td>
+          <td style="text-align: right !important;">Integrum</td>
+          <td style="text-align: right !important;">12</td> -->
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</nz-drawer>
+
+<nz-drawer [nzVisible]="visible_documentUpload" [nzWidth]="640" nzIcon="user" nzTitle="Document Details"
+  (nzOnClose)="close_documentUpload()">
+  <div>
+    <div class="row">
+      <form [formGroup]="documentForm">
+        <div class="col-12 col-md-12 col-sm-12">
+          <div class="clearfix">
+            <div class="row" *ngIf="DocumentMappingList?.length > 0">
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label">Document Name<span class="required"> *</span></label>
+                <ng-select [items]="DocumentMappingList" (change)="onChangeDocumentName($event)"
+                  placeholder="-- select an option --" formControlName="DocumentType" [ngClass]="{
+                    'ng-touched': submitted && h.DocumentType.errors
+                  }" bindLabel="DocumentTypeName" bindValue="DocumentTypeId">
+                </ng-select>
+                <div *ngIf="submitted && h.DocumentType.invalid" class="help-block">
+                  <div *ngIf="h.DocumentType.errors.required">
+                    Document Name is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label">Signed On <span class="required"> *</span>
+                </label>
+                <input type="text" class="form-control" bsDatepicker readonly (bsValueChange)="onChangetblDate($event)"
+                  placement="bottom" [bsConfig]="{
+                    isAnimated: true,
+                    dateInputFormat: 'DD-MM-YYYY',
+                    containerClass: 'theme-default'
+                  }" name="SignedOn" formControlName="SignedOn"
+                  [ngClass]="{ 'is-invalid': submitted && h.SignedOn.errors }" placeholder="12-12-2020"
+                  autocomplete="off" />
+                <div *ngIf="submitted && h.SignedOn.invalid" class="help-block">
+                  <div *ngIf="h.SignedOn.errors.required">
+                    Signed On is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label">Signed By <span class="required"> *</span></label>
+                <ng-select [items]="internalAccountManagers" [multiple]="true" (change)="onSignedByChange($event)"
+                  placeholder="-- select an option --" formControlName="SignedBy"
+                  [ngClass]="{ 'ng-touched': submitted && h.SignedBy.errors }" bindLabel="Name" bindValue="Id">
+                </ng-select>
+                <div *ngIf="submitted && h.SignedBy.invalid" class="help-block">
+                  <div *ngIf="h.SignedBy.errors.required">
+                    Signed By is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label">Sign Up Center <span class="required"> *</span></label>
+                <ng-select [items]="CompanyBranchList" (change)="onSignUpCenterChange($event)"
+                  placeholder="-- select an option --" formControlName="SignUpCenter" [ngClass]="{
+                    'ng-touched': submitted && h.SignUpCenter.errors
+                  }" bindLabel="BranchName" bindValue="Id">
+                </ng-select>
+                <div *ngIf="submitted && h.SignUpCenter.invalid" class="help-block">
+                  <div *ngIf="h.SignUpCenter.errors.required">
+                    Sign Up Center is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-12">
+                <label class="form-label"> Remarks </label>
+                <textarea class="form-control" name="Remarks" spellcheck="false" formControlName="Remarks"
+                  placeholder="Remarks"></textarea>
+                <div *ngIf="submitted && h.Remarks.errors" class="invalid-feedback">
+                  <div *ngIf="h.Remarks.errors.required">
+                    Remarks is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                <label class="form-label">Attachment <span class="required"> *</span>
+                  <span class="help-text m-l-5">(Max file size 2MB)</span></label>
+                <label class="upload control" style="width: 50%; float: left"
+                  *ngIf="!documentForm.controls.FileName.value">
+                  <div class="upload-draggable is-primary">
+                    <section class="section">
+                      <div class="has-text-centered">
+                        <span class="icon is-large">
+                          <span style="padding-left: 10px">
+                            <i class="mdi mdi-cloud-upload" style="color: #9ba7ca"></i>
+                            Upload
+                          </span>
+                        </span>
+                      </div>
+                    </section>
+                  </div>
+                  <input type="file" accept="application/msword,  application/pdf" (change)="onFileUpload($event)"
+                    id="sTest-uploadFile-candidateAddResume" />
+                </label>
+                <div *ngIf="submitted && !documentForm.controls.FileName.value" class="help-block">
+                  Attachment is required
+                </div>
+                <p class="control" *ngIf="documentForm.controls.FileName.value">
+                  <span class="file-name">
+                    <button class="btn btn-danger c-btn" [disabled]="!isLoading" (click)="doDeleteFile()">
+                      <a ngbTooltip="Delete Attachment" id="sTest-deleteFile-candidateAddResume" style="
+                          padding-left: 10px;
+                          font-size: 15px;
+                          cursor: pointer;
+                          display: block;
+                          margin-top: -5px;
+                        ">
+                        <i class="fa fa-trash-o"></i>
+                      </a>
+                    </button>
+                    <a target="blank" class="ahref" style="padding: 2px; font-size: 10px">
+                      {{ documentForm.controls.FileName.value }}
+                    </a>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row" style="position: absolute; bottom: 10px; width: 100%" *ngIf="DocumentMappingList?.length > 0">
+    <div class="col-lg-6">
+      <ul class="list-inline"></ul>
+    </div>
+    <div class="col-lg-6 text-right">
+      <div class="text-right">
+        <ul class="list-inline" *ngIf="isLoading">
+          <li class="list-inline-item">
+            <button class="btn btn-default" type="button" [disabled]="!isLoading" (click)="close_documentUpload()">
+              <i class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel
+            </button>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn btn-primary" [disabled]="!isLoading" type="Submit" name="btnSubmit" id="btnSubmit"
+              (click)="saveDocumentDetails()">
+              <div class="pos-rlt sm-btn-component">
+                <span>
+                  <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                </span>
+              </div>
+            </button>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center" *ngIf="!isLoading">
+          <strong class="text-right">
+            {{ spinnerText }}... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-drawer>

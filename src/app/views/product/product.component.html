@@ -1,0 +1,750 @@
+<!-- <div id="overlay">
+  <div class="w-100 d-flex justify-content-center align-items-center">
+      <div class="spinner"></div>
+  </div>
+</div> -->
+<div class="page-wrapper">
+
+
+
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="row">
+
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6 col-12">
+        <ul class="list-inline">
+          <li class="list-inline-item subheader__main" style="cursor: default !important">
+            <!-- <h5 class="mt-0 p-l-5 subheader__title"> Product : </h5> -->
+
+            <h5 class="mt-0 p-l-5 subheader__title">{{header}}</h5>
+
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+
+            <li class="list-inline-item"><button type="submit" class="btn btn-primary" id="btnSubmit"
+                (click)="saveProductFn()">
+                <i class="mdi mdi-content-save  m-r-xs"></i> Save
+              </button></li>
+            <li class="list-inline-item">
+
+              <button class="btn btn-default btn-bold" tooltip="Exit" (click)="confirmExit()" tooltip-placement="bottom"
+                data-original-title="" title="">
+                <i class="mdi mdi-close font-size-md"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    &nbsp;
+    &nbsp;
+    <div class="content m-b report-content p-10rem">
+      <form [formGroup]="productForm">
+
+        <div class="row">
+
+          <div class="form-group form-group-vertical col-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12">
+
+            <div class="row" style="float: right;">
+              <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding-left: 10px !important;">
+                <label class="form-label">Status</label>
+              </div>
+              <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding:0px !important;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" formControlName="status" checked enabled />
+                  <span class="el-switch-style"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-lg-4 col-md-4 col-xs-12 col-sm-12 ">
+            <label class="form-label"> Code <span class="required">*</span>
+              <span class="form__length"> {{ codeInput.value?.length }}/20</span>
+            </label>
+            <input type="text" maxlength="20" placeholder="Product Code" class="form-control" formControlName="code"
+            onkeypress="return /[a-zA-Z0-9 \s]/i.test(event.key)" [ngClass]="{ 'is-invalid': submitted && f.code.errors }" #codeInput>
+
+            <div *ngIf="f.code.errors" class="invalid-feedback">
+              <div *ngIf="f.code.errors.required">  Code is required</div>
+              <div *ngIf="f.code.errors.minlength">Code must be at least 2 characters</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-lg-8 col-md-8 col-xs-12 col-sm-12 ">
+            <label class="form-label"> Name <span class="required">*</span> </label>
+            <input type="text" placeholder="Product Name" class="form-control" formControlName="name"
+             [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+            <div *ngIf="f.name.errors" class="invalid-feedback">
+              <div *ngIf="f.name.errors.required"> Name is required</div>
+              <div *ngIf="f.name.errors.minlength">Name must be at least 2 characters</div>
+            </div>
+          </div>
+
+
+          <div class="form-group form-group-vertical col-12 col-lg-12 col-md-12 col-xs-12 col-sm-12 ">
+            <label class="form-label"> Description
+              <!-- <span class="required">*</span>  -->
+            </label>
+            <textarea class="form-control" rows="3" spellcheck="false" id="description"
+              formControlName="description"></textarea>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-lg-6 col-md-6 col-xs-12 col-sm-12">
+            <label class="form-label">Product Category<span class="required">*</span> </label>
+
+            <ng-select [items]="listOfproductCategory" [searchable]="true" placeholder="----Select----"
+              bindValue="ValueMember" bindLabel="DisplayMember" formControlName="productCategory" [clearable]="false"
+              [ngClass]="{ 'is-invalid': submitted && f.productCategory.errors }">
+            </ng-select>
+            <div *ngIf="submitted && f.productCategory.invalid" class="help-block">
+              <div *ngIf="f.productCategory.errors.required">Product Category is required</div>
+            </div>
+          </div>
+
+          <!-- <div class="form-group form-group-vertical col-lg-6 col-md-6 col-xs-12 col-sm-12 ">
+              
+              <label class="form-label">Product Category
+              </label>
+            <div class="radio-tile-group">
+              <div class="input-container" *ngFor="let productCategory of listOfproductCategory">
+                 
+                <input class="c-card" type="radio" formControlName="productCategory"  class="radio-button" [value]="productCategory.ValueMember" [checked]="productCategory.checked">
+                                 
+                <div class="radio-tile">
+                                        
+                  <div class="card-state-icon"></div>
+                  
+                  <label for="{{productCategory.ValueMember}}">
+                  
+                    <div class="image"> <div class="icon walk-icon">
+
+                  
+                      <i class="mdi {{productCategory.icon}}" style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                  
+                    </div></div>
+                  
+                    <label for="test" class="radio-tile-label">{{productCategory.DisplayMember}}</label>
+                  
+                  </label>
+                  
+                </div>
+                
+              </div> 
+                                          
+                  
+            </div>
+          </div> -->
+
+          <div class="form-group form-group-vertical col-12 col-lg-6 col-md-6 col-xs-12 col-sm-12"
+            [ngStyle]="{'visibility': productForm.controls.productCategory.value != 3 ? 'visible' : 'hidden'}">
+            <label class="form-label">Product Group<span class="required">*</span> </label>
+
+            <ng-select #select3 [items]="listOfproductGroup" [searchable]="true" placeholder="----Select----"
+              bindValue="Id" bindLabel="Name" formControlName="productGroup" [clearable]="false"
+              [ngClass]="{ 'is-invalid': submitted && f.productGroup.errors }">
+              <!-- [disabled]="clientContactForm.controls.Id.value ? true: null"  -->
+
+              <ng-template ng-header-tmp>
+                <input placeholder="Search product group " type="text" class="form-control"
+                  style="border: none;border-radius: 0px !important;background: white"
+                  (input)="select3.filter($event.target.value)" />
+              </ng-template>
+            </ng-select>
+            <div *ngIf="submitted && f.productGroup.invalid" class="help-block">
+              <div *ngIf="f.productGroup.errors.required">Product Group is required</div>
+            </div>
+          </div>
+
+
+          <!-- <div class="form-group form-group-vertical col-lg-8 col-md-8 col-xs-12 col-sm-12 "> 
+            <label class="form-label">Product Group<span class="required">*</span> </label>
+
+            <div class="radio-tile-group">
+              <div class="input-container" *ngFor="let productGroup of listOfproductGroup">
+                 
+                <input class="c-card" type="radio" formControlName="productGroup"  class="radio-button" [value]="productGroup.Id" [checked]="productGroup.checked">
+                                 
+                <div class="radio-tile">
+                                        
+                  <div class="card-state-icon"></div>
+                  
+                  <label for="{{productGroup.Id}}">
+                  
+                    <div class="image"> <div class="icon walk-icon">
+
+                  
+                      <i class="mdi {{productGroup.icon}}" style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                  
+                    </div></div>
+                  
+                    <label for="test" class="radio-tile-label">{{productGroup.Name}}</label>
+                  
+                  </label>
+                  
+                </div>
+                
+              </div> 
+                                          
+                  
+            </div>
+
+          </div>
+           -->
+
+          <div class="form-group form-group-vertical col-12 col-lg-6 col-md-6 col-xs-12 col-sm-12 ">
+            <label class="form-label">Product Type<span class="required">*</span></label>
+
+            <ng-select #select2 [items]="listOfproductType" [searchable]="true" placeholder="----Select----"
+              bindValue="Id" [clearable]="false" bindLabel="Name" formControlName="productType"
+              [ngClass]="{ 'is-invalid': submitted && f.productType.errors }">
+              <!-- [disabled]="clientContactForm.controls.Id.value ? true: null"  -->
+
+              <ng-template ng-header-tmp>
+                <input placeholder="Search product type" type="text" class="form-control"
+                  style="border: none;border-radius: 0px !important;background: white"
+                  (input)="select2.filter($event.target.value)" />
+              </ng-template>
+            </ng-select>
+            <div *ngIf="submitted && f.productType.invalid" class="help-block">
+              <div *ngIf="f.productType.errors.required">Product Type is required</div>
+            </div>
+          </div>
+
+
+          <!-- <div class="form-group form-group-vertical col-12 col-lg-6 col-md-6 col-xs-12 col-sm-12 "> 
+            <label class="form-label">Product Type<span class="required">*</span> </label>
+
+            <div class="radio-tile-group">
+              <div class="input-container" *ngFor="let productType of listOfproductType">
+                 
+                <input class="c-card" type="radio" formControlName="productType"  [value]="productType.Id"  [checked]="productType.checked" (change)="change($event, productType)"  class="radio-button" >
+                                 
+                <div class="radio-tile">
+                                        
+                  <div class="card-state-icon"></div>
+                  
+                  <label for="{{productType.Id}}">
+                  
+                    <div class="image"> <div class="icon walk-icon">
+
+                  
+                      <i class="mdi {{productType.icon}}" style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                  
+                    </div></div>
+                  
+                    <label for="test" class="radio-tile-label">{{productType.Name}}</label>
+                  
+                  </label>
+                  
+                </div>
+                
+              </div> 
+                                          
+                  
+            </div>
+
+          </div>   -->
+
+          <div class="form-group form-group-vertical col-12 col-lg-6 col-md-6 col-xs-12 col-sm-12">
+            <label class="form-label">Calculation Type<span class="required">*</span> </label>
+
+            <ng-select [items]="listOfcalculationType" [searchable]="true" placeholder="----Select----"
+              bindValue="ValueMember" bindLabel="DisplayMember" formControlName="calculationType" [clearable]="false"
+              [ngClass]="{ 'is-invalid': submitted && f.calculationType.errors }">
+            </ng-select>
+          </div>
+
+          <!-- <div class="form-group form-group-vertical col-12 col-lg-6 col-md-6 col-xs-12 col-sm-12 "> 
+            <label class="form-label">Calculation Type
+               <span class="required">*</span>  -->
+          <!-- </label>
+
+            <div class="radio-tile-group">
+              <div class="input-container" *ngFor="let calculationType of listOfcalculationType">
+                 
+                <input class="c-card" type="radio" formControlName="calculationType"  [value]="calculationType.ValueMember"  [checked]="calculationType.checked" (change)="ttypechange($event, calculationType)"  class="radio-button" >
+                                 
+                <div class="radio-tile">
+                                        
+                  <div class="card-state-icon"></div>
+                  
+                  <label for="{{calculationType.ValueMember}}">
+                  
+                    <div class="image"> <div class="icon walk-icon">
+
+                  
+                      <i class="mdi {{calculationType.icon}}" style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                  
+                    </div></div>
+                  
+                    <label for="test" class="radio-tile-label">{{calculationType.DisplayMember}}</label>
+                  
+                  </label>
+                  
+                </div>
+                
+              </div> 
+                                          
+                  
+            </div>
+
+          </div>  -->
+
+          <!-- <div class="form-group form-group-vertical col-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12">
+            
+            <div class="row" style="float: right;">
+              <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding-left: 10px !important;" >
+                <label class="form-label">Status</label>
+              </div>
+              <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="padding:0px !important;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" formControlName="status" checked enabled />
+                    <span class="el-switch-style"></span>
+                </label>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="col-xs-12  col-sm-6">
+            <div class="form-group form-group-vertical  col-xs-12 ">
+              <div class="row">
+
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6">
+                  <label class="form-label">Is LOP Applicable
+                    <!-- <span class="required">*</span> -->
+                  </label>
+                </div>
+
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="text-align: center;">
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="LOP Applicable" formControlName="lOpApplicable" />
+                    <span class="el-switch-style"></span>
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12">
+              <div class="row">
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6">
+                  <label class="form-label">Is Arrear Applicable
+                    <!-- <span class="required">*</span> -->
+                  </label>
+                </div>
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="text-align: center;">
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="Arrear Applicable" formControlName="arrearApplicable" />
+                    <span class="el-switch-style"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 ">
+              <div class="row">
+
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6">
+                  <label class="form-label">Is Bills Required
+                    <!-- <span class="required">*</span> -->
+                  </label>
+                </div>
+
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="text-align: center;">
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="Bills required" formControlName="billsrequired" />
+                    <span class="el-switch-style"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 ">
+              <div class="row">
+
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6">
+                  <label class="form-label">Is Benefit Product
+                  </label>
+                </div>
+
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="text-align: center;">
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="Bills required" formControlName="IsBenefitProduct" />
+                    <span class="el-switch-style"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12" *ngIf="this.productForm.controls.taxprojection">
+              <div class="row">
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6">
+                  <label class="form-label">Is Tax Projection Required
+                    <!-- <span class="required">*</span> -->
+                  </label>
+                </div>
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="text-align: center;">
+
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="Tax projection" formControlName="taxprojection" />
+                    <span class="el-switch-style"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12" *ngIf="this.productForm.controls.taxCodeApplicable">
+              <div class="row">
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6">
+                  <label class="form-label">Is Tax Code Applicable
+                    <!-- <span class="required">*</span> -->
+                  </label>
+                </div>
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="text-align: center;">
+
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="Tax projection" formControlName="taxCodeApplicable" />
+                    <span class="el-switch-style"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12" *ngIf="this.productForm.controls.IsThresholdLimitApplicable">
+              <div class="row">
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6">
+                  <label class="form-label">Is Threshold Limit Applicable
+                  </label>
+                </div>
+                <div class="col-lg-6 col-6 col-md-6 col-sm-6 col-xs-6 col-xxs-6" style="text-align: center;">
+
+                  <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="Tax projection" formControlName="IsThresholdLimitApplicable" />
+                    <span class="el-switch-style"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-xs-12  col-sm-6">
+
+            <div class="form-group form-group-vertical col-xs-12">
+              <label class="form-label">RoundOff Type<span class="required">*</span> </label>
+
+              <ng-select [items]="listOfroundOffType" [searchable]="true" placeholder="----Select----"
+                bindValue="ValueMember" bindLabel="DisplayMember" formControlName="roundOffType" [clearable]="false"
+                [ngClass]="{ 'is-invalid': submitted && f.roundOffType.errors }">
+                <!-- [disabled]="clientContactForm.controls.Id.value ? true: null"  -->
+
+              </ng-select>
+            </div>
+            <!-- <div class="form-group form-group-vertical  col-xs-12 ">
+            <label class="form-label">RoundOff Type
+              <span class="required">*</span> 
+            </label>
+            
+            <div class="radio-tile-group">
+              <div class="input-container" *ngFor="let roundOffType of listOfroundOffType">
+                 
+                <input class="radio-button form-control c-card" type="radio" formControlName="roundOffType" [ngClass]="{ 'is-invalid': submitted && f.roundOffType.errors }" 
+                [value]="roundOffType.ValueMember" [checked]="roundOffType.checked">
+                                 
+                <div class="radio-tile">
+                                        
+                  <div class="card-state-icon"></div>
+                  
+                  <label for="{{roundOffType.ValueMember}}">
+                  
+                    <div class="image"> <div class="icon walk-icon">
+
+                  
+                      <i class="mdi {{roundOffType.icon}}" style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                  
+                    </div></div>
+                  
+                    <label for="test" class="radio-tile-label">{{roundOffType.DisplayMember}}</label>
+                  
+                  </label>
+                  
+                </div>
+                  
+              </div> 
+              <div *ngIf="submitted && f.roundOffType.errors" class="invalid-feedback invalid-feedback-show">
+                <div *ngIf="f.roundOffType.errors.required">RoundOff type is required</div>
+              </div>                      
+                  
+            </div>
+           
+          </div>  -->
+
+            <!-- <div class="form-group form-group-vertical col-lg-6 col-md-6 col-xs-3 col-sm-3 p-r-10rem">
+                      <label>CalculationType<span class="required">*</span> </label>
+                      <select id="calculationType" class="form-control" formControlName="calculationType"
+                         [ngClass]="{ 'is-invalid': submitted && f.calculationType.errors }">
+                        <option value="">----Select----</option>
+                        <option *ngFor="let calculationType of listOfcalculationType" [value]="calculationType.ValueMember">
+                          {{calculationType.DisplayMember}}
+                        </option>
+                      </select>
+                      <div *ngIf="submitted && f.calculationType.errors" class="invalid-feedback">
+                        <div *ngIf="f.calculationType.errors.required">CalculationType is required</div>
+                      </div>
+                    </div>  -->
+
+
+            <div class="form-group form-group-vertical  col-xs-12">
+              <label class="form-label">RoundOff Value<span class="required">*</span>
+              </label>
+              <input class="form-control" type="number" min="0" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+                placeholder="RoundOff Value" formControlName="roundOffValue"
+                [ngClass]="{ 'is-invalid': submitted && f.roundOffValue.errors }">
+              <div *ngIf="submitted && f.roundOffValue.errors" class="invalid-feedback">
+                <div *ngIf="f.roundOffValue.errors.required">RoundOff Value is required</div>
+              </div>
+            </div>
+
+            <!-- <div class="form-group form-group-vertical col-xs-12">
+              <label class=form-label>GL Code </label>
+              <input type="text" placeholder="GL Code" class="form-control" formControlName="gLCode"
+                [ngClass]="{ 'is-invalid': submitted && f.gLCode.errors }">
+              <div *ngIf="submitted && f.gLCode.errors" class="invalid-feedback">
+                <div *ngIf="f.gLCode.errors.required">GL Code is required</div>
+              </div>
+            </div> -->
+          </div>
+
+
+
+          <!-- <div class="form-group form-group-vertical col-xs-3 col-sm-3">
+                        <label>Product Category<span class="required">*</span> </label>
+                        <select id="productCategory" class="form-control" formControlName="productCategory"
+                           [ngClass]="{ 'is-invalid': submitted && f.productCategory.errors }">
+                          <option value="">----Select----</option>
+                          <option *ngFor="let productCategory of listOfproductCategory" [value]="productCategory.ValueMember">
+                            {{productCategory.DisplayMember}}
+                          </option>
+                        </select>
+                        <div *ngIf="submitted && f.productCategory.errors" class="invalid-feedback">
+                          <div *ngIf="f.productCategory.errors.required">ProductCategory is required</div>
+                        </div>
+                      </div>  -->
+
+
+          <!-- <div class="form-group form-group-vertical col-12 col-lg-6 col-md-6 col-xs-3 col-sm-3 p-l-10rem">
+                            <label>RoundOffType<span class="required">*</span> </label>
+                            <select id="roundOffType" class="form-control" formControlName="roundOffType"
+                               [ngClass]="{ 'is-invalid': submitted && f.roundOffType.errors }">
+                              <option value="">----Select----</option>
+                              <option *ngFor="let roundOffType of listOfroundOffType" [value]="roundOffType.ValueMember">
+                                {{roundOffType.DisplayMember}}
+                              </option>
+                            </select>
+                            <div *ngIf="submitted && f.roundOffType.errors" class="invalid-feedback">
+                              <div *ngIf="f.roundOffType.errors.required">RoundOffType is required</div>
+                            </div>
+                          </div>  -->
+
+          <!-- <div class="form-group form-group-vertical col-xs-3 col-sm-3">
+                          <label class="form-label">Status</label>
+                          &nbsp;
+                          &nbsp;
+                          <div class="pretty p-switch p-fill padding-top-10">
+                            <input type="checkbox" formControlName="status" checked enabled />
+                            <div class="state p-success">
+                              <label></label>
+                            </div>
+                          </div>
+                        </div> -->
+
+
+
+
+
+
+          <div class="form-group form-group-vertical col-lg-6 col-md-6 col-xs-12 col-sm-12 "
+            *ngIf="this.productForm.controls.taxCodeApplicable.value == true">
+            <label class=form-label>Applicable Tax Code <span class="required">*</span>  </label>
+
+            <ng-select #select2 [items]="listOfTaxCodes" [searchable]="true" placeholder="----Select----" bindValue="Id"
+              bindLabel="Code" formControlName="applicableTaxCode" [clearable]="false"
+              [ngClass]="{ 'is-invalid': submitted && f.applicableTaxCode.errors }">
+              <ng-template ng-header-tmp>
+                <input placeholder="APPlicable Tax Code" type="text" class="form-control"
+                  style="border: none;border-radius: 0px !important;background: white" />
+              </ng-template>
+            </ng-select>
+            
+            <div *ngIf="submitted && f.applicableTaxCode.invalid" class="help-block">
+              <div *ngIf="f.applicableTaxCode.errors.required">Applicable Tax Code is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-lg-6 col-md-6 col-xs-12 col-sm-12 "
+            *ngIf="this.productForm.controls.IsThresholdLimitApplicable.value == true">
+            <label class=form-label>Threshold Limit <span class="required">*</span></label>
+            <input type="number" onkeypress="return /^[0-9 .]+$/i.test(event.key)" placeholder="1.00" 
+              class="form-control" formControlName="thresholdlimit"
+              [ngClass]="{ 'is-invalid': submitted && f.thresholdlimit.errors }">
+            <div *ngIf="submitted && f.thresholdlimit.errors" class="invalid-feedback">
+              <div *ngIf="f.thresholdlimit.errors.required">Threshold Limit is required</div>
+              <div *ngIf="f.thresholdlimit.errors.min"> Please enter value greater than 0</div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+
+      </form>
+
+
+
+      <div style="height:100%;" *ngIf="f.calculationType && f.calculationType.value != 2">
+        <ngb-tabset style="height:auto;">
+
+          <ngb-tab style="height:auto;">
+            <ng-template ngbTabTitle><i class="fa fa-crosshairs" aria-hidden="true"></i>&nbsp;&nbsp; Rules
+            </ng-template>
+            <ng-template ngbTabContent>
+              <!-- <div class="pull-right ml-1" style="padding-top: 10px;padding-bottom: 10px;">
+                <button type="button" class="btn btn-primary" (click)="newpayrollRule()">
+                  <i class="mdi mdi-file-plus m-r-xs"></i> Add PayRoll Rule</button>
+              </div>
+              <div class="pull-right" style="padding-top: 10px;padding-bottom: 10px;" >
+                <button type="button" class="btn btn-primary" (click)="newCTCRule()">
+                  <i class="mdi mdi-file-plus m-r-xs"></i> Add CTC Rule</button>
+              </div> -->
+              <div class="pull-right" style="padding-top: 10px;padding-bottom: 10px;" *ngIf="!spinner">
+                <button type="button" class="btn btn-primary" (click)="newPayrollCtcRule()">
+                  <i class="mdi mdi-file-plus m-r-xs"></i> Add Rule</button>
+              </div>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+              <div *ngIf="!spinner">
+                <!-- <angular-slickgrid gridId="CTCgrid" [columnDefinitions]="CTCcolumnDefinitions"
+                  [gridOptions]="CTCgridOptions" [dataset]="CTCdataset" gridWidth="100%"
+                  (onAngularGridCreated)="angularGridReady_CTCangularGrid($event)">
+                </angular-slickgrid> -->
+                <angular-slickgrid gridId="productCTCPayrollRuleGrid" [columnDefinitions]="payrollCTCRuleColumnDefinitions"
+                  [gridOptions]="payrollCTCRuleGridOptions" [dataset]="payrollCTCRuleDataset" gridWidth="100%"
+                  (onAngularGridCreated)="angularGridReady_payrollCTCRuleAngularGrid($event)">
+                </angular-slickgrid>
+              </div>
+
+            </ng-template>
+          </ngb-tab>
+
+          <!-- <ngb-tab style="height:auto;">
+            <ng-template ngbTabTitle><i class="fa fa-crosshairs" aria-hidden="true"></i>&nbsp;&nbsp;PayRoll Rules
+            </ng-template>
+            <ng-template ngbTabContent>
+
+              <div class="pull-right" style="padding-top: 10px;padding-bottom: 10px;">
+                <button type="button" class="btn btn-primary" (click)="newpayrollRule()">
+                  <i class="mdi mdi-file-plus m-r-xs"></i> Add PayRoll Rule</button>
+              </div>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+              <div *ngIf="!spinner">
+                <angular-slickgrid gridId="PayRollgrid" [columnDefinitions]="PayRollcolumnDefinitions"
+                  [gridOptions]="PayRollgridOptions" [dataset]="PayRolldataset" gridWidth="100%"
+                  (onAngularGridCreated)="angularGridReady_PayrollangularGrid($event)">
+                </angular-slickgrid>
+              </div>
+
+            </ng-template>
+          </ngb-tab> -->
+
+          <ngb-tab style="height:auto;">
+            <ng-template ngbTabTitle><i class="fa fa-crosshairs" aria-hidden="true"></i>&nbsp;&nbsp;
+              Applicability
+            </ng-template>
+            <ng-template ngbTabContent>
+
+              <div class="pull-right" style="padding-top: 10px;padding-bottom: 10px;">
+                <button type="button" class="btn btn-primary" (click)="newProductApplicabilityClick()">
+                  <i class="mdi mdi-file-plus m-r-xs"></i> Add Applicability</button>
+              </div>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+              <div *ngIf="!spinner">
+                <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+                  [dataset]="datasetproductapp" gridWidth="100%" (onAngularGridCreated)="angularGridReady($event)">
+                </angular-slickgrid>
+              </div>
+
+
+
+              <div id="modaldeleteconfimation" class="modal fade" tabindex="-1" role="dialog"
+                aria-labelledby="modaldeleteconfimation" aria-hidden="true">
+                <div class="modal-dialog ">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <div class="col-xs-11">
+                        <h4 class="modal-title" id="modaldeleteconfimation">Confirmation</h4>
+                      </div>
+                      <div class="col-xs-1">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="modal-body alert-warning">
+                      <div class="row">
+                        <div class="col-xs-2">
+                          <i class="fa fa-warning fa-3x "></i>
+                        </div>
+                        <div class="col-xs-10">
+                          <div>
+                            <h5>
+                              Are you sure you want to delete this value <span> {{deleteColumn}}</span>?
+                            </h5>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-danger btn-sm" (click)="delete()">Yes</button> &nbsp;
+                      <button class="btn btn-default btn-sm" data-dismiss="modal">No</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </ng-template>
+          </ngb-tab>
+
+
+        </ngb-tabset>
+
+
+
+
+      </div>
+    </div>
+
+  </div>
+</div>

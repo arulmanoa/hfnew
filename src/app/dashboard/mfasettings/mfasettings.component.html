@@ -1,0 +1,466 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;">
+        <!-- <h3> Enable your multi-factor authentication methods </h3> -->
+
+
+
+        <div class="row" *ngIf='NonRegisteredMFA'>
+          <div class="col-lg-12">
+            <div class="row">
+              <div class="col-lg-10">
+                <a href="javascript:;">
+                  <img class="logo-size" src='../../../../assets/Images/clientlogo/{{clientLogoLink}}' alt="logo"
+                    style="height: 30px;text-align: left;    padding-top: 8px;display: block;">
+                </a>
+              </div>
+              <div class="col-lg-2 text-right">
+                <a href="javascript:;" class="close" (click)="cancel()"> <i class="mdi mdi-close"> </i> </a>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <img src="assets/Images/mfainit.svg" style="position: absolute;
+                bottom: 0px;
+                left: 0px;">
+              </div>
+              <div class="col-lg-8">
+                <div class="row">
+
+                  <div class="col-lg-12">
+                    <h6 class="h61"> Protect your account with Multi-Factor Authentication </h6>
+                    <p class="p1"> Each time you sign in to your account, you will need your password and a verification
+                      code. To
+                      secure your HfactoR account support with Multi-Factor-Authentication (MFA). Setting up MFA will
+                      help
+                      reduce risks from outside threats to your account</p>
+                  </div>
+                </div>
+                <br />
+                <br />
+
+                <div class="row">
+                  <div class="col-lg-6">
+                    <label class="form-label lab"> Enable MFA </label>
+                    <p>Use your email address to receive security codes</p>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="p-t-10">
+                      <label class="el-switch el-switch-green">
+                        <input type="checkbox" name="switch" value="yes" [(ngModel)]="isEnableTFA">
+                        <span class="el-switch-style"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-lg-2">
+                  </div>
+                </div>
+                <br />
+
+                <div class="row" *ngIf="hasErrorOccurred">
+                  <div class="col-lg-12 text-center" style="color: red;">
+                    <!-- <ngb-alert [dismissible]="false"> -->
+                    <strong>{{FailerMessage}}</strong>
+                    <!-- </ngb-alert> -->
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-md-12 text-right">
+                    <button class="btn btn-primary" (click)="doRequestOTP()" [disabled]="smallspinner"
+                      style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                        class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Next &nbsp; &nbsp; <span
+                        *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true"></span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+
+        <div class="row" style="padding: 1rem;" *ngIf='DisableMFA'>
+          <div class="col-lg-12">
+            <div class="row">
+              <div class="col-lg-10">
+
+              </div>
+              <div class="col-lg-2 text-right">
+                <a href="javascript:;" class="close" (click)="cancel()"> <i class="mdi mdi-close"> </i> </a>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <img src="assets/Images/mfaauth.svg" style="position: absolute; 
+                bottom: 0px;
+                left: 0px;">
+              </div>
+              <div class="col-lg-8">
+                <div class="card" style="border: none;">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <a href="javascript:;">
+                        <img class="logo-size" src='assets/Images/antivirus_lock.png' alt="logo"
+                          style="height: 50px;text-align: center;margin: 0 auto;    padding-top: 8px;display: block;">
+                      </a>
+                    </div>
+                    <div class="col-lg-12">
+                      <h6 class="h61 text-center">Two Step Verification</h6>
+                      <p class="p1 text-center"> Enter the six-digit code from the Authenticator application </p>
+                    </div>
+
+                    <div class="col-lg-12">
+                      <input type="tel" [(ngModel)]="MFASecurityCode"
+                        onkeypress="return /^[0-9]+$/i.test(event.key)"
+                        class="form-control" autocomplete="off" placeholder="### ###" />
+                    </div>
+
+
+
+                  </div>
+                  <br />
+
+
+                  <div class="row" *ngIf="hasErrorOccurred">
+                    <div class="col-lg-12 text-center" style="color: red;">
+                      <!-- <ngb-alert [dismissible]="false"> -->
+                      <strong>{{FailerMessage}}</strong>
+                      <!-- </ngb-alert> -->
+                    </div>
+                  </div>
+
+                  <br />
+
+                  <div class="row">
+                    <div class="col-lg-8 text-right">
+                      <button class="btn btn-primary" (click)="doDisableMFA()" [disabled]="smallspinner"
+                        style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                          class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Verify and Confirm &nbsp; &nbsp;
+                        <span *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status"
+                          aria-hidden="true"></span>
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+
+
+        <div class="row" style="padding: 1rem;" *ngIf='VerifyOTP'>
+          <div class="col-lg-12">
+            <div class="row">
+              <div class="col-lg-10">
+
+              </div>
+              <div class="col-lg-2 text-right">
+                <a href="javascript:;" class="close" (click)="cancel()"> <i class="mdi mdi-close"> </i> </a>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <img src="assets/Images/mfaauth.svg" style="position: absolute; 
+                bottom: 0px;
+                left: 0px;">
+              </div>
+              <div class="col-lg-8">
+                <div class="card" style="border: none;">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <a href="javascript:;">
+                        <img class="logo-size" src='assets/Images/antivirus_lock.png' alt="logo"
+                          style="height: 50px;text-align: center;margin: 0 auto;    padding-top: 8px;display: block;">
+                      </a>
+                    </div>
+                    <div class="col-lg-12">
+                      <h6 class="h61 text-center">Authenticate Your Account</h6>
+                      <p class="p1 text-center"> Please confirm your
+                        account by entering the authorization code sent to your registered email </p>
+                    </div>
+
+                    <div class="col-lg-12">
+                      <input type="tel" [(ngModel)]="OTP"
+                        onkeypress="return /^[0-9]+$/i.test(event.key)"
+                        class="form-control" autocomplete="off" placeholder="*** ***" />
+                    </div>
+
+
+
+                  </div>
+                  <br />
+
+
+                  <div class="row" *ngIf="hasErrorOccurred">
+                    <div class="col-lg-12 text-center" style="color: red;">
+                      <!-- <ngb-alert [dismissible]="false"> -->
+                      <strong>{{FailerMessage}}</strong>
+                      <!-- </ngb-alert> -->
+                    </div>
+                  </div>
+
+                  <br />
+
+                  <div class="row">
+
+                    <div class="col-lg-7 text-left">
+                      <span> It may take a minute to receive your code. Haven't received it?
+                        <a href="javascript:;"><span *ngIf="timecounter == 0" (click)="resendOTP()"> Resend a new code.
+                          </span>
+
+                          <span *ngIf="timecounter > 0" style="color: #ec2424;font-size: 14px;">{{timeleft}}</span>
+
+                          &nbsp;<span *ngIf="spinner" class="spinner-border spinner-border-sm" role="status"
+                            aria-hidden="true"></span>
+                        </a>
+                      </span>
+                    </div>
+
+
+                    <div class="col-lg-5 text-right">
+                      <button class="btn btn-primary" (click)="doVerifyOTP()" [disabled]="smallspinner"
+                        style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                          class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Verify OTP &nbsp; &nbsp;
+                        <span *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status"
+                          aria-hidden="true"></span>
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+
+
+        <div class="row" *ngIf='Setup2Factor'>
+          <div class="col-lg-12">
+
+            <div class="card" style="border: none;">
+
+              <div class="row">
+                <div class="col-lg-10">
+                  <h6 class="h61 text-left">Setup 2-factor authentication</h6>
+                  <p class="p1 text-left">You can scan the image below with any authenticator mobile application on your
+                    mobile. (i.e : Microsoft or Google authenticator assistant to scan this QR Code and type the 6-digit
+                    security code in the below summary box) </p>
+                </div>
+                <div class="col-lg-2 text-right">
+                  <a href="javascript:;" class="close" (click)="cancel()"> <i class="mdi mdi-close"> </i> </a>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-12">
+                  <a href="javascript:;">
+
+                    <img class="logo-size" [src]="QRCode" alt="QR"
+                      style="height: 10rem;text-align: center;margin: 0 auto;padding-top: 0px;display: block;">
+                  </a>
+                </div>
+
+                <br />
+                <br />
+
+                <div class="col-lg-12">
+                  <h6 class="h61 text-left">Enter the six-digit code from the application</h6>
+                  <p class="p1 text-left">After scanning the QR image, the app will display a six-digit code that
+                    you can enter below. </p>
+                </div>
+
+
+                <div class="col-lg-12">
+                  <input type="tel"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)"
+                    [(ngModel)]="TFACode" class="form-control" autocomplete="off" placeholder="### ###" />
+                </div>
+
+              </div>
+
+              <br />
+
+              <div class="row">
+                <div class="col-lg-4">
+                  <label class="form-label lab" style="margin-top: 10px;"> Enable MFA for Web </label>
+                </div>
+                <div class="col-lg-4" style="margin-top:-2px">
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green" style="font-size: 91% !important;">
+                      <input type="checkbox" name="switch" value="yes" [(ngModel)]="isEnableTFAForWeb">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-4">
+                  <label class="form-label lab" style="margin-top: 10px;"> Enable MFA for Mobile </label>
+                </div>
+                <div class="col-lg-4" style="margin-top:-2px">
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green" style="font-size: 91% !important;">
+                      <input type="checkbox" name="switch" value="yes" [(ngModel)]="isEnableTFAForMobile">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="hasErrorOccurred">
+                <div class="col-lg-12 text-center" style="color: red;">
+                  <!-- <ngb-alert [dismissible]="false"> -->
+                  <strong>{{FailerMessage}}</strong>
+                  <!-- </ngb-alert> -->
+                </div>
+              </div>
+
+              <div class="row">
+
+                <div class="col-lg-12 text-right">
+                  <button class="btn btn-primary" (click)="doEnbaleTFA()" [disabled]="smallspinner"
+                    style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                      class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Enable MFA &nbsp; &nbsp;
+                    <span *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="row" *ngIf='RegisteredMFA'>
+          <div class="col-lg-12">
+            <div class="row">
+
+              <div class="col-lg-10">
+                <a href="javascript:;">
+                  <img class="logo-size" src='../../../../assets/Images/clientlogo/{{clientLogoLink}}' alt="logo"
+                    style="height: 30px;text-align: left;    padding-top: 8px;display: block;">
+                </a>
+              </div>
+              <div class="col-lg-2 text-right">
+                <a href="javascript:;" class="close" (click)="cancel()"> <i class="mdi mdi-close"> </i> </a>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-lg-4">
+                <img src="assets/Images/mfasuccess.svg" style="position: absolute;
+                bottom: 0px;
+                left: 0px;">
+              </div>
+              <div class="col-lg-8">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <h6 class="h61"> Protect your account with Multi-Factor Authentication </h6>
+                    <p class="p1"> Each time you sign in to your account, you will need your password and a verification
+                      code. To
+                      secure your HfactoR account support with Multi-Factor-Authentication (MFA). Setting up MFA will
+                      help
+                      reduce risks from outside threats to your account</p>
+                  </div>
+                </div>
+                <br />
+                <br />
+                <div class="row">
+                  <div class="col-lg-4" style="margin-top: 11px;">
+                    <label class="form-label lab"> MFA For Web</label>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="p-t-10">
+                      <label class="el-switch el-switch-green">
+                        <input type="checkbox" name="switch" value="yes" (change)="doMFAChange($event, 'Web')" [(ngModel)]="MFAEnabledForWeb">
+                        <span class="el-switch-style"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-4" style="margin-top: 11px;">
+                    <label class="form-label lab"> MFA For Mobile</label>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="p-t-10">
+                      <label class="el-switch el-switch-green">
+                        <input type="checkbox" name="switch" value="yes" (change)="doMFAChange($event, 'Mobile')"  [(ngModel)]="MFAEnabledForMobile">
+                        <span class="el-switch-style"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                  </div>
+                </div>
+
+                <br />
+                <div class="row" *ngIf="ShouldShowChangeSettings">
+                  <div class="col-md-12 text-right">
+                    <button class="btn btn-primary" (click)="doChangeSettings()"
+                      style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                        class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Change Settings &nbsp; &nbsp;
+                      <span *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+      </div>
+
+
+
+
+
+
+    </div>
+    <!--  footer  -->
+    <!-- <div class="modal-footer">
+      <div class="row">
+        <div class="col-md-12 text-right">
+          <button class="btn btn-link" type="button"
+            style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="cancel()"> &nbsp;
+            &nbsp; close &nbsp; &nbsp;
+          </button>
+
+          <button class="btn btn-primary" (click)="doRequestOTP()"
+            style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+              class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Request OTP &nbsp; &nbsp;
+          </button>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>

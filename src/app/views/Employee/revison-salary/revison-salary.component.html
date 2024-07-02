@@ -1,0 +1,2274 @@
+<div class="page-wrapper">
+  <div class="page-content">
+
+    <app-loading-screen></app-loading-screen>
+
+    <div class="row">
+
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 post">
+        <ul class="list-inline">
+          <li class="list-inline-item subheader__main">
+            <h5 class="mt-0 p-l-5 subheader__title">{{header}} </h5>
+            <span class="subheader__separator subheader__separator--v"></span>
+            <span class="subheader__desc help-text" *ngIf="!isSkeleton">
+              {{newObj.FirstName}}
+            </span>
+            <span class="subheader__desc help-text" *ngIf="isSkeleton">
+              <div class="line" [style.height]="height" [style.width]="width"></div>
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+
+            <li class="list-inline-item" *ngIf="this.Id != '0'">
+
+              <button class="btn btn-danger btn-bold" [disabled]="!disableBtn" (click)="cancel_transaction()"
+                tooltip-placement="bottom" data-original-title="" title="">
+                <i class="mdi mdi-cancel font-size-md"></i> Cancel Transaction
+              </button>
+            </li>
+
+            <li class="list-inline-item"><button type="button" class="btn upgrade-btn" id="btn_onboarding_submit"
+                [disabled]="!disableBtn" (click)="doSaveOrSubmit('Submit')"> <i
+                  class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Submit
+              </button></li>
+
+            <li class="list-inline-item"><button type="button" class="btn btn-primary" [disabled]="!disableBtn"
+                (click)="doSaveOrSubmit('onlySave')">
+                <i class="mdi mdi-content-save  m-r-xs"></i> Save
+              </button></li>
+
+            <li class="list-inline-item">
+
+              <button class="btn btn-default btn-bold" tooltip="Close" (click)="confirmExit()"
+                tooltip-placement="bottom" data-original-title="" title="">
+                <i class="mdi mdi-close font-size-md"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <br>
+
+
+    <div class="wrapper-lg cell">
+
+
+      <!-- <div class="post">
+        <div class="line" [style.height]="height" [style.width]="width"></div>
+        <div class="line2" [style.height]="height" [style.width]="width"></div>
+      </div> -->
+
+
+      <div class="content m-b report-content post">
+        <div class="col-12 col-md-12 col-sm-12">
+          <div class="clearfix">
+
+            <div class="row" *ngIf="isSkeleton">
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <div class="line2" [style.height]="height" [style.width]="width"></div>
+                  <br>
+                  <label class="qcsummarylabel form-text text-muted" style="margin-top: 0px;">
+                    <div class="line" [style.height]="height" [style.width]="width"></div>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <div class="line2" [style.height]="height" [style.width]="width"></div>
+                  <br>
+                  <label class="qcsummarylabel form-text text-muted" style="margin-top: 0px;">
+                    <div class="line" [style.height]="height" [style.width]="width"></div>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <div class="line2" [style.height]="height" [style.width]="width"></div>
+                  <br>
+                  <label class="qcsummarylabel form-text text-muted" style="margin-top: 0px;">
+                    <div class="line" [style.height]="height" [style.width]="width"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin-top:3em;" *ngIf="isSkeleton">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <div class="line2" [style.height]="height" [style.width]="width"></div>
+                  <br>
+                  <label class="qcsummarylabel form-text text-muted" style="margin-top: 0px;">
+                    <div class="line" [style.height]="height" [style.width]="width"></div>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <div class="line2" [style.height]="height" [style.width]="width"></div>
+                  <br>
+                  <label class="qcsummarylabel form-text text-muted" style="margin-top: 0px;">
+                    <div class="line" [style.height]="height" [style.width]="width"></div>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <div class="line2" [style.height]="height" [style.width]="width"></div>
+                  <br>
+                  <label class="qcsummarylabel form-text text-muted" style="margin-top: 0px;">
+                    <div class="line" [style.height]="height" [style.width]="width"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="!isSkeleton">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <small>Employee Code </small>
+                  <label class="qcsummarylabel form-text text-muted">
+                    {{newObj.Code}}
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <small class="form-text text-muted">Employee Name </small>
+                  <label class="qcsummarylabel form-text text-muted">
+                    {{newObj.FirstName}}
+                  </label>
+                </div>
+              </div>
+
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <small>DOJ </small>
+                  <label class="qcsummarylabel form-text text-muted">
+                    {{Label_DOJ | date : 'dd-MM-yyyy'}}
+                  </label>
+
+                </div>
+              </div>
+
+              <!--show for payroll -->
+              <div class="col-md-4" *ngIf="BusinessType == 3">
+                <div class="form-group">
+                  <small>Client Name </small>
+                  <label class="qcsummarylabel form-text text-muted">
+                    {{Label_ClientName}}
+                  </label>
+                </div>
+              </div>
+             
+              <div class="col-md-4" *ngIf="Idx != 4 && !isAllenDigital">
+                <div class="form-group">
+                  <small>Annual Salary </small>
+                  <label class="qcsummarylabel form-text text-muted">
+                    &#8377; {{Label_AnnualSalary}}
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <small>Location </small>
+                  <label class="qcsummarylabel form-text text-muted">
+                    {{Label_LocationName}}
+
+                  </label>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+         <!-- #region Skeleton screen desing -->
+
+        <div *ngIf="isSkeleton" class="p-3 card-section">
+          <div class="row col-12 col-md-12 col-lg-12 post">
+            <div class="line_title" [style.height]="height" [style.width]="width"></div>
+        
+          </div>
+          <br><br><br>
+        
+          <!-- <div class="row  col-12 col-md-12 col-lg-12 post">
+                  <div class="line_detail1" [style.height]="height" [style.width]="width" style="margin: 0 auto;"></div>
+        
+        
+                </div> -->
+          <br>
+          <div class="row  col-12 col-md-12 col-lg-12 post">
+        
+            <div class="line_detail2" [style.height]="height" [style.width]="width" style="margin: 0 auto;"></div>
+        
+          </div>
+          <br>
+          <p style="text-align: center;">You will be redirected in a few moments.
+          </p>
+        </div>
+        <!-- #endregion -->
+      <div class="m-b">
+        <form [formGroup]="RevisionForm">
+          <div class="col-12 col-md-12 col-sm-12">
+            <div class="clearfix">
+
+              <!-- <div style="margin-top:1em;" class="row">
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <small>Employee Code </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      {{newObj.Code}}
+                    </label>
+                 </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <small class="form-text text-muted">Employee Name </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      {{newObj.FirstName}}
+                    </label>
+                  </div>
+                </div>
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <small>DOJ </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      {{Label_DOJ | date : 'dd-MM-yyyy'}}
+                    </label>
+
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <small>Client Name </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      {{Label_ClientName}}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <small>Annual Salary </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      &#8377; {{Label_AnnualSalary}}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <small>Location </small>
+                    <label class="qcsummarylabel form-text text-muted">
+                      {{Label_LocationName}}
+
+                    </label>
+
+                  </div>
+                </div>
+
+
+              </div>
+
+
+              <hr> -->
+           
+              
+
+              <!-- #region  Salary Revision Information -->
+
+
+
+              <div class="row" *ngIf="(SalaryRevision) && !isSkeleton">
+
+                <div class="row col-12 col-md-12 col-lg-12">
+                  <div class="col-lg-4 col-md-4 ">
+                    <ul class="list-inline">
+                      <div class="form-group">
+                        <h5 *ngIf="(this.Idx == 2)">Salary Revision</h5>
+                        <h5 *ngIf="(this.Idx == 9)">Salary Revision / Location / Designation</h5>
+                        <h5 *ngIf="(this.Idx == 5)">Salary Revision / Location </h5>
+                        <h5 *ngIf="(Idx == 6)">Salary Revision / Designation</h5>
+                      </div>
+                      
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Existing Record -->
+                <div class="col-xs-12  col-sm-4 borderright  p-r-50">
+
+                  <div class="form-group form-group-vertical col-xs-12" style="text-align: left;">
+                    <label class="form-label">: : Existing Record : :</label>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;"  *ngIf="(Idx == 9 || Idx == 6)">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small> Designation </small>
+                        <label class="form-text text-muted">
+                         {{Label_Designation}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small> Annual Salary </small>
+                        <label class="form-text text-muted">
+                          &#8377; {{Label_AnnualSalary}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Industry </small>
+                        <label class="form-text text-muted">
+                          {{Label_IndustryName}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                     <div class="col-12 col-md-6" style="margin-bottom: 1rem;" *ngIf="(Idx == 9 || Idx == 5)">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Location </small>
+                        <label class="form-text text-muted">
+                          {{Label_LocationName}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Pay Group </small>
+                        <label class="form-text text-muted">
+                          {{Label_PayGroupName}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Skill Category </small>
+                        <label class="form-text text-muted">
+                          {{Label_SkillCategoryName}}
+                        </label>
+
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6" style="margin-bottom: 1.3rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Zone </small>
+                        <label class="form-text text-muted">
+                          {{Label_ZoneName}}
+                        </label>
+
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6" style="margin-bottom: 1.3rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>PF Logic </small>
+                        <label class="form-text text-muted">
+                          {{ Label_PFLogic }}
+                        </label>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr>
+
+                  <div class ="row" *ngIf="ELCTransaction.Status == 4">
+                    <div class="col-12" style="margin-bottom: 1rem;" >
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Approver Remarks </small>
+                        <label class="form-text text-muted">
+                         {{ELCTransaction.QcRemarks}}
+                        </label>
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+
+                <!-- New Record -->
+                <div class="col-xs-12  col-sm-8 p-l-50">
+
+
+                  <div class="form-group form-group-vertical col-xs-12" style="text-align: left;">
+                    <label class="form-label">: : New Record : :</label>
+
+                  </div>
+
+
+                  <div class="row">
+                    <!-- Hike Type -->
+                    <div class="form-group col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.hiketype">
+                        <label class="form-label">Hike type </label>
+
+                        <ng-select [items]="hiketype" placeholder="Hike type" formControlName="hiketype"
+                          bindLabel="Name" bindValue="Id" (change)="onChangeHiketype($event)">
+
+                        </ng-select>
+                        <!-- <div *ngIf="submitted && g.hiketype.invalid" class="help-block">
+                          <div *ngIf="g.hiketype.errors.required"> Hike type is required</div>
+                        </div> -->
+
+                      </div>
+                    </div>
+                    <!-- Hike Value -->
+                    <div class="form-group col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.RevisionForm.controls.hiketype.value != null">
+                        <label class="form-label" *ngIf="this.RevisionForm.controls.hiketype.value == 1">Percentage
+                          (%)</label>
+                        <label class="form-label" *ngIf="this.RevisionForm.controls.hiketype.value == 2">Value </label>
+
+                        <input type="text" class="form-control" placeholder="Hiketype input"
+                          formControlName="hiketypeinput" min="0" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          [ngClass]="{ 'is-invalid': submitted && g.hiketypeinput.invalid }" autocomplete="none|false|no"
+                          (change)="onChangePercentage($event.target.value)" onpaste="return false;">
+                        <!-- <div *ngIf="submitted && g.hiketypeinput.invalid" class="help-block">
+                          <div *ngIf="g.hiketypeinput.errors.required">Hike type input is required
+                          </div>
+                        </div> -->
+                      </div>
+
+                    </div>
+                     <!-- Minimum Wages Applicable Product -->
+                     <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-3 col-md-2 col-sm-3" 
+                      *ngIf="this.minimumWagesApplicableProductsList && this.minimumWagesApplicableProductsList.length > 0">
+                      <label class="form-label">Minimum Wages Applicable Product</label>
+
+                      <ng-select [items]="minimumWagesApplicableProductsList" placeholder="-- select --" 
+                        [disabled]="minimumWagesApplicableProductsList.length == 1" formControlName="minimumWagesApplicableProducts"
+                        [ngClass]="{'ng-touched': submitted && this.RevisionForm.controls.minimumWagesApplicableProducts.errors }" 
+                        bindLabel="Name" bindValue="Code" (change)="onChangeMinWagesApplicableProducts($event)">
+                      </ng-select>
+                      <div *ngIf="submitted && this.RevisionForm.controls.minimumWagesApplicableProducts.invalid" class="help-block">
+                          <div *ngIf="this.RevisionForm.controls.minimumWagesApplicableProducts.errors.required">
+                            Minimum wage applicable product is required
+                          </div>
+                      </div>
+                    </div>
+                    <!-- Do you want to specify Monthly Salary? -->
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6"
+                      *ngIf="this.RevisionForm.controls.forMonthlyValue">
+                      <label class="form-label" id='forMonthlyValue'>Do you want to specify Monthly Salary? </label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="switch" value="yes" formControlName="forMonthlyValue">
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div> 
+                    <!-- Annual Salary -->
+                    <div class="form-group col-12 col-md-6"
+                      *ngIf="this.RevisionForm.controls.forMonthlyValue.value == false">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.RevisionForm.controls.annualSalary">
+                        <label class="form-label">Annual Salary <span class="required"> * </span></label>
+
+                        <input type="text" class="form-control" placeholder="Annual salary" min={{Label_AnnualSalary}}
+                          formControlName="annualSalary" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          [ngClass]="{ 'is-invalid': (submitted && g.annualSalary.invalid) }" autocomplete="none|false|no"
+                          (keyup)="onChangeAnnaulSalary($event.target.value)" onpaste="return false;">
+
+                        <div *ngIf="submitted && g.annualSalary.invalid" class="help-block">
+                          <div *ngIf="g.annualSalary.errors.required">Annual Salary is required</div>
+                        </div> 
+                        <!-- <div *ngIf="isminAmount" class="help-block">
+                          Annual Salay must be equal or greater than {{Label_AnnualSalary}}
+                       </div>  -->
+
+                      </div>
+                    </div>
+                    <!-- Monthly Salary -->
+                    <div class="form-group col-12 col-md-6"
+                      *ngIf="this.RevisionForm.controls.forMonthlyValue.value == true">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.RevisionForm.controls.annualSalary">
+                        <label class="form-label">Monthly Salary <span class="required"> * </span></label>
+
+                        <input type="text" class="form-control" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          placeholder="Monthly salary" formControlName="monthlyAmount"
+                          (keyup)="onChangeMonthlySalary($event.target.value)" onpaste="return false;"
+                          [ngClass]="{ 'is-invalid': (submitted && g.monthlyAmount.invalid)  }" autocomplete="none|false|no">
+
+                        <div *ngIf="submitted && g.monthlyAmount.invalid" class="help-block">
+                          <div *ngIf="g.monthlyAmount.errors.required">Monthly Salary is required</div>
+                        </div>
+
+                        <!-- <div *ngIf="isminAmount" class="help-block">
+                          Monthly Salay must be equal or greater than {{Label_MonthlySalary}}
+                       </div>  -->
+
+                      </div>
+                    </div>
+                    <!-- Designation -->
+                    <div class="col-12 col-md-6" *ngIf="(Idx == 6 || Idx == 9)">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.RevisionForm.controls.designation">
+                        <label class="form-label">Designation <span class="required"> * </span></label>
+                        <input type="text" class="form-control" placeholder="Designation" formControlName="designation"
+                          [ngClass]="{ 'is-invalid': submitted && g.designation.invalid }" autocomplte="off" >
+                        <div *ngIf="submitted && g.designation.invalid" class="help-block">
+                          <div *ngIf="g.designation.errors.required">Designation is required</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- <div class="form-group col-12 col-md-6" *ngIf="(Idx == 5 || Idx == 9)">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.location">
+                        <label class="form-label">Location <span class="required"> * </span></label>
+
+                        <ng-select [items]="ClientLocationList" placeholder="Location" formControlName="location"
+                          (change)="onChangeOfferLocation($event, 'secondtime')"
+                          [ngClass]="{ 'ng-touched': submitted && g.location.invalid }" bindLabel="LocationName"
+                          bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.location.invalid" class="help-block">
+                          <div *ngIf="g.location.errors.required"> Location is required</div>
+                        </div>
+
+                      </div>
+                    </div> -->
+                    <!-- Salary Type -->
+                    <div class="form-group col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.RevisionForm.controls.salaryType">
+                        <label class="form-label">Salary Type <span class="required"> * </span></label>
+
+                        <ng-select [items]="Salarytype" formControlName="salaryType" placeholder="Salary Type"
+                          [ngClass]="{ 'ng-touched': submitted && g.salaryType.invalid }" bindLabel="Name"
+                          bindValue="Id" (change)="onFocus_OfferAccordion()">
+                        </ng-select>
+                        <div *ngIf="submitted && g.salaryType.invalid" class="help-block">
+                          <div *ngIf="g.salaryType.errors.required">Salary Type is required</div>
+                        </div>
+
+                      </div>
+
+                    </div>
+                    <!-- Pay Group -->
+                    <div class="form-group col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <label class="form-label">Pay Group <span class="required"> * </span></label>
+
+                        <ng-select [items]="PayGroupList" placeholder="Pay Group" formControlName="payGroup"
+                          [ngClass]="{ 'ng-touched': submitted && g.payGroup.invalid }" bindLabel="Name"
+                          bindValue="PayGroupId"  (change)="onFocus_OfferAccordion()">
+                        </ng-select>
+                        <div *ngIf="submitted && g.payGroup.invalid" class="help-block">
+                          <div *ngIf="g.payGroup.errors.required">PayGroup is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <!-- Industry -->
+                    <div class="form-group col-12 col-md-6" *ngIf="!ReLocation && SalaryRevision">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.RevisionForm.controls.industryType">
+                        <label class="form-label">Industry <span class="required"> * </span></label>
+
+                        <ng-select [items]="IndustryList" placeholder="Industry" formControlName="industryType"
+                          (change)="onChangeIndustryType($event)"
+                          [ngClass]="{ 'ng-touched': submitted && g.industryType.invalid }" bindLabel="Name"
+                          bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.industryType.invalid" class="help-block">
+                          <div *ngIf="g.industryType.errors.required">Industry is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="form-group col-12 col-md-6" *ngIf="!ReLocation && SalaryRevision">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.RevisionForm.controls.skillCategory">
+                        <label class="form-label">Skill Category <span class="required"> * </span></label>
+
+                        <ng-select [items]="SkillCategoryList" placeholder="Skill Category"
+                          formControlName="skillCategory"
+                          [ngClass]="{ 'ng-touched': submitted && g.skillCategory.invalid }" bindLabel="Name"
+                          bindValue="Id" (change)="onFocus_OfferAccordion()">
+                        </ng-select>
+                        <div *ngIf="submitted && g.skillCategory.invalid" class="help-block">
+                          <div *ngIf="g.skillCategory.errors.required">Skill Category is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+
+                    <div class="form-group col-12 col-md-6" *ngIf="!ReLocation && SalaryRevision">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.zone">
+                        <label class="form-label">Zone <span class="required"> * </span></label>
+
+                        <ng-select [items]="ZoneList" placeholder="Zone" formControlName="zone"
+                          [ngClass]="{ 'ng-touched': submitted && g.zone.invalid }" bindLabel="Name" bindValue="Id" (change)="onFocus_OfferAccordion()">
+                        </ng-select>
+                        <div *ngIf="submitted && g.zone.invalid" class="help-block">
+                          <div *ngIf="g.zone.errors.required">Zone is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf ="Idx == 2">
+                      <label class="form-label">Letter Template <span class="required"> * </span></label>
+                      <ng-select [items]="LetterTemplateList" placeholder="-- select an option --"
+                        formControlName="revisionTemplate"
+                        [ngClass]="{'ng-touched': submitted && g.revisionTemplate.errors }" bindLabel="Name"
+                        bindValue="TemplateId">
+                      </ng-select>
+                      <div *ngIf="submitted && g.revisionTemplate.invalid" class="help-block">
+                        <div *ngIf="g.revisionTemplate.errors.required">Letter Template is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.zone && (Idx ==2 || Idx == 10) ">
+                        <label class="form-label">Effective From Date<span class="required"> * </span></label>
+
+
+                        <input class="form-control" type="text" class="form-control" bsDatepicker  [minDate]="EffectiveminDate" [maxDate]="EffectivemaxDate" placement="top"
+                          [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                          name="effectiveDate" formControlName="effectiveDate"
+                          [ngClass]="{'is-invalid': submitted && g.effectiveDate.errors }" readonly placeholder="12-12-2020"
+                          autocomplete="none|false|no">
+
+                        <div *ngIf="submitted && g.effectiveDate.invalid" class="help-block">
+                          <div *ngIf="g.effectiveDate.errors.required">Effective Date is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="form-group col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.zone && (Idx ==2 || Idx == 10)">
+                        <label class="form-label">Effective Pay Period <span class="required"> * </span></label>
+
+                        <ng-select [items]="EffectivePayPeriodList" placeholder="-- select an option --"
+                        formControlName="effectivePeriod"
+                        [ngClass]="{'ng-touched': submitted && g.effectivePeriod.errors }" bindLabel="PayCyclePeriodName"
+                        bindValue="Id">
+                        </ng-select>
+
+                        <div *ngIf="submitted && g.effectivePeriod.invalid" class="help-block">
+                          <div *ngIf="g.effectivePeriod.errors.required">Effective Pay Period is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="form-group col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf ="Idx == 2" >
+                        <label class="form-label">Insurance Plan<span class="required"> * </span> 
+                        </label>
+                        <ng-select [items]="InsuranceList"                                               
+                            placeholder="-- select an option --" formControlName="insuranceplan"
+                            [ngClass]="{'ng-touched': submitted && g.insuranceplan.errors }"
+                            bindLabel="Name" bindValue="Id" (change)="onChangeInsurancePlan($event)"> 
+                        </ng-select>
+                        <div *ngIf="submitted && g.insuranceplan.errors" class="invalid-feedback">
+                            <div *ngIf="submitted && g.insuranceplan.invalid" class="help-block">
+                                <div *ngIf="g.insuranceplan.errors.required">Insurance Plan is required
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+
+
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">Oncost - Insurance Amt <span class="required"> * </span> 
+                      </label>
+                      <input class="form-control" type="number" name="onCostInsuranceAmount"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          formControlName="onCostInsuranceAmount"
+                          [ngClass]="{'is-invalid': submitted && g.onCostInsuranceAmount.errors }"
+                          placeholder="456" autocomplete="none|false|no"
+                          (change)="onFocus_OfferAccordion()">
+                      <div *ngIf="submitted && g.onCostInsuranceAmount.errors" class="invalid-feedback">
+                          <div *ngIf="g.onCostInsuranceAmount.errors.required">OnCost Insurance Amount is required
+                          </div>
+                      </div>
+                      <!-- <div *ngIf="candidatesForm.get('onCostInsuranceAmount').touched && candidatesForm.controls.onCostInsuranceAmount.value == 0" class="help-block">
+                          Oncost Insurance Amount should be greater than zero
+
+                      </div> -->
+                  </div>
+
+
+                 
+
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">Fixed Deduction - Insurance Amt <span class="required"> * </span>
+                      </label>
+                      <input class="form-control" type="number" name="fixedDeductionAmount"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          formControlName="fixedDeductionAmount"
+                          [ngClass]="{'is-invalid': submitted && g.fixedDeductionAmount.errors }"
+                          placeholder="456" autocomplete="none|false|no"
+                          (change)="onFocus_OfferAccordion()">
+                      <div *ngIf="submitted && g.fixedDeductionAmount.errors"
+                          class="invalid-feedback">
+                          <div *ngIf="g.fixedDeductionAmount.errors.required">Fixed Deduction
+                              Amount for insurance is required
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">GMC <span
+                              class="required"> * </span>
+                      </label>
+                      <input class="form-control" type="number" name="Gmc"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" formControlName="Gmc"
+                          [ngClass]="{'is-invalid': submitted && g.Gmc.errors }"
+                          placeholder="150000" autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.Gmc.errors" class="invalid-feedback">
+                          <div *ngIf="g.Gmc.errors.required">GMC Amount is required
+                          </div>
+                      </div>
+
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">GPA <span
+                              class="required"> * </span>
+                      </label>
+                      <input class="form-control" type="number" name="Gpa"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" formControlName="Gpa"
+                          [ngClass]="{'is-invalid': submitted && g.Gpa.errors }"
+                          placeholder="300000" autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.Gpa.errors" class="invalid-feedback">
+                          <div *ngIf="g.Gpa.errors.required">GPA Amount is required
+                          </div>
+                      </div>
+
+                  </div> -->
+
+
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6" *ngIf="Idx == 2">
+                    
+                  </div>
+
+                  
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6" *ngIf="Idx == 2">
+                    <label class="form-label">Send Email to Employee</label>
+                    <div class="p-t-10">
+                      <label class="el-switch el-switch-green">
+                        <input type="checkbox" name="sendmailimmediately" formControlName="sendmailimmediately" />
+                        <span class="el-switch-style"></span>
+                      </label>
+                    </div>
+                  </div>
+                  
+
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="Idx == 2">
+                    <label class="form-label">CC E-mail's  <i class="mdi mdi-information-outline" placement="right" style="cursor: pointer;" ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, separated by comma or space."></i><span class="help-text m-l-5">( Please separate email ids using comma )</span>   </label>
+
+                    <div class="editor-tag" (click)="focusTagInput()">
+                        <span class="tag-item" *ngFor="let tag of ccmailtags">
+                                      {{tag}}
+                                      <span class="remove-tag" (click)="removeTag(tag)">×</span>
+                        </span>
+                        <input class="form-control" class="input-tag input_border" pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" type="text" name="emailList" formControlName="emailList" [ngClass]="{'is-invalid': submitted && g.emailList.errors }"
+                            placeholder="example@domain.com"  autocomplete="none|false|no" style="width: 100%;" #tagInput (keyup)="onKeyUp($event)" (change)="onchangeCC($event)">
+                    </div>
+                    <div *ngIf="submitted && g.emailList.errors" class="invalid-feedback">
+                        <div *ngIf="g.emailList.errors.required">CC E-mail is required
+                        </div>
+                    </div>
+                    <div class="help-block" *ngIf="CCemailMismatch">Please type your e-mail address in the format example@domain.com
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12 col-12" *ngIf="Idx == 2">
+                    <label class="form-label">Letter Remarks (if any)</label>
+                    <textarea class="form-control" rows="2" spellcheck="false" formControlName="LetterRemarks"></textarea>  
+                  </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- #endregion -->
+
+              
+              <!-- #region Re Designation Information -->
+
+              <div class="row card-section" *ngIf="(ReDesignation) && !isSkeleton" >
+
+                <div class="row col-12 col-md-12 col-lg-12">
+                  <div class="col-lg-4 col-md-4 ">
+                    <ul class="list-inline">
+                      <div class="form-group">
+                        <h5 class="card-title"> Designation Information</h5>
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-xs-12  col-sm-4 borderright p-r-5">
+                  <div class="form-group form-group-vertical col-xs-12" style="text-align: left;">
+                    <label class="form-label">: : Existing Record : :</label>
+
+                  </div>  
+
+                  <div class="row">
+                  
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12" style="margin-bottom: 1.7rem;">
+                        <small> Category  </small>
+                        <label class="form-text text-muted">
+                          {{Label_Type}}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12" style="margin-bottom: 1.7rem;">
+                        <small>Designation </small>
+                        <label class="form-text text-muted">
+                          {{Label_Designation}}
+                        </label>
+                      </div>
+                    </div>
+                  
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12" style="margin-bottom: 1.7rem;">
+                        <small>Department</small>
+                        <label class="form-text text-muted">
+                         {{Label_Department}}
+                        </label>
+                      </div>
+                    </div>
+                  
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12" style="margin-bottom: 1.7rem;">
+                        <small>Division  </small>
+                        <label class="form-text text-muted">
+                       {{Label_Division}}
+                        </label>
+                      </div>
+                    </div>
+
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12" style="margin-bottom: 1.7rem;">
+                        <small> Level  </small>
+                        <label class="form-text text-muted">
+                          {{Label_Level}}
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12" style="margin-bottom: 1.7rem;">
+                        <small> Job Profile / Role </small>
+                        <label class="form-text text-muted">
+                          {{Label_JobRole}}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12" style="margin-bottom: 1.7rem;">
+                        <small> Sub EmployementType  </small>
+                        <label class="form-text text-muted">
+                          {{Label_SubEmployementType}}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12" style="margin-bottom: 1.7rem;">
+                        <small>Reporting Manager</small>
+                        <label class="form-text text-muted">
+                          {{Label_ReportingManager}}
+                        </label>
+                      </div>
+                    </div>
+
+
+                  </div>
+                  
+                  <hr *ngIf="ELCTransaction.Status == 4 && Idx == 4">
+                  
+                  <div class="row" *ngIf="ELCTransaction.Status == 4 && (Idx == 4 || Idx == 7)">
+                    <div class="col-12" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small> Approver Remarks </small>
+                        <label class="form-text text-muted">
+                          {{ELCTransaction.QcRemarks != undefined && ELCTransaction.QcRemarks != null &&
+                          ELCTransaction.QcRemarks != '' ? ELCTransaction.QcRemarks : 'None'}}
+                        </label>
+                  
+                      </div>
+                    </div>
+                  </div>
+                  
+                  </div>
+
+
+                <div class="col-xs-12  col-sm-8 p-l-50">
+                  <div class="form-group form-group-vertical col-xs-12" style="text-align: left;">
+                    <label class="form-label">: : New Record : :</label>
+                  </div>
+
+                  <div class="row">
+               
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.type">
+                        <label class="form-label">Category<span class="required"> * </span></label>
+                        <ng-select [items]="OfferInfoListGrp.LstEmployeeCategory" placeholder="Choose Category" formControlName="type"
+                          [ngClass]="{'ng-touched': submitted && g.type.invalid }" bindLabel="Name" bindValue="Id" (ngModelChange)="onTypeChange($event)">
+                        </ng-select>
+                    
+                        <div *ngIf="submitted && g.type.invalid" class="help-block">
+                          <div *ngIf="g.type.errors.required">Category is required</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.designation">
+                        <label class="form-label">Designation<span class="required"> *
+                        </span>
+                        <span class="form__length">{{newSkillCategory ? newSkillCategory : ''}}</span>
+                      </label>
+
+                        <ng-select [items]="DesignationList" placeholder="Choose Designation" formControlName="designation"
+                          [ngClass]="{'ng-touched': submitted && g.designation.invalid }" bindLabel="Name" bindValue="Code" 
+                          (ngModelChange)="onDesignationChange($event)">
+                        </ng-select>
+                    
+                        <div *ngIf="submitted && g.designation.invalid" class="help-block">
+                          <div *ngIf="g.designation.errors.required">Designation is required</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.department">
+                        <label class="form-label">Department<span class="required"> * </span></label>
+                        <ng-select [items]="OfferInfoListGrp.LstEmployeeDepartment" placeholder="Choose Department" formControlName="department"
+                          [ngClass]="{'ng-touched': submitted && g.department.invalid }" bindLabel="Name" bindValue="Id">
+                        </ng-select>
+                    
+                        <div *ngIf="submitted && g.department.invalid" class="help-block">
+                          <div *ngIf="g.department.errors.required">Department is required</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.division">
+                        <label class="form-label">Division<span class="required"> * </span></label>
+                        <ng-select [items]="OfferInfoListGrp.LstEmployeeDivision" placeholder="Choose Division" formControlName="division"
+                          [ngClass]="{'ng-touched': submitted && g.division.invalid }" bindLabel="Name" bindValue="Id">
+                        </ng-select>
+                    
+                        <div *ngIf="submitted && g.division.invalid" class="help-block">
+                          <div *ngIf="g.division.errors.required">Division is required</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    
+
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.level">
+                        <label class="form-label">Level<span class="required"> * </span></label>
+
+                        <ng-select [items]="OfferInfoListGrp.LstEmployeeLevel" placeholder="Choose Level" formControlName="level"
+                          [ngClass]="{'ng-touched': submitted && g.level.invalid }" bindLabel="Name" bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.level.invalid" class="help-block">
+                          <div *ngIf="g.level.errors.required">Level is required</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.jobRole">
+                        <label class="form-label">Job Profile / Role<span class="required"> * </span></label>
+                        <ng-select [items]="OfferInfoListGrp.LstJobProfile" placeholder="Choose Job Profile / Role" formControlName="jobRole"
+                          [ngClass]="{'ng-touched': submitted && g.jobRole.invalid }" bindLabel="Name" bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.jobRole.invalid" class="help-block">
+                          <div *ngIf="g.jobRole.errors.required">Job Role is required</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.subEmploymentType">
+                        <label class="form-label">Sub Employement Type<span class="required"> * </span></label>
+                        <ng-select [items]="OfferInfoListGrp.LstSubEmploymentType" placeholder="Choose Sub EmployementType" formControlName="subEmploymentType"
+                          [ngClass]="{'ng-touched': submitted && g.subEmploymentType.invalid }" bindLabel="Name" bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.subEmploymentType.invalid" class="help-block">
+                          <div *ngIf="g.subEmploymentType.errors.required">Sub Employement Type is required</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.reportingManager">
+                        <label class="form-label">Reporting Manager<span class="required"> * </span></label>
+                        <ng-select [items]="OfferInfoListGrp.ReportingManagerList" placeholder="Reporting Manager" formControlName="reportingManager"
+                          [ngClass]="{'ng-touched': submitted && g.reportingManager.invalid }" bindLabel="ManagerName" bindValue="ManagerId">
+                        </ng-select>
+                    
+                        <div *ngIf="submitted && g.reportingManager.invalid" class="help-block">
+                          <div *ngIf="g.reportingManager.errors.required">Reporting Manager is required</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="(Idx == 4 || Idx == 6)">
+                      <label class="form-label">Letter Template <span class="required"> * </span></label>
+                      <ng-select [items]="LetterTemplateList" placeholder="-- select an option --"
+                        formControlName="revisionTemplate"
+                        [ngClass]="{'ng-touched': submitted && g.revisionTemplate.errors }" bindLabel="Name"
+                        bindValue="TemplateId">
+                      </ng-select>
+                      <div *ngIf="submitted && g.revisionTemplate.invalid" class="help-block">
+                        <div *ngIf="g.revisionTemplate.errors.required">Letter Template is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-12 col-md-6" *ngIf="(Idx == 4 || Idx == 6 || Idx == 12)">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <label class="form-label">Effective From Date<span class="required"> * </span></label>
+
+
+                        <input class="form-control" type="text" class="form-control" bsDatepicker placement="top"  [minDate]="EffectiveminDate" [maxDate]="EffectivemaxDate"
+                          [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                          name="effectiveDate" formControlName="effectiveDate"
+                          [ngClass]="{'is-invalid': submitted && g.effectiveDate.errors }" readonly placeholder="12-12-2020"
+                          autocomplete="none|false|no">
+
+                        <div *ngIf="submitted && g.effectiveDate.invalid" class="help-block">
+                          <div *ngIf="g.effectiveDate.errors.required">Effective Date is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="form-group col-12 col-md-6" *ngIf="(Idx == 4 || Idx == 6 || Idx == 12 )">
+                      <div class="form-group form-group-vertical col-xs-12" >
+                        <label class="form-label">Effective Pay Period <span class="required"> * </span></label>
+
+                        <ng-select [items]="EffectivePayPeriodList" placeholder="-- select an option --"
+                        formControlName="effectivePeriod"
+                        [ngClass]="{'ng-touched': submitted && g.effectivePeriod.errors }" bindLabel="PayCyclePeriodName"
+                        bindValue="Id">
+                      </ng-select>
+
+                    
+
+                        <div *ngIf="submitted && g.effectivePeriod.invalid" class="help-block">
+                          <div *ngIf="g.effectivePeriod.errors.required">Effective Pay Period is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+
+                      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6" *ngIf="Idx == 4 || Idx == 6">
+                        <label class="form-label">Send Email to Employee</label>
+                        <div class="p-t-10">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" name="sendmailimmediately" formControlName="sendmailimmediately" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+                      </div>
+                    
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="Idx == 4 || Idx == 6">
+                      <label class="form-label">CC E-mail's  <i class="mdi mdi-information-outline" placement="right" style="cursor: pointer;" ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, separated by comma or space."></i><span class="help-text m-l-5">( Please separate email ids using comma )</span>   </label>
+
+                      <div class="editor-tag" (click)="focusTagInput()">
+                          <span class="tag-item" *ngFor="let tag of ccmailtags">
+                                        {{tag}}
+                                        <span class="remove-tag" (click)="removeTag(tag)">×</span>
+                          </span>
+                          <input class="form-control" class="input-tag input_border" pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" type="text" name="emailList" formControlName="emailList" [ngClass]="{'is-invalid': submitted && g.emailList.errors }"
+                              placeholder="example@domain.com" autocomplete="none|false|no" style="width: 100%;" #tagInput (keyup)="onKeyUp($event)" (change)="onchangeCC($event)">
+                      </div>
+                      <div *ngIf="submitted && g.emailList.errors" class="invalid-feedback">
+                          <div *ngIf="g.emailList.errors.required">CC E-mail is required
+                          </div>
+                      </div>
+                      <div class="help-block" *ngIf="CCemailMismatch">Please type your e-mail address in the format example@domain.com
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12 col-12" *ngIf="Idx == 4 || Idx == 6">
+                      <label class="form-label">Letter Remarks (if any)</label>
+                      <textarea class="form-control" rows="2" spellcheck="false" formControlName="LetterRemarks"></textarea>  
+                    </div>
+
+
+                 
+
+                  </div>
+
+                </div>
+              </div>
+
+
+              <!-- #endregion -->
+
+
+              <!-- #region  Re Location Information  -->
+              <div class="row card-section" *ngIf="(ReLocation)  && !isSkeleton">
+
+                <div class="row col-12 col-md-12 col-lg-12">
+                  <div class="col-lg-4 col-md-4 ">
+                    <ul class="list-inline">
+                      <div class="form-group">
+                        <h5 class="card-title">Location Information</h5>
+                      </div>
+                    </ul>
+                  </div>
+
+                </div>
+                <div class="col-xs-12  col-sm-4 borderright p-r-5">
+
+                  <div class="form-group form-group-vertical col-xs-12" style="text-align: left;">
+                    <label class="form-label">: : Existing Record : :</label>
+
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Joining Location (City)</small>
+                        <label class="form-text text-muted">
+                          {{Label_City}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Reporting Location (Campus)</small>
+                        <label class="form-text text-muted">
+                         {{Label_Campus}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                    <!-- not required for allen -->
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;" *ngIf="!isAllenDigital" >
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Industry </small>
+                        <label class="form-text text-muted">
+                          {{Label_IndustryName}}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Cost City Center </small>
+                        <label class="form-text text-muted">
+                          {{Label_Cost_City_Center}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;" *ngIf="!isAllenDigital">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Skill Category </small>
+                        <label class="form-text text-muted">
+                          {{Label_SkillCategoryName}}
+                        </label>
+
+                      </div>
+                    </div>
+
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;" *ngIf="isAllenDigital">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Zone </small>
+                        <label class="form-text text-muted">
+                          {{Label_ClientZoneName}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;" *ngIf="!isAllenDigital">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Zone </small>
+                        <label class="form-text text-muted">
+                          {{Label_ZoneName}}
+                        </label>
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  
+                  <hr *ngIf="ELCTransaction.Status == 4 && Idx == 3">
+
+                  <div class="row" *ngIf="ELCTransaction.Status == 4 && (Idx == 3 || Idx == 7)">
+                    <div class="col-12" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small> Approver Remarks </small>
+                        <label class="form-text text-muted">
+                          {{ELCTransaction.QcRemarks != undefined && ELCTransaction.QcRemarks != null &&
+                          ELCTransaction.QcRemarks != '' ? ELCTransaction.QcRemarks : 'None'}}
+                        </label>
+                  
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- New Record Form -->
+                <div class="col-xs-12  col-sm-8 p-l-50">
+
+
+                  <div class="form-group form-group-vertical col-xs-12" style="text-align: left;">
+                    <label class="form-label">: : New Record : :</label>
+
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col-12 col-md-6" >
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.city">
+                        <label class="form-label">Joining Location (Center / City) <span class="required"> * </span></label>
+                        <ng-select [items]="ClientCityList" placeholder="Choose City" formControlName="city"
+                        (change)="onChangeJoiningLocation($event, 'secondtime')"
+                          [ngClass]="{ 'ng-touched': submitted && g.city.invalid }" bindLabel="Code"
+                          bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.city.invalid" class="help-block">
+                          <div *ngIf="g.city.errors.required"> City is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" >
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.campus">
+                        <label class="form-label">Reporting Location (Campus) <span class="required"> * </span></label>
+
+                        <ng-select [items]="GetClientLocationList()" placeholder="Choose Campus" formControlName="campus"
+                          [ngClass]="{ 'ng-touched': submitted && g.campus.invalid }" bindLabel="LocationName"
+                          bindValue="Id" (change)="onChangeOfferLocation($event, 'secondtime')">
+                        </ng-select>
+                        <div *ngIf="submitted && g.campus.invalid" class="help-block">
+                          <div *ngIf="g.campus.errors.required"> Campus is required</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6" *ngIf="!isAllenDigital">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.RevisionForm.controls.industryType">
+                        <label class="form-label">Industry <span class="required"> * </span></label>
+
+                        <ng-select [items]="IndustryList" placeholder="Choose Industry" formControlName="industryType"
+                          (change)="onChangeIndustryType($event)"
+                          [ngClass]="{ 'ng-touched': submitted && g.industryType.invalid }" bindLabel="Name"
+                          bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.industryType.invalid" class="help-block">
+                          <div *ngIf="g.industryType.errors.required">Industry is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.costCityCenter">
+                        <label class="form-label">Cost City Center<span class="required"> * </span></label>
+                        <ng-select [items]="OfferInfoListGrp.LstCostCityCenter" placeholder="Choose Cost City Center"
+                          formControlName="costCityCenter" [ngClass]="{'ng-touched': submitted && g.costCityCenter.invalid }"
+                          bindLabel="Name" bindValue="Id">
+                        </ng-select>
+                    
+                        <div *ngIf="submitted && g.costCityCenter.invalid" class="help-block">
+                          <div *ngIf="g.costCityCenter.errors.required">Cost City Center is required</div>
+                        </div>
+                    
+                    
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6" *ngIf="!isAllenDigital">
+                      <div class="form-group form-group-vertical col-xs-12"
+                        *ngIf="this.RevisionForm.controls.skillCategory">
+                        <label class="form-label">Skill Category <span class="required"> * </span></label>
+
+                        <ng-select [items]="SkillCategoryList" placeholder="Choose Skill Category"
+                          formControlName="skillCategory"
+                          [ngClass]="{ 'ng-touched': submitted && g.skillCategory.invalid }" bindLabel="Name"
+                          bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.skillCategory.invalid" class="help-block">
+                          <div *ngIf="g.skillCategory.errors.required">Skill Category is required</div>
+                        </div>
+
+                      </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6" *ngIf="isAllenDigital">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.employmentZone">
+                        <label class="form-label">Zone <span class="required"> * </span></label>
+
+                        <ng-select [items]="OfferInfoListGrp.LstClientZone" placeholder="Choose Zone" formControlName="employmentZone"
+                          [ngClass]="{ 'ng-touched': submitted && g.employmentZone.invalid }" bindLabel="Name" bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.employmentZone.invalid" class="help-block">
+                          <div *ngIf="g.employmentZone.errors.required">Zone is required</div>
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="col-12 col-md-6" *ngIf="!isAllenDigital">
+                      <div class="form-group form-group-vertical col-xs-12" *ngIf="this.RevisionForm.controls.zone">
+                        <label class="form-label">Zone <span class="required"> * </span></label>
+
+                        <ng-select [items]="ZoneList" placeholder="Zone" formControlName="zone"
+                          [ngClass]="{ 'ng-touched': submitted && g.zone.invalid }" bindLabel="Name" bindValue="Id">
+                        </ng-select>
+                        <div *ngIf="submitted && g.zone.invalid" class="help-block">
+                          <div *ngIf="g.zone.errors.required">Zone is required</div>
+                        </div>
+
+                      </div>
+
+                    </div>
+
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="(Idx == 3 || Idx == 5 || Tdx == 7 || Tdx == 9)">
+                      <label class="form-label">Letter Template <span class="required"> * </span> </label>
+                      <ng-select [items]="LetterTemplateList" placeholder="-- select an option --"
+                        formControlName="revisionTemplate"
+                        [ngClass]="{'ng-touched': submitted && g.revisionTemplate.errors }" bindLabel="Name"
+                        bindValue="TemplateId">
+                      </ng-select>
+                      <div *ngIf="submitted && g.revisionTemplate.invalid" class="help-block">
+                        <div *ngIf="g.revisionTemplate.errors.required">Letter Template is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-12 col-md-6" *ngIf="(Idx == 3 || Idx == 5 || Tdx == 7 || Tdx == 9)">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <label class="form-label"> Effective From Date<span class="required"> * </span></label>
+
+
+                        <input class="form-control" type="text" class="form-control" bsDatepicker placement="top"
+                          [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                          name="effectiveDate" formControlName="effectiveDate"
+                          [ngClass]="{'is-invalid': submitted && g.effectiveDate.errors }" readonly placeholder="12-12-2020"
+                          autocomplete="none|false|no"  [minDate]="EffectiveminDate" [maxDate]="EffectivemaxDate" >
+
+                        <div *ngIf="submitted && g.effectiveDate.invalid" class="help-block">
+                          <div *ngIf="g.effectiveDate.errors.required">Effective Date is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="form-group col-12 col-md-6" *ngIf="(Idx == 3 || Idx == 5 || Tdx == 7 || Tdx == 9)">
+                      <div class="form-group form-group-vertical col-xs-12" >
+                        <label class="form-label">Effective Pay Period <span class="required"> * </span></label>
+
+                        <ng-select [items]="EffectivePayPeriodList" placeholder="-- select an option --"
+                        formControlName="effectivePeriod"
+                        [ngClass]="{'ng-touched': submitted && g.effectivePeriod.errors }" bindLabel="PayCyclePeriodName"
+                        bindValue="Id">
+                      </ng-select>
+
+                        <div *ngIf="submitted && g.effectivePeriod.invalid" class="help-block">
+                          <div *ngIf="g.effectivePeriod.errors.required">Effective Pay Period is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="(Idx == 3 || Idx == 5 || Tdx == 7 || Tdx == 9)">
+                        <label class="form-label">Send Email to Employee</label>
+                        <div class="p-t-10">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" name="sendmailimmediately" formControlName="sendmailimmediately" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+                      </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="(Idx == 3 || Idx == 5 || Tdx == 7 || Tdx == 9)">
+                      <label class="form-label">CC E-mail's  <i class="mdi mdi-information-outline" placement="right" style="cursor: pointer;" ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, separated by comma or space."></i><span class="help-text m-l-5"> ( Please separate email ids using comma ) </span>   </label>
+                      <div class="editor-tag" (click)="focusTagInput()">
+                          <span class="tag-item" *ngFor="let tag of ccmailtags">
+                                        {{tag}}
+                                        <span class="remove-tag" (click)="removeTag(tag)">×</span>
+                          </span>
+                          <input class="form-control" class="input-tag input_border" pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" type="text" name="emailList" formControlName="emailList" [ngClass]="{'is-invalid': submitted && g.emailList.errors }"
+                              placeholder="example@domain.com" autocomplete="none|false|no" style="width: 100%;" #tagInput (keyup)="onKeyUp($event)" (change)="onchangeCC($event)">
+                      </div>
+                      <div *ngIf="submitted && g.emailList.errors" class="invalid-feedback">
+                          <div *ngIf="g.emailList.errors.required">CC E-mail is required
+                          </div>
+                      </div>
+                      <div class="help-block" *ngIf="CCemailMismatch">Please type your e-mail address in the format example@domain.com
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12 col-12" *ngIf="(Idx == 3 || Idx == 5 || Tdx == 7 || Tdx == 9)">
+                      <label class="form-label">Letter Remarks (if any)</label>
+                      <textarea class="form-control" rows="2" spellcheck="false" formControlName="LetterRemarks"></textarea>  
+                    </div>
+                    
+
+                  </div>
+                </div>      
+              </div>
+
+
+              <!-- #endregion -->
+
+
+              <!-- #region  Contract Information  -->
+              <div class="row" *ngIf="(ContractExtension)  && !isSkeleton">
+                <div class="row col-12 col-md-12 col-lg-12">
+                  <div class="col-lg-4 col-md-4 ">
+                    <ul class="list-inline">
+                      <div class="form-group">
+                        <h5>Contract Information</h5>
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-xs-12  col-sm-4 borderright p-r-5">
+
+                  <div class="form-group form-group-vertical col-xs-12" style="text-align: left;">
+                    <label class="form-label">: : Existing Record : :</label>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-md-6" style="margin-bottom: 1rem;">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small>Contract End Date </small>
+                        <label class="form-text text-muted">
+                          {{Label_ContractEndDate | date}}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr *ngIf="ELCTransaction.Status == 4 && Idx == 8" >
+
+                  <div class ="row" *ngIf="ELCTransaction.Status == 4 && Idx == 8">
+                    <div class="col-12" style="margin-bottom: 1rem;" >
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <small> Approver Remarks </small>
+                        <label class="form-text text-muted">
+                         {{ELCTransaction.QcRemarks != undefined && ELCTransaction.QcRemarks != null && 
+                            ELCTransaction.QcRemarks != '' ? ELCTransaction.QcRemarks : 'None'}}
+                        </label>
+
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- New Record Form -->
+                <div class="col-xs-12  col-sm-8 p-l-50">
+
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12" style="text-align: left;">
+                      <label class="form-label">: : New Record : :</label>
+  
+                    </div>
+                  </div>
+                  
+
+                 
+
+                  <div class="row">
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">Extension Period <span class="required"> * </span></label>
+                      <ng-select [items]="extensionPeriodList" placeholder="-- select an option --"
+                        formControlName="extensionPeriod"
+                        [ngClass]="{'ng-touched': submitted && g.extensionPeriod.errors }" bindLabel="Name"
+                        bindValue="NoOfMonths">
+                      </ng-select>
+                      <div *ngIf="submitted && g.extensionPeriod.invalid" class="help-block">
+                        <div *ngIf="g.extensionPeriod.errors.required">Extension Period is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="(Idx == 8 || Idx == 11 || Idx == 12 || Idx == 13 || Idx == 14 || Tdx == 15 || Idx == 17)">
+                      <label class="form-label">Letter Template <span class="required"> * </span></label>
+                      <ng-select [items]="LetterTemplateList" placeholder="-- select an option --"
+                        formControlName="revisionTemplate"
+                        [ngClass]="{'ng-touched': submitted && g.revisionTemplate.errors }" bindLabel="Name"
+                        bindValue="TemplateId">
+                      </ng-select>
+                      <div *ngIf="submitted && g.revisionTemplate.invalid" class="help-block">
+                        <div *ngIf="g.revisionTemplate.errors.required">Letter Template is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">Want to Specify Exact Date?</label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="specifyExactDate" formControlName="specifyExactDate" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="form-group col-12 col-md-6">
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <label class="form-label">Contract End Date<span class="required"> * </span></label>
+
+
+                        <input class="form-control" type="text" class="form-control" bsDatepicker placement="top"
+                          [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                          name="contractEndDate" formControlName="contractEndDate" [minDate]="minContractDate"
+                          [ngClass]="{'is-invalid': submitted && g.contractEndDate.errors }" placeholder="12-12-2020"
+                          autocomplete="none|false|no">
+
+                        <div *ngIf="submitted && g.contractEndDate.invalid" class="help-block">
+                          <div *ngIf="g.contractEndDate.errors.required">Contract Extension Date is required</div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    
+                  </div>
+                  
+                  <!-- Send Mail to employee -->
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-lg-6 col-md-6 col-sm-6" *ngIf="(Idx == 8 || Idx == 11 || Idx == 12 || Idx == 13 || Idx == 14 || Tdx == 15 || Idx == 17)">
+                      <label class="form-label">Send Email to Employee</label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="sendmailimmediately" formControlName="sendmailimmediately" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-lg-6 col-md-6 col-sm-6" *ngIf="(Idx == 8 || Idx == 11 || Idx == 12 || Idx == 13 || Idx == 14 || Tdx == 15 || Idx == 17)">
+                      <label class="form-label">CC E-mail's  <i class="mdi mdi-information-outline" placement="right" style="cursor: pointer;" ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, separated by comma or space."></i><span class="help-text m-l-5"> ( Please separate email ids using comma ) </span>   </label>
+                      <div class="editor-tag" (click)="focusTagInput()">
+                          <span class="tag-item" *ngFor="let tag of ccmailtags">
+                                        {{tag}}
+                                        <span class="remove-tag" (click)="removeTag(tag)">×</span>
+                          </span>
+                          <input class="form-control" class="input-tag input_border" pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" type="text" name="emailList" formControlName="emailList" [ngClass]="{'is-invalid': submitted && g.emailList.errors }"
+                              placeholder="example@domain.com" autocomplete="none|false|no" style="width: 100%;" #tagInput (keyup)="onKeyUp($event)" (change)="onchangeCC($event)">
+                      </div>
+                      <div *ngIf="submitted && g.emailList.errors" class="invalid-feedback">
+                          <div *ngIf="g.emailList.errors.required">CC E-mail is required
+                          </div>
+                      </div>
+                      <div class="help-block" *ngIf="CCemailMismatch">Please type your e-mail address in the format example@domain.com
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12 col-12" *ngIf="(Idx == 8 || Idx == 11 || Idx == 12 || Idx == 13 || Idx == 14 || Tdx == 15 || Idx == 17)">
+                      <label class="form-label">Letter Remarks (if any)</label>
+                      <textarea class="form-control" rows="2" spellcheck="false" formControlName="LetterRemarks"></textarea>  
+                    </div>
+
+                  </div>
+
+                  
+                  
+                </div>
+
+
+
+              </div>
+              <!-- #endregion -->
+
+
+
+            <div class="row top-speration card-section" *ngIf=" Idx == 7  && !isSkeleton" >
+
+
+
+              <div class="col-xs-12 col-sm-4 borderright p-r-5">
+
+              </div>
+
+             
+                <div class="col-xs-12  col-sm-8 p-l-50">
+                
+                  <div class="row">
+                
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6" >
+                      <label class="form-label">Letter Template <span class="required"> * </span> </label>
+                      <ng-select [items]="LetterTemplateList" placeholder="-- select an option --" formControlName="revisionTemplate"
+                        [ngClass]="{'ng-touched': submitted && g.revisionTemplate.errors }" bindLabel="Name" bindValue="TemplateId">
+                      </ng-select>
+                      <div *ngIf="submitted && g.revisionTemplate.invalid" class="help-block">
+                        <div *ngIf="g.revisionTemplate.errors.required">Letter Template is required
+                        </div>
+                      </div>
+                    </div>
+                
+                    <div class="form-group col-12 col-md-6" >
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <label class="form-label">Effective From Date<span class="required"> * </span></label> 
+                
+                
+                        <input class="form-control" type="text" class="form-control" bsDatepicker placement="top"
+                          [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                          name="effectiveDate" formControlName="effectiveDate"
+                          [ngClass]="{'is-invalid': submitted && g.effectiveDate.errors }" readonly placeholder="12-12-2020"
+                          autocomplete="none|false|no"  [minDate]="EffectiveminDate" [maxDate]="EffectivemaxDate" >
+                
+                        <div *ngIf="submitted && g.effectiveDate.invalid" class="help-block">
+                          <div *ngIf="g.effectiveDate.errors.required">Effective Date is required</div>
+                        </div>
+                
+                      </div>
+                    </div>
+                
+                    <div class="form-group col-12 col-md-6" >
+                      <div class="form-group form-group-vertical col-xs-12">
+                        <label class="form-label">Effective Pay Period <span class="required"> * </span></label>
+                
+                        <ng-select [items]="EffectivePayPeriodList" placeholder="-- select an option --"
+                          formControlName="effectivePeriod" [ngClass]="{'ng-touched': submitted && g.effectivePeriod.errors }"
+                          bindLabel="PayCyclePeriodName" bindValue="Id">
+                        </ng-select>
+                
+                        <div *ngIf="submitted && g.effectivePeriod.invalid" class="help-block">
+                          <div *ngIf="g.effectivePeriod.errors.required">Effective Pay Period is required</div>
+                        </div>
+                
+                      </div>
+                    </div>
+                
+                
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6" >
+                      <label class="form-label">Send Email to Employee</label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="sendmailimmediately" formControlName="sendmailimmediately" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+                
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6" >
+                      <label class="form-label">CC E-mail's <i class="mdi mdi-information-outline" placement="right"
+                          style="cursor: pointer;"
+                          ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, separated by comma or space."></i><span
+                          class="help-text m-l-5"> ( Please separate email ids using comma ) </span> </label>
+                      <div class="editor-tag" (click)="focusTagInput()">
+                        <span class="tag-item" *ngFor="let tag of ccmailtags">
+                          {{tag}}
+                          <span class="remove-tag" (click)="removeTag(tag)">×</span>
+                        </span>
+                        <input class="form-control" class="input-tag input_border"
+                          pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" type="text" name="emailList"
+                          formControlName="emailList" [ngClass]="{'is-invalid': submitted && g.emailList.errors }"
+                          placeholder="example@domain.com" autocomplete="none|false|no" style="width: 100%;" #tagInput
+                          (keyup)="onKeyUp($event)" (change)="onchangeCC($event)">
+                      </div>
+                      <div *ngIf="submitted && g.emailList.errors" class="invalid-feedback">
+                        <div *ngIf="g.emailList.errors.required">CC E-mail is required
+                        </div>
+                      </div>
+                      <div class="help-block" *ngIf="CCemailMismatch">Please type your e-mail address in the format example@domain.com
+                      </div>
+                    </div>
+                
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12 col-12" >
+                      <label class="form-label">Letter Remarks (if any)</label>
+                      <textarea class="form-control" rows="2" spellcheck="false" formControlName="LetterRemarks"></textarea>
+                    </div>
+                  </div>
+  
+                </div>
+             
+              
+            </div>
+
+
+            </div>
+          </div>
+
+        </form>
+
+        <br>
+        <br>
+
+
+
+        <!-- <div class="row" *ngIf="!isSkeleton">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+            <div class="text-left" *ngIf="SalaryRevision || ReLocation">
+              <ul class="list-inline">
+                <li class="list-inline-item">
+                  <button class="btn btn-default btn-sm" (click)="Current_SalaryBreakup()">
+                    <i class="mdi mdi-monitor-multiple m-r-xs"></i>
+                    Current Salary Breakup
+                  </button>
+                </li>
+
+                <li class="list-inline-item">
+                  <button class="btn btn-default btn-sm" (click)="onClickingClientApprovalButton()">
+                    <i class="mdi mdi-monitor-multiple m-r-xs"></i>
+                    Client Approval
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="additionalApplicableProducts && additionalApplicableProducts.length > 0">
+                  <button class="btn btn-default btn-sm m-r-sm"  (click)="showApplicableProductsFn()">
+                    <i class="mdi mdi-check-circle m-r-xs"></i>
+                    Modify Applicable products
+                  </button>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+
+            <div class="text-right">
+              <ul class="list-inline">
+                <li class="list-inline-item" >
+                  <button class="btn btn-default btn-sm m-r-sm" (click)="PreviewLetter()">
+                    <i class="mdi mdi-file-send m-r-xs"></i>
+                    Preview Letter
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="SalaryRevision || ReLocation">
+                  <button class="btn btn-default btn-sm" (click)="New_ViewSalaryBreakup()">
+                    <i class="mdi mdi-file-check m-r-xs"></i>
+                    Preview New CTC
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div> -->
+
+
+
+
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div id="popup_salary_breakup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_salary_breakup"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="popup_salary_breakup"> View Salary Breakup</h6>
+            <div class="modal-close" (click)="modal_dismiss_Current_SalaryBreakup()"><span
+                class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                <table class="table salary-breakup-table-header-fixed table-bordered table-container responsive" *ngIf="!isDailyOrHourlyWages">
+                  <thead>
+                    <tr class="document_table_tr">
+                      <th scope="col" style="width: 40%; text-align: left!important">Product Code</th>
+                      <!-- <th scope="col" style="width: 20%;text-align: center">Is Overidable</th>                                     -->
+                      <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+                      <th scope="col" style="width: 20%;text-align: center">Annually</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let item of Current_RateSetList; let i = index"
+                      [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                      <td class="table-td-center">
+                        <span class="productName_span"> {{item.DisplayName}} </span>
+                      </td>
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value.toFixed(2)}}
+                        </label>
+                        <!-- <input type="number" max="" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value.toFixed(2)}}"
+                          class="form-control"> -->
+                      </td>
+
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value * 12 | number : '1.2-2'}}
+                        </label>
+                        <!-- <input type="text" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value * 12}}"
+                          class="form-control"> -->
+                      </td>
+
+                    </tr>
+                  </tbody>
+                </table>
+                <table class="table table-bordered table-container responsive salary-breakup-table-header-fixed" *ngIf="isDailyOrHourlyWages">
+                  <thead>
+                    <tr class="document_table_tr">
+                      <th scope="col" style="width: 40%; text-align: left!important">Product Code</th>
+                      <!-- <th scope="col" style="width: 20%;text-align: center">Is Overidable</th>                                     -->
+                      <th scope="col" style="width: 20%;text-align: center">{{wageType}} Pay Rate</th>
+                      <th scope="col" style="width: 20%;text-align: center" *ngIf="BusinessType == 3">{{wageType}} Bill Rate </th>
+                      <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+                      <th scope="col" style="width: 20%;text-align: center">Annually</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let item of Current_RateSetList; let i = index"
+                      [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                      <td class="table-td-center">
+                        <span class="productName_span"> {{item.DisplayName}} </span>
+                      </td>
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <label class="text-right" style="padding: 15px; font-size: 14px;">
+                          {{item.PayableRate.toFixed(2)}}
+                        </label>
+                      </td>
+                      <td class="txt-align document_table_validFrom table-td-center" *ngIf="BusinessType == 3">
+                        <label class="text-right" style="padding: 15px; font-size: 14px;">
+                          {{item.BillableRate.toFixed(2)}}
+                        </label>
+                      </td>
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value.toFixed(2)}}
+                        </label>
+                        <!-- <input type="number" max="" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value.toFixed(2)}}"
+                          class="form-control"> -->
+                      </td>
+
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value * 12 | number : '1.2-2'}}
+                        </label>
+                        <!-- <input type="text" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value * 12}}"
+                          class="form-control"> -->
+                      </td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="popup_new_salary_breakup" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="popup_new_salary_breakup" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="popup_new_salary_breakup"> Salary Breakup </h6>
+            <div class="modal-close" (click)="modal_dismiss_New_SalaryBreakup()"> <span
+                class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row m-1" style="padding-top: 0 !important;padding-bottom: 0.5em !important;">
+            <div class="col-12 custom-control custom-checkbox"  *ngIf="baseDaysForAddlApplicableProduct > 0">
+              <input type="checkbox" class="custom-control-input" id="isDailyWages" 
+              [(ngModel)]="isDailyOrHourlyWages" (change)="onWageTypeChangeFn($event)">
+              <input type="checkbox" class="custom-control-input" id="isDailyWages" 
+              [(ngModel)]="isDailyOrHourlyWages" (change)="onWageTypeChangeFn($event)">
+              <label class="custom-control-label" for="isDailyWages">Is Daily wage applicable ?</label>
+              <p class="ml-3 text-warning" *ngIf="isDailyOrHourlyWages">
+                  ( working days is {{baseDaysForAddlApplicableProduct}} days )
+              </p>
+            </div>
+          </div>
+          <div class="row m-1" style="padding-top: 0 !important;padding-bottom: 0.5em !important;">  
+            <div class="col-12 custom-control custom-checkbox"  *ngIf="isDailyOrHourlyWages">
+                <input type="checkbox" class="custom-control-input" id="isOverrideMonthly" [(ngModel)]="isOverrideMonthlyValue" >
+                <label class="custom-control-label" for="isOverrideMonthly">Would you like to override monthly value ?</label>
+            </div>
+          </div>
+          <span class="error_span"
+            *ngIf="ELCModel && ELCModel.newELCobj && ELCModel.newELCobj.IsMinimumwageAdhere == false || ELCModel && ELCModel.newELCobj && ELCModel.newELCobj.IsRateSetValid == false"><a
+            *ngIf="ELCModel && ELCModel.newELCobj && ELCModel.newELCobj.IsMinimumwageAdhere == false || ELCModel && ELCModel.newELCobj && ELCModel.newELCobj.IsRateSetValid == false"  class="mdi mdi-information-outline"></a> &nbsp; {{ELCModel.newELCobj.CalculationRemarks}}</span>
+
+          <br>
+          <div class="row">
+            <div class="col-12">
+              <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                <table class="table salary-breakup-table-header-fixed table-bordered table-container"  *ngIf="!isDailyOrHourlyWages">
+                  <thead class="tbl-freezhead">
+                    <tr class="document_table_tr">
+                      <th scope="col" style="width: 45%">Product Code</th>
+                      <th scope="col" style="width: 15%;text-align: center">Is Overidable</th>                                    
+                      <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+                      <th scope="col" style="width: 20%;text-align: center">Annually</th>
+                    </tr>
+                  </thead>
+
+                  <tbody class="tbl-scrollbody">
+                    <tr *ngFor="let item of New_RateSetList; let i = index"
+                      [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                      <td class="table-td-center">
+                        <div class="row">
+                          <div class="col-lg-12" *ngIf="!item.IsOverridableProductGroup">
+                              {{item.DisplayName}}</div>
+                          <div class="col-lg-6" *ngIf="item.IsOverridableProductGroup"
+                              style="padding-top: 10px;">{{item.DisplayName}}</div>
+
+
+                          <div class="col-lg-6" *ngIf="item.IsOverridableProductGroup">
+                              <ng-select [items]="item.lstOfProducts"
+                                  [(ngModel)]="item.defaultValue" [disabled]="BusinessType == 3"
+                                  placeholder="select an option" bindLabel="Description"
+                                  bindValue="Id" (change)="onChangePayGroup($event, item)">
+                              </ng-select>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="table-td-center text-center">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="isoveridable{{i}}" [(ngModel)]="item.IsOveridable" [disabled]="true">
+                            <label class="custom-control-label" for="isoveridable{{i}}"></label>
+                        </div>
+                    </td>
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <!-- <label class="text-right">
+                          {{item.Value.toFixed(2)}}
+                        </label> -->
+                        <input type="number" max="" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          [disabled]="!item.IsOveridable" (change)="onChangeAmount($event.target.value, item)" [(ngModel)]="item.Value"
+                          class="form-control">
+                      </td>
+
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <!-- <label class="text-right">
+                          {{item.Value * 12 | number : '1.2-2'}}
+                        </label> -->
+                        <input type="text" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value * 12}}"
+                          class="form-control">
+                      </td>
+
+                    </tr>
+                  </tbody>
+                </table>
+                <table class="table salary-breakup-table-header-fixed table-bordered table-container" *ngIf="isDailyOrHourlyWages">
+                  <thead>
+                      <tr class="document_table_tr">
+                          <th rowspan=2 scope="col" style="width: 30%">
+                              <div class="row">
+                                  <div class="col-lg-12">
+                                      Product Code
+
+                                  </div>
+                                  <!-- <div class="col-lg-6">
+                                      Is Product Overidable
+                                  </div> -->
+                              </div>
+                          </th>
+                          <th rowspan=2 scope="col" style="width: 12%;text-align: center">Is Overidable</th>
+                          <th rowspan=2 scope="col" style="width: 12%;text-align: center">Monthly</th>
+                          <th rowspan=2 scope="col" style="width: 12%;text-align: center">Annually</th>
+                          <th colspan=3 scope="col" style="width: 20%;text-align: center">{{wageType}}</th>
+                      </tr>
+                      <tr class="document_table_tr text-end">
+                          <th valign="top" style="width: 20%;">Pay Rate</th>
+                          <th valign="top" style="width: 20%;" *ngIf="BusinessType == 3">Bill Rate</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let item of New_RateSetList; let i = index" [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                          <td class="table-td-center">
+                              <div class="row">
+                                  <div class="col-lg-12" *ngIf="!item.IsOverridableProductGroup">{{item.DisplayName}}</div>
+                                  <div class="col-lg-4" *ngIf="item.IsOverridableProductGroup" style="padding-top: 10px;">{{item.DisplayName}}</div>
+
+
+                                  <div class="col-lg-8" *ngIf="item.IsOverridableProductGroup">
+                                      <ng-select [items]="item.lstOfProducts" [(ngModel)]="item.defaultValue" placeholder="select an option" bindLabel="Description" bindValue="Id" (change)="onChangePayGroup($event, item)">
+                                      </ng-select>
+                                  </div>
+                              </div>
+                          </td>
+                          <td class="table-td-center text-center" style="text-align: center !important;">
+                              <div class="custom-control custom-checkbox">
+                                  <input type="checkbox" class="custom-control-input" id="isoveridable{{i}}" [(ngModel)]="item.IsOveridable" [disabled]="true">
+                                  <label class="custom-control-label" for="isoveridable{{i}}"></label>
+                              </div>
+                          </td>
+                          <td class="txt-align document_table_validFrom table-td-center">
+                              <input type="number" max="33333" style="text-align:right" maxlength="12" (change)="onChangeAmount($event.target.value, item)"
+                              onkeypress="return /^[0-9]+$/i.test(event.key)" [disabled]="!item.IsOveridable || !isOverrideMonthlyValue" value="{{item.Value}}" class="form-control">
+                          </td>
+
+                          <td class="txt-align document_table_validFrom table-td-center">
+                              <input type="text" style="text-align:right" maxlength="12" onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value * 12}}" class="form-control">
+                          </td>
+                          <td class="txt-align document_table_validFrom table-td-center">
+                              <input type="text" style="text-align:right" maxlength="10" [(ngModel)]="item.PayableRate" value="{{item.PayableRate}}"
+                              (input)="onChangePayRateAmount($event.target.value, item)"  disabled="{{!item.IsOveridable}}" 
+                              onkeypress="return /^[0-9 .]+$/i.test(event.key)" class="form-control">
+                          </td>
+                          <td class="txt-align document_table_validFrom table-td-center" *ngIf="BusinessType == 3">
+                              <input type="text" style="text-align:right" maxlength="10" [(ngModel)]="item.BillableRate" value="{{item.BillableRate}}"
+                              (input)="onChangeBillRateAmount($event.target.value, item)" 
+                              onkeypress="return /^[0-9 .]+$/i.test(event.key)" class="form-control" [disabled]="!item.IsOveridable">
+                          </td>
+
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="modal-footer">
+            <div class="pull-left left-margin-btn">
+              <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="reviewLater()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-av-timer"></i> Cancel, I will review
+                    later </span></div>
+              </button>
+            </div>
+            <div class="pull-right m-r-sm">
+              <div>
+                <div>
+                  <button class="btn  btn-primary m-r-sm"  type="Submit" name="btnSubmit" id="btnSubmit"
+                    (click)="recalculateCTC()">
+                    <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-file-restore"></i> Re-Calculate
+                      </span></div>
+                  </button>
+                  <button class="btn upgrade-btn pull-right" type="button" (click)="modal_dismiss_New_SalaryBreakup()"> <i
+                      class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Confirm</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_client_approval" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_client_approval"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="popup_salary_breakup">Document Approval</h6>
+            <div class="modal-close" (click)="modal_dismiss_client_approval()"><span
+                class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row m-b">
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+              <div class="text-right">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <button prevent-double-submit type="button" class="btn upgrade-btn"
+                        (click)="addAttachment()"> <i class="mdi mdi-plus m-r-xs"></i> Add
+                        Attachment
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="clientApprovalTbl == undefined || clientApprovalTbl == null || clientApprovalTbl.length === 0">
+            <div class="col-12" style="text-align: center;">
+              No Attachments are added.
+            </div>
+          </div>
+          <div class="row"  *ngIf="clientApprovalTbl?.length> 0" >
+            <div class="col-12">
+              <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                <table class="table table-bordered table-container" style="max-width:fit-content;">
+                  <thead>
+                      <tr class="document_table_tr">
+                          <th scope="col" style="width:20%;font-weight: 500 !important;">
+                              Approval For</th>
+                          <th scope="col" style="width:15%;font-weight: 500;">Approval
+                              Type
+                          </th>
+                          <th scope="col" style="width:15%;font-weight: 500;">Document
+                              Name
+                          </th>
+                          <th scope="col" style="width:20%;font-weight: 500;">
+                              Remarks </th>
+                          <th scope="col" style="width:10%;font-weight: 500;">Status
+                          </th>
+                          <!-- <th scope="col" style="width:10%;font-weight: 500;">
+                              File(Attachment)</th> -->
+                          <th scope="col" style="width:10%;font-weight: 500;">Actions</th>
+
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let item of clientApprovalTbl; let i = index" >
+                      <tr *ngIf ="item.UIStatus !== 0">
+
+
+                          <td class="document_table_docName">
+                            <span *ngIf="item.DocumentApprovalFor == 3">Min. Wages Non-Adherence</span>
+                            <span  *ngIf="item.DocumentApprovalFor == 5">Others</span>
+                            <span *ngIf="item.DocumentApprovalFor == 6">ELC</span>
+                          </td>
+                          <td class="document_table_docName">
+                            <span *ngIf="item.DocumentApprovalType == 1">Internal</span>
+                          <span  *ngIf="item.DocumentApprovalType == 2">External</span>
+                          </td>
+                          <td class="document_table_docName">
+                              {{item.DocumentName}}
+                          </td>
+                          <td class="document_table_docName">
+                              {{item.Remarks}}
+                          </td>
+
+                          <td class="document_table_docName">
+                              <span class="badge badge-warning"
+                                  *ngIf="item.Status == 1">Pending</span>
+                              <span class="badge badge-danger"
+                                  *ngIf="item.Status == 2">Rejected</span>
+                              <span class="badge badge-success"
+                                  *ngIf="item.Status == 4">Approved</span>
+
+                          </td>
+                          <!-- <td class="table_header document_table_docNo">
+                              <a href="JavaScript:;" *ngIf="item.DocumentName" (click)="editApprovalFile(item,i)" class="btn subheader__btn-primary btn-icon mr-2">
+                                  <i class="mdi mdi-eye font-16"></i>
+                              </a>[class.disabled]="isGuid(item.Id) == false ? true : null"
+                          </td> -->
+                          <td class="table_header document_table_docNo">
+                              <a href="JavaScript:;" *ngIf="item.DocumentName"
+                                  (click)="editApprovalFile(item,i)"
+                                  class="btn subheader__btn-primary btn-icon mr-2"
+                                  [class.disabled]="item.Status == 4 ? true : null">
+                                  <i class="fa fa-pencil-square-o font-16"></i>
+                              </a>
+                              <a href="JavaScript:;" *ngIf="item.DocumentName"
+                                  (click)="deleteApprovalFile(item)"
+                                  class="btn subheader__btn-primary btn-icon mr-2"
+                                  [class.disabled]="item.Status == 4 ? true : null">
+                                  <i class="fa fa-trash-o font-16"></i>
+                              </a>
+
+                          </td>
+
+
+                      </tr>
+                    </ng-container>
+                  </tbody>
+
+              </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="margin-top: 5px;">
+          <h6 class="h6_c"> {{pageTitle}} </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right" *ngIf="!spinner">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onClose()">
+                <i class="mdi mdi-close  m-r-xs"></i>Close
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content" style="margin-top: -5px;">
+      <div class="row pb-0 mt-2 w-100">
+        <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left"> </div>
+        <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right">
+          <ul class="list-inline mb-2">
+            <li class="list-inline-item" *ngIf="!spinner && mlReportData.length > 0">
+              <button type="button" class="btn btn-primary" (click)="exportToExcel()">
+                <i class="mdi mdi-download m-r-xs"></i> Export Excel
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row w-100">
+        <div class="col-lg-12" >
+          <angular-slickgrid gridId="leaveReportGridId" [data]="mlReportData"
+            [columnDefinitions]="mlReportColumn" [gridOptions]="mlReportGridOptions"
+            [dataset]="mlReportData" (onAngularGridCreated)="initiateManagerLevelReportGridReady($event)"
+            gridWidth="100%">
+          </angular-slickgrid>
+        </div>
+        <div class="col-lg-12" *ngIf="!spinner && mlReportData.length == 0">
+          <div class="text-center ma-5">
+            <span>No records found!</span>
+          </div>
+        </div>
+      </div>
+      <br>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,420 @@
+<div style="display: block" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <small class="header-pretitle"><b>{{ Id ? "Edit Team" : "Create new Team" }}</b></small>
+      </div>
+
+      <div class="modal-body" style="
+          max-height: calc(110vh - 103px) !important;
+          overflow-x: hidden !important;
+        ">
+        <div class="d-flex align-items-center" *ngIf="spinner" style="
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          ">
+          <strong class="text-center">
+            Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+        <br />
+
+        <div class="row" *ngIf="!spinner">
+          <div class="col-lg-12">
+            <form [formGroup]="teamForm">
+              <div class="row">
+                <div *ngIf="BusinessType == 3" class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Client Name <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="LstClient" placeholder="-- Select Client --" formControlName="ClientId"
+                    [ngClass]="{ 'ng-touched': submitted && g.ClientId.errors }" bindLabel="Name" bindValue="Id"
+                    (change)="onChangeClient($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && g.ClientId.invalid" class="help-block">
+                    <div *ngIf="g.ClientId.errors.required">
+                      Client Name is required
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="BusinessType == 3" class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Client Contract Name <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="LstClientContract" placeholder="-- Select Client Contract --"
+                    formControlName="ClientContractId" [ngClass]="{
+                      'ng-touched': submitted && g.ClientContractId.errors
+                    }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.ClientContractId.invalid" class="help-block">
+                    <div *ngIf="g.ClientContractId.errors.required">
+                      Client Contract Name is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Client Contact Name <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="LstClientContact" placeholder="-- Select Client Contact --"
+                    formControlName="ClientContactId" [ngClass]="{
+                      'ng-touched': submitted && g.ClientContactId.errors
+                    }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.ClientContactId.invalid" class="help-block">
+                    <div *ngIf="g.ClientContactId.errors.required">
+                      Client Contact Name is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Code <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" style="text-transform: uppercase"
+                    name="Code" maxlength="100" #Code formControlName="Code"
+                    [ngClass]="{ 'is-invalid': submitted && g.Code.errors }" placeholder="XYZ"
+                    autocomplete="none|false|no" />
+                  <div *ngIf="submitted && g.Code.errors" class="invalid-feedback">
+                    <div *ngIf="g.Code.errors.required">
+                      Team Code is required
+                    </div>
+                  </div>
+                  <!-- <div *ngIf="clientForm.get('Code').errors || clientForm.get('Code').touched" class="help-block">
+                    <span *ngIf="clientForm.get('Code').errors.minlength">
+                      Client Code should be minimum 5 characters
+                    </span>
+                  </div> -->
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Name <span class="required">* </span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false" name="Name" maxlength="100" #Name
+                    formControlName="Name" [ngClass]="{ 'is-invalid': submitted && g.Name.errors }"
+                    placeholder="Team XYZ" autocomplete="none|false|no" />
+                  <div *ngIf="submitted && g.Name.errors" class="invalid-feedback">
+                    <div *ngIf="g.Name.errors.required">
+                      Team Name is required
+                    </div>
+                  </div>
+                  <!-- <div *ngIf="clientForm.get('Name').errors || clientForm.get('Name').touched" class="help-block">
+                    <span *ngIf="clientForm.get('Name').errors.minlength">
+                      Client Name should be minimum 5 characters
+                    </span>
+                  </div> -->
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Pay Group <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="PaygroupList" placeholder="-- Select Pay Group --" formControlName="PayGroupId"
+                    [ngClass]="{
+                      'ng-touched': submitted && g.PayGroupId.errors
+                    }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.PayGroupId.invalid" class="help-block">
+                    <div *ngIf="g.PayGroupId.errors.required">
+                      Pay Group is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Pay Cycle <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="PaycycleList" placeholder="-- Select Pay Group --" formControlName="PayCycleId"
+                    [ngClass]="{
+                      'ng-touched': submitted && g.PayCycleId.errors
+                    }" bindLabel="Name" bindValue="Id" (change)="onChangePayPeriod($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && g.PayCycleId.invalid" class="help-block">
+                    <div *ngIf="g.PayCycleId.errors.required">
+                      Pay Cycle is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Pay Period<span class="required">*</span>
+                  </label>
+                  <ng-select [items]="PayPeriodList" placeholder="-- Select Pay Period --"
+                    formControlName="OpenPayPeriodId" [ngClass]="{
+                      'ng-touched': submitted && g.OpenPayPeriodId.errors
+                    }" bindLabel="PayCyclePeriodName" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.OpenPayPeriodId.invalid" class="help-block">
+                    <div *ngIf="g.OpenPayPeriodId.errors.required">
+                      Pay Period is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Attendance Cycle <span class="required">*</span>
+                  </label>
+                  <ng-select [items]="AttendanceCycleList" placeholder="-- Select Attendance Cycle --"
+                    formControlName="AttendanceCycleId" [ngClass]="{
+                      'ng-touched': submitted && g.AttendanceCycleId.errors
+                    }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.AttendanceCycleId.invalid" class="help-block">
+                    <div *ngIf="g.AttendanceCycleId.errors.required">
+                      Attendance Cycle Id is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Attendance Startday <span class="required">*</span></label>
+                  <input type="text" class="form-control" name="AttendanceStartday" formControlName="AttendanceStartday"
+                    [ngClass]="{
+                      'is-invalid': submitted && g.AttendanceStartday.errors
+                    }" (input)="onUpdateAttendanceStartDay($event)" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                    placeholder="01" autocomplete="none|false|no" minlength="1" maxlength="2" />
+                  <div *ngIf="submitted && g.AttendanceStartday.errors" class="invalid-feedback">
+                    <div *ngIf="g.AttendanceStartday.errors.required">
+                      Attendance Startday is required
+                    </div>
+                    <div *ngIf="g.AttendanceStartday.hasError('invalidStartDay')">
+                      Attendance Startday cannot be greater than 31
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Attendance Endday <span class="required">*</span></label>
+                  <input type="text" class="form-control" name="AttendanceEndday" formControlName="AttendanceEndday"
+                    [ngClass]="{
+                      'is-invalid': submitted && g.AttendanceEndday.errors
+                    }" onkeypress="return /^[0-9]+$/i.test(event.key)" (input)="onUpdateAttendanceEndDay($event)"
+                    placeholder="01" autocomplete="none|false|no" minlength="1" maxlength="2" />
+                  <div *ngIf="submitted && g.AttendanceEndday.errors" class="invalid-feedback">
+                    <div *ngIf="g.AttendanceEndday.errors.required">
+                      Attendance Endday is required
+                    </div>
+                    <div *ngIf="g.AttendanceEndday.hasError('invalidEndDay')">
+                      Attendance Endday cannot be greater than 31
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Pay Cycle Start Day</label>
+                  <input type="text" class="form-control" name="PaycycleStartDay" formControlName="PaycycleStartDay"
+                    [ngClass]="{
+                      'is-invalid': submitted && g.PaycycleStartDay.errors
+                    }" onkeypress="return /^[0-9]+$/i.test(event.key)" (input)="onUpdatePayCycleStartDay($event)"
+                    placeholder="01" autocomplete="none|false|no" minlength="1" maxlength="2" />
+                  <div *ngIf="submitted && g.PaycycleStartDay.hasError('invalidPayCylceStartDay')"
+                    class="invalid-feedback">
+                    Pay Cycle Start Day cannot be greater than 31 </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Base Days Consideration </label>
+                  <ng-select [items]="basedaysconsiderationtypeList" placeholder="-- Select Base Days Consideration --"
+                    formControlName="BaseDaysConsiderationType" [ngClass]="{
+                        'ng-touched': submitted && g.BaseDaysConsiderationType.errors
+                      }" bindLabel="name" bindValue="value">
+                  </ng-select>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label ">Leave Group </label>
+                  <ng-select [items]="LeaveGroupList" placeholder="-- select on option --"
+                    formControlName="LeaveGroupId" [ngClass]="{'ng-touched': submitted && g.LeaveGroupId.errors }"
+                    bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Consultant Details</label>
+                  <input type="text" class="form-control" name="ConsultantDetails" formControlName="ConsultantDetails"
+                    [ngClass]="{
+                      'is-invalid': submitted && g.ConsultantDetails.errors
+                    }" autocomplete="none|false|no" />
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label"> Is Naps Based </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" formControlName="isnapbased" />
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Is van Based -->
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label"> Is Van Based Account </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" formControlName="isVanBased" />
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Is vanbased payout -->
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Is VanBased Payout</label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" formControlName="IsVanBasedPayOut" />
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <ng-container *ngIf="g.isVanBased.value">
+                  <!-- Account Number -->
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                    <label class="form-label">Account Number<span class="required">*</span></label>
+                    <input type="number" class="form-control" name="accountNumber" formControlName="AccountNumber"
+                      [ngClass]="{
+                        'is-invalid': submitted && g.AccountNumber.errors
+                      }" placeholder="Enter Account Number" autocomplete="none|false|no" />
+                    <div *ngIf="submitted && g.AccountNumber.errors" class="invalid-feedback">
+                      <div *ngIf="g.AccountNumber.errors.required">
+                        Account Number is required
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Account Holder Name -->
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                    <label class="form-label">Account Holder Name<span class="required">* </span>
+                    </label>
+                    <input class="form-control" type="text" name="accountHolderName" formControlName="AccountHolderName"
+                      pattern="[a-zA-Z ]*" [ngClass]="{
+                        'is-invalid': submitted && g.AccountHolderName.errors
+                      }" placeholder="Account Holder Name" autocomplete="none|false|no" />
+                    <div *ngIf="submitted && g.AccountHolderName.errors" class="invalid-feedback">
+                      <div *ngIf="g.AccountHolderName.errors.required">
+                        Account Holder Name is required
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Bank Name -->
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                    <label class="form-label">Bank Name<span class="required">*</span>
+                    </label>
+                    <ng-select [items]="bankList" placeholder="-- Select Bank Name --" formControlName="BankId"
+                      (change)="onChangeBank($event)" [ngClass]="{
+                        'ng-touched': submitted && g.BankId.errors
+                      }" bindLabel="Name" bindValue="Id">
+                    </ng-select>
+                    <div *ngIf="submitted && g.BankId.invalid" class="help-block">
+                      <div *ngIf="g.BankId.errors.required">
+                        Bank Name is required
+                      </div>
+                    </div>
+                  </div>
+                  <!-- IFSC Code -->
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                    <label class="form-label">IFSC Code <span class="required">*</span></label>
+                    <ng-select [items]="ifsc_Code_List" placeholder="-- Select IFSC Code --" formControlName="IFSCCode"
+                      [ngClass]="{
+                        'ng-touched': submitted && g.IFSCCode.errors
+                      }" bindLabel="FinancialSystemCode" bindValue="Id">
+                      <ng-template ng-header-tmp *ngIf="is_spinner_ifsc">
+                        <div class="d-flex justify-content-center">
+                          <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div *ngIf="submitted && g.IFSCCode.invalid" class="help-block">
+                      <div *ngIf="g.IFSCCode.errors.required">
+                        IFSC Code is required
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Default Manager </label>
+                  <ng-select [items]="ManagerList" placeholder="-- Select Client Contact --"
+                    formControlName="defaultManagerId" [ngClass]="{
+                      'ng-touched': submitted && g.defaultManagerId.errors
+                    }" bindLabel="Name" bindValue="ManagerId">
+                  </ng-select>
+                  <div *ngIf="submitted && g.defaultManagerId.invalid" class="help-block">
+                    <div *ngIf="g.defaultManagerId.errors.required">
+                      Client Contact Name is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">
+                    Is Attendance Stamping Based On Last Date
+                  </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes"
+                        formControlName="IsAttendanceStampingBasedonLastDate" />
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label"> Is Mustor Roll </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" formControlName="IsMustorRollApplicable" />
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- 
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label"> Status <span class="required">*</span> </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" value="yes" formControlName="Status">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+               -->
+              </div>
+            </form>
+
+            <br />
+            <br />
+            <br />
+          </div>
+        </div>
+
+        <div class="row footr">
+          <div class="col-md-6 text-left"></div>
+          <div class="col-md-6 text-right">
+            <button class="btn btn-link" type="button" style="
+                text-decoration: none !important;
+                margin-top: 10px;
+                margin-right: 15px;
+              " (click)="close()">
+              &nbsp; &nbsp; Cancel &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-primary" (click)="doSaveTeam()" *ngIf="!spinner" style="
+                background: #146ba2 !important;
+                margin-top: 10px;
+                margin-right: 10px;
+              ">
+              <i class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp;
+              Save &nbsp; &nbsp;
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

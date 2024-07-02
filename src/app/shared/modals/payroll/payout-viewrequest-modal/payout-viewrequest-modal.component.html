@@ -1,0 +1,168 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg modal-dialog-centered animated fadeInDownBig">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Payout Requests - Confirmation</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL"> Overview</h6>
+        </div>
+
+        <div class="modal-close" (click)="closeModal()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+
+      <div class="modal-body" >
+
+        <div class="d-flex align-items-center" *ngIf="isrendering_spinner" style="margin-top: 10px;">
+          <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+        <div  *ngIf="!isrendering_spinner">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-t-2"
+            *ngFor="let item of lstPayoutInformation; let i= index">
+            <div class="headerbar-right" *ngIf="lstPayoutInformation?.length > 0">
+              <div class="media" style="width: 15% !important;">
+                <div class="media-body">
+                  <label>Batch </label>
+                  <h6># {{item.Id}} | {{item.PayStatus}}</h6>
+                </div>
+              </div> 
+              <div class="media" style="width: 35% !important;">
+                <div class="media-body">
+                  <label *ngIf="BusinessType ==3">Client Name</label>
+                  <label *ngIf="BusinessType !=3">Company Name</label>
+                  <h6> {{item.ClientName}}</h6>
+                </div>
+              </div>
+              <div class="media" style="width: 25% !important;">
+                <div class="media-body">
+                  <label>Pay Period</label>
+                  <h6> {{item.PayPeriod}}</h6>
+                </div>
+              </div>
+              <div class="media" style="width: 25% !important;">
+                <div class="media-body">
+                  <label>Pay Amount</label>
+                  <h6> ₹ {{item.PayOutAmount | number: '1.2-2'}}</h6>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <br>
+        
+        <div class="row" style="padding-bottom: 5px;">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <button  [disabled]="inEmployeesInitiateSelectedItems.length == 0" type="button" class="btn btn-default-danger" (click)="do_delete_selctedEmp()">
+                  <i class="mdi mdi-delete m-r-xs"></i>Delete &nbsp;
+                </button>
+              </li>
+             
+            </ul>
+          </div>
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+          <p style="font-weight: 700;margin-bottom:0px; text-align: right;margin-top: 1rem;"> No.Of Employee(s) :
+            {{this.inEmployeesInitiateList.length}} &nbsp; | &nbsp; Selected Employee(s): {{inEmployeesInitiateSelectedItems.length}} </p>
+            </div>
+        </div>
+
+        <!-- <div class="card"> -->
+         <!-- <div class="table-responsive mg-t-15"> -->
+            <!-- <ng-container *ngFor="let item of lstPayoutInformation; let i= index">
+              <table class="table table-striped table-talk-time">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox"
+                      [(ngModel)]="selectAll" (click)="selectAllEmp($event)"> </th>
+                    <th>Emp. Code</th>
+                    <th>Emp. Name</th>
+                    <th>Mobile No.</th>
+                    <th>Acc. No.</th>
+                    <th>Net Pay</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let datas of item.LstPayoutInformationDetails">
+                    <td> <input type="checkbox" [(ngModel)]="datas.isSelected" (click)="onCheckEmployee(datas,item, $event)"></td>
+                    <td>{{datas.EmployeeCode}}</td>
+                    <td>{{datas.EmployeeName}}</td>
+                    <td>{{datas.MobileNumber}}</td>
+                    <td>{{datas.AccountNumber}}</td>
+                    <td>{{datas.NetPay  | number : '1.2-2'}}</td>
+                    <td class="text-center">{{datas.Status}}</td>
+                    <td class="text-center" style="cursor: pointer;">
+                      <i ngbTooltip="delete" (click)="remove_Employee(datas)" class="fa fa-trash" aria-hidden="true"></i>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td> Pay Amount : </td>
+                    <td ><b
+                      style="float: left">{{getTotalCount() | number : '1.2-2'}}</b></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </ng-container> -->
+
+            <div class="row">
+              <div class="col-lg-12">
+                <angular-slickgrid gridId="grdinEmployeesInitiate"
+                  [columnDefinitions]="inEmployeesInitiateColumnDefinitions" [gridOptions]="inEmployeesInitiateGridOptions"
+                  [dataset]="inEmployeesInitiateList" (onAngularGridCreated)="inEmployeesInitiateGridReady($event)"
+                  gridWidth="100%"
+                  (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+                </angular-slickgrid>
+              </div>
+            </div>
+
+
+          <!-- </div> -->
+        <!-- </div> -->
+      </div>
+    </div>
+
+      <div class="modal-footer">
+        <div class="pull-left left-margin-btn">
+        </div>
+        <div class="pull-right m-r-sm">
+          <div>
+            <div>
+              <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="closeModal()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+              </button>
+              <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+                  *ngIf="ROLE === 'Finance'" (click)="do_approveorhold_payout('Approve')">
+                  <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-spellcheck"></i> Approve </span></div>
+                </button>
+                <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="do_approveorhold_payout('Hold')">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-gesture-double-tap"></i> Hold </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

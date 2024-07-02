@@ -1,0 +1,246 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside" role="document">
+    <div class="modal-content">
+
+      <div class="row" style="padding-left: 10px;
+      padding-top: 10px;">
+        <div class="col-md-12 text-left">
+          <h3>Perquisites</h3>
+        </div>
+      </div>
+
+      <div class="modal-body" style="max-height: calc(110vh - 143px) !important;overflow-x: hidden !important;">
+
+        <div class="row">
+          <ng-container *ngFor="let item of LstDeclarationCategories | slice:0:tobeShown">
+            <div class="col-md-3" style="padding: 3px;" *ngIf="doHideIgnoredProducts(item)">
+              <a class="card1" href="javascript:;" (click)="addItem(item)"
+                matTooltip="{{productNameWithLetterSpace(item.ProductName)}}">
+                <h3
+                  style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;width: 165px;">
+                  {{productNameWithLetterSpace(item.ProductName)}}</h3>
+                <p class="small" style="line-height: 18px;font-size: 12px;
+                  font-weight: 400;"></p>
+                <div class="go-corner" href="#">
+                  <div class="go-arrow">
+                    +
+                  </div>
+                </div>
+              </a>
+            </div>
+          </ng-container>
+        </div>
+        <div class="row">
+          <div class="col-lg-12"
+            style="text-align: right; font-size: 13px;font-weight: 700;cursor: pointer;color: #146BA2;"
+            (click)="seeMore()" *ngIf="LstDeclarationCategories.length > 0">
+            <span> <span style="padding-right: 5px;"> {{seeMoreText}}</span>
+              <i class="fa fa fa-sort-desc bounce" style="font-size: 17px;position: relative;
+             top: -2px;" *ngIf="seeMoreText =='See more'"></i>
+              <i class="fa fa fa-sort-asc" style="font-size: 17px;position: relative;
+             top: 6px;" *ngIf="seeMoreText =='See less'"></i></span>
+            <br>
+
+          </div>
+        </div>
+
+        <nz-divider></nz-divider>
+        <div class="row">
+          <div class="col-md-12 text-left">
+            <h3>Your Perquisites</h3>
+          </div>
+        </div>
+
+        <div class="col-lg-12 text-center" *ngIf="IsFailedToValidate" >
+          <ngb-alert [dismissible]="false" type="danger">
+            <strong>{{InvestmentWarningMessage}}
+              the<i class="fa fa-question-circle" style="color: red;font-size: 14px;margin-left: 5px;"></i>
+              </strong>
+            <!-- <strong>The form cannot be submitted as its missing required data. Please correct the marked fields and try again.</strong> -->
+          </ngb-alert>
+        </div>
+
+        <div class="row" *ngIf="DeclarationItems.length == 0">
+          <div class="col-lg-12 text-center">
+            <p style="margin-top: 12px;
+            font-size: 13px;"><span id="MainContent_ctl143" class="LabelMediumBig">There
+                are no
+                Perquisites entries
+                in this screen yet.</span></p>
+          </div>
+        </div>
+
+
+        <ng-container *ngFor="let i of DeclarationItems.slice().reverse(); let j = index">
+          <div class="card animated fadeInDownBig" style="box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.13);
+border-radius: 4px;margin-bottom: 10px;"
+            [ngClass]="i.Status == 1?'border-success': i.Status == 2 ? 'border-rejected' : 'border-pending'"
+            *ngIf="!i.IsDeleted">
+            <div class="row" style="margin: 1px;">
+              <div [ngClass]="i.Status == 1? 'col-md-12' : currentTaxMode == 2 ? 'col-md-9' : 'col-md-12' ">
+                <div class="row" style="background: #ffffff;
+            padding-top: 10px;
+            ">
+                  <div class="col-md-6" style="margin-bottom: -10px;">
+                    <div class="col-lg-12 text-left">
+                      <h3
+                        style="font-size: 12px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+                        {{i.Declarations.ProductName}}</h3>
+                      <p class="small" style="line-height: 16px;  font-size: 12px; font-weight: 400;">
+                        {{i.Declarations.Description}}</p>
+
+                    </div>
+                  </div>
+                  <div class="col-md-6" style="margin-bottom: -10px;">
+                    <div class="col-lg-12 text-left">
+
+                      <p class="small" style="line-height: 16px;font-size: 12px;
+                        font-weight: 400;margin-bottom: 0px;"> <i *ngIf="i.IsError" class="fa fa-question-circle"
+                          matTooltip="Please fill in the required fields and try to save"
+                          style="color: red;font-size: 14px;margin-left: 5px;"></i>
+<!-- 
+                        <span *ngIf="i.Status == 0" style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                          <span class="badge badge-warning1"> Pending </span>
+                        </span>
+                        <span *ngIf="i.Status == 2" style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                          <span class="badge badge-danger1"> Rejected </span>
+                          <span class="badge badge-remarks" matTooltip="{{i.ApproverRemarks}}"> <i
+                              class="mdi mdi-message-alert-outline"></i>
+                          </span>
+                        </span>
+                        <span *ngIf="i.Status == 1" style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                          <span class="badge badge-success1"> Approved </span>
+                          
+                        </span> -->
+                      </p>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" style="margin-top: 20px;margin-left: 0px;margin-bottom: 10px;">
+                  <div class="col-md-6">
+                    <label class="form-label">Amount </label>
+                    <div class="input-group" style="margin-bottom: 10px;margin-top: 0px;">
+                      <div class="input-group-prepend" style="height: 38px !important;">
+                        <span class="input-group-text" id="basic-addon1" style="background: white;
+                        ">₹</span>
+                      </div>
+                      <input class="form-control" type="text"
+                        onkeypress="return /[0-9]/i.test(event.key)" (keyup)="onChangeDeclaredAmount(i)"
+                        [(ngModel)]="i.DeclaredAmount" name="amount" placeholder="1,50,000" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Remarks </label>
+                    <textarea class="form-control"  rows="1" style="height: 38px !important;"
+                      (change)="OnChangeInvestmentProducts(i)" placeholder="Type your message here..."
+                      spellcheck="false" id="Remarks" [(ngModel)]="i.DeclaredAmountRemarks"></textarea>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-md-3" style="padding-right: 30px;" >
+                <div class="upload-files-container" style="margin: 7px;" *ngIf="(i.DeclarationAttachments.length < 1)">
+                  <div class="drag-file-area" style="height: 110px; cursor: pointer;padding: 10px;" *ngIf="isLoading">
+                    <label class="label" style="margin-bottom: -5px;width: 100%;cursor: pointer;">
+                      <h3 class="dynamic-message" style="color: #146BA2;top: 5%;position: relative;"> Upload
+                        your files here </h3>
+                      <span style="display: block;font-size: 10px;"> (Max size:
+                        2MB) </span>
+                      <span class="browse-files"> <input #myInput type="file"
+                          step="height: 100%;width: 100%;padding: 7px;" class="default-file-input"
+                          accept="application/msword,  application/pdf, image/*"
+                          (change)="onFileUpload($event, i, 'Investment')" />
+                      </span>
+                    </label>
+                  </div>
+                  <div class="d-flex align-items-center" style="margin-top: 10%;"
+                    *ngIf="!isLoading && i.Id == selectedUploadIndex">
+                    <strong class="text-right"> {{docSpinnerText}} ... &nbsp;&nbsp;&nbsp;</strong>
+                    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin-left: 5px;">
+              <div class="col-md-12" style="padding: 5px;" *ngIf="i.DeclarationAttachments.length > 0">
+                <div id="scroll-wrapper scrollbox_delayed">
+                  <div id="thumbnails" style="padding-bottom: 0px;margin-left: 15px;
+                margin-right: 15px;">
+                    <div class="thumbnail-container" *ngFor="let photo of i.DeclarationAttachments">
+
+                      <div class="box" style="height: 60px;border: none;">
+                        <button type="button" class="delete" style="color: white"
+                          (click)="doDeleteFile(i,photo, 'Investment')">
+                          <span style="background-color: #ee6d6d">&times;</span>
+                        </button>
+
+                        <div style="margin: 0 auto;
+                               margin-top: 0px;
+                                font-size: 12px;
+                                margin-left: 10px;">
+                          <!-- <span class="material-icons p-r-10"> 
+                                file_present
+                                </span> -->
+                          <span class="file-name" style="padding-top: 20px;">
+                            <button type="button" class="delete" matTooltip="View Document"
+                              style="right: 1px;top: 38px;font-size: 20px;"
+                              (click)="doViewFile(medical, photo, 'Medical')">
+                              <span style="border-radius: 14%;background: #e4e4e4;"><i class="mdi mdi-progress-download"
+                                  style="color: #787c7b;"></i>
+                              </span>
+                            </button>
+
+                            {{photo.FileName}} </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="go-corner" href="javascript:;" (click)="deleteInvestmentProduct(i)"
+              matTooltip="Delete" style="background: #f4f4f4;
+    cursor: pointer;
+    border-radius: 0 4px 0 10px;">
+              <div class="go-arrow">
+                <i class="fa fa-trash delete_icon"></i>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+
+
+
+      </div>
+      <div class="modal-footer">
+
+        <div class="row" style="width: 100%;">
+          <div class="col-lg-6">
+            <ul class="list-inline">
+              <h3 style="font-size: 14px;
+                padding-top: 5px;">Total Amount : {{TotalDeclaredAmount | currency:'INR':'symbol-narrow':'1.2-2'}}</h3>
+            </ul>
+          </div>
+          <div class="col-lg-6 text-right">
+            <div class="text-right">
+              <ul class="list-inline">
+                <li class="list-inline-item">
+                  <button class="btn btn-link" type="button" (click)="close_slider_preq()"> Cancel</button>
+                </li>
+                <li class="list-inline-item">
+                  <button class="btn  btn-primary"
+                    style="padding-left: 25px;padding-right: 25px;padding-top: 2px;padding-bottom: 3px;" type="Submit"
+                    name="btnSubmit" id="btnSubmit" (click)="saveDeclarations()"> Save
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>

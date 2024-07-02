@@ -1,0 +1,1530 @@
+<div class="page-wrapper">
+  <div class="page-content ">
+
+    <app-loading-screen></app-loading-screen>
+
+    <div [ngStyle]="{'display': spinner?'flex':'none'}" id="overlay">
+      <div class="w-100 d-flex justify-content-center align-items-center">
+        <div  class="spinner"></div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-8">
+            <input class="form-control" placeholder="Enter Code"  [(ngModel)]="code">
+          </div>
+          <div class="col-4">
+            <button class="btn btn-primary edit" (click)="onClickingEditButton()">Edit</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-primary new" (click)="onClickingAddNewButton()">New</button>
+      </div>
+    </div>
+    
+
+    <div class="content m-b report-content" *ngIf="pageLayout">
+      
+      <div class="row m-b">
+
+        <span class="col">
+          <label for="code" class="form-label" > Code : </label>  
+          <input id="code" class="form-control" type="text" [(ngModel)]="pageLayout.Code">
+        </span>
+  
+        <span class="col">
+          <label for="description" class="form-label" > Description : </label>  
+          <input id="description" class="form-control" type="text" [(ngModel)]="pageLayout.Description">
+        </span>
+  
+        <span class="col">
+          <label for="Company-Id" class="form-label" > Company ID : </label>  
+          <input id="Company-Id" class="form-control" type="number" [(ngModel)]="pageLayout.CompanyId">
+        </span>
+        
+        <span class="col">
+          <label for="Client-Id" class="form-label" > Client ID : </label>  
+          <input id="Client-Id" class="form-control" type="number" [(ngModel)]="pageLayout.ClientId">
+        </span>
+        
+      </div>
+      
+      <div class="row m-b">
+        <span class="col">
+          <label for="DataSource-Type" class="form-label">Data Source Type:</label>
+          <ng-select   [clearable]="false" [items]="dataSourceTypeNames" bindValue="value" bindLabel="label" [(ngModel)]="pageLayout.GridConfiguration.DataSource.Type">
+          </ng-select>
+        </span>
+  
+        <span class="col">
+          <label for="DataSource" class="form-label"> Data Source Name : </label>  
+          <input id="DataSource" class="form-control" type="text" [(ngModel)]="pageLayout.GridConfiguration.DataSource.Name">
+        </span>
+
+        <span class="col">
+          <label for="DataSource" class="form-label"> Entity Type : </label>  
+          <input id="DataSource" class="form-control" type="text" [(ngModel)]="pageLayout.GridConfiguration.DataSource.EntityType">
+        </span>
+
+        <span class="col" >
+          <div class="row"  style="padding-top: 30px;">
+            <span class="col" style="text-align: right;">Is Core Entity:</span>
+            <span class="col">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.DataSource.IsCoreEntity"/>
+                <span class="el-switch-style" ></span>
+              </label>
+            </span>
+          </div>
+        </span>
+        <br><br>
+      </div>
+
+      <button class="btn btn-primary" (click)="onClickingDataSourceConfirmButton()" >Confirm</button>
+      
+      
+      <!-- Page Properties -->
+      <div>
+
+        <hr>
+        
+        <h1>Configure Page Properties</h1><br>
+        
+        <div class="row">
+
+          <div class="col">
+            <label for="PageTitle" class="form-label" > Page Title : </label>  
+            <input id="PageTitle"class="form-control" type="text" [(ngModel)]="pageLayout.PageProperties.PageTitle"><br>
+      
+            <label for="BannerText" class="form-label"> Banner Text : </label>  
+            <input id="BannerText" class="form-control" type="text" [(ngModel)]="pageLayout.PageProperties.BannerText"><br>
+          </div>
+  
+          <div class="col">
+
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">Card Layout Required :</span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.PageProperties.IsCardLayoutRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">Grid Layout Required :</span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.PageProperties.IsGridLayoutRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col-8">Is Download Excel Button Required For Reports:</span>
+              <span class="col-4">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.PageProperties.IsDownloadExcelRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+
+            <div class="row"  style="padding-top: 15px;">
+              <span class="col-8">Is Download Pdf Button Required For Reports:</span>
+              <span class="col-4">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.PageProperties.IsDownloadPdfRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Search Configuration for View -->
+      <div *ngIf="columnNames && pageLayout.GridConfiguration.DataSource.Type === 1"> 
+        
+        <hr>
+        
+        <h1>Configure Search Panel </h1>
+
+        <label for="ButtonIds" > List of Buttons Required : </label>
+        <ng-select id="ButtonIds" [multiple]="true" (closeOnSelect)="false" [(ngModel)]="pageLayout.SearchConfiguration.ButtonIds">
+          <ng-option [value]="1">Add Product</ng-option>
+          <ng-option [value]="2">Add Scale</ng-option>
+          <ng-option [value]="3">Add Paygroup</ng-option>
+          <ng-option [value]="4">Add Tax Code</ng-option>
+        </ng-select>
+        <br>
+
+        <label for="SearchButtonRequired" >Search Button Required : </label>
+        <ng-select id="SearchButtonRequired"  [(ngModel)]="pageLayout.SearchConfiguration.SearchButtonRequired">
+          <ng-option [value]="true">Yes</ng-option>
+          <ng-option [value]="false">No</ng-option>
+        </ng-select>
+        <br>
+
+        <label for="ClearButtonRequired" >Clear Button Required : </label>
+        <ng-select id="ClearButtonRequired"  [(ngModel)]="pageLayout.SearchConfiguration.ClearButtonRequired">
+          <ng-option [value]="true">Yes</ng-option>
+          <ng-option [value]="false">No</ng-option>
+        </ng-select>
+        <br>
+        
+        <div *ngFor="let column of columnNamesForSearchElements; let i = index">
+          <label>
+            <input type="checkbox" [checked]="column.value" (click)="onClickingSearchElementCheckBox(i , $event)">
+          </label>
+          {{column.name}}
+        </div>
+        <br>
+
+        <div *ngFor = "let searchElement of tempSearchElementObject | keyvalue">
+          <h2>><strong>{{columnNames[searchElement.key]}} :</strong></h2>
+
+          <label for="display-name" > Display Name : </label>  
+          <input id="display-name" type="text" [(ngModel)]="searchElement.value.DisplayName"><br>
+
+          <label for="input-type" > Input type : </label>
+          <ng-select id="input-type" [items]="inputControlTypeNames" [clearable]="false" bindValue="value" bindLabel="label"  class="" [(ngModel)]="searchElement.value.InputControlType">
+          </ng-select><br>
+
+          <span *ngIf="pageLayout.GridConfiguration.ShowDataOnLoad">
+            <label for="Value" > Default Value : </label>  
+            <input id="Value" type="text" [(ngModel)]="searchElement.value.Value"><br>
+          </span>
+
+          <label for="relational-symbol" > Relational Operator Required : </label>
+          <ng-select id="relational-symbol" class="" [(ngModel)]="searchElement.value.RelationalOperatorsRequired">
+            <ng-option [value]="true">Yes</ng-option>
+            <ng-option [value]="false">No</ng-option>
+          </ng-select>
+          <br>
+
+          <label for="DataSource-Type">Data Source Type:</label>
+          <ng-select   [clearable]="false" [items]="dataSourceTypeNames" bindValue="value" bindLabel="label" [(ngModel)]="searchElement.value.DataSource.Type">
+          </ng-select><br>
+
+          <label for="DataSource" > Data Source : </label>  
+          <input id="DataSource" type="text" [(ngModel)]="searchElement.value.DataSource.Name"><br>
+
+          <label for="default-search" > Include in Search Panel? : </label>
+          <ng-select id="default-search"  [(ngModel)]="searchElement.value.IsIncludedInDefaultSearch">
+            <ng-option [value]="true">Yes</ng-option>
+            <ng-option [value]="false">No</ng-option>
+          </ng-select><br>
+
+          <label for="foreign-key" >Name of the Foreign Key Column: </label>  
+          <ng-select (open)="onOpeningForeignKeyDropDown(searchElement.value)" [loading]="!searchElementColumns" [clearable]="false" 
+          [items]="searchElementColumns"  [(ngModel)]="searchElement.value.ForeignKeyColumnNameInDataset">
+          </ng-select><br>
+
+          <label for="display-field" >Binding Label Column Name in Dataset : </label>  
+          <ng-select (open)="onOpeningForeignKeyDropDown(searchElement.value)" [loading]="!searchElementColumns" [clearable]="false" 
+          [items]="searchElementColumns"  [(ngModel)]="searchElement.value.DisplayFieldInDataset">
+          </ng-select><br>
+
+          <label for="Parent-fields" >Parent Fields (if any): </label>  
+          <ng-select   [items]="columnNames" [multiple]="true" [closeOnSelect]="false" [(ngModel)]="searchElement.value.ParentFields">
+          </ng-select><br>
+
+          <label for="readOnly" > Read only : </label>
+          <ng-select id="readOnly"  [(ngModel)]="searchElement.value.ReadOnly">
+            <ng-option [value]="true">Yes</ng-option>
+            <ng-option [value]="false">No</ng-option>
+          </ng-select>
+          <br>
+
+          <label for="TriggerSearchOnChange" > Trigger Search on change: </label>
+          <ng-select id="TriggerSearchOnChange"  [(ngModel)]="searchElement.value.TriggerSearchOnChange">
+            <ng-option [value]="true">Yes</ng-option>
+            <ng-option [value]="false">No</ng-option>
+          </ng-select>
+          <br>
+
+          <div *ngIf="searchElement.value.DataSource.Type == 2">
+
+            <label  for="outputFieldName" >Drop Down List:  </label>  
+            <input type="text" [(ngModel)]="dropDownValue">
+            <br>
+
+            <button  class="btn btn-primary" (click)="onClickingDropDownValueAddButton(searchElement.value)">Add</button><br>
+            
+            
+            <div *ngFor="let item of searchElement.value.DropDownList; let i = index">
+              <button (click)="onClickingRemoveDropDownValue(i , searchElement.value)"><i class="fa fa-remove" style="color:red"></i></button>
+              {{item}}
+            </div>
+            <br>
+
+          </div>
+
+        </div>
+      </div>
+
+      
+      <!-- Search Configuration for SP -->
+      <div  *ngIf="tempSearchElementObject && pageLayout.GridConfiguration.DataSource.Type === 0">
+        
+        <hr>
+        
+        <h1>Configure Search Panel </h1>
+        
+        <div class="row">
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Search Button Required : </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.SearchButtonRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Clear Button Required : </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.ClearButtonRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Data Level Security Required : </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.IsDataLevelSecurityRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Save SearchElements Locally : </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.SaveSearchElementsLocally"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Fill SearchElements From Local Storage: </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.FillSearchElementsFromLocal"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+
+        </div>
+
+        <ngb-accordion  class="panel" [closeOthers]="true">
+          <ngb-panel  class="panel" [title]="searchElement.value.FieldName"
+            *ngFor = "let searchElement of tempSearchElementObject | keyvalue">
+            <ng-template ngbPanelContent>
+            
+                
+
+                <div class="row m-b">
+                  <div class="col-6">
+                    <label class="form-label" for="display-name" > Display Name : </label>  
+                    <input class="form-control" id="display-name" type="text" [(ngModel)]="searchElement.value.DisplayName">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label" for="input-type" > Input type : </label>
+                    <ng-select id="input-type" [items]="inputControlTypeNames" [clearable]="false" bindValue="value" bindLabel="label"  class="" [(ngModel)]="searchElement.value.InputControlType">
+                    </ng-select>
+                  </div>
+                  <div class="col-6">
+                    <label for="DataSource-Type">Data Source Type:</label>
+                    <ng-select   [clearable]="false" [items]="dataSourceTypeNames" bindValue="value" bindLabel="label" [(ngModel)]="searchElement.value.DataSource.Type">
+                    </ng-select>
+                  </div>
+                  <div class="col-6" *ngIf="searchElement.value.DataSource.Type !== 2">
+                    <label class="form-label" for="DataSource" > Data Source Name : </label>  
+                    <input class="form-control" id="DataSource" type="text" [(ngModel)]="searchElement.value.DataSource.Name">
+                  </div>
+                  <div class="col-6" *ngIf="searchElement.value.DataSource.Type === 2">
+                    
+                    <div class="row">
+                      <div class="col-8">
+                        <label class="form-label" for="outputFieldName" >Drop Down List:  </label>  
+                        <input class="form-control" type="text" [(ngModel)]="dropDownValue">
+                      </div>
+                      <div class="col-4">
+                        <button  class="btn btn-primary" (click)="onClickingDropDownValueAddButton(searchElement.value)">Add</button><br>
+                      </div>
+                    </div>
+                    <div *ngFor="let item of searchElement.value.DropDownList; let i = index">
+                      <button (click)="onClickingRemoveDropDownValue(i , searchElement.value)"><i class="fa fa-remove" style="color:red"></i></button>
+                      {{item}}
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label" for="foreign-key" >Value Field in Dataset: </label>  
+                    <ng-select (open)="onOpeningForeignKeyDropDown(searchElement.value)" [loading]="!searchElementColumns" [clearable]="false" [items]="searchElementColumns"  [(ngModel)]="searchElement.value.ForeignKeyColumnNameInDataset">
+                    </ng-select>
+                  </div>
+                  <div class="col-6">
+                    <label  class="form-label" for="display-field" >Label Field in Dataset : </label>  
+                    <ng-select (open)="onOpeningForeignKeyDropDown(searchElement.value)" [loading]="!searchElementColumns" [clearable]="false" [items]="searchElementColumns"  [(ngModel)]="searchElement.value.DisplayFieldInDataset">
+                    </ng-select>
+                  </div>
+                  <div class="col-6" *ngIf = "editing">
+                    <label  class="form-label" for="Parent-fields" >Parent Fields (if any): </label>  
+                    <ng-select    [items]="searchElementList" [multiple]="true" bindValue="FieldName" bindLabel="FieldName" [closeOnSelect]="false" [(ngModel)]="searchElement.value.ParentFields">
+                    </ng-select>
+                  </div>
+                  <div class="col-6" *ngIf = "!editing">
+                    <label class="form-label"  for="Parent-fields" >Parent Fields (if any): </label>  
+                    <ng-select    [items]="paramNames" [multiple]="true"   [closeOnSelect]="false" [(ngModel)]="searchElement.value.ParentFields">
+                    </ng-select>
+                  </div>
+                  
+                </div>
+                
+                <div class="row m-b">
+                  <div class="col-6">
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Include in Search Panel? : </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="searchElement.value.IsIncludedInDefaultSearch"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+    
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Read only : </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="searchElement.value.ReadOnly"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Is Mandatory?: </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="searchElement.value.IsFieldMandatory"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+    
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Is Data Mapped?: </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="searchElement.value.DataSecurityConfiguration.IsMappedData"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="row">
+                      <div class="col-12">
+                        <label class="form-label" for="Value" > Default Value : </label>  
+                        <input class="form-control" id="Value" type="text" [(ngModel)]="searchElement.value.DefaultValue">
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label" for="Value" > Display Order : </label>
+                        <ng-select    [items]="displayOrder"   [(ngModel)]="searchElement.value.DisplayOrder">
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  
+                <fieldset class="border" *ngIf="pageLayout.SearchConfiguration.IsDataLevelSecurityRequired">
+                  <legend class="border">Data Security Configuration :</legend>
+                  <div class="row m-b">
+                    <div class="col-12 text-right">
+                      <button  class="btn btn-primary"
+                       (click)="onClickingAddRoleSecurityConfigurationButton(searchElement.value)">Add</button><br>
+
+                    </div>
+                  </div>
+                  <div class="row m-b">
+                    <div class="col-6">
+                      <label class="form-label" for="DataSource" >Role Code : </label>  
+                      <input class="form-control" id="DataSource" type="text" [(ngModel)]="roleCode">
+                    </div>
+                    <div class="col-6">
+                      <div class="row" style="margin-bottom: 10px;" >
+                        <span class="col" style="text-align: right;">
+                          <label class="form-label" >Data Leverl Security Required : </label>
+                        </span>
+                        <span class="col" style="text-align: right;">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" [(ngModel)]="RoleDataLevelSecurityRequired"/>
+                            <span class="el-switch-style" ></span>
+                          </label>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <fieldset class="border m-b">
+                    <legend class="border">Overided Users :</legend>
+                    <div class="row m-b">
+                      <div class="col-6">
+                        <label class="form-label" for="DataSource" >User Id : </label>  
+                        <input class="form-control" id="DataSource" type="text" [(ngModel)]="userId"> 
+                      </div>
+                      <div class="col-6">
+                        <div class="row">
+                          <div class="col-8">
+                            <div class="row" style="margin-bottom: 10px;" >
+                              <span class="col" style="text-align: right;">
+                                <label class="form-label" >Data Leverl Security Required : </label>
+                              </span>
+                              <span class="col" style="text-align: right;">
+                                <label class="el-switch el-switch-green">   
+                                  <input type="checkbox" [(ngModel)]="UserDataLevelSecurityRequired"/>
+                                  <span class="el-switch-style" ></span>
+                                </label>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="col-4 text-right">
+                            <button  class="btn btn-primary" 
+                            (click)="onClickingOveridedUserConfigurationButton(searchElement.value)">Add</button>
+                            
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                    <div *ngFor="let item of OveridedUsers; let i = index">
+                      <button (click)="onClickingRemoveUserDataConfiguration(i)"><i class="fa fa-remove" style="color:red"></i></button>
+                      {{item.UserId}} -> {{item.IsDataLeverSecurityRequired}}
+                    </div>
+                  </fieldset>
+
+
+                  <div *ngFor="let item of searchElement.value.DataSecurityConfiguration.RoleBasedConfigurationList; let i = index">
+                    <button (click)="onClickingRemoveRoleConfiguration(i , searchElement.value)"><i class="fa fa-remove" style="color:red"></i></button>
+                    {{item.RoleCode}} -> {{item.IsDataLeverSecurityRequired}}
+                  </div>
+                    
+                </fieldset>
+                
+   
+                
+
+                
+              
+            </ng-template>
+          </ngb-panel>  
+          
+        </ngb-accordion>
+        
+
+      </div>
+
+      <!-- Search Configuration for External API -->
+      <div  *ngIf="tempSearchElementObject && pageLayout.GridConfiguration.DataSource.Type === 3">
+        
+        <hr>
+        
+        <h1>Configure Search Panel </h1>
+        
+        <div class="row">
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Search Button Required : </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.SearchButtonRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Clear Button Required : </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.ClearButtonRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Data Level Security Required : </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.IsDataLevelSecurityRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Save SearchElements Locally : </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.SaveSearchElementsLocally"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="margin-bottom: 10px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Fill SearchElements From Local Storage: </label>
+              </span>
+              <span class="col" style="text-align: right;">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.SearchConfiguration.FillSearchElementsFromLocal"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+
+        </div>
+
+        <ngb-accordion  class="panel" [closeOthers]="true">
+          <ngb-panel  class="panel" [title]="searchElement.value.FieldName"
+            *ngFor = "let searchElement of tempSearchElementObject | keyvalue">
+            <ng-template ngbPanelContent>
+            
+                
+
+                <div class="row m-b">
+                  <div class="col-6">
+                    <label class="form-label" for="display-name" > Display Name : </label>  
+                    <input class="form-control" id="display-name" type="text" [(ngModel)]="searchElement.value.DisplayName">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label" for="input-type" > Input type : </label>
+                    <ng-select id="input-type" [items]="inputControlTypeNames" [clearable]="false" bindValue="value" bindLabel="label"  class="" [(ngModel)]="searchElement.value.InputControlType">
+                    </ng-select>
+                  </div>
+                  <div class="col-6">
+                    <label for="DataSource-Type">Data Source Type:</label>
+                    <ng-select   [clearable]="false" [items]="dataSourceTypeNames" bindValue="value" bindLabel="label" [(ngModel)]="searchElement.value.DataSource.Type">
+                    </ng-select>
+                  </div>
+                  <div class="col-6" *ngIf="searchElement.value.DataSource.Type !== 2">
+                    <label class="form-label" for="DataSource" > Data Source Name : </label>  
+                    <input class="form-control" id="DataSource" type="text" [(ngModel)]="searchElement.value.DataSource.Name">
+                  </div>
+                  <div class="col-6" *ngIf="searchElement.value.DataSource.Type === 2">
+                    
+                    <div class="row">
+                      <div class="col-8">
+                        <label class="form-label" for="outputFieldName" >Drop Down List:  </label>  
+                        <input class="form-control" type="text" [(ngModel)]="dropDownValue">
+                      </div>
+                      <div class="col-4">
+                        <button  class="btn btn-primary" (click)="onClickingDropDownValueAddButton(searchElement.value)">Add</button><br>
+                      </div>
+                    </div>
+                    <div *ngFor="let item of searchElement.value.DropDownList; let i = index">
+                      <button (click)="onClickingRemoveDropDownValue(i , searchElement.value)"><i class="fa fa-remove" style="color:red"></i></button>
+                      {{item}}
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label" for="foreign-key" >Value Field in Dataset: </label>  
+                    <ng-select (open)="onOpeningForeignKeyDropDown(searchElement.value)" [loading]="!searchElementColumns" [clearable]="false" [items]="searchElementColumns"  [(ngModel)]="searchElement.value.ForeignKeyColumnNameInDataset">
+                    </ng-select>
+                  </div>
+                  <div class="col-6">
+                    <label  class="form-label" for="display-field" >Label Field in Dataset : </label>  
+                    <ng-select (open)="onOpeningForeignKeyDropDown(searchElement.value)" [loading]="!searchElementColumns" [clearable]="false" [items]="searchElementColumns"  [(ngModel)]="searchElement.value.DisplayFieldInDataset">
+                    </ng-select>
+                  </div>
+                  <div class="col-6" *ngIf = "editing">
+                    <label  class="form-label" for="Parent-fields" >Parent Fields (if any): </label>  
+                    <ng-select    [items]="searchElementList" [multiple]="true" bindValue="FieldName" bindLabel="FieldName" [closeOnSelect]="false" [(ngModel)]="searchElement.value.ParentFields">
+                    </ng-select>
+                  </div>
+                  <div class="col-6" *ngIf = "!editing">
+                    <label class="form-label"  for="Parent-fields" >Parent Fields (if any): </label>  
+                    <ng-select    [items]="paramNames" [multiple]="true"   [closeOnSelect]="false" [(ngModel)]="searchElement.value.ParentFields">
+                    </ng-select>
+                  </div>
+                  
+                </div>
+                
+                <div class="row m-b">
+                  <div class="col-6">
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Include in Search Panel? : </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="searchElement.value.IsIncludedInDefaultSearch"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+    
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Read only : </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="searchElement.value.ReadOnly"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Is Mandatory?: </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="searchElement.value.IsFieldMandatory"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+    
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Is Data Mapped?: </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="searchElement.value.DataSecurityConfiguration.IsMappedData"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="row">
+                      <div class="col-12">
+                        <label class="form-label" for="Value" > Default Value : </label>  
+                        <input class="form-control" id="Value" type="text" [(ngModel)]="searchElement.value.DefaultValue">
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label" for="Value" > Display Order : </label>
+                        <ng-select    [items]="displayOrder"   [(ngModel)]="searchElement.value.DisplayOrder">
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  
+                <fieldset class="border" *ngIf="pageLayout.SearchConfiguration.IsDataLevelSecurityRequired">
+                  <legend class="border">Data Security Configuration :</legend>
+                  <div class="row m-b">
+                    <div class="col-12 text-right">
+                      <button  class="btn btn-primary"
+                       (click)="onClickingAddRoleSecurityConfigurationButton(searchElement.value)">Add</button><br>
+
+                    </div>
+                  </div>
+                  <div class="row m-b">
+                    <div class="col-6">
+                      <label class="form-label" for="DataSource" >Role Code : </label>  
+                      <input class="form-control" id="DataSource" type="text" [(ngModel)]="roleCode">
+                    </div>
+                    <div class="col-6">
+                      <div class="row" style="margin-bottom: 10px;" >
+                        <span class="col" style="text-align: right;">
+                          <label class="form-label" >Data Leverl Security Required : </label>
+                        </span>
+                        <span class="col" style="text-align: right;">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" [(ngModel)]="RoleDataLevelSecurityRequired"/>
+                            <span class="el-switch-style" ></span>
+                          </label>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <fieldset class="border m-b">
+                    <legend class="border">Overided Users :</legend>
+                    <div class="row m-b">
+                      <div class="col-6">
+                        <label class="form-label" for="DataSource" >User Id : </label>  
+                        <input class="form-control" id="DataSource" type="text" [(ngModel)]="userId"> 
+                      </div>
+                      <div class="col-6">
+                        <div class="row">
+                          <div class="col-8">
+                            <div class="row" style="margin-bottom: 10px;" >
+                              <span class="col" style="text-align: right;">
+                                <label class="form-label" >Data Leverl Security Required : </label>
+                              </span>
+                              <span class="col" style="text-align: right;">
+                                <label class="el-switch el-switch-green">   
+                                  <input type="checkbox" [(ngModel)]="UserDataLevelSecurityRequired"/>
+                                  <span class="el-switch-style" ></span>
+                                </label>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="col-4 text-right">
+                            <button  class="btn btn-primary" 
+                            (click)="onClickingOveridedUserConfigurationButton(searchElement.value)">Add</button>
+                            
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                    <div *ngFor="let item of OveridedUsers; let i = index">
+                      <button (click)="onClickingRemoveUserDataConfiguration(i)"><i class="fa fa-remove" style="color:red"></i></button>
+                      {{item.UserId}} -> {{item.IsDataLeverSecurityRequired}}
+                    </div>
+                  </fieldset>
+
+
+                  <div *ngFor="let item of searchElement.value.DataSecurityConfiguration.RoleBasedConfigurationList; let i = index">
+                    <button (click)="onClickingRemoveRoleConfiguration(i , searchElement.value)"><i class="fa fa-remove" style="color:red"></i></button>
+                    {{item.RoleCode}} -> {{item.IsDataLeverSecurityRequired}}
+                  </div>
+                    
+                </fieldset>
+                
+   
+                
+
+                
+              
+            </ng-template>
+          </ngb-panel>  
+          
+        </ngb-accordion>
+        
+
+      </div>
+
+      <button class="btn btn-primary" *ngIf="keysinTempSearchElementObject?.length > 0 || (searchElementList !== null && searchElementList.length > 0) || (paramNames == null ||  paramNames.length == 0)" (click)="onClickingSearchElementConfirmButton()" >Confirm</button>
+      
+      <hr>
+
+      <!-- Configuring Grids -->
+      <div>
+        <h1>Configure Grid</h1>
+        
+        <!-- CheckBoxes -->
+        <div class="row m-b">
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Dynamic columns?: </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.IsDynamicColumns"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Show Data on Load : </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.ShowDataOnLoad"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >MultiSelect Allowed : </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.IsMultiSelectAllowed"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Summary Required :</label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.IsSummaryRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Pagination Required :: </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.IsPaginationRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Display Filter By Default : </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.DisplayFilterByDefault"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Row Selection CheckBox Required : </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.RowSelectionCheckBoxRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Enable Column Re-Arrangement : </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.EnableColumnReArrangement"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Column Picker Required : </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.IsColumnPickerRequired"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Grouping Enabled : </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.IsGroupingEnabled"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row"  style="padding-top: 30px;">
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Pin Row From Bottom : </label>
+              </span>
+              <span class="col">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.PinRowFromBottom"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="padding-top: 30px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Save Filter / Sorting Locally : </label>
+              </span>
+              <span class="col" >
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.SaveColumnSettingsLocally"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="row" style="padding-top: 30px;" >
+              <span class="col" style="text-align: right;">
+                <label class="form-label" >Set Filter / Sorting from Local : </label>
+              </span>
+              <span class="col" >
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" [(ngModel)]="pageLayout.GridConfiguration.SetColumnSettingsFromLocal"/>
+                  <span class="el-switch-style" ></span>
+                </label>
+              </span>
+            </div>
+          </div>
+          
+        </div>
+
+        <!-- DropDowns -->
+        <div class="row m-b">
+
+          <div class="col-6">
+            <label class="form-label" for="DefaultLayoutType" > Default Layout Type : </label>
+            <ng-select id="DefaultLayoutType" [items]="defaultLayoutTypeNames" bindLabel="label" bindValue="value" [(ngModel)]="pageLayout.GridConfiguration.DefaultLayoutType">
+            </ng-select>
+          </div>
+
+          <div class="col-6" *ngIf="pageLayout.GridConfiguration.RowSelectionCheckBoxRequired">
+            <label class="form-label"  for="RowSelectionType" > Row Selection Type : </label>
+            <ng-select  id="RowSelectionType" [items]="rowSelectionTypeNames" bindLabel="label" bindValue="value" [(ngModel)]="pageLayout.GridConfiguration.RowSelectionType">
+            </ng-select>
+          </div>
+
+          <div class="col-6" *ngIf="pageLayout.GridConfiguration.IsGroupingEnabled && columnNames">
+            <label class="form-label"  for="DefaultGroupingFields" > Default Grouping Fields: </label>
+            <ng-select [items]="columnNames" [multiple]="true" (closeOnSelect)="false"  id="DefaultGroupingFields"  [(ngModel)]="pageLayout.GridConfiguration.DefaultGroupingFields">
+            </ng-select>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label" for="PinnedRowCount" > Pinned Row Count : </label>  
+            <input class="form-control" id="PinnedRowCount" type="number" [(ngModel)]="pageLayout.GridConfiguration.PinnedRowCount">
+          </div>
+
+          <div class="col-6">
+            <label class="form-label" for="PinnedColumnCount" > Pinned Column Count : </label>  
+            <input class="form-control" id="PinnedColumnCount" type="number" [(ngModel)]="pageLayout.GridConfiguration.PinnedColumnCount">
+          </div>
+        </div>
+
+      </div>
+
+      
+      <!-- Configure grid columns -->
+      <div *ngIf = "columnNames && !pageLayout.GridConfiguration.IsDynamicColumns">
+        
+        <hr>
+        
+        <h1>Configure Grid Columns </h1>
+        
+        <div *ngFor="let column of columnNamesForColumnDefinition; let i = index">
+          <label>
+            <input type="checkbox" [checked]="column.value" (click)="onClickingColumnSelectCheckBox(i , $event)">
+          </label>
+          {{column.name}}
+        </div>
+        <br>
+
+        <div class="btn btn-primary" (click)="onClickingAddNewColumnButton()">Add Custom Column</div>
+        
+        <hr>
+        <br>
+        
+        <ngb-accordion  class="panel" [closeOthers]="true">
+          <ngb-panel  class="panel" [title]="columnDefinition.value.Type===1? columnDefinition.value.Id :columnDefinition.value.FieldName"
+            *ngFor = "let columnDefinition of tempColumnDefinitionObject | keyvalue ">
+            <ng-template ngbPanelContent>
+              
+                <!-- <h2 *ngIf="columnDefinition.value.Type === 0">><strong>{{columnDefinition.value.FieldName}} :</strong><br></h2>
+                <h2 *ngIf="columnDefinition.value.Type === 1">><strong>Custom :</strong><br></h2> -->
+                <div class="row" style="margin-bottom: 10px;">
+                  <div class="col-4">
+                    <label class="form-label" for="display-name" > Display Name : </label>  
+                    <input class="form-control" id="display-name" type="text" [(ngModel)]="columnDefinition.value.DisplayName">
+                  </div>
+                  <div class="col-4">
+                    <label class="form-label" *ngIf="columnDefinition.value.Type === 1" for="id">ID:</label>
+                    <input class="form-control" *ngIf="columnDefinition.value.Type === 1" type="text"  id="id" [(ngModel)]="columnDefinition.value.Id">
+                  </div>
+                  <div class="col-4">
+                    <label class="form-label" *ngIf="columnDefinition.value.Type === 1" for="Field">Field:</label>
+                    <ng-select  *ngIf="columnDefinition.value.Type === 1" id="Field" [items]="columnNames"  [(ngModel)]="columnDefinition.value.FieldName">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                  
+                  <!-- CheckBox -->
+                  <div class="col">
+                    <div class="row" style="margin-bottom: 10px;">
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Display Name in Header?: </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="columnDefinition.value.ShowInHeader"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+    
+                    <div class="row" style="margin-bottom: 10px;">
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Sortable?: </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="columnDefinition.value.IsSortable"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+    
+                    <div class="row" style="margin-bottom: 10px;">
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Filterable?: </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="columnDefinition.value.IsFilterable"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+    
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Editable?: </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="columnDefinition.value.IsEditable"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Clickable?: </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="columnDefinition.value.Clickable"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Summary Required : </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="columnDefinition.value.IsSummarizable"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 10px;" >
+                      <span class="col" style="text-align: right;">
+                        <label class="form-label" >Summary Required while Grouping : </label>
+                      </span>
+                      <span class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" [(ngModel)]="columnDefinition.value.SummaryRequiredInGrouping"/>
+                          <span class="el-switch-style" ></span>
+                        </label>
+                      </span>
+                    </div>
+
+                    
+                    
+
+                  </div>
+
+                  <!-- DropDowns -->
+                  <div class="col">
+                    <div class="row">
+
+                      <div class="col-12" style="margin-bottom: 10px;">
+                        <label class="form-label" for="DisplayOrder" > Display Order : </label>
+                        <ng-select  id="DisplayOrder" 
+                        (change)="onDisplayOrderChange(columnDefinition.value.DisplayOrder,columnDefinition.key)" 
+                        [(ngModel)]="columnDefinition.value.DisplayOrder">
+                         <ng-option *ngFor = "let column of tempColumnDefinitionObject | keyvalue; let i = index" [value]="i+1">{{i+1}}</ng-option>
+                        </ng-select>
+                      </div>
+    
+                      <div class="col-12" style="margin-bottom: 10px;">
+                        <label class = "form-label" for="Width">Width :</label>
+                        <input  type="number"  id="Width" class="form-control" [(ngModel)]="columnDefinition.value.Width"> 
+                      </div>  
+
+                      <div *ngIf="columnDefinition.value.IsFilterable" class="col-12" style="margin-bottom: 10px;">
+                        <label class = "form-label" for="Filterable" > Filter Type : </label>
+                        <ng-select id="FilterType"  bindLabel="label" bindValue="value" [items]="filterTypeNmaes" 
+                        [(ngModel)]="columnDefinition.value.FilterType">
+                        </ng-select>
+                      </div>
+
+                      <div *ngIf="columnDefinition.value.IsEditable" class="col-12" style="margin-bottom: 10px;">
+                        <label class = "form-label" for="EditorType" > Editor Type: </label>
+                        <ng-select id="EditorType"  [items]="editorTypeNames" [(ngModel)]="columnDefinition.value.EditorType">
+                        </ng-select>
+                      </div>
+                      
+                    </div>
+                  </div>
+                    
+                </div>
+
+
+      
+                <div class="row" style="margin-bottom: 10px;">
+                  <div class="col-4" *ngIf="columnDefinition.value.Clickable">
+                    <ngb-accordion class="panel">
+                      <ngb-panel class="panel" [title]="'Clickable Actions'">
+                        <ng-template ngbPanelContent>
+                          <div class="row">
+                            <div class="col-12">
+                              <label class = "form-label" for="routing-link" > Routing Link : </label>  
+                              <input class="form-control"  id="routing-link" type="text" [(ngModel)]="columnDefinition.value.RouteLink">
+                            </div>
+
+                            <div class="row" style="margin-bottom: 10px;" >
+                              <span class="col" style="text-align: right;">
+                                <label class="form-label" >Send Data to Next Screen : </label>
+                              </span>
+                              <span class="col" style="text-align: right;">
+                                <label class="el-switch el-switch-green">
+                                  <input type="checkbox" [(ngModel)]="columnDefinition.value.SendValuesToSearchElements"/>
+                                  <span class="el-switch-style" ></span>
+                                </label>
+                              </span>
+                            </div>
+                  
+                            <div *ngIf="columnDefinition.value.SendValuesToSearchElements">
+                
+                              <label class="form-label"  >Input and Output Field Names:(For search elements)</label><br>
+                              <label class="form-label" for="inputFieldName" >Input Field Name : </label>  
+                              <ng-select   [clearable]="false" [items]="columnNames"  [(ngModel)]="inputFieldName">
+                              </ng-select><br>
+                              <label class="form-label" for="outputFieldName" >Output Field Name :  </label>  
+                              <input type="text" [(ngModel)]="outputFieldName">
+                              <br>
+                
+                              <label class="form-label" for="readonly">Read Only: </label>
+                              <ng-select id="readOnly" [(ngModel)]="readOnly">
+                                <ng-option [value]="true">Yes</ng-option>
+                                <ng-option [value]="false">No</ng-option>
+                              </ng-select><br>
+                              <button  class="btn btn-primary" (click)="onClickingRoutingValueAddButton(columnDefinition.value)">Add</button><br>
+                              
+                              
+                              <div *ngFor="let item of columnDefinition.value.SearchElementValuesList; let i = index">
+                                <button (click)="onClickingRemoveSearchElementValue(i , columnDefinition.value)"><i class="fa fa-remove" style="color:red"></i></button>
+                                {{item.InputFieldName}} -> {{item.OutputFieldName}} : {{item.ReadOnly}}
+                              </div>
+                              <br>
+                  
+                            </div>
+                
+                            <div class= "row">
+                              <span class="col-12">
+                                <label  for="Function" class="form-label"> Function Name : </label>  
+                                <input id="Function" class="form-control" type="text" [(ngModel)]="columnDefinition.value.FunctionName"><br> 
+                              </span>
+                  
+                              <span class = "col-12">
+                                <div *ngIf="columnDefinition.value.FunctionName !== null && columnDefinition.value.FunctionName !== ''">
+                                  <div class="row"  style="padding-top: 30px;">
+                                    <span class="col" style="text-align: right;">Send Data To Function:</span>
+                                    <span class="col">
+                                      <label class="el-switch el-switch-green">
+                                        <input type="checkbox" [(ngModel)]="columnDefinition.value.SendDataToFunction"/>
+                                        <span class="el-switch-style" ></span>
+                                      </label>
+                                    </span>
+                                  </div>
+                                </div>
+                              </span>
+                            </div>
+                
+                            <div *ngIf="columnDefinition.value.SendDataToFunction">
+                              <div class="row">
+                                <span class="col">
+                                  <label class="form-label">Key:</label>
+                                  <input type="text" class="form-control" [(ngModel)]="key">
+                                </span>
+                                <span class="col">
+                                  <label for="type" class="form-label">Type:</label>
+                                  <ng-select id="type"  [(ngModel)]="keyType">
+                                    <ng-option value="string">String</ng-option>
+                                    <ng-option value="number">Number</ng-option>
+                                    <ng-option value="boolean">Boolean</ng-option>
+                                  </ng-select>
+                                </span>
+                                <span class="col" style="text-align: left;">
+                                  <button class="btn btn-primary" (click)="onClickingAddKeyButton(columnDefinition.value)">Add key</button>
+                                </span>
+                              </div>
+                
+                              <div *ngFor="let item of columnDefinition.value.FunctionDataType | keyvalue; trackBy:trackByKey">
+                
+                                <span *ngIf="typeOf(item.value) === 'string'" class="col-6">
+                                  <button (click)="onClickingRemoveFunctionDataKey(item.key , columnDefinition.value)">
+                                    <i class="fa fa-remove" style="color:red"></i></button>
+                                  <label class="form-label">{{item.key}}:</label>
+                                  <input class="form-control" type="text" [(ngModel)]="columnDefinition.value.FunctionDataType[item.key]">
+                                </span>
+                
+                                <span *ngIf="typeOf(item.value) === 'number'" class="col-6">
+                                  <button (click)="onClickingRemoveFunctionDataKey(item.key , columnDefinition.value)">
+                                    <i class="fa fa-remove" style="color:red"></i></button>
+                                  <label class="form-label">{{item.key}}:</label>
+                                  <input class="form-control" type="number" [(ngModel)]="columnDefinition.value.FunctionDataType[item.key]">
+                                </span>
+                
+                                <span *ngIf="typeOf(item.value) === 'boolean'" class="col-6">
+                                  <button (click)="onClickingRemoveFunctionDataKey(item.key , columnDefinition.value)">
+                                    <i class="fa fa-remove" style="color:red"></i></button>
+                                  <div class="row"  style="padding-top: 30px;">
+                                    <span class="col" style="text-align: right;">{{item.key}}:</span>
+                                    <span class="col">
+                                      <label class="el-switch el-switch-green">
+                                        <input type="checkbox" [(ngModel)]="columnDefinition.value.FunctionDataType[item.key]"/>
+                                        <span class="el-switch-style" ></span>
+                                      </label>
+                                    </span>
+                                  </div>
+                                </span>
+                              </div>
+                
+                              <button class="btn btn-primary" 
+                              *ngIf="columnDefinition.value.FunctionDataType !== null && columnDefinition.value.FunctionDataType !== {}" 
+                              (click)="onclickingAddFunctionDataButton(columnDefinition.value)">Add Data</button>
+                
+                              
+                              <div *ngFor="let data of columnDefinition.value.FunctionData; let i = index">
+                                <button (click)="onClickingRemoveFunctionData(i , columnDefinition.value)">
+                                  <i class="fa fa-remove" style="color:red"></i></button>
+                                <div *ngFor="let item of data | keyvalue">
+                                  <label class="form-label">{{item.key}}:{{item.value}}</label>
+                                </div>
+                              </div>
+                
+                
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ngb-panel>
+                    </ngb-accordion>
+                  </div>
+
+                  <div class="col-4" *ngIf="columnDefinition.value.IsSummarizable">
+                    <ngb-accordion class="panel">
+                      <ngb-panel class="panel" [title]="'Summary Aggregator'">
+                        <ng-template ngbPanelContent>
+                          <label  for="Aggregator-Type" > Aggregator Type : </label>
+                          <ng-select  id="Aggregator-Type" [items]="acceptedAggregatorTypes" [(ngModel)]="columnDefinition.value.AggregatorType">
+                            <ng-option [value]="true">Yes</ng-option>
+                            <ng-option [value]="false">No</ng-option>
+                          </ng-select>
+                          <br>
+              
+                          <label for="prefix" > Aggregator Prefix : </label>  
+                          <input id="prefix"  type="text" [(ngModel)]="columnDefinition.value.Params.GroupFormatterPrefix"><br>
+                          <label  for="display-name" > Aggregator Sufix : </label>  
+                          <input  id="display-name" type="text" [(ngModel)]="columnDefinition.value.Params.GroupFormatterSuffix"><br>
+                        </ng-template>
+                      </ngb-panel>
+                      
+                    </ngb-accordion>
+                   
+                  </div>
+
+                  <div class="col-4" *ngIf="columnDefinition.value.SummaryRequiredInGrouping">
+                    <ngb-accordion class="panel">
+                      <ngb-panel class="panel" [title]="'Group Aggregator'">
+                        <ng-template ngbPanelContent>
+                          <label >Group Aggregator Column And Type</label><br>
+                          <label  for="Column" >Column : </label>  
+                          <ng-select   [clearable]="false" [items]="columnNames"  [(ngModel)]="column">
+                          </ng-select><br>
+                          <label  for="foreign-key" >Type :  </label>  
+                          <ng-select   [clearable]="false" [items]="acceptedAggregatorTypes"  bindValue="value" [(ngModel)]="type">
+                          </ng-select><br>
+                          <button  class="btn btn-primary" (click)="onClickingGroupAggregatorAddButton(columnDefinition.key)">Add</button>
+                          
+                          
+                          <div *ngFor="let item of columnDefinition.value.GroupAggregatorColumnAndType">
+                            <button (click)="onClickingRemoveGroupAggregatorButton(i , columnDefinition.value)"><i class="fa fa-remove" style="color:red"></i></button>
+                            {{item.Column}} : {{item.Type}}
+                          </div>
+                          <br>
+                        </ng-template>
+                      </ngb-panel>
+                      
+                    </ngb-accordion>
+
+                    
+                  </div>
+
+                  <div class="col-4" *ngIf="columnDefinition.value.IsFilterable">
+                    <ngb-accordion class="panel">
+                      <ngb-panel class="panel" [title]="'Filter Options'">
+                        <ng-template ngbPanelContent>
+                          <div class="row">
+                            <div class="col-12 text-right">
+                              <div class="row" style="margin-bottom: 10px;">
+                                <span class="col" style="text-align: right;">
+                                  <label class="form-label" >Is Custom Filter : </label>
+                                </span>
+                                <span class="col" style="text-align: right;">
+                                  <label class="el-switch el-switch-green">
+                                    <input type="checkbox" [(ngModel)]="columnDefinition.value.IsCustomFilter"/>
+                                    <span class="el-switch-style" ></span>
+                                  </label>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" >
+                            <div class="col-12" *ngIf="!columnDefinition.value.IsCustomFilter" >
+                              <label class = "form-label" for="Filterable" > Filter Type : </label>
+                              <ng-select id="FilterType"  bindLabel="label" bindValue="value" [items]="filterTypeNmaes" 
+                              [(ngModel)]="columnDefinition.value.FilterType">
+                              </ng-select>
+                            </div>
+
+                            <div class="col-12" *ngIf="columnDefinition.value.IsCustomFilter">
+                              <label class = "form-label" for="filterHandler" > Custom Filter Handler : </label>
+                              <input   id="Width" class="form-control" [(ngModel)]="columnDefinition.value.CustomFilterHandler"> 
+                            </div>
+
+                            <div class="col-12" *ngIf="columnDefinition.value.IsCustomFilter">
+                              <label class = "form-label" for="filterHandler" > Custom Filter Compoent Name : </label>
+                              <input id="Width" class="form-control" [(ngModel)]="columnDefinition.value.CustomFilterComponentName"> 
+                            </div>
+                          </div>
+                          
+                        </ng-template>
+                      </ngb-panel>
+                      
+                    </ngb-accordion>
+                  </div>
+
+                </div>
+
+              
+            </ng-template>
+          </ngb-panel>
+          
+        </ngb-accordion>
+        
+
+
+      </div>
+
+      <button class="btn btn-primary" *ngIf="keysinTempColumnDefinitionObject.length > 0" (click)="onClickingColumnDefinitionConfirmButton()" >Confirm</button>
+      
+      
+      <button class="btn btn-primary submit" (click)="onClickingSubmitButton()">Submit&nbsp; &nbsp;<span
+        *ngIf="submitSpinner" class="spinner-border spinner-border-sm" role="status"
+        aria-hidden="true"></span></button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="dfc100 overflow-y-auto">
+
+
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">Add New State</h4>
+                    <!-- <button type="button" class="close" (click)="closeModal()"><i class="mdi mdi-close"></i></button> -->
+                    <button type="button" class="btn btn-sm btn-default modal-close-btn" (click)="closeModal()">
+                        <i class="mdi mdi-close font-size-md"></i>
+                    </button>
+                </div>
+
+
+                <div class="modal-body no-padder">
+
+                    <div class="flex-column">
+
+                        <form [formGroup]="stateForm">
+
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="clearfix">
+                                    <div class="row">
+
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label>Code <span class="required">*</span> </label>
+                                            <input type="text" placeholder="State Code" onkeypress="return /[a-z]/i.test(event.key)" maxlength="10" autocomplete="off" class="form-control" formControlName="code" [ngClass]="{ 'is-invalid': submitted && f.code.errors }">
+
+                                            <div *ngIf="submitted && f.code.errors" class="invalid-feedback">
+                                                <div *ngIf="f.code.errors.required">State Code is required</div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label> Name <span class="required">*</span> </label>
+                                            <input autocomplete="off" type="text" placeholder="State Name" onkeypress="return /[a-z]/i.test(event.key)" class="form-control" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+                                            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                                                <div *ngIf="f.name.errors.required">State Name is required</div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col-md-12 p-15">
+                                            <label> Description <span class="required">*</span> </label>
+                                            <textarea class="form-control" rows="5" spellcheck="false" id="Description" formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+                                            <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                                                <div *ngIf="f.description.errors.required">The Description field is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- <div class="col-12 col-md-8 col-sm-6">
+                                        <div class="row">
+                                            <div class="col-md-12 p-15">
+                                                <label> Abbrevation <span class="required">*</span> </label>
+                                                <textarea class="form-control" rows="5" spellcheck="false" id="abbrevation" formControlName="abbrevation" [ngClass]="{ 'is-invalid': submitted && f.abbrevation.errors }"></textarea>
+                                                <div *ngIf="submitted && f.abbrevation.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.abbrevation.errors.required">The Abbrevation field is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-default pull-right" type="button">Cancel</button>
+
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSaveAndNewSubmit" id="btnSaveAndNewSubmit">
+                                    <div class="pos-rlt sm-btn-component"> <span> Save and add other </span> </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="savebutton()">
+                                    <div class="pos-rlt sm-btn-component"> <span> Save </span></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

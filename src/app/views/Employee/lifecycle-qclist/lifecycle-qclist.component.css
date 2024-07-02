@@ -1,0 +1,45 @@
+.sticky {
+    background: #fff;
+    box-shadow: 0 3px 12px 0 rgba(0, 0, 0, .08);
+    position: fixed;
+    top: 0;
+    transition: all 0.3s;
+    height: 70px;
+    width: 82%;
+    z-index: 1000;
+    left: 58.2%;
+    transform: translateX(-50%);
+    padding: 15px;
+}
+
+@media only screen and (max-width: 766px) {
+    .sticky {
+        width: 78%;
+        left: 59.8%;
+    }
+}
+
+.history-button {
+    display: flex;
+    justify-content: flex-end;
+    width: 200px;
+    margin-right: 0px;
+    right: 20px;
+    top: 20px;
+    position:absolute;
+    padding: 5px 10px;
+    background: #0a609eeb;
+    border: 1px solid #0a609eeb;
+    color: #fff;
+
+  }
+
+  .history-button:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+
+  .m-t-50{
+    margin-top: 50px;
+  }

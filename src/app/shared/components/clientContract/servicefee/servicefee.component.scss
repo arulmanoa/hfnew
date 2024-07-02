@@ -1,0 +1,191 @@
+.payroll_radio {
+    position: relative;
+    padding-left: 23px;
+    cursor: pointer;
+    display: inline;
+    font-size: 14px;
+    margin-left: 0;
+    transition: all .3s ease;
+    top: 2px;
+    cursor: pointer;
+}
+.backgroundsvg {
+    height: 100vh;
+    background-color: #ffffff;
+    background-image: url('../../../../../assets/Images/background_svg.svg');
+
+}
+
+
+// CARD SKELETON
+
+// THE CARD 
+.card {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 300px;
+	flex-shrink: 0;
+	flex-grow: 0;
+	max-width: 100%;
+	background-color: #FFF;
+	box-shadow: 0 5px 10px 0 rgba(#000, .15);
+	border-radius: 10px;
+	overflow: hidden;
+    margin: 1rem;
+    padding: 5px !important;
+}
+
+.card-img {
+	padding-bottom: 15%;
+	position: relative;
+	img {
+		position: absolute;
+		width: 100%;
+	}
+}
+
+.card-body {
+	padding: 1.5rem;
+}
+
+.card-title {
+	font-size: 1.25rem;
+	line-height: 1.33;
+	font-weight: 700;
+	&.skeleton { // NOTICE THIS
+		min-height: 28px;
+		border-radius: 4px;
+	}
+}
+
+.card-intro {
+	margin-top: .75rem;
+    line-height: 1.5;
+    font-size: 16px;
+	&.skeleton { // NOTICE THIS
+		min-height: 15px;
+    border-radius: 4px;
+    width: 20%;
+    
+	}
+}
+
+// THE LOADING EFFECT
+.skeleton {
+	background-color: #e2e5e7;
+	// The shine that's going to move across the skeleton:
+	background-image:			
+			linear-gradient(
+				90deg, 
+				rgba(#fff, 0), 
+				rgba(#fff, 0.5),
+				rgba(#fff, 0)
+			);
+	background-size: 40px 100%; // width of the shine
+	background-repeat: no-repeat; // No need to repeat the shine effect
+	background-position: left -40px top 0; // Place shine on the left side, with offset on the left based on the width of the shine - see background-size
+	animation: shine 1s ease infinite; // increase animation time to see effect in 'slow-mo'
+}
+
+@keyframes shine {
+	to {
+		// Move shine from left to right, with offset on the right based on the width of the shine - see background-size
+		background-position: right -40px top 0;
+	}
+}
+
+// Codepen spesific styling - only to center the elements in the pen preview and viewport 
+.container {
+	// position: absolute;
+	// top: 0;
+	// left: 0;
+	// right: 0;
+	// bottom: 0;
+	 width: 100%;
+	// display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+
+// POST CARD SKELETON
+
+ .section {
+          border-top: 5px solid #5850ec;
+      // margin: 20px;
+    // padding: 15px 30px;
+    // border-radius: 10px;
+    //   box-shadow: 0 8px 17px -8px #A3A5AE;
+    // background-color: #FFF;
+    // width: 400px;
+}
+.section2 {
+    border-top: 5px solid #EA5353;
+}
+.section3 {
+    border-top: 5px solid #FCAF4A;
+}
+.section4 {
+    border-top: 5px solid #549EF2;
+}
+
+
+.flag {
+    width: 28%;
+    top: 0;
+    right: 0;
+    height: 70px;
+    // position: absolute;
+    border-top-right-radius: 8px;
+    float: right;
+}
+.ruleHeader {
+    font-size: 16px;
+    line-height: 1;
+    // position: absolute;
+    top: 80px;
+    left: 15px;
+}
+.ruleSubHeader {
+    // position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    padding-top: 15px;
+    justify-content: space-between;
+    box-sizing: border-box;
+    border-radius: 0 0 8px 8px;
+}
+.label {
+    font-size: 14px;
+    opacity: .7;
+    margin-bottom: 5px;
+}
+.ruleHeader span {
+    margin-right: 10px;
+    display: inline-block;
+}
+.validate {
+    text-align: center;
+}
+.leading-5 {
+    line-height: 1.25rem;
+}
+.text-sm {
+    font-size: .875rem;
+    float: right;
+    color: #5850ec;
+}
+.font-medium {
+    font-weight: 600;
+}
+
+.pagination {    
+    font-size: 12px !important;
+    float: right !important;
+}.scroll {
+    max-height: 175px;
+    overflow-y: auto;
+}

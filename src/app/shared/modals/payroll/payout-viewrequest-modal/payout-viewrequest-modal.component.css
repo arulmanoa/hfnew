@@ -1,0 +1,249 @@
+
+
+tr.hide-table-padding td {
+    padding: 0;
+  }
+  
+  .expand-button {
+      position: relative;
+  }
+  
+  .accordion-toggle .expand-button:after
+  {
+    position: absolute;
+    left:.75rem;
+    top: 50%;
+    transform: translate(0, -50%);
+    content: '-';
+  }
+  .accordion-toggle.collapsed .expand-button:after
+  {
+    content: '+';
+  }
+
+
+  
+#accordionExample-faq .card-header {
+    background: rgb(242, 244, 244);
+    padding: 5px 12px;
+    padding-left: 0px;
+}
+
+#accordionExample-faq .card-header:hover {
+    /* background-color: #efefef; */
+}
+
+.accordion>.card .card-header {
+    margin-bottom: -1px;
+}
+
+#accordionExample-faq .card-header h5 button::before {
+    font-family: "Material Icons";
+    content: "\e5cd";
+    font-weight: 600;
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    transition: -webkit-transform 0.25s;
+    -webkit-transition: -webkit-transform 0.25s;
+    transition: transform 0.25s;
+    transition: transform 0.25s, -webkit-transform 0.25s;
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    /* color: #4d79f6; */
+    font-size: 10px;
+    background-color: rgba(96, 97, 102, 0.15);
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 50%;
+    font-size: 12px;
+    float: right;
+    position: static;
+    margin-right: 15px;
+    margin-top: 10px;
+    color: black;
+}
+
+.btn-link {
+    color: #8997bd;
+    padding: 0.1rem 0.1rem !important;
+    padding-left: 0px;
+    padding-right: 10px;
+}
+
+.btn-link {
+    font-weight: 400;
+    color: #0a609eeb;
+    text-decoration: none;
+    width: 100%;
+}
+
+#accordionExample-faq .card-header h5 button.collapsed::before {
+    font-family: "Material Icons";
+    content: "\e5cc";
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+    font-size: 10px;
+    font-size: 12px;
+    float: left !important;
+        position: static;
+    margin-right: 15px;
+    margin-top: 5px;
+    color: black;
+}
+
+#accordionExample-faq .card-header {
+    background: rgb(242, 244, 244);
+    padding: 8px 12px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.accordion>.card .card-header {
+    margin-bottom: -1px;
+}
+
+.content {
+    padding: 0px !important;
+}
+
+.card-header {
+    border-bottom: none !important;
+}
+
+.card {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+#accordion ul li:first-child div {
+    display: block;
+    border-top: 3px solid #ffcdcd;
+}
+
+@media (min-width: 992px){
+    .modal-lg, .modal-xl {
+        max-width: 1000px;
+    }
+    }
+
+    #accordionExample-faq[_ngcontent-c14] .card-header[_ngcontent-c14] h5[_ngcontent-c14] button[_ngcontent-c14]::before {
+        font-family: "Material Icons";
+        content: "\e5cd";
+        font-weight: 600;
+        position: absolute;
+        top: 13px;
+        left: 10px;
+        transition: transform 0.25s;
+        transform: rotate(180deg);
+        font-size: 10px;
+        background-color: rgba(96, 97, 102, 0.15);
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        border-radius: 50%;
+        font-size: 12px;
+        float: right;
+        position: static;
+        margin-right: 15px;
+        margin-top: 3px;
+        color: black;
+    }
+
+    .action {
+
+        font-weight: 600;
+    color: #40a9ff;
+    cursor: pointer;
+    text-decoration: underline;
+    padding-right: 5px;
+    }
+
+/* 
+#accordionExample-faq[_ngcontent-c13] .card-header[_ngcontent-c13] h5[_ngcontent-c13] button[_ngcontent-c13]::before {
+    font-family: "Material Icons";
+    content: "\e5cd";
+    font-weight: 600;
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    transition: transform 0.25s;
+    transform: rotate(180deg);
+    font-size: 10px;
+    background-color: rgba(96, 97, 102, 0.15);
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 50%;
+    font-size: 12px;
+    float: left !important;
+    position: static;
+    margin-top: 5px;
+    color: black;
+    margin-left: -30px;
+}
+ */
+
+ .mg-t-15 {
+    margin-top: 15px;
+}
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.table-talk-time {
+    margin-bottom: 0;
+}
+.table {
+    color: #3b4863;
+}
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #031b4e;
+}
+table {
+    border-collapse: collapse;
+}
+.table-talk-time thead > tr th:first-child, .table-talk-time thead > tr td:first-child, .table-talk-time tbody > tr th:first-child, .table-talk-time tbody > tr td:first-child {
+    padding-left: 20px;
+}
+.table-talk-time thead > tr th, .table-talk-time thead > tr td, .table-talk-time tbody > tr th, .table-talk-time tbody > tr td {
+    padding: 10px 10px;
+}
+.table thead th, .table thead td {
+    color: #7987a1;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    border-bottom-width: 1px;
+    border-top-width: 0;
+    padding: 0 15px 5px;
+} 
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #cdd4e0;
+}
+.table th, .table td {
+    line-height: 1.462;
+}
+.table th, .table td {
+    vertical-align: top;
+    border-top: 1px solid #cdd4e0;
+}
+tbody {
+
+    font-size: 13px;
+    font-weight: 600;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #d1dfeb52;
+}
+
+@media (min-width: 992px){
+    .modal-lg, .modal-xl {
+        max-width: 1200px;
+    }
+    }

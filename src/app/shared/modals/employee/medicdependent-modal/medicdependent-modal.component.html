@@ -1,0 +1,140 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg modal-dialog-centered animated fadeInDownBig">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Add Depedent Details</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL">Qualifying Limit : {{ProductInfo.b[0].ThresholdLimit}} | 
+            Qualifying Limit for Senior : {{ProductInfo.b[0].ThresholdLimitSenior}}
+          </h6>
+        </div>
+        <div class="modal-close" (click)="closeModal()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+
+      <div class="modal-body">
+        <!-- <nz-descriptions [nzColumn]="2" nzTitle="" style="padding-left: 4rem;">
+          <nz-descriptions-item nzTitle="Qualifying Limit" [nzSpan]="1"> <b>{{ProductInfo.b[0].ThresholdLimit}} </b></nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Qualifying Limit for Senior" [nzSpan]="1"> <b>{{ProductInfo.b[0].ThresholdLimitSenior}}  </b></nz-descriptions-item>
+              </nz-descriptions>
+        <hr> -->
+        <div class="flex-column">
+        
+          <form [formGroup]="medicDependForm">
+
+            <div class="col-12 col-md-12 col-sm-12">
+              
+              <div class="clearfix">
+                <div class="row">
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="medicType === 'medicInsurance'">
+                    <label class="form-label"> Dependent Type </label>
+                    <ng-select #select [items]="DependentType" bindValue="Id" formControlName="DependentTypes"
+                      bindLabel="Name" placeholder="Select an option" (change)="medicalInsuType($event)">
+                    </ng-select>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="medicType === 'medicInsuranceHandicap'">
+                    <label class="form-label"> Disability Percentage	 </label>
+                    <ng-select #select [items]="lstDisabilityPercentage	" bindValue="Id" formControlName="DisabilityPercentage"
+                      bindLabel="Name" placeholder="Select an option">
+                    </ng-select>
+                  </div>
+
+                  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="medicType === 'medicInsuranceSelf'">
+                    <label class="form-label">Age of Dependent		 </label>
+                    <ng-select #select [items]="lstAgeofDependent" bindValue="Id" formControlName="AgeofDependent"
+                      bindLabel="Name" placeholder="Select an option">
+                    </ng-select>
+                  </div> -->
+
+                  <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">Amount<span class="required"> *</span></label>
+                    <input class="form-control" type="text"  name="Amount"
+                      placeholder=""  value="15,0000" 
+                      autocomplete="off" disabled>
+                    
+                  </div> -->
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                    <label class="form-label"> Relationship </label>
+                    <ng-select [items]="relationship"  placeholder="-- select an option --"
+                      formControlName="relationship" [ngClass]="{ 'ng-touched': submitted && g.relationship.invalid }"
+                      bindLabel="name" bindValue="id" (change)="onChangeRelationship($event)">
+                    </ng-select>
+                    <div *ngIf="submitted && g.relationship.invalid" class="help-block">
+                      <div *ngIf="g.relationship.errors.required">Relationship is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">Name of Dependent<span class="required"> *</span></label>
+                    <input class="form-control" type="text" name="NameofDependent" placeholder="Name of Dependent"
+                      formControlName="NameofDependent"
+                      [ngClass]="{ 'is-invalid': submitted && g.NameofDependent.errors }" autocomplete="off">
+                    <div *ngIf="submitted && g.NameofDependent.invalid" class="help-block">
+                      <div *ngIf="g.NameofDependent.errors.required">Name of Dependent is required
+                      </div>
+                    </div>
+                  </div>
+
+                  
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">DOB<span class="required"> *</span></label>
+                    <input class="form-control" type="text" name="DOB" bsDatepicker placement="bottom"
+                      
+                      [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                      placeholder="12-12-1970" formControlName="DOB" [ngClass]="{ 'is-invalid': submitted && g.DOB.errors }"
+                      autocomplete="off">
+                    <div *ngIf="submitted && g.DOB.invalid" class="help-block">
+                      <div *ngIf="g.DOB.errors.required">DOB is required
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">Amount<span class="required"> *</span></label>
+                    <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" name="Amount"
+                      placeholder="5000" formControlName="Amount" [ngClass]="{ 'is-invalid': submitted && g.Amount.errors }"
+                      autocomplete="off">
+                    <div *ngIf="submitted && g.Amount.invalid" class="help-block">
+                      <div *ngIf="g.Amount.errors.required">Amount is required
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+
+        <div class="pull-right m-r-sm">
+          <div>
+            <div>
+              <button class="btn  btn-default m-r-sm" type="Submit"  (click)="closeModal()" name="btnSubmit" id="btnSubmit">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+              </button>
+
+              <button class="btn btn-primary pull-right" type="button" (click)="savebutton()"> <i
+                  class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Save</button>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

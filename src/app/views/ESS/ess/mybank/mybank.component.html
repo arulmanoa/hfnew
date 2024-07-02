@@ -1,0 +1,812 @@
+<div class="page-wrapper ff" *ngIf="isESSLogin == true">
+  <div class="page-content">
+
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;">
+      <app-loading-screen></app-loading-screen>
+      <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" [fullScreen]="true">
+                <p style="color: #0a609eeb"> Loading... </p>
+            </ngx-spinner> -->
+
+      <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+      </div>
+
+      <div class="row" *ngIf="!spinner">
+        <div class="col-lg-6 col-xs-12 col-sm-12">
+          <div class="headerbar">
+            <div>
+              <h2 class="header_title">My Bank</h2>
+              <p class="subheader_title" *ngIf="employeedetails != null">Name : {{employeedetails.FirstName}} ~ Code :
+                {{employeedetails.Code}}
+              </p>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-6 text-right">
+          <div class="text-right">
+            <ul class="list-inline" *ngIf="!spinner && !isBankUnderQC">
+              <li class="list-inline-item"
+                *ngIf="!spinner && !isBankUnderQC && isESSLogin == true && shouldShowActionButtons('btn_addbank')">
+                <button *ngIf="isEnbleBankBtn" type="button" [disabled]="!isLoading" class="btn btn-default"
+                  (click)="openBankSlider()"> <i class="mdi mdi-bank-plus m-r-xs"></i>
+                  Add Bank
+                </button>
+              </li>
+              <li class="list-inline-item" *ngIf="shouldShowActionButtons('btn_savebank')">
+                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(false)">
+                  <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                </button>
+              </li>
+              <!-- <li class="list-inline-item">
+                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(true)">
+                  <i class="mdi mdi-content-save  m-r-xs"></i> Save and Submit
+                </button>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <div *ngIf="!spinner">
+
+        <ng-container *ngTemplateOutlet="mydocumentTemplate">
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isESSLogin == false && !spinner">
+  <ng-container *ngTemplateOutlet="mydocumentTemplate">
+  </ng-container>
+</div>
+
+<ng-template #mydocumentTemplate>
+
+  <div class="row" *ngIf="!spinner && isBankUnderQC">
+    <div class="col-lg-12 text-center">
+      <span class="text-center">Bank Document verification is underway. Please wait until it is completed. </span>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!spinner && !isBankUnderQC && isESSLogin == false">
+    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12"
+      style="margin-bottom:0px;">
+      <div class="text-right">
+        <ul class="list-inline" *ngIf="allowedToSave">
+          <li class="list-inline-item"><button type="button" [disabled]="!isLoading" class="btn btn-primary"
+              (click)="openBankSlider()"> <i class="mdi mdi-sticker-plus-outline  m-r-xs"></i>
+              Add Bank
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row deskContent" *ngIf="!spinner && !isBankUnderQC">
+    <div class="col-12">
+      <table class="table table-bordered table-container">
+        <thead>
+          <tr class="document_table_tr">
+            <th scope="col" style="width:20%;font-weight: 500 !important;">
+              Bank Name
+            </th>
+            <th scope="col" style="width:15%;font-weight: 500;">
+              Account No.
+            </th>
+            <th scope="col" style="width:10%;font-weight: 500;">
+              IFSC Code
+            </th>
+            <th scope="col" style="width:10%;font-weight: 500;">
+              Is Default
+            </th>
+            <th scope="col" style="width:10%;font-weight: 500;">
+                            Account Holder Name
+
+                        </th>
+            <th scope="col" style="width:10%;font-weight: 500;">
+              Status
+            </th>
+            <th scope="col" style="width:25%;font-weight: 500;">
+              Action
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr class="popover-row-position" *ngFor="let item of LstBank; let i = index" tabindex="{{index}}">
+
+            <td class="document_table_docName table-vertical-align text-center">
+              <div *ngIf="item.StatusName == 'Rejected'" class="popover-toolti">
+                <div class="popup-arrow">
+                  <span>
+                    <h6>Rejected Remarks:&nbsp;</h6>
+                  </span> {{item.Remarks}}
+                </div>
+              </div>
+              <b *ngIf="item.bankFullName != null && item.bankFullName != ''"> {{item.bankFullName}} </b>
+              <b *ngIf="item.bankFullName == null || item.bankFullName == ''"> {{getBankName(item.BankId)}} </b>
+
+            </td>
+            <td class="document_table_docName table-vertical-align text-center">
+              <b> {{item.accountNumber}} </b>
+            </td>
+            <td class="txt-align table-vertical-align text-center">
+              <span>{{item.bankBranchId}}
+              </span>
+            </td>
+            <td class="txt-align table-vertical-align">
+              <span>{{item.IsDefaultText}}
+              </span>
+            </td>
+            <td class="txt-align table-vertical-align text-center">
+              <span>{{item.accountHolderName}}
+              </span>
+            </td>
+
+            <td class="txt-align table-vertical-align">
+              <label *ngIf="item.StatusName == null"> --- </label>
+              <span class="badge badge-warning" *ngIf="item.StatusName == 'Pending'">Pending</span>
+              <span class="badge badge-danger" *ngIf="item.StatusName == 'Rejected'">Rejected</span>
+              <span class="badge badge-success" *ngIf="item.StatusName == 'Approved'">Approved</span>
+            </td>
+
+
+            <td class="document_table_docName text-center" style="text-align: center">
+
+              <button class="btn btn-default btn-sm m-r-sm" 
+                style="padding: 2px 9px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="bank_file_edit(item)"
+                [disabled]="item.isEditButtonEnable == false ? true : null"><i class="fa fa-pencil-square-o m-r-xs"></i>
+                Edit
+              </button>
+              <button class="btn btn-default btn-sm m-r-sm "
+                style="padding: 2px 9px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="bank_file_delete(item,i)"
+                [disabled]="item.StatusName == 'Approved' ? true : null"><i class="fa fa-trash-o m-r-xs"></i> Delete
+              </button>
+              <button *ngIf="item.CandidateDocument != null" class="btn btn-default btn-sm m-r-sm "
+                style="padding: 2px 9px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="bank_file_view(item)"><i
+                  class="fa fa-eye m-r-xs"></i> Document </button>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <div class="row phoneContent" style="padding: 10px;" *ngIf="!spinner && !isBankUnderQC">
+    <div class="col-xs-12 col-sm-4" *ngFor="let item of LstBank; let i = index">
+      <div class="card" style="border-radius: 0px;">
+        <div class="card-body" style="padding: 5px !important;">
+
+          <div class="row">
+            <div class="col-12 text-right" style="margin-bottom: 10px;">
+              <label *ngIf="item.StatusName == null"> --- </label>
+              <span class="badge badge-warning" *ngIf="item.StatusName == 'Pending'"
+                style="display: inline !important;">Pending</span>
+              <span class="badge badge-danger" *ngIf="item.StatusName == 'Rejected'"
+                style="display: inline !important;">Rejected</span>
+              <span class="badge badge-success" *ngIf="item.StatusName == 'Approved'"
+                style="display: inline !important;">Approved</span>
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label">Bank Name<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.bankFullName }}</p>
+
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label">Account Number<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.accountNumber}}</p>
+
+              </div>
+            </div>
+
+
+
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label">IFSC Code<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.bankBranchId}}</p>
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label">Is Default<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.IsDefaultText}}</p>
+
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label">Allocation<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.allocation}}</p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer" style="padding: 5px !important;">
+          <div class="row">
+            <div class="col-12 text-right">
+              <button *ngIf="allowedToSave" class="btn btn-default btn-sm m-r-sm "
+                style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="bank_file_edit(item)"
+                [disabled]="item.Status == 1 ? true : null"><i class="fa fa-pencil-square-o m-r-xs"></i>
+                Edit
+              </button>
+              <button *ngIf="allowedToSave" class="btn btn-default btn-sm m-r-sm "
+                style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="bank_file_delete(item)"
+                [disabled]="item.Status == 1 ? true : null"><i class="fa fa-trash-o m-r-xs"></i> Delete
+              </button>
+              <button *ngIf="item.CandidateDocument != null" class="btn btn-default btn-sm m-r-sm "
+                style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                (click)="bank_file_view(item, 'Documents')"><i class="fa fa-eye m-r-xs"></i> View </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+
+
+<nz-drawer [nzVisible]="bank_slidervisible" className="my-drawer" [nzWidth]="640" nzTitle="Bank Information"
+  (nzOnClose)="close_BankSlider()" [disabled]="!isLoading">
+
+  <div class="row" *ngIf="BusinessType != 3">
+    <div class="col-lg-12 text-center">
+      <b>Alert: This bank information will be marked as Default Account Details.</b>
+    </div>
+  </div>
+  <form [formGroup]="employeeForm">
+    <div class="col-12 col-md-12 col-sm-12">
+      <div class="clearfix">
+
+        <div class="row" *ngIf="!IsManualModeEnabled && isFailedInitiateProcess">
+          <div class="col-lg-12 text-center">
+            <ngb-alert [dismissible]="false">
+              <strong>{{FailedInitiateProcessMessage}}</strong>
+            </ngb-alert>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+          <div class="form-group form-group-vertical col-xs-12 col-sm-12 "
+            *ngIf="this.employeeForm.controls.status.value==2">
+            <label class=" form-label rej-remarks">( Rejected Remarks
+              :{{rejectedRemarks}} )</label>
+
+          </div>
+
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="employeedetails != null">
+            <label class="form-label">Employee Name
+
+            </label>
+            <input class="form-control" type="text" name="Name" maxlength="50" [(ngModel)]="employeedetails.FirstName"
+              [ngModelOptions]="{standalone: true}" disabled placeholder=" Name" autocomplete="none|false|no">
+
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6 " *ngIf="this.employeeForm.controls.status">
+            <label class="form-label ">Status</label>
+
+
+            <div class="p-t-10">
+
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="status" [attr.disabled]="true" disabled formControlName="status" />
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+
+
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6 " *ngIf="this.employeeForm.controls.bankName">
+            <label class="form-label ">Bank Name <span class="required">*</span></label>
+
+            <ng-select [items]="BankList" (change)="onChangeBank($event)" placeholder="-- select an option --"
+              formControlName="bankName" [ngClass]="{ 'ng-touched': g.bankName.errors }" bindLabel="Name"
+              bindValue="Id">
+              <ng-template ng-header-tmp *ngIf="is_spinner_ifsc">
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-select>
+
+            <div *ngIf="g.bankName.errors" class="help-block">
+              Bank Name is required
+            </div>
+
+
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6 " *ngIf="this.employeeForm.controls.IFSCCode">
+            <label class="form-label ">IFSC Code <span class="required">*</span>
+            </label>
+            <ng-select [items]="BranchList" placeholder="-- select an option --" formControlName="IFSCCode"
+              (change)="onChangeIFSC($event)" [ngClass]="{ 'ng-touched': g.IFSCCode.errors }"
+              bindLabel="FinancialSystemCode" bindValue="Id" autocomplete="new-password">
+              <ng-template ng-header-tmp *ngIf="is_spinner_ifsc">
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-select>
+            <div *ngIf="g.IFSCCode.errors" class="help-block">
+              IFSC is required
+            </div>
+
+          </div>
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6 "
+            *ngIf="this.employeeForm.controls.accountNumber">
+            <label class="form-label ">Account Number <span class="required">*</span></label>
+            <input class="form-control" name="accountNumber" formControlName="accountNumber"
+              placeholder="Account Number" onkeypress="return /^[0-9]+$/i.test(event.key)"
+              [ngClass]="{ 'is-invalid': g.accountNumber.errors }" type="password" autocomplete="new-password"
+              [readonly]="disableSelect">
+            <!-- readonly onfocus="this.removeAttribute('readonly');" -->
+            <div *ngIf="g.accountNumber.errors" class="help-block">
+              Account Number is required
+            </div>
+
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6 "
+            *ngIf="this.employeeForm.controls.confirmAccountNumber">
+            <label class="form-label ">Confirm Account Number <span class="required">*</span></label>
+            <input class="form-control" name="confirmAccountNumber" formControlName="confirmAccountNumber"
+              placeholder="Confirm Account Number" onkeypress="return /^[0-9]+$/i.test(event.key)"
+              [ngClass]="{ 'is-invalid': g.confirmAccountNumber.errors }" type="text" autocomplete="new-password"
+              [readonly]="disableSelect">
+
+            <div *ngIf="g.confirmAccountNumber.errors" class="help-block">
+              Confirm Account Number is required | Confirm Account Number does not match
+            </div>
+            <!-- <div class="help-block" *ngIf="g.confirmAccountNumber.errors.mustMatch">Account Numbers must match</div> -->
+
+          </div>
+
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6 "
+            *ngIf="this.employeeForm.controls.accountHolderName">
+            <label class="form-label ">Account Holder Name <span class="required">*</span> <span
+                class="help-text m-l-5">(As per bank record)</span> </label>
+            <input class="form-control" name="accountHolderName" spellcheck="false" formControlName="accountHolderName"
+              placeholder="SBI Customer" [ngClass]="{ 'is-invalid': g.accountHolderName.errors }" type="text"
+              autocomplete="none|false|no" [readonly]="disableSelect">
+
+            <div *ngIf="g.accountHolderName.errors" class="help-block">
+              Account Holder Name is required
+            </div>
+
+            <div *ngIf="!IsManualModeEnabled && IsNameMisMatched" class="invalid-feedback" style="display: block;
+                        color: #309cec !important;
+                        font-weight: 700 !important;
+                        font-size: 14px;"> Name as per Bank : {{NameAsPerBank}}
+              <div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6 " *ngIf="this.employeeForm.controls.allocation">
+            <label class="form-label ">Allocation(%) <span class="required">*</span></label>
+            <input class="form-control" name="allocation" formControlName="allocation" placeholder="100"
+              [ngClass]="{ 'is-invalid': submitted && g.allocation .errors }" value="100" type="number"
+              autocomplete="none|false|no" disabled>
+            <!-- <input class="form-control" disabled name="allocation" formControlName="allocation" disabled placeholder="100" [ngClass]="{ 'is-invalid': submitted && g.allocation .errors }" value="100" type="number" autocomplete="none|false|no"> -->
+            <div *ngIf="g.allocation .errors" class="help-block">
+              Allocation is required
+            </div>
+          </div>
+
+
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6 "
+            *ngIf="this.employeeForm.controls.proofType  && !IsPennyDropCheckRequired && IsManualModeEnabled">
+            <label class="form-label ">Proof Type <span class="required">
+                *</span></label>
+
+            <ng-select [items]="BankDocumentCategoryList" placeholder="-- select an option --"
+              formControlName="proofType" [ngClass]="{ 'ng-touched': g.proofType.errors }"
+              (change)="onProofTypeChange($event)" bindLabel="Name" bindValue="DocumentTypeId">
+
+            </ng-select>
+
+
+            <!-- <select class="form-control" id="proofType" name="proofType" formControlName="proofType"
+                            [ngClass]="{ 'is-invalid': g.proofType.errors }">
+                            <option disabled=""  selected="true" value=""> --
+                                Select an Option --
+                            </option>
+                            <option *ngFor="let proofType of BankDocumentCategoryList"
+                                [value]="proofType.DocumentTypeId" class="ng-star-inserted">
+                                {{proofType.Name}}</option>
+
+
+                        </select> -->
+            <div *ngIf="g.proofType.errors" class="help-block">
+              Proof Type is required
+            </div>
+          </div>
+
+          <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6" *ngIf="!IsPennyDropCheckRequired && IsManualModeEnabled">
+                        <label class="form-label">Attachment <span class="required">*</span> <span class="help-text m-l-5">(Max file
+                size 2MB)</span></label>
+                        <label class="upload control" style="width: 50%; float: left;" *ngIf="!FileName">
+              <div class="upload-draggable is-primary">
+                <section class="section">
+                  <div class="has-text-centered">
+                    <span class="icon is-large">
+                      <span style="padding-left: 10px;"> <i class="fa fa-upload" style="color: #9ba7ca;"></i> Upload
+                      </span>
+                    </span>
+
+                  </div>
+                </section>
+              </div>
+              <input type="file" accept="application/msword,  application/pdf, image/*" (change)="onFileUpload($event)"
+                id="sTest-uploadFile-candidateAddResume">
+
+            </label>
+                        <div *ngIf=" g.DocumentId.errors" class="help-block">
+                            <div>Attachment is required
+                            </div>
+                        </div>
+                        <p class="control" *ngIf="FileName">
+                            <span class="file-name">
+                <button class="btn btn-danger c-btn" (click)="doDeleteFile()" [disabled]="!isLoading"><a
+                    ngbTooltip="Trash Attachment" id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                     display: block ;margin-top: -5px;"><i
+                      class="fa fa-trash-o"></i></a> </button>
+
+
+                <a target="blank" class="ahref" style="padding: 2px;">
+                  {{FileName}}
+                </a>
+
+              </span>
+
+                        </p>
+                    </div> -->
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+            *ngIf="!IsPennyDropCheckRequired && IsManualModeEnabled">
+            <label class="form-label">Attachment <span class="required">*</span> <span *ngIf="MaxSize == 0"
+                class="help-text m-l-5">(Max file size 2MB)</span> <span *ngIf="MaxSize" class="help-text m-l-5">(Max
+                file size is <span>{{MaxSize/1024}}</span>
+                MB)</span> </label>
+            <label class="upload control" style="width: 100%; float: left;z-index: 999;margin-bottom: 10px;">
+              <div class="upload-draggable is-primary">
+                <section class="section">
+                  <div class="has-text-centered">
+                    <span class="icon is-large">
+                      <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload " style="color: #9ba7ca;"></i>
+                        Upload </span>
+                    </span>
+
+                  </div>
+                </section>
+              </div>
+              <!-- different type upload -->
+              <input type="file" *ngIf="!acceptOnlyImageFile" accept="application/msword,  application/pdf, image/*"
+                (change)="onAddingFile($event)" (click)="$event.target.value=null"
+                id="sTest-uploadFile-candidateAddResume" multiple>
+              <!-- only image upload -->
+              <input type="file" *ngIf="acceptOnlyImageFile" accept="image/*" (change)="onAddingFile($event)"
+                (click)="$event.target.value=null" id="sTest-uploadFile-candidateAddResume" multiple>
+
+            </label>
+            <div *ngIf="submitted && !fileList[0]" class="help-block">
+              <div>Attachment is required
+              </div>
+            </div>
+            <div class="d-flex align-items-center" style="width: 100%;"
+              *ngIf="firstTimeDocumentId && !fileList[0] && !isFileChange">
+              <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+            <ng-container *ngIf="fileList?.length > 0">
+              <p class="control" *ngFor="let file of fileList">
+                <span class="file-name">
+                  <button class="btn btn-danger c-btn" (click)="doDeleteFile(file)"><a ngbTooltip="Delete Photo"
+                      id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                   display: block   ;margin-top: -5px;"><i
+                        class="fa fa-trash-o"></i></a>
+                  </button>
+
+
+                  <a target="blank" class="ahref" style="padding: 2px;">
+                    {{file.name}}
+                  </a>
+
+                </span>
+
+              </p>
+            </ng-container>
+          </div>
+
+
+
+        </div>
+
+
+        <div class="row">
+
+          <div *ngIf="IsMultipleAttempts"
+            class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+            <label class="form-label" id='manuallVerification'>Do you want to verify the bank account
+              details manually? (Yes/No) </label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" [(ngModel)]="manuallVerification"
+                  (change)='onChangeManual($event)' />
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </form>
+
+
+
+  <div class="row " style="position: absolute;bottom: 10px;width: 100%; ">
+    <div class="col-lg-12 ">
+      <div class="d-flex align-items-center " *ngIf="pennydropLoading " style="width: 100%; ">
+
+        <nz-steps [nzCurrent]="1 " nzSize="small " style="width: 100%; ">
+          <nz-step nzTitle="{{textSpin}} " nzStatus="{{status}} " nzIcon="{{loadingicon}} "
+            nzDescription="{{desciption}} ">
+          </nz-step>
+          <nz-step nzTitle="{{textSpin1}} " nzStatus="{{status1}} " nzIcon="{{loadingicon1}} "
+            nzDescription="{{desciption1}} "></nz-step>
+          <nz-step nzTitle="{{textSpin2}} " nzStatus="{{status2}} " nzIcon="{{loadingicon2}} "
+            nzDescription="{{desciption2}} "></nz-step>
+        </nz-steps>
+      </div>
+    </div>
+  </div>
+  <div class="row " *ngIf="!pennydropLoading "
+    style="text-align: right;position: absolute;bottom: 10px;width: 100%; display: block; ">
+    <div class="text-right ">
+      <div class="col-lg-12 " *ngIf="IsPennyDropCheckRequired ">
+        <div class="text-right ">
+          <ul class="list-inline ">
+            <li class="list-inline-item ">
+              <button class="btn btn-primary " type="Submit " name="btnSubmit " id="btnSubmit " [disabled]="!isLoading "
+                (click)="addnewbankdetails() ">
+                <div class="pos-rlt sm-btn-component "> <span>
+                    <i class="fa fa-check-circle " *ngIf="IsPennyDropCheckRequired && !isFailedInitiateProcess "
+                      aria-hidden="true "></i>
+                    <i class="fa fa-repeat " *ngIf="IsPennyDropCheckRequired && isFailedInitiateProcess "
+                      aria-hidden="true "></i>
+
+                    <span *ngIf="IsPennyDropCheckRequired && !isFailedInitiateProcess "> &nbsp;
+                      Verify </span>
+                    <span *ngIf="IsPennyDropCheckRequired && isFailedInitiateProcess "> &nbsp;
+                      Re-Verify </span>
+
+
+                  </span></div>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center " *ngIf="!isLoading ">
+        <strong class="text-right "> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+        <div class="spinner-border ml-auto " role="status " aria-hidden="true "></div>
+      </div>
+
+      <div class="col-lg-12 " *ngIf="!IsPennyDropCheckRequired && IsManualModeEnabled ">
+        <div class="text-right " *ngIf="isLoading ">
+          <ul class="list-inline ">
+            <!-- <li class="list-inline-item "><button type="button " class="btn upgrade-btn " [disabled]="!isLoading " (click)="addnewbankdetails() "> <i class="mdi mdi-database-plus m-r-xs "></i>
+                Update Account
+              </button></li> -->
+
+            <li class="list-inline-item "><button type="button " class="btn btn-primary" [disabled]="!isLoading "
+                (click)="validate_bank_formControl() "> <i class="mdi mdi-database-plus m-r-xs "></i>
+                Confirm
+              </button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</nz-drawer>
+
+
+
+
+<div id="popup_viewDocs1" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_viewDocs1" aria-hidden="true">
+  <div style="display: block; " class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered ">
+      <div class="modal-content ">
+
+        <div class="modal-header " style="padding: 15px !important; ">
+
+          <div class="col-md-8 ">
+            <small class="header-pretitle " style="float: left;width: 100%; "><b style="float: left; ">
+                Employee Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left " id="popup_release_AL ">Preview
+            </h6>
+          </div>
+          <div class="col-md-4 " style="top: 13px; ">
+            <div class="modal-close " (click)="modal_dismiss_docs() " style="margin-top: -15px; "><span
+                class="mdi mdi-close pull-left "></span>
+            </div>
+
+            <div style="float: right;margin-right: 45px;margin-top: -3px; ">
+              <!-- <app-file-download [documentId]="documentURLId">
+                            </app-file-download> -->
+              <app-filedownload [documentId]="documentURLId">
+              </app-filedownload>
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="modal-body ">
+          <div class="iframe-container " *ngIf="documentURL==null "
+            style=" border: 1px solid #d3d3d3 !important; border-radius: 1rem; ">
+            <img src="assets/Images/logo_menu.png " style="opacity: .5; ">
+            <span>
+              <i class="mdi mdi-cached mdi-spin " style="text-align: center;font-weight: 600;font-size: 16px; ">
+                &nbsp; Please wait...</i>
+              <span class="sr-only ">Please wait...</span>
+            </span>
+          </div>
+          <div class="iframe-container " *ngIf="documentURL !=null "
+            style=" border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 350px; ">
+
+            <iframe [src]="documentURL " frameborder="0 " scrolling="yes " height="100% "
+              style="width: 100%;height: 100%; "></iframe>
+            <img
+              style="top: 0 !important; right: 0px !important; position: absolute !important; z-index: 9; height: 55px !important; vertical-align: top; opacity: inherit; bottom: unset !important; left: unset !important; "
+              src="../../../../assets/Images/logo_menu.png ">
+          </div>
+        </div>
+        <!-- <div class="modal-footer ">        
+          <div>
+            <button class="btn btn-default m-r-sm " type="Submit " name="btnSubmit " id="btnSubmit "
+              (click)="modal_dismiss() ">
+              <div class="pos-rlt sm-btn-component "> <span> <i class="mdi mdi-close "></i> Close </span></div>
+            </button>
+
+          </div>
+
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="documentviewer" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_viewDocs" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+            </h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="close_documentviewer()" style="margin-top: -15px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+            <!-- #region Old code before JSZip  -->
+            <!-- <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                            <app-filedownload [documentId]="documentURLId">
+                            </app-filedownload>
+                        </div> -->
+            <!-- #endregion -->
+
+            <!-- #region New code after Jszip  -->
+            <!-- JSZIP -->
+            <!-- <a style="float: right;margin-right: 45px;margin-top: -3px;" class="btn btn-label-success btn-upper btn-sm btn-bold btn-custom_preview m-r-xs" [download]="downLoadFileName" [href]="documentURL">Download</a> -->
+            <app-filedownload [documentId]="documentURLId" style="float: right;margin-right: 45px;margin-top: -3px;">
+            </app-filedownload>
+            <!-- JSZIP -->
+
+            <!-- #endregion -->
+          </div>
+
+        </div>
+
+
+        <div class="modal-body" style="overflow: auto !important;">
+
+          <div class="iframe-container" *ngIf="docList?.length == 0"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <img src="assets/Images/clientlogo/{{clientminiLogoLink}}">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <ng-container *ngIf="docList?.length > 0">
+            <div class="iframe-container" *ngFor="let item of docList"
+              style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;margin-bottom: 10px">
+              <iframe [src]="item.ImageURL" frameborder="0" scrolling="yes"></iframe>
+              <div><span style="top: 0 !important;
+                                left: 0px !important;
+                                position: absolute !important;
+                                z-index: 5;
+                                height: 25px !important;
+                                vertical-align: top;
+                                opacity: inherit;
+                                bottom: unset !important;
+                                right: unset !important;
+                                background: #c9c9c7;
+                                width: 45%;
+                                padding-left: 5px;
+                                opacity: 0.9;">{{item.name}} </span></div>
+
+              <img style="top: 0 !important;
+                        right: 0px !important;
+                        position: absolute !important;
+                        z-index: 9;
+                        height: 55px !important;
+                        vertical-align: top;
+                        opacity: inherit;
+                        bottom: unset !important;
+                        left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientLogoLink}}">
+
+            </div>
+          </ng-container>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

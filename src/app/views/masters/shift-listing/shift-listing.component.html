@@ -1,0 +1,48 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+        <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                Please wait...
+            </button>
+        </div>
+        <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="!spinner">
+            <div class="row" *ngIf="businessType == 3 ">
+                <div class="col-12 d-flex">
+                    <div class="col-md-4 text-left">
+                        <label class="form-label searchbar-label">Client Name </label>
+                        <ng-select [items]="clientList" (change)="onChangeClient($event)" [searchable]="true" 
+                            [closeOnSelect]="true" [clearable]="false" [multiple]="false"
+                            placeholder="Choose ..." bindLabel="Name" bindValue="Id" [(ngModel)]="searchText">
+                        </ng-select>
+                    </div>
+                    <div class="col-md-7 mt-4">
+                        <button type="submit" class="btn btn-primary" (click)="searchClient()" [disabled]="searchText === ''">
+                            Search
+                        </button>
+                    </div>
+                </div> 
+            </div>
+            <div *ngIf="businessType == 3 "><hr></div>
+            <div class="row">
+                <div class="col-md-12 text-right mb-2">
+                    <button type="button" class="btn btn-primary" (click)="clickonCreateNewShiftMap()" style="border-radius: 6px;">
+                        <i class="mdi mdi-plus m-r-xs"></i>
+                        Map Shift
+                    </button>
+                </div>
+                <div class="table m-2">
+                    <div class="w-100">
+                        <angular-slickgrid gridId="gridMappingList1" [data]="dataset" [columnDefinitions]="columnDefinitions"
+                            [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%"
+                            (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+                            (onAngularGridCreated)="angularGridReady($event)">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>

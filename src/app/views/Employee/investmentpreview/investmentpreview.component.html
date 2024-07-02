@@ -1,0 +1,385 @@
+<!-- <div class="page-wrapper ff">
+  <div class="page-content">
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;">
+       -->
+
+<div class="text-center ma-5" *ngIf="spinner">
+    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+</div>
+
+<div class="row" *ngIf="!spinner && employeedetails != null">
+    <div class="col-lg-6 col-xs-12 col-sm-12">
+        <div class="headerbar">
+            <div>
+                <h2 class="header_title">Employee Investment Preview</h2>
+                <p class="subheader_title">Name : {{employeedetails.FirstName}} ~ Code : {{employeedetails.Code}}
+                </p>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="">
+
+            <div class="row">
+                <div class="col-lg-6 col-12 col-xs-12"></div>
+                <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12">
+                    <label class="form-label"> Financial Year </label>
+                    <ng-select [items]="FinancialYearList" (change)="onChangeFinancialYear($event)" placeholder="-- select an option --" [(ngModel)]="FinId" bindLabel="code" bindValue="Id">
+                    </ng-select>
+                </div>
+            </div>
+            <!-- <ul class="list-inline" >
+                  <li class="list-inline-item">
+                    <button *ngIf="isEnbleBankBtn" type="button" [disabled]="!isLoading" class="btn btn-default"
+                      (click)="openBankSlider()"> <i class="mdi mdi-plus  m-r-xs"></i>
+                      Add Bank
+                    </button>
+                  </li>
+                  </ul> -->
+        </div>
+    </div>
+
+</div>
+
+<div class="row" *ngIf="!spinner && employeedetails != null">
+
+    <div class="col-12 col-xl-6 col-xs-12 col-sm-12 col-lg-6">
+        <div class="card">
+            <div class="card-header" style="background-color: white;">
+                <h5 class="card-header-title">
+                    Investments
+                </h5>
+            </div>
+            <div class="card-body" style="padding: 20px;padding-left: 0px;padding-right: 0px;">
+                <div class="list-group list-group-flush my-n3">
+                    <p class="norecord_text" *ngIf="Lstinvestment.length == 0" style="text-align: center;
+              padding: 12px;">
+                        No records!
+                    </p>
+                    <div class="list-group-item" *ngFor="let item of Lstinvestment">
+
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <a href="javascript:;" class="avatar">
+                                    <img src="assets/Images/accountinghome.png" alt="" class="avatar-img rounded" style="width:40px">
+                                </a>
+                            </div>
+                            <div class="col ml-n2">
+                                <h4 class="font-weight-normal mb-1">
+                                    <a href="javascript:;" style="color: #5c5c5c;font-weight: 600 !important;font-size: 14px;">{{getLetterSpace(item.Name)}}
+    
+                        <span class="badge badge-self" style="display: inline;" *ngIf="item.IsProposed">Declaration</span>
+                        <span class="badge badge-warning" style="display: inline;" *ngIf="!item.IsProposed">Proof</span>
+    
+                      </a>
+                                </h4>
+                                <small class="text-muted" style="letter-spacing: 1px;">
+                      Amt Declared : <b> ₹ {{item.AmtInvested | number : '1.2-2' }} </b> <i class="fa fa-info-circle"
+                        style="cursor: pointer;" matTooltip="{{item.Remarks}}">
+                      </i> <span *ngIf="!item.IsProposed"> | Amt Approved : <b> ₹ {{item.AmtApproved | number :
+                          '1.2-2' }} </b>
+                        <i class="fa fa-info-circle" style="cursor: pointer;" matTooltip="{{item.ApproverRemarks}}"> </i>
+                      </span>
+                    </small>
+                            </div>
+                            <div class="col-auto">
+                                <div class="media-right" *ngIf="!item.IsProposed">
+                                    <a href="javascript:;" class="btn action-edit pull-right" style="margin-right: 5px" [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="left"> PREVIEW
+    
+                      </a>
+                                </div>
+
+
+                                <ng-template #popContent>
+                                    <ng-container *ngIf="item.DocumentDetails != null">
+                                        <div class="row" *ngFor="let i of item.DocumentDetails" style="padding-bottom: 5px;">
+                                            <div class="col-lg-6" style="font-size: 12px;">
+                                                {{i.FileName}}
+
+                                                <span class="badge badge-warning" *ngIf="i.Status == 0" style="display: inline;color:white !important;cursor: pointer;">
+                              Pending
+    
+    
+                            </span>
+                                                <span class="badge badge-danger" *ngIf="i.Status == 2" style="display: inline;color:white !important;cursor: pointer;">
+                              Rejected
+    
+                            </span>
+                                                <span class="badge badge-success" *ngIf="i.Status == 1" style="display: inline;color:white !important;cursor: pointer;">
+    
+                              Approved
+    
+                            </span>
+                                            </div>
+                                            <div class="col-lg-6 text-right">
+                                                <button class="btn btn-default btn-sm m-r-sm " style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="document_file_view(i, 'Documents')"><i class="fa fa-eye m-r-xs"></i>
+                              View </button>
+
+                                            </div>
+                                        </div>
+
+                                    </ng-container>
+                                </ng-template>
+                                <ng-template #popTitle> Preview
+                                    <span style="color: transparent;">dummay text for content</span> Document Details
+                                </ng-template>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-6 col-xs-12 col-sm-12 col-lg-6">
+        <div class="card">
+            <div class="card-header" style="background-color: white;">
+                <h5 class="card-header-title">
+                    Deductions
+                </h5>
+            </div>
+            <div class="card-body" style="padding: 20px;padding-left: 0px;padding-right: 0px;">
+                <div class="list-group list-group-flush my-n3">
+
+                    <p class="norecord_text" *ngIf="Lstdeduction_Exemption.length == 0" style="text-align: center;
+              padding: 12px;">
+                        No records!
+                    </p>
+
+                    <div class="list-group-item" *ngFor="let item of Lstdeduction_Exemption">
+
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <a href="javascript:;" class="avatar">
+                                    <img src="assets/Images/accountinghome.png" alt="" class="avatar-img rounded" style="width:40px">
+                                </a>
+                            </div>
+                            <div class="col ml-n2">
+                                <h4 class="font-weight-normal mb-1">
+                                    <a href="javascript:;" style="color: #5c5c5c;font-weight: 600 !important;font-size: 14px;">{{getLetterSpace(item.Name)}}
+                        <span class="badge badge-self" style="display: inline;" *ngIf="item.IsProposed">Declaration</span>
+                        <span class="badge badge-warning" style="display: inline;" *ngIf="!item.IsProposed">Proof</span>
+                      </a>
+                                </h4>
+                                <small class="text-muted" style="letter-spacing: 1px;">
+                      Amt Declared : <b> ₹ {{item.AmtInvested | number : '1.2-2' }} </b> <i class="fa fa-info-circle"
+                        style="cursor: pointer;" matTooltip="{{item.Remarks}}">
+                      </i> <span *ngIf="!item.IsProposed"> | Amt Approved : <b> ₹ {{item.AmtApproved | number :
+                          '1.2-2' }} </b>
+                        <i class="fa fa-info-circle" style="cursor: pointer;" matTooltip="{{item.ApproverRemarks}}"> </i>
+                      </span>
+                    </small>
+                            </div>
+                            <div class="col-auto">
+                                <div class="media-right" *ngIf="!item.IsProposed">
+                                    <a href="javascript:;" class="btn action-edit pull-right" style="margin-right: 5px" [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="left"> PREVIEW
+    
+                      </a>
+                                </div>
+
+
+                                <ng-template #popContent>
+                                    <ng-container *ngIf="item.DocumentDetails != null">
+                                        <div class="row" *ngFor="let i of item.DocumentDetails" style="padding-bottom: 5px;">
+                                            <div class="col-lg-6" style="font-size: 12px;">
+                                                {{i.FileName}}
+
+                                                <span class="badge badge-warning" *ngIf="i.Status == 0" style="display: inline;color:white !important;cursor: pointer;">
+                              Pending
+    
+    
+                            </span>
+                                                <span class="badge badge-danger" *ngIf="i.Status == 2" style="display: inline;color:white !important;cursor: pointer;">
+                              Rejected
+    
+                            </span>
+                                                <span class="badge badge-success" *ngIf="i.Status == 1" style="display: inline;color:white !important;cursor: pointer;">
+    
+                              Approved
+    
+                            </span>
+                                            </div>
+                                            <div class="col-lg-6 text-right">
+                                                <button class="btn btn-default btn-sm m-r-sm " style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="document_file_view(i, 'Documents')"><i class="fa fa-eye m-r-xs"></i>
+                              View </button>
+
+                                            </div>
+                                        </div>
+
+                                    </ng-container>
+                                </ng-template>
+                                <ng-template #popTitle> Preview
+                                    <span style="color: transparent;">dummay text for content</span> Document Details
+                                </ng-template>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-6 col-xs-12 col-sm-12 col-lg-6">
+        <div class="card">
+            <div class="card-header" style="background-color: white;">
+                <h5 class="card-header-title">
+                    Exemptions
+                </h5>
+            </div>
+            <div class="card-body" style="padding: 20px;padding-left: 0px;padding-right: 0px;">
+                <div class="list-group list-group-flush my-n3">
+                    <p class="norecord_text" *ngIf="dynamicExeptions.length == 0" style="text-align: center;
+              padding: 12px;">
+                        No records!
+                    </p>
+                    <div class="list-group-item" *ngFor="let item of dynamicExeptions">
+
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <a href="javascript:;" class="avatar">
+                                    <img src="assets/Images/accountinghome.png" alt="" class="avatar-img rounded" style="width:40px">
+                                </a>
+                            </div>
+                            <div class="col ml-n2">
+                                <h4 class="font-weight-normal mb-1">
+                                    <a href="javascript:;" style="color: #5c5c5c;font-weight: 600 !important;font-size: 14px;">{{getLetterSpace(item.ProductName)}}
+                        <span class="badge badge-self" style="display: inline;" *ngIf="item.IsProposed">Declaration</span>
+                        <span class="badge badge-warning" style="display: inline;" *ngIf="!item.IsProposed">Proof</span>
+                      </a>
+                                </h4>
+                                <small class="text-muted" style="letter-spacing: 1px;">
+                      Amt Declared : <b> ₹ {{item.Amount | number : '1.2-2' }} </b> <i class="fa fa-info-circle"
+                        style="cursor: pointer;" matTooltip="{{item.InputsRemarks}}">
+                      </i> <span *ngIf="!item.IsProposed"> | Amt Approved : <b> ₹ {{item.ApprovedAmount | number :
+                          '1.2-2' }} </b>
+                        <i class="fa fa-info-circle" style="cursor: pointer;" matTooltip="{{item.ApproverRemarks}}"> </i>
+                      </span>
+                    </small>
+                            </div>
+                            <div class="col-auto">
+                                <div class="media-right" *ngIf="!item.IsProposed">
+                                    <a href="javascript:;" class="btn action-edit pull-right" style="margin-right: 5px" [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="left"> PREVIEW
+    
+                      </a>
+                                </div>
+
+
+                                <ng-template #popContent>
+                                    <ng-container *ngIf="item.LstEmployeeExemptionBillDetails != null">
+                                        <div class="row" *ngFor="let i of item.LstEmployeeExemptionBillDetails" style="padding-bottom: 5px;">
+                                            <div class="col-lg-6" style="font-size: 12px;">
+                                                {{i.FileName}}
+
+                                                <span class="badge badge-warning" *ngIf="i.Status == 0" style="display: inline;color:white !important;cursor: pointer;">
+                              Pending
+    
+    
+                            </span>
+                                                <span class="badge badge-danger" *ngIf="i.Status == 2" style="display: inline;color:white !important;cursor: pointer;">
+                              Rejected
+    
+                            </span>
+                                                <span class="badge badge-success" *ngIf="i.Status == 1" style="display: inline;color:white !important;cursor: pointer;">
+    
+                              Approved
+    
+                            </span>
+                                            </div>
+                                            <div class="col-lg-6 text-right">
+                                                <button class="btn btn-default btn-sm m-r-sm " style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="document_file_view(i, 'Exemptions')"><i class="fa fa-eye m-r-xs"></i>
+                              View </button>
+
+                                            </div>
+                                        </div>
+
+                                    </ng-container>
+                                </ng-template>
+                                <ng-template #popTitle> Preview
+                                    <span style="color: transparent;">dummay text for content</span> Document Details
+                                </ng-template>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<!-- </div>
+      </div> -->
+
+
+
+
+<div id="popup_viewDocs" class="modal" aria-labelledby="popup_viewDocs" aria-hidden="true">
+    <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" *ngIf="!spinner && employeedetails">
+
+                <div class="modal-header" style="padding: 15px !important;">
+
+                    <div class="col-md-8">
+                        <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                    {{employeedetails.FirstName}} ~ {{employeedetails.Code}}</b></small>
+                        <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+                        </h6>
+                    </div>
+                    <div class="col-md-4" style="top: 13px;">
+                        <div class="modal-close" *ngIf="!shouldRendering" (click)="modal_dismiss4()" style="margin-top: -15px;">
+                            <span class="mdi mdi-close pull-left"></span>
+                        </div>
+
+                        <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                            <app-filedownload [documentId]="documentURLId">
+                            </app-filedownload>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="iframe-container" *ngIf="documentURL == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                        <img src="assets/Images/logo_menu.png" style="opacity: .5;">
+                        <span>
+                  <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                    &nbsp; Please wait...</i>
+                  <span class="sr-only">Please wait...</span>
+                        </span>
+                    </div>
+                    <div class="iframe-container" *ngIf="documentURL != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+                        <iframe [src]="documentURL" frameborder="0" scrolling="yes" style="width: 100%;height: 100%;"></iframe>
+                        <img style="top: 0 !important;
+                right: 0px !important;
+                position: absolute !important;
+                z-index: 9;
+                height: 55px !important;
+                vertical-align: top;
+                opacity: inherit;
+                bottom: unset !important;
+                left: unset !important;" src="../../../../assets/Images/logo_menu.png">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="content m-b report-content p-0" style="box-shadow: none !important;background: transparent;"
+      *ngIf="!spinner">
+      <div class="row">
+        <div class="col-12">
+          <app-searchbar-view [searchConfiguration]="searchElementConfiguration"
+            (searchButtonClicked)="onSearchBtnClickedEvent($event)">
+          </app-searchbar-view>
+        </div>
+        <div class="content m-3 report-content w-100" *ngIf="!refreshing_table_spinner">
+          <div class="row">
+            <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+              <ul class="list-inline">
+                <li class="list-inline-item" *ngIf="!noData && dataset.length > 0">
+                  <button type="button" class="btn btn-primary-custom" (click)="exportAsExcel()" style="margin-bottom: 3px">
+                    <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right"></div>
+          </div>
+          <div class="row w-100 m-1">
+            <div class="mx-auto text-center ma-5" *ngIf="refreshing_table_spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+            <div class="mx-auto text-center ma-5" *ngIf="noData">
+              <span>No records found !</span>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <angular-slickgrid class="w-100" gridId="leaveReportTableGridId" [columnDefinitions]="columnDefinition" [gridOptions]="gridOptions"
+              [dataset]="dataset" gridWidth="100%" (onAngularGridCreated)="angularGridReady($event)">
+            </angular-slickgrid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

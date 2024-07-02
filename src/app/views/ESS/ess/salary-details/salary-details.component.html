@@ -1,0 +1,166 @@
+<div>
+    <div>
+        <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" [fullScreen]="true">
+            <p style="color: #0a609eeb"> Loading... </p>
+        </ngx-spinner> -->
+        <app-loading-screen></app-loading-screen>
+    </div>
+
+
+    <div class="row align-self-stretch" style="margin: 2px;" *ngIf="_rateSetReault && _rateSetReault.length > 0">
+        <div class="col-md-4 px-0 border border-right-0">
+            <div class="">
+
+                <div class="col-lg-12">
+                    <div class="row ">
+                        <ng-container *ngIf="_rateSetReault && _rateSetReault.length > 0">
+                            <h6 class="card-title col-md-12 mt-2"> Rate Sets</h6>
+                            <div class="" style="max-height:300px; overflow-y:auto;overflow-x: hidden;">
+                                <div class="col-md-12 col-sm-12 col-xs-12 mb-2" *ngFor="let reqObj of _rateSetReault  let i = index">
+
+                                    <div [ngClass]="reqObj.card ? 'card clickedcard right-active-arrow' : 'card'" class="card-before-clicked" (click)="clickOnCard(reqObj,i)" id="addClass">
+                                        <!-- <div class="card-header">
+
+                <span class="badge badge-soft-danger" style="display: inline;"> {{reqObj.Id}}
+                </span>
+                
+              </div> -->
+                                        <div class="card-body" style="padding:10px;">
+                                            <div class="row align-items-center">
+                                                <div class="col-8 mb-2">
+                                                    <label style="font-size: 14px; color: #9d9d9d;">Effective
+                            Date</label>
+                                                    <h6> {{reqObj.EffectiveDate |date:'mediumDate'}}</h6>
+                                                </div>
+                                                <div class="col-4 mb-2">
+                                                    <label *ngIf="reqObj" style="font-size: 14px;color: #9d9d9d; ">{{reqObj.BreakupType}}</label>
+                                                    <h6>{{reqObj.AnnualSalary}} </h6>
+                                                </div>
+
+                                                <div class="col-8">
+                                                    <label style="font-size: 14px;color: #9d9d9d;" *ngIf="reqObj">Effective Period</label>
+                                                    <h6> {{reqObj.PayCyclePeriodName}}</h6>
+
+                                                </div>
+                                                <div class="col-4">
+                                                    <label style="font-size: 14px;color: #9d9d9d;">IsLatest</label>
+                                                    <h6 *ngIf="reqObj&& reqObj.IsLatest==true">Yes</h6>
+                                                    <h6 *ngIf="reqObj&& reqObj.IsLatest==false">No</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 px-0">
+
+            <div class="border">
+                <div class="row mx-0 align-items-center py-1">
+                    <div class="col-md-10">
+                        <h6 class="card-title  mt-2 ">Breakup Details</h6>
+                    </div>
+                    <div class="col-md-2 text-right" *ngIf="editEnabledForNewJoinee==true && BusinessType!=3">
+                        <button class=" btn btn-primary" (click)="isEdit()"><i class="fa fa-pencil  m-r-xs" style="cursor:pointer"></i>Edit</button>
+                    </div>
+
+                </div>
+                <div class="row mx-0 border align-items-center py-2" *ngIf="_isNewJoinee==true">
+                    <div class="col-md-4">
+                        <!-- [(ngModel)]="serchclientId" -->
+                        <label class="form-label" style="padding-bottom: 3px;"> Component Name<span class="required">*
+                        </span></label>
+                        <ng-select [items]="_dropDownList" placeholder="-- select a component --" [(ngModel)]="newProductId" bindLabel="DisplayName" bindValue="ProductId" [searchable]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-md-3">
+                        <!-- [(ngModel)]="serchclientId" -->
+                        <label class="form-label" style="padding-bottom: 3px;"> Monthly Value<span class="required">*
+                        </span></label>
+                        <input type="number" placeholder="Enter Amount" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" [(ngModel)]="newComponentValue" />
+
+                    </div>
+                    <div class="col-md-5 text-right ">
+                        <label class="form-label" style="padding-bottom: 3px;">&nbsp;</label>
+                        <div>
+                            <button type="button" class="btn btn-default mr-3" (click)="clickOnAddToList()">
+                        <i class="mdi mdi-plus-box m-r-xs" title="Add Item" style="cursor:pointer"></i> Add To List
+                        </button>
+
+
+                            <button type="button" class="btn btn-primary" (click)="deleteComponent(_breakUpDetails,i)">
+                      <i class="mdi mdi-delete  m-r-xs" style="cursor:pointer"></i> Delete
+                     </button>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class=" table-responsive col-md-12" style="max-height:300px; overflow-y:auto;">
+                    <table class="table-sticky table table-bordered table-th-td">
+                        <thead style="background-color: #f5f5f5 !important;">
+                            <tr>
+                                <th *ngIf="_isNewJoinee==true">
+                                    <!-- <input type="checkbox" [(ngModel)]="selectAll" (click)="ClickOnSelectAll($event)" /> -->
+                                    <input #checkAll type="checkbox" id="checkAll" [checked]="checked" [(ngModel)]="selectAll" (change)="ClickOnSelectAll(checkAll.checked)" />
+                                </th>
+                                <th>Component</th>
+                                <th style="width:200px">Monthly Value</th>
+
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="_breakUpDetails &&_breakUpDetails.length>0">
+                            <tr *ngFor=" let  breakObj of _breakUpDetails let j = index">
+                                <td class="text-center" *ngIf="_isNewJoinee==true">
+
+                                    <input #check type="checkbox" class="input-checkbox" [(ngModel)]="breakObj.isSelected" [checked]="breakObj.isSelected==true" id="check" (change)="ClickOnSelect(breakObj,check.checked)">
+
+                                </td>
+                                <td>
+                                    <!-- <div class="type-text-boarder" *ngIf="_isNewJoinee==true">
+                                        <input type="text" class="form-control " [(ngModel)]="breakObj.DisplayName" />
+
+                                    </div> -->
+                                    <div style="padding: 10px !important;">
+                                        {{breakObj.DisplayName}}
+                                    </div>
+
+
+                                </td>
+
+                                <td style="width:350px">
+                                    <div class="type-text-boarder" *ngIf="_isNewJoinee==true">
+                                        <input type="text" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" [(ngModel)]="breakObj.value" (change)="inLineEditFn(breakObj)" />
+                                        <!--  -->
+                                    </div>
+                                    <div style="padding: 10px !important;" *ngIf="_isNewJoinee==false">
+                                        {{breakObj.value}}
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+    <div *ngIf="_rateSetReault!=null && _rateSetReault.length == 0" style="text-align: center;
+ font-size: 16px;">
+        <label style="    text-align: center;
+  ">No Records Found...</label>
+    </div>
+
+</div>

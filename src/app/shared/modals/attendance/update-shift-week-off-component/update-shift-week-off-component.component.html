@@ -1,0 +1,149 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <!-- LOADER -->
+    <app-loading-screen></app-loading-screen>
+    <!-- LOADER -->
+    <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+            Please wait...
+        </button>
+    </div>
+    <!-- EDIT DRAWER -->
+    <div class="m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="action == 'update'">
+      <div class="row mb-4">
+        <div class="col-md-12 ml-3">
+          <label class="form-label">Status</label>
+          <div class="p-t-10">
+            <label class="el-switch el-switch-green">
+              <input type="checkbox" name="statusActive" [(ngModel)]="rowData.Status" (ngModelChange)="onStatusChange($event)" />
+              <span class="el-switch-style"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex ">
+          <div class="col-6 col-md-6">
+            <label class="text-label text-uppercase">Client</label>
+            <label class="header">{{rowData.ClientName}}</label>
+          </div>
+          <div class="col-6 col-md-6">
+             <label class="text-label text-uppercase">Client Contract</label>
+             <label class="header">{{rowData.ClientContractName}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex ">
+          <div class="col-6 col-md-6">
+            <label class="text-label text-uppercase">Team</label>
+            <label class="header">{{rowData.TeamName}}</label>
+          </div>
+          <div class="col-6 col-md-6">
+            <label class="text-label text-uppercase">Employee</label>
+            <label class="header">{{rowData.EmployeeName}}</label>
+         </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-12 d-flex">
+          <div class="col-6 col-md-6">
+            <label class="text-label text-uppercase">Location</label>
+            <label class="header">{{rowData.LocationName}}</label>
+          </div>
+          <div class="col-6 col-md-6" *ngIf="comingFrom === 'shift'">
+            <label class="text-label text-uppercase">Shift</label>
+            <ng-select [items]="shiftList" class="mt-1" (change)="onShiftDrpdwnChangeFn($event)" placeholder="Choose..." 
+              bindLabel="Name" bindValue="Id" [(ngModel)]="selectedDropdown" [multiple]="false">
+              <ng-template ng-label-tmp let-item="item">
+                <span>{{item.Name + ' (' + item.modifiedStartTime + ' - ' + item.modifiedEndTime + ')'}}</span>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                <span>{{item.Name + ' (' + item.modifiedStartTime + ' - ' + item.modifiedEndTime + ')'}}</span>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="col-6 col-md-6" *ngIf="comingFrom === 'weekoff'">
+            <label class="text-label text-uppercase">Week off 
+              <i class="mdi mdi-information-outline" placement="right" style="cursor: pointer;"
+              matTooltip="Minimum WeekOff Selection: {{minWeekOffSelection }} , Maximum WeekOff Selection: {{maxWeekOffSelection}}"></i>
+            </label>
+            <ng-select [items]="weeksDropdown" #select bindLabel="name"  bindValue="id" [multiple]="true"
+              placeholder="Choose..." [(ngModel)]="selectedDropdown" [maxSelectedItems]="maxWeekOffSelection"
+              (change)="onWeekOffDrpDwnChangeFn($event)" [dropdownPosition]="'bottom'" [clearable]="false" [closeOnSelect]="true">
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.name}}
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex ">
+          <div class="col-6 col-md-6">
+             <label class="text-label text-uppercase">Start Date</label>
+             <input class="form-control" type="text" name="startDate" bsDatepicker placement="bottom"
+             (bsValueChange)="onChangePeriodStartDate($event)" placeholder="01-01-2020" [minDate]="minDate" [maxDate]="maxDate"
+             [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+             [(ngModel)]="periodStartDate" [disabled]="isDisableStartDatePicker" autocomplete="off" readonly required>
+             <span class="error-note" *ngIf="isDisableStartDatePicker">Cannot edit past date</span>
+          </div>
+          <div class="col-6 col-md-6" *ngIf="!isDisableStartDatePicker">
+             <label class="text-label text-uppercase">End Date</label>
+             <input class="form-control" type="text" name="endDate" bsDatepicker [(ngModel)]="periodEndDate" 
+              placement="bottom" [minDate]="periodStartDate" [maxDate]="maxDate" (bsValueChange)="onChangePeriodEndDate($event)"
+             [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+             placeholder="12-12-2020" autocomplete="off"  readonly required>
+          </div>
+          <div class="col-6 col-md-6" *ngIf="isDisableStartDatePicker">
+            <label class="text-label text-uppercase">End Date</label>
+            <input class="form-control" type="text" name="endDate" bsDatepicker [(ngModel)]="periodEndDate" 
+             placement="bottom" [minDate]="minDate" [maxDate]="maxDate" (bsValueChange)="onChangePeriodEndDate($event)"
+            [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+            placeholder="12-12-2020" autocomplete="off"  readonly required>
+         </div>
+        </div>
+      </div>
+     
+    </div>
+    <!-- DELETE DRAWER -->
+    <div class="mx-auto text-center" *ngIf="action == 'delete'">
+      <div class="row mx-auto text-center">
+        <div class="col-md-12" style="margin-left: 42%;margin-top: 35%;">
+          <img src="assets/Images/warning-outline.png" alt="warning">
+        </div>
+        <div class="row mx-auto text-center">
+          <div class="col-md-12 text-big">
+            Are you sure ?
+          </div>
+          <div class="col-md-12 mb-4 text-small">
+            Do you want to <b>delete</b> this {{comingFrom}} 
+          </div>
+        </div>
+      </div>
+    </div>
+     <!-- INACTIVE DRAWER -->
+     <div class="mx-auto text-center" *ngIf="action == 'inactive'">
+      <div class="row mx-auto text-center">
+        <div class="col-md-12" style="margin-left: 42%;margin-top: 35%;">
+          <img src="assets/Images/warning-outline.png" alt="warning">
+        </div>
+        <div class="row mx-auto text-center">
+          <div class="col-md-12 text-big">
+            Are you sure ?
+          </div>
+          <div class="col-md-12 mb-4 text-small">
+            Do you want to <b>inactive</b> this {{comingFrom}}  
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- BUTTONS -->
+    <div style="float: right" *ngIf="!spinner">
+      <button nz-button style="margin-right: 8px;" (click)="closeUpdateShiftWeekOffDrawer()">Cancel</button>
+      <button nz-button nzType="primary" (click)="clickedSubmitFn()">Submit</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,165 @@
+<div class="content mb-2 report-content int-header-content-panel" style="padding: 6px; margin: -12px !important;"
+  *ngIf="employeeDetails">
+  <div class="row " style="    MARGIN: auto !important">
+    <!-- <label class="form-label searchbar-label"><i class="fas fa-user" style="height: 100px;width: 100px;"></i></label> -->
+    <div style="z-index: 1000" class="form-group-vertical col-xs-12 col-sm-4 col-md-4">
+      <label class="form-label searchbar-label">Emp Name
+        : {{employeeDetails.EmployeeName}}</label>
+      <div class="form-group m-t-m5">
+        <div class="input-group">
+        </div>
+      </div>
+    </div>
+    <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-4 col-md-4">
+      <label class="form-label searchbar-label">Emp Code : {{employeeDetails.EmployeeCode}}</label>
+      <div class="form-group m-t-m5">
+      </div>
+    </div>
+    <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-4 col-md-4">
+      <label class="form-label searchbar-label">Designation:
+        {{employeeDetails.Designation=="NULL"?'---':employeeDetails.Designation}}</label>
+      <div class="form-group m-t-m5">
+        <div class="input-group">
+        </div>
+      </div>
+    </div>
+    <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-4 col-md-4">
+      <label class="form-label searchbar-label">DOJ :{{employeeDetails.DOJ=="NULL"?'---':employeeDetails.DOJ}}</label>
+      <div class="form-group m-t-m5">
+        <div class="input-group">
+        </div>
+      </div>
+    </div>
+    <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-4 col-md-4">
+      <label class="form-label searchbar-label">Location:
+        {{employeeDetails.LocationName=="NULL"?'---':employeeDetails.LocationName}}</label>
+      <div class="form-group m-t-m5">
+        <div class="input-group">
+        </div>
+      </div>
+    </div>
+    <div *ngIf="businessType==3" style="z-index: 1000 !important"
+      class="form-group-vertical col-xs-12 col-sm-4 col-md-4">
+      <label class="form-label searchbar-label">Client Name:
+        {{employeeDetails.ClientName=="NULL"?'---':employeeDetails.ClientName}}</label>
+      <div class="form-group m-t-m5">
+        <div class="input-group">
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<br>
+
+<div class="row" *ngIf="salaryDetails && salaryDetails.length>0" >
+  <div class="col-lg-6" style="margin-top: 4px;  padding-right: 32px;  margin-bottom: 4px;">
+    <button class="btn btn-default pull-left" type="button" style="    margin-top: -7px;;" (click)=exportAsXLSX()> <i
+        class="mdi mdi-file-excel"></i> &nbsp; Export </button>
+  </div>
+  <div class="col-lg-6 pull-right" style=" margin-top: 4px;  padding-right: 32px;  margin-bottom: 4px;">
+
+    <p class="small mb-0" style="font-size: 12px;float:right">
+      <span class="Other" style="font-size: 12px;">●</span> Other &nbsp;
+    </p>
+    <p class="small mb-0" style="font-size: 12px;float:right">
+      <span class="Total" style="font-size: 12px;">●</span> Total &nbsp;
+    </p>
+    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+      <span class="OnCost" style="font-size: 12px;">●</span> OnCost
+    </p>
+    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+      <span class="GrossDedn" style="font-size: 12px;">●</span> gross Deductions
+    </p>
+    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+      <span class="Deductions" style="font-size: 12px;">●</span> Deductions
+    </p>
+    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+      <span class="Earning" style="font-size: 12px;">●</span> Earning
+    </p>
+  </div>
+
+  <div class="table-responsive table-height " style="height: calc(100vh - 240px);">
+    <table class=" table-sticky table-bordered table " *ngIf="MonthArr!=null && MonthArr.length>0"
+      style="text-align: center; font-size: 12px;">
+      <thead>
+        <tr>
+          <th>Component Name</th>
+          <th *ngFor="let month of MonthArr ">{{month}}</th>
+          <th class="subTotal">Total</th>
+        </tr>
+      </thead>
+      <tbody class="tbl-scrollbody" *ngIf="salaryDetails && salaryDetails.length>0">
+        <tr *ngFor="let prod of salaryDetails">
+          <td
+            [ngClass]="prod.PTY == 1 ? 'Earning' : (prod.PTY == 3 ? 'Deductions' : (prod.PTY == 4 ? 'GrossDedn' :(prod.PTY == 2 ? 'Total' :(prod.PTY == 5?'OnCost':'Other'))))">
+            {{prod.Pro}}
+          </td>
+          <td>
+            {{prod.Apr}}
+          </td>
+          <td>
+            {{prod.May}}
+          </td>
+          <td>
+            {{prod.Jun}}
+          </td>
+          <td>
+            {{prod.Jul}}
+          </td>
+          <td>
+            {{prod.Aug}}
+          </td>
+          <td>
+            {{prod.Sep}}
+          </td>
+          <td>
+            {{prod.Oct}}
+          </td>
+          <td>
+            {{prod.Nov}}
+          </td>
+          <td>
+            {{prod.Dec}}
+          </td>
+          <td>
+            {{prod.Jan}}
+          </td>
+          <td>
+            {{prod.Feb}}
+          </td>
+          <td>
+            {{prod.Mar}}
+          </td>
+          <td class="subTotal">{{prod.tot}}</td>
+
+      </tbody>
+    </table>
+    <div *ngIf="salaryDetails && salaryDetails.length==0" style="text-align: center;">No records
+      found</div>
+  </div>
+
+  <!-- <div class="col-lg-6 pull-right" style="margin-top: -20px; padding-right: 32px;">
+
+    <p class="small mb-0" style="font-size: 12px;float:right">
+      <span class="Other" style="font-size: 12px;">●</span> Other &nbsp;
+    </p>
+    <p class="small mb-0" style="font-size: 12px;float:right">
+      <span class="Total" style="font-size: 12px;">●</span> Total &nbsp;
+    </p>
+    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+      <span class="OnCost" style="font-size: 12px;">●</span> OnCost
+    </p>
+    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+      <span class="Deductions" style="font-size: 12px;">●</span> Deductions
+    </p>
+    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+      <span class="Earning" style="font-size: 12px;">●</span> Earning
+    </p>
+  </div> -->
+
+</div>
+
+<div *ngIf="!employeeDetails" style="text-align: center;">No records
+  found</div>

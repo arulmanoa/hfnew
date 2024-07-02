@@ -1,0 +1,936 @@
+<div class="page-wrapper ff" *ngIf="isESSLogin == true">
+  <div class="page-content">
+    <!-- <ngx-spinner></ngx-spinner> -->
+    <app-loading-screen></app-loading-screen>
+
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;">
+      <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" [fullScreen]="true">
+                <p style="color: #0a609eeb"> Loading... </p>
+            </ngx-spinner> -->
+
+      <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+      </div>
+      <div class="row" *ngIf="!spinner">
+        <div class="col-lg-6 col-xs-12 col-sm-12">
+          <div class="headerbar">
+            <div>
+              <h2 class="header_title">My Profile</h2>
+              <p class="subheader_title" *ngIf="employeedetails != null">Name : {{employeedetails.FirstName}} ~ Code :
+                {{employeedetails.Code}} ~ DOJ : {{employeedetails.EmploymentContracts[0].StartDate | date :
+                'dd-MM-yyyy' }}
+              </p>
+
+
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-6 text-right" *ngIf="!isAllenDigital">
+          <div class="text-right">
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(false)">
+                  <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div *ngIf="!spinner">
+
+        <div>
+          <ngb-tabset (tabChange)="loadData($event)" [(activeId)]="activeTabName">
+            <ngb-tab id="General">
+              <ng-template ngbTabTitle><i class="fa fa-get-pocket" aria-hidden="true"></i>&nbsp;&nbsp; General
+              </ng-template>
+              <ng-template ngbTabContent>
+                <ng-container *ngTemplateOutlet="myprofileTemplate">
+                </ng-container>
+              </ng-template>
+            </ngb-tab>
+
+            <ngb-tab id="isCommunicationdetails">
+              <ng-template ngbTabTitle><i class="fa fa-address-book-o" aria-hidden="true"></i>&nbsp;&nbsp; Communication
+              </ng-template>
+              <ng-template ngbTabContent>
+                <app-mycommunications [employeedetails]="employeedetails" #communication
+                  (communicationChangeHandler)="communicationChangeHandler($event)">
+                </app-mycommunications>
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center ma-5" *ngIf="isESSLogin == false">
+  <app-loading-screen></app-loading-screen>
+  <div *ngIf="spinner">
+    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+      Please wait...
+    </button>
+  </div>
+</div>
+
+<div *ngIf="isESSLogin == false && !spinner">
+  <ng-container *ngTemplateOutlet="myprofileTemplate">
+  </ng-container>
+</div>
+
+
+
+<ng-template #myprofileTemplate>
+  <div>
+
+
+
+
+    <form [formGroup]="employeeForm" autocomplete="off">
+      <div class="row">
+        <div class="col-12 col-md-12 col-sm-12">
+          <div class="clearfix">
+            <div class="row" style="margin-top: 15px;">
+              <div class="col-12 col-sm-12">
+                <div class="row">
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="employeedetails && employeedetails.Id > 0">
+                    <label class="form-label">Employee Profile
+                    </label>
+                    <div class="col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+                      <div class="avatar-upload">
+                        <div class="avatar-edit">
+                          <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" (change)="readURL($event)" />
+                          <label for="imageUpload"></label>
+                        </div>
+                        <div class="avatar-preview img-center-block">
+                          <div id="imagePreview" *ngIf="contentmodalurl != null">
+                            <img [src]="contentmodalurl" style="width: 100%;
+                                  height: 100%;
+                                  border-radius: 100%;
+                                  background-size: contain;
+                                  background-repeat: no-repeat;
+                                  background-position: center;">
+                          </div>
+                          <div id="imagePreview" *ngIf="contentmodalurl == null"
+                            style="background-image: url(https://user.gadjian.com/static/images/personnel_boy.png);">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="col-lg-8"> -->
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeeForm.controls.Name">
+                    <label class="form-label">Name <span class="required">* </span>
+                      <span class="help-text m-l-5">(as per Aadhaar Card)</span>
+                      <span class="form__length"> {{ Name.value?.length
+                        }}/100</span>
+                    </label>
+                    <input class="form-control" type="text" spellcheck="false"
+                      onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="Name" maxlength="100" #Name appUppercaseInput appAutocompleteOff 
+                      formControlName="Name" [ngClass]="{ 'is-invalid': submitted && g.Name.errors }"
+                      placeholder=" Name" onpaste="return false;" autocomplete="nope">
+                    <div *ngIf="submitted && g.Name.errors" class="invalid-feedback">
+                      <div *ngIf="g.Name.errors.required">Name is required
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeeForm.controls.gender">
+                    <label class="form-label">Gender <span class="required">*
+                      </span></label>
+                    <ng-select [items]="gender" placeholder="-- select Gender --" formControlName="gender"
+                      [ngClass]="{'ng-touched': submitted && g.gender.invalid }" bindLabel="name" bindValue="id"
+                      (change)="onChangeGender($event)">
+                    </ng-select>
+
+                    <div *ngIf="submitted && g.gender.invalid" class="help-block">
+                      <div *ngIf="g.gender.errors.required">Gender is required
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeeForm.controls.dateOfBirth">
+                    <label class="form-label">Date of Birth <span class="required">*
+                      </span> <i class="mdi mdi-information-outline" placement="right" style="cursor: pointer;"
+                        ngbTooltip="Please Specify as per aadhaar, if DOB not available in aadhaar, Please specify as per PAN card."></i>
+                      <span class="help-text m-l-5">(Please specify as per Aadhaar
+                        -
+                        DD-MM-YYYY)</span> </label>
+                    <input type="text" class="form-control" bsDatepicker placement="top"  [maxDate]="DOBmaxDate"
+                      (bsValueChange)="onChangeDOB($event)"
+                      [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',containerClass:'theme-default' }"
+                      placement="bottom" name="dateOfBirth" formControlName="dateOfBirth"
+                      [ngClass]="{'is-invalid': submitted && g.dateOfBirth.errors }" placeholder="12-12-1990"
+                      autocomplete="none|false|no">
+                    <div *ngIf="submitted && g.dateOfBirth.errors" class="invalid-feedback">
+                      <div *ngIf="g.dateOfBirth.errors.required">DOB is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                    <label class="form-label">Father's Name <span class="required">*
+                      </span> <span class="help-text m-l-5">(Please specify as per
+                        Aadhaar)</span>
+                      <span class="form__length">
+                        {{ fatherName.value?.length }}/50</span>
+                    </label>
+                    <input class="form-control" spellcheck="false" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                      name="fatherName" maxlength="50" #fatherName formControlName="fatherName"
+                      [ngClass]="{'is-invalid': submitted && g.fatherName.errors }" placeholder="Father's Name"
+                      autocomplete="none|false|no" onpaste="return false;">
+                    <div *ngIf="submitted && g.fatherName.errors" class="invalid-feedback">
+                      <div *ngIf="g.fatherName.errors.required">Father's Name is required
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeeForm.controls.mobile">
+                    <label class="form-label">Mobile No. <span class="required">*
+                      </span></label>
+                    <div class="input-group" style="margin-top: 0px;">
+                      <div class="input-group-prepend">
+                        <button disabled tabindex="-1" class="btn btn-outline-secondary dropdown-toggle"
+                          style="color: #fff; width: 90px;background-color: #6c757d;border-color: #6c757d;"
+                          type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">+
+                          {{countryCode}}</button>
+                        <div class="dropdown-menu" style="height: 200px;overflow-y: auto; border-radius: 0px;">
+                          <a class="dropdown-item" (click)="theFunction(item)"
+                            *ngFor="let item of LstcountryCode">{{item.name}}</a>
+                        </div>
+                      </div>
+                      <input class="form-control" minlength="10"
+                        style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;"
+                        type="text" maxlength="10" onkeypress="return /^[0-9]+$/i.test(event.key)" name="mobile"
+                        formControlName="mobile" [ngClass]="{'is-invalid': submitted && g.mobile.errors }"
+                        placeholder="9876543210" autocomplete="none|false|no" (paste)="onPaste($event)">
+                    </div>
+                    <div *ngIf="employeeForm.get('mobile').errors && employeeForm.get('mobile').touched "
+                      class="help-block">
+                      <div *ngIf="g.mobile.errors"> Mobile No is required
+                      </div>
+                      <span *ngIf="employeeForm.get('mobile').errors.minlength">
+                        Mobile No should be minimum 10 characters
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeeForm.controls.email">
+                    <label class="form-label">Personal Email <span class="required">*
+                      </span></label>
+                    <input class="form-control" type="email" name="email"
+                      pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                      formControlName="email" [ngClass]="{'is-invalid': submitted && g.email.errors}"
+                      placeholder="example@domain.com" autocomplete="none|false|no">
+
+                    <div *ngIf="employeeForm.get('email').errors && employeeForm.get('email').touched "
+                      class="help-block">
+                      <div *ngIf="g.email.errors">E-Mail is required
+                      </div>
+                      <span *ngIf="employeeForm.get('email').errors.pattern">
+                        Please
+                        enter
+                        valid email (pattern mismatch)
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeeForm.controls.email">
+                    <label class="form-label">Official Email </label>
+
+                    <input class="form-control" type="email" name="officialEmail"
+                      pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                      formControlName="officialEmail" [ngClass]="{'is-invalid': submitted && g.officialEmail.errors}"
+                      placeholder="example@domain.com" autocomplete="none|false|no">
+
+                    <div *ngIf="employeeForm.get('officialEmail').errors && employeeForm.get('officialEmail').touched "
+                      class="help-block">
+                      <div *ngIf="g.officialEmail.errors">E-Mail is required
+                      </div>
+                      <span *ngIf="employeeForm.get('officialEmail').errors.pattern">
+                        Please
+                        enter
+                        valid email (pattern mismatch)
+                      </span>
+                    </div>
+                  </div>
+
+
+
+
+
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeedetails.RelationshipId>0">
+                    <label class="form-label">{{relationName}}'s Name <span class="required">*
+                      </span> <span class="help-text m-l-5" *ngIf="relationName=='Father'">(Please specify as per
+                        Aadhaar)</span>
+                      <span class="form__length">
+                        {{ _relationName.value?.length }}/100</span>
+                    </label>
+                    <input class="form-control" spellcheck="false" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                      name="_relationName" maxlength="100" #_relationName formControlName="_relationName" appUppercaseInput appAutocompleteOff 
+                      [ngClass]="{'is-invalid': submitted && g._relationName.errors }"
+                      placeholder="{{relationName}}'s Name" autocomplete="none|false|no" onpaste="return false;">
+                    <div *ngIf="submitted && g._relationName.errors" class="invalid-feedback">
+                      <div *ngIf="g._relationName.errors.required">{{relationName}}'s Name is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                    *ngIf="this.employeeForm.controls.bloodGroup">
+                    <label class="form-label">Blood Group <span class="required"> </span></label>
+
+
+                    <ng-select [items]="bloodGroup" placeholder="-- select an option --" formControlName="bloodGroup"
+                      [ngClass]="{'ng-touched': submitted && g.bloodGroup.invalid }" bindLabel="name" bindValue="id">
+                    </ng-select>
+
+                    <div *ngIf="submitted && g.bloodGroup.invalid" class="help-block">
+                      <div *ngIf="g.bloodGroup.errors.required">Blood Group is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                    *ngIf="employeeForm.controls.MaritalStatus && employeeForm.controls.gender.value != 3">
+                    <label class="form-label">Marital Status <span class="required"> </span></label>
+
+                    <ng-select [items]="maritalStatus" placeholder="-- select an option --"
+                      formControlName="MaritalStatus" [ngClass]="{'ng-touched': submitted && g.MaritalStatus.invalid }"
+                      bindLabel="name" bindValue="id" (change)="onChangeMaritalStatus($event)">
+                    </ng-select>
+
+
+                    <div *ngIf="submitted && g.MaritalStatus.invalid" class="help-block">
+                      <div *ngIf="g.MaritalStatus.errors.required">Marital Status is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="employeeForm.controls.gender.value != 3 && (employeeForm.controls.MaritalStatus.value == 2 || employeeForm.controls.MaritalStatus.value == 3)">
+                    <label class="form-label" for="MarriageDate">Marriage Date <span class="required"> </span></label>
+                    <input type="text" id="MarriageDate" bsDatepicker placement="bottom" class="form-control"
+                      [(ngModel)]="employeedetails.MarriageDate" [ngModelOptions]="{standalone: true}"
+                      [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                      placeholder="12-12-1990" [maxDate]="currentDate" readonly autocomplete="off">
+                  </div>
+
+
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                    <label class="form-label">Nationality <span class="required">*</span></label>
+
+
+                    <ng-select [items]="nationality" placeholder="-- Nationality --"
+                      (change)="onChangeNationality($event)" formControlName="nationality"
+                      [ngClass]="{'ng-touched': submitted && g.nationality.invalid }" bindLabel="name" bindValue="id"
+                      [clearable]="false">
+                    </ng-select>
+                    <div *ngIf="submitted && g.nationality.invalid" class="help-block">
+                      <div *ngIf="g.nationality.errors.required">Nationality is required
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4" *ngIf="isESSLogin">
+                    <label class="form-label"> Department <span class="required"> </span></label>
+                    <ng-select [items]="onboardingAdditionalInfo.LstEmployeeDepartment"
+                      placeholder="-- select an option --" [disabled]="true"
+                      [(ngModel)]="employeedetails.EmploymentContracts[0].DepartmentId"
+                      [ngModelOptions]="{standalone: true}" bindLabel="Name" bindValue="Id">
+                    </ng-select>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4" *ngIf="isESSLogin">
+                    <label class="form-label"> Division <span class="required"> </span></label>
+                    <ng-select [items]="onboardingAdditionalInfo.LstEmployeeDivision"
+                      placeholder="-- select an option --" [disabled]="true"
+                      [(ngModel)]="employeedetails.EmploymentContracts[0].Division"
+                      [ngModelOptions]="{standalone: true}" bindLabel="Name" bindValue="Id">
+                    </ng-select>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4" *ngIf="isESSLogin">
+                    <label class="form-label"> Designation <span class="required"> </span></label>
+                    <ng-select [items]="onboardingAdditionalInfo.LstEmployeeDesignation"
+                      placeholder="-- select an option --" [disabled]="true"
+                      [(ngModel)]="employeedetails.EmploymentContracts[0].DesignationId"
+                      [ngModelOptions]="{standalone: true}" bindLabel="Name" bindValue="Id">
+                    </ng-select>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4" *ngIf="isESSLogin">
+                    <label class="form-label"> Sub Employment Type <span class="required"> </span></label>
+                    <ng-select [items]="onboardingAdditionalInfo.LstSubEmploymentType"
+                      placeholder="-- select an option --" [disabled]="true"
+                      [(ngModel)]="employeedetails.EmploymentContracts[0].SubEmploymentType"
+                      [ngModelOptions]="{standalone: true}" bindLabel="Name" bindValue="Id">
+                    </ng-select>
+                  </div>
+
+                  <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-4" *ngIf="isESSLogin">
+                    <label class="form-label"> Category <span class="required"> </span> 
+                    <i class="mdi mdi-information-outline pointer"  matTooltip="Your role does not have permission to edit this field."></i>
+                    </label>
+                    <ng-select [items]="onboardingAdditionalInfo.LstEmployeeCategory"
+                      placeholder="-- Staff/Executive --" [disabled]="true"
+                      [(ngModel)]="employeedetails.EmploymentContracts[0].Category"
+                      [ngModelOptions]="{standalone: true}" bindLabel="Name" bindValue="Id">
+                    </ng-select>
+                  </div>  -->
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4" *ngIf="isESSLogin">
+                    <label class="form-label"> Sub Employment Category <span class="required"> </span></label>
+                    <ng-select [items]="onboardingAdditionalInfo.LstSubEmploymentCategory"
+                      placeholder="-- Academic/Non Academic --" [disabled]="true"
+                      [(ngModel)]="employeedetails.EmploymentContracts[0].SubEmploymentCategory"
+                      [ngModelOptions]="{standalone: true}" bindLabel="Name" bindValue="Id">
+                    </ng-select>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4" *ngIf="isESSLogin">
+                    <label class="form-label"> Level <span class="required"> </span></label>
+                    <ng-select [items]="onboardingAdditionalInfo.LstEmployeeLevel" placeholder="-- select an option --"
+                      [disabled]="true" [(ngModel)]="employeedetails.EmploymentContracts[0].Level"
+                      [ngModelOptions]="{standalone: true}" bindLabel="Name" bindValue="Id">
+                    </ng-select>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                    <label class="form-label"> Religion <span class="required"> </span></label>
+                    <ng-select [items]="onboardingAdditionalInfo.LstReligion" placeholder="-- select an option --"
+                      [(ngModel)]="employeedetails.Religion" [ngModelOptions]="{standalone: true}" bindLabel="Name"
+                      bindValue="Id">
+                    </ng-select>
+                  </div>
+
+
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeeForm.controls.emergencyContactnumber &&  this.BusinessType == 3">
+                    <label class="form-label">Emergency Contact No. <span
+                        class="required">{{emergencyContactnumber}}</span></label>
+                    <div class="input-group" style="margin-top: 0px;">
+                      <div class="input-group-prepend">
+                        <!-- <span class="input-group-text">{{countryCode}}</span> -->
+                        <button disabled tabindex="-1" class="btn btn-outline-secondary dropdown-toggle"
+                          style="color: #fff; width: 90px;background-color: #6c757d;border-color: #6c757d;"
+                          type="button" data-toggle="dropdown
+                                     " aria-haspopup="true" aria-expanded="false">+ {{countryCode}}</button>
+                        <div class="dropdown-menu" style="height: 200px;overflow-y: auto; border-radius: 0px;">
+                          <a class="dropdown-item" (click)="theFunction(item)"
+                            *ngFor="let item of LstcountryCode">{{item.name}}</a>
+                        </div>
+                      </div>
+                      <input class="form-control" minlength="10"
+                        style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;"
+                        type="text" maxlength="10" onkeypress="return /^[0-9]+$/i.test(event.key)
+                                     " name="emergencyContactnumber" formControlName="emergencyContactnumber"
+                        [ngClass]="{'is-invalid': submitted && g.emergencyContactnumber.errors }"
+                        placeholder="9876543210" onpaste="return false;" autocomplete="none|false|no">
+                    </div>
+                    <div
+                      *ngIf="employeeForm.get('emergencyContactnumber').errors && employeeForm.get('emergencyContactnumber').touched "
+                      class="help-block">
+                      <div *ngIf="g.emergencyContactnumber.errors">Emergency Contact No. is required
+                      </div>
+                      <span *ngIf="employeeForm.get('emergencyContactnumber').errors.minlength"> Emergency Contact No.
+                        should be minimum 10 characters
+                      </span>
+                      <span
+                        *ngIf="employeeForm.get('mobile').value != null && employeeForm.get('emergencyContactnumber').value != null
+                                          && employeeForm.get('mobile').value != '' && employeeForm.get('emergencyContactnumber').value != ''
+                                          && employeeForm.get('mobile').value != undefined && employeeForm.get('emergencyContactnumber').value != undefined
+                                           && employeeForm.get('emergencyContactnumber').value == employeeForm.get('mobile').value">
+                        The alternate mobile number should not be the same as the mobile number.
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeeForm.controls.emergencyContactPersonName && this.BusinessType == 3">
+                    <label class="form-label">Emergency Contact Person Name <span
+                        class="required">{{emergencyContactPersonName}}</span>
+                    </label>
+                    <input class="form-control" spellcheck="false" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                      pattern="[\x00-\x7F]+" name="emergencyContactPersonName" maxlength="100"
+                      formControlName="emergencyContactPersonName" [ngClass]="{
+                                     'is-invalid': submitted && g.emergencyContactPersonName.errors }"
+                      placeholder="Emergency Contact Person Name" autocomplete="none|false|no">
+                    <div *ngIf="submitted && g.emergencyContactPersonName.errors" class="invalid-feedback">
+                      <div *ngIf="g.emergencyContactPersonName.errors.required">Emergency Contact Person Name is
+                        required
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="employeeForm.get('emergencyContactPersonName').errors && employeeForm.get('emergencyContactPersonName').touched"
+                      class="help-block">
+
+                      <span *ngIf="employeeForm.get('emergencyContactPersonName').errors.pattern"> Entered special
+                        characters are not allowed
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4"
+                    *ngIf="this.employeeForm.controls.adhaarnumber">
+                    <label class="form-label">Aadhaar Number <span class="required"> *</span> </label>
+
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" placeholder="4444 5555 6666"
+                        formControlName="adhaarnumber" [ngClass]="{ 'ng-touched': submitted && g.adhaarnumber.invalid }"
+                        (keyup)="onChangeAadhaarNumber($event)" autocomplte="off" pattern="^([0-9X]){12}?$"
+                        onkeypress="return /^[0-9]+$/i.test(event.key)" maxlength="12"
+                        [attr.disabled]="icontoggle ? true : null">
+                      <div class="input-group-append" *ngIf="BusinessType != '3'" (click)="icontogglechange()"
+                        style="cursor: pointer;">
+                        <span class="input-group-text" id="basic-addon2"><i class="fa fa-eye-slash"
+                            [ngClass]="{'fa-eye-slash': icontoggle, 'fa-eye': !icontoggle}" aria-hidden="true"></i>
+                        </span>
+                      </div>
+                    </div>
+
+
+
+                    <!-- <input type="text" class="form-control"
+                          placeholder="4444 5555 6666" formControlName="adhaarnumber"
+                          [ngClass]="{ 'ng-touched': submitted && g.adhaarnumber.invalid }"
+                          (keyup)="onChangeAadhaarNumber($event)" autocomplte="off"
+                          pattern="^([0-9X]){12}?$"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          maxlength="12"
+                          [attr.disabled]="isAadhaarNotEditable? true : null"> -->
+                    <div *ngIf="submitted && g.adhaarnumber.invalid" class="help-block">
+                      <div *ngIf="g.adhaarnumber.errors.required">Aadhaar Number is required
+                      </div>
+                    </div>
+                    <div *ngIf="employeeForm.get('adhaarnumber').errors && employeeForm.get('adhaarnumber').touched"
+                      class="help-block">
+
+                      <span *ngIf="employeeForm.get('adhaarnumber').errors.pattern">
+                        Please match the
+                        requested format. (Ex: 1012 3456 7891)
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                    <label class="form-label">PAN No <span class="required"> *</span>
+                    </label>
+                    <div class="input-group mb-3">
+                      <input class="form-control uppercase" type="text"
+                        pattern="^([a-zA-Z]){3}([pPcCHhaAbBgGlLfFTtjJ]){1}([a-zA-Z]){1}([0-9]){4}([a-zA-Z]){1}?$"
+                        maxlength="10" name="PANNO" formControlName="PANNO" (keyup)="onChangePanNo($event)"
+                        [ngClass]="{ 'ng-touched': submitted && g.PANNO.invalid }" (keyup)="onChangePanNo($event)"
+                        placeholder="ABCPD1234E" autocomplete="none|false|no" style="text-transform: uppercase;"
+                        [attr.disabled]="isPANNotEditable? true : null">
+
+                      <!-- <div class="input-group-append" (click)="icontogglechangePan()" style="cursor: pointer;">
+                        <span class="input-group-text" id="basic-addon2"><i class="fa fa-eye-slash"
+                            [ngClass]="{'fa-eye-slash': icontogglepan, 'fa-eye': !icontogglepan}"
+                            aria-hidden="true"></i>
+                        </span>
+                      </div> -->
+                    </div>
+
+                    <!-- <div *ngIf="submitted && g.PANNO.errors" -->
+                    <div *ngIf="submitted && g.PANNO.invalid" class="help-block">
+                      <div *ngIf="g.PANNO.errors.required">PAN no is required
+                      </div>
+                    </div>
+
+                    <div class="help-block">
+                      <span
+                        *ngIf="employeeForm.get('PANNO').errors?.pattern || employeeForm.get('PANNO').errors?.invalid">
+                        Please match the requested format. (Ex: ABCPD1234E)
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                    <label class="form-label">UAN No
+                    </label>
+                    <input class="form-control" type="text" pattern="^([1-9]){1}([0-9]){11}?$"
+                      onkeypress="return /^[0-9]+$/i.test(event.key)" maxlength="12" name="UAN" formControlName="UAN"
+                      placeholder="1012 3456 7891" [ngClass]="{'is-invalid': submitted && g.UAN.errors  }"
+                      autocomplete="none|false|no">
+                    <div *ngIf="submitted && g.UAN.errors" class="invalid-feedback">
+                      <div *ngIf="g.UAN.errors.required">UAN is required
+                      </div>
+                    </div>
+                    <div *ngIf="employeeForm.get('UAN').errors && employeeForm.get('UAN').touched" class="help-block">
+
+                      <span *ngIf="employeeForm.get('UAN').errors.pattern"> Please
+                        match the
+                        requested format. (Ex: 1012 3456 7891) | Number must be
+                        start with
+                        greater than 0.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                    <label class="form-label">ESIC No <i class="mdi mdi-information-outline" placement="right"
+                        style="cursor: pointer;"
+                        matTooltip="Employees are exempt from filling out ESIC Form if their gross monthly wage exceeds ₹ 21,000"></i>
+                    </label>
+                    <input class="form-control" type="text" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                      maxlength="10" name="ESIC" formControlName="ESIC" placeholder="31-53-******"
+                      [ngClass]="{'is-invalid': submitted && g.ESIC.errors  }" autocomplete="none|false|no">
+                    <div *ngIf="submitted && g.ESIC.errors" class="invalid-feedback">
+                      <div *ngIf="g.ESIC.errors.required">ESIC is required
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                    <label class="form-label">PF No
+                    </label>
+                    <input class="form-control" type="text" name="PFNumber" formControlName="PFNumber"
+                      [ngClass]="{'is-invalid': submitted && g.PFNumber.errors  }" placeholder="BNG-******"
+                      autocomplete="none|false|no">
+                    <div *ngIf="submitted && g.PFNumber.errors" class="invalid-feedback">
+                      <div *ngIf="g.PFNumber.errors.required">PF NO is required
+                      </div>
+                    </div>
+                    <div *ngIf="employeeForm.get('PFNumber').errors && employeeForm.get('PFNumber').touched"
+                      class="help-block">
+
+                      <span *ngIf="employeeForm.get('PFNumber').errors.pattern">
+                        Please
+                        match the
+                        requested format.
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                      <label class="form-label">PF No
+                      </label>
+                      <input class="form-control" type="text"
+                          pattern="^([1-9]){1}([0-9]){11}?$"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)"
+                          maxlength="12" name="UAN" formControlName="UAN"
+                          placeholder="1012 3456 7891"
+                          [ngClass]="{'is-invalid': submitted && g.UAN.errors  }"
+                          autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.UAN.errors" class="invalid-feedback">
+                          <div *ngIf="g.UAN.errors.required">UAN is required
+                          </div>
+                      </div>
+                      <div *ngIf="employeeForm.get('UAN').errors && employeeForm.get('UAN').touched"
+                          class="help-block">
+
+                          <span *ngIf="employeeForm.get('UAN').errors.pattern"> Please
+                              match the
+                              requested format. (Ex: 1012 3456 7891) | Number must be
+                              start with
+                              greater than 0.
+                          </span>
+                      </div>
+                  </div> -->
+
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-4"
+                    *ngIf="!isESSLogin && employeedetails && employeedetails.Id == 0">
+                    <label class="form-label"> Is ESS Login Required
+                      <i class="mdi mdi-information-outline" placement="right" style="cursor: pointer;"
+                        ngbTooltip="(If yes, It will enable the user to access the Employee Self-Service Portal and log in)"></i>
+                    </label>
+                    <div class="p-t-10">
+                      <label class="el-switch el-switch-green">
+                        <input type="checkbox" name="switch" value="true" formControlName="IsESSRequired">
+                        <span class="el-switch-style"></span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-4">
+                    <div class="d-flex">
+                      <label class="form-label">Is Differently abled <span class="help-text m-l-5">(If yes, mention
+                          percentage of disability)</span></label>
+                      <ng-container *ngIf="RoleCode == 'PayrollOps' && isInfoBtnVisible">
+                        <i class="mdi mdi-information-outline ml-2 text-red-500" placement="right"
+                          style="cursor: pointer;"
+                          ngbTooltip="Please upload a document for differently disabled in documents tab"></i>
+                      </ng-container>
+                    </div>
+                    <div class="d-flex justify-content-start align-items-center">
+                      <div class="form-group">
+                        <div class="p-t-10">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" name="switch" value="yes" formControlName="IsDifferentlyabled" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+                      </div>
+
+
+                      <div class="form-group mt-2 qcRemarks ml-3" *ngIf="
+                                                            employeeForm.controls.IsDifferentlyabled.value == true
+                                                          ">
+                        <div class="input-group mt-0">
+                          <input class="form-control" type="number" min="0" max="100" name="DisabilityPercentage"
+                            formControlName="DisabilityPercentage" [ngClass]="{
+                                                                'is-invalid': g.DisabilityPercentage.errors
+                                                              }" placeholder="50" autocomplete="off" />
+                          <div class="input-group-addon">%</div>
+                        </div>
+                      </div>
+                      <ng-container *ngIf="RoleCode == 'Employee'">
+                        <app-info-pop-up [popUpData]="popUpData" [UserId]="UserId" [objStorageJson]="objStorageJson"
+                          [docConfig]="disabilityDocConfig" (docUploadChange)="handleDocUpload($event)"
+                          *ngIf="isInfoBtnVisible"></app-info-pop-up>
+                      </ng-container>
+                    </div>
+
+                  </div>
+
+                  <!-- custom fields -->
+                  <ng-container *ngIf="RequiredToShowCustomFieldsOnESS">
+                    <ng-container *ngIf="BusinessType != 3; else staffingCustomFields">
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Custom Data 1 </label>
+                        <input class="form-control" type="text" name="CustomData1" formControlName="CustomData1"
+                          autocomplete="none|false|no" />
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Custom Data 2 </label>
+                        <input class="form-control" type="text" name="CustomData2" formControlName="CustomData2"
+                          autocomplete="none|false|no" />
+                      </div>
+                    </ng-container>
+
+                    <ng-template #staffingCustomFields>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Custom Data 1 </label>
+                        <input class="form-control" type="text" name="CustomData1" formControlName="CustomData1"
+                          autocomplete="none|false|no" />
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Custom Data 2 </label>
+                        <input class="form-control" type="text" name="CustomData2" formControlName="CustomData2"
+                          autocomplete="none|false|no" />
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Custom Data 3 </label>
+                        <input class="form-control" type="text" name="CustomData3" formControlName="CustomData3"
+                          autocomplete="none|false|no" />
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Custom Data 4 </label>
+                        <input class="form-control" type="text" name="CustomData4" formControlName="CustomData4"
+                          autocomplete="none|false|no" />
+                      </div>
+                    </ng-template>
+                  </ng-container>
+
+                  <!-- </div> -->
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-12" *ngIf="employeedetails && employeedetails.Id == 0">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12" style="text-align: center"
+                  *ngIf="isValidateCandidate">
+                  <button class="btn btn-default btn-sm m-r-sm" onkeydown="return (event.keyCode!=13);"
+                    *ngIf="isValidateCandidate" (click)="duplicateCheck()">
+                    <i class="mdi mdi-account-question m-r-xs"></i>
+                    Validate Employee
+                  </button>
+                </div>
+              </div>
+
+
+
+              <!-- <div class="col-lg-4" *ngIf="employeedetails && employeedetails.Id > 0">
+                <div class="col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+                  <div class="avatar-upload">
+                    <div class="avatar-edit">
+                      <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" (change)="readURL($event)" />
+                      <label for="imageUpload"></label>
+                    </div>
+                    <div class="avatar-preview img-center-block">
+                      <div id="imagePreview" *ngIf="contentmodalurl != null">
+                        <img [src]="contentmodalurl" style="width: 100%;
+                              height: 100%;
+                              border-radius: 100%;
+                              background-size: contain;
+                              background-repeat: no-repeat;
+                              background-position: center;">
+                      </div>
+                      <div id="imagePreview" *ngIf="contentmodalurl == null"
+                        style="background-image: url(https://user.gadjian.com/static/images/personnel_boy.png);">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+
+            </div>
+
+            <div class="row" *ngIf="isInvalidCandidateInformation">
+              <div class="col-lg-12 text-center">
+                <ngb-alert [dismissible]="false">
+                  <strong>{{DuplicateCheckMessage}}</strong>
+                </ngb-alert>
+              </div>
+            </div>
+
+
+            <div class="row"
+              *ngIf="!spinner && employeedetails && employeedetails.Id > 0 && ELCTransactions.length > 0 && shouldShowActionButtons('card_elctransaction')">
+              <div class="col-lg-12">
+                <div class="card" style="margin: 15px;">
+                  <div class="card-body">
+                    <div class="hori-timeline" dir="ltr">
+                      <h6>Employee Life Cycle Transaction</h6>
+                      <ul class="list-inline events" style="margin-top: 45px;">
+                        <li class="list-inline-item event-list" style="margin-bottom: 2rem;"
+                          *ngFor="let item of ELCTransactions;let i = index">
+                          <div class="px-4">
+                            <div class="event-date bg-soft-primary text-primary">
+                              {{item.CreatedOn | date:'d MMMM,y'}}</div>
+                            <h5 class="font-size-16">{{item.Designation}}</h5>
+                            <p class="text-muted" *ngIf="item.EmployeeRatesets.length > 0">
+                              {{item.EmployeeRatesets[0].EffectiveDate | date:'dd-MM-yyyy'}}
+                            </p>
+                            <p class="text-muted" *ngIf="item.EmployeeRatesets.length == 0"> --
+                            </p>
+                            <div>
+                              <p (click)="ViewRateset(item)"> <b style="color: cornflowerblue;">
+                                  View CTC
+                                </b>
+                              </p>
+                            </div>
+                          </div>
+                        </li>
+
+
+                      </ul>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+
+
+<nz-drawer [nzVisible]="visible1" [nzWidth]="840" nzTitle="Employee Life Cycle Transaction" (nzOnClose)="close1()">
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+        <table class="table table-bordered table-container responsive">
+          <thead>
+            <tr class="document_table_tr">
+              <th scope="col" style="width: 40%; text-align: left!important">Product Code
+              </th>
+              <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+              <th scope="col" style="width: 20%;text-align: center">Annually</th>
+            </tr>
+          </thead>
+          <tbody style="font-size: 13px;">
+            <tr *ngFor="let item of Current_RateSetList; let i = index"
+              [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+              <td class="table-td-center" style="padding: 8px !important;" *ngIf="item.Value > 0">
+                <span class="productName_span"> {{item.DisplayName}} </span>
+              </td>
+              <td class="txt-align document_table_validFrom table-td-center" *ngIf="item.Value > 0">
+                <label class="text-right" style="
+                  font-size: 13px;padding: 6px;
+font-size: 12px;">
+                  {{item.Value | number : '1.2-2'}}
+                </label>
+              </td>
+              <td class="txt-align document_table_validFrom table-td-center" *ngIf="item.Value > 0">
+                <label class="text-right" style="
+                  font-size: 13px;padding: 6px;
+font-size: 12px;">
+                  {{item.Value * 12 | number : '1.2-2'}}
+                </label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- <div class="col-12" *ngIf="!showCurrentRateSet">
+            <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                <table class="table table-bordered table-container responsive">
+                    <thead>
+                        <tr class="document_table_tr">
+                            <th scope="col" style="width: 40%; text-align: left!important">Product Code
+                            </th>
+                            <th scope="col" style="width: 20%;text-align: center">Old Value (Monthly)</th>
+                            <th scope="col" style="width: 20%;text-align: center">Old Value (Annually)</th>
+                            <th scope="col" style="width: 20%;text-align: center">New Value (Monthly)</th>
+                            <th scope="col" style="width: 20%;text-align: center">New Value (Annually)</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-size: 13px;">
+                        <tr *ngFor="let item of Old_RateSetList; let i = index" [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                            <td class="table-td-center" style="padding: 8px !important;" *ngIf="item.newValue > 0">
+                                <span class="productName_span"> {{item.DisplayName}} </span>
+                            </td>
+                            <td class="txt-align document_table_validFrom table-td-center" *ngIf="item.newValue > 0">
+                                <label class="text-right" style="font-size: 13px;padding: 6px;font-size: 12px;">
+                                    {{item.oldValue | number : '1.2-2'}}
+                                </label>
+                            </td>
+                            <td class="txt-align document_table_validFrom table-td-center" *ngIf="item.newValue > 0">
+                                <label class="text-right" style="font-size: 13px;padding: 6px;font-size: 12px;">
+                                    {{item.oldValue * 12 | number : '1.2-2'}}
+                                </label>
+                            </td>
+                            <td class="txt-align document_table_validFrom table-td-center" *ngIf="item.newValue > 0">
+                                <label class="text-right" style="font-size: 13px;padding: 6px;font-size: 12px;">
+                                    {{item.newValue | number : '1.2-2'}}
+                                </label>
+                            </td>
+                            <td class="txt-align document_table_validFrom table-td-center" *ngIf="item.newValue > 0">
+                                <label class="text-right" style="font-size: 13px;padding: 6px;font-size: 12px;">
+                                    {{item.newValue * 12 | number : '1.2-2'}}
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div> -->
+  </div>
+</nz-drawer>

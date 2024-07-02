@@ -1,0 +1,55 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="row" style=" margin-bottom: 1px !important ;">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left"
+        style="margin-top: 3px; margin-bottom: 10px !important;">
+        <div class="text-left">
+          <h1 class="vss-HubTitle">
+            <div class="vss-HubTitle--titleText">Push Message</div>
+          </h1>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content">
+      <div class='row'>
+     
+        <div class="col-md-4 mb-2">
+          <label class="form-label ">User Ids</label>
+          <input type="text" [(ngModel)]="userIds" placeholder="12, 2851"
+            class="form-control" />
+
+        </div>
+        <div class="col-md-4 mb-2">
+          <label class="form-label ">Title</label>
+          <input type="text" [(ngModel)]="title" placeholder="Leave Request"
+            class="form-control" />
+
+        </div>
+        <div class="col-md-4 mb-2">
+          <label class="form-label ">Body Message</label>
+          <textarea type="text" [(ngModel)]="bodyMessage" placeholder="Type your message here..."
+            class="form-control" cols="3"> </textarea>
+
+        </div>
+        <div class="col-md-4 mb-2">
+          <label class="form-label ">Expiry Date</label>
+          <input type="text" [(ngModel)]="expiryDate" placeholder="2023-02-21 10:00:00"
+            class="form-control" />
+        </div>
+
+        <div class="col-md-4 mb-2">
+          <label class="form-label ">Category </label>
+          <ng-select [items]="lstCategory" class="mt-1"  placeholder="select an option" bindLabel="name" bindValue="id" [(ngModel)]="category">
+          </ng-select>
+      </div>
+       
+        <div class="col-md-12 text-right mb-2">
+          <button class="btn btn-primary " (click)="onClickNotify()">Notify</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

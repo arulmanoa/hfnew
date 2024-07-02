@@ -1,0 +1,49 @@
+<div class="page-wrapper mt-3">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="row" style="margin-bottom: 10px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="margin-top: 5px;">
+          <h6 class="h6_c"> Pending Employee Data Correction Requests</h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <button type="button" class="btn upgrade-btn" id="btn_qc_approve" (click)="approveAllRequests()"> <i
+                  class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+                Approve
+              </button>
+            </li>
+            <li class="list-inline-item">
+              <button type="button" class="btn btn-danger" id="btn_qc_reject" (click)="rejectAllRequests()"> <i
+                  class="mdi mdi-close-circle  m-r-xs"></i> Reject
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner">
+      <div class="row">
+        <div class="col-12">
+          <angular-slickgrid gridId="grid14" [dataset]="dataset" [columnDefinitions]="columnDefinitions"
+            (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions"
+            (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+            (onAngularGridCreated)="angularGridReady($event)">
+          </angular-slickgrid>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+

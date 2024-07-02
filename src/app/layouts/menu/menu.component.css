@@ -1,0 +1,368 @@
+/* The side navigation menu */
+
+.sidenav {
+    height: 100%;
+    /* 100% Full-height */
+    width: 220px;
+    /* 0 width - change this with JavaScript */
+    position: fixed;
+    /* Stay in place */
+    z-index: 200;
+    /* Stay on top */
+    top: 0;
+    /* Stay at the top */
+    left: 0;
+    background-color: #1d2127;
+    overflow-x: hidden;
+    /* Disable horizontal scroll */
+    transition: 0.5s;
+    /* 0.5 second transition effect to slide in the sidenav */
+}
+
+.sidenav1 {
+    height: 100%;
+    /* 100% Full-height */
+    width: 220px;
+    /* 0 width - change this with JavaScript */
+    position: fixed;
+    /* Stay in place */
+    z-index: 200;
+    /* Stay on top */
+    top: 0;
+    /* Stay at the top */
+    left: 0;
+    background-color: #1d2127;
+    overflow-x: hidden;
+    /* Disable horizontal scroll */
+    transition: 0.5s;
+    /* 0.5 second transition effect to slide in the sidenav */
+}
+
+
+/* The navigation menu links */
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    /* font-size: 25px; */
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+
+/* When you mouse over the navigation links, change their color */
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav1 a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    /* font-size: 25px; */
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+
+/* When you mouse over the navigation links, change their color */
+
+.sidenav1 a:hover {
+    color: #f1f1f1;
+}
+
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+
+#main {
+    transition: margin-left 0.5s;
+    padding: 0px;
+    margin-left: 170px;
+}
+
+.sidenavCollapsed {
+    height: 100%;
+    /* 100% Full-height */
+    width: 50px;
+    /* 0 width - change this with JavaScript */
+    position: fixed;
+    /* Stay in place */
+    z-index: 200;
+    /* Stay on top */
+    top: 0;
+    /* Stay at the top */
+    left: 0;
+    background-color: #1d2127;
+    /* Black*/
+    transition: 0.5s;
+    /* 0.5 second transition effect to slide in the sidenav */
+}
+
+
+/* When you mouse over the navigation links, change their color */
+
+.sidenavCollapsed a:hover {
+    color: #f1f1f1;
+}
+
+.iconContainer {
+    padding-left: 4rem;
+    height: 3.75em;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    border-bottom-color: lightgray;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    position: relative;
+}
+
+
+/* Hide the links inside the navigation menu (except for logo/home) */
+
+.topnav #myLinks {
+    display: none;
+}
+
+
+/* Style navigation menu links */
+
+.topnav a {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+
+/* Style the hamburger menu */
+
+.topnav a.icon {
+    background: black;
+    right: 0;
+    top: 0;
+}
+
+.topnav a.active {
+    padding-left: 10px;
+}
+
+li {
+    cursor: pointer !important;
+}
+
+
+/* Style the active link (or home/logo) */
+
+.active {
+    /* background-color: black;
+    color: black; */
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navlist li {
+    display: block;
+    float: left;
+    width: 100%;
+    line-height: 19px;
+    color: #8b91a0;
+    font-size: 13px;
+    font-weight: 400;
+    padding: 15px 10px 15px 15px;
+    text-decoration: none;
+    border-bottom: 1px solid #17191e;
+    vertical-align: text-bottom;
+}
+
+.maincontent {
+    padding-left: 3.2rem;
+    height: 100%;
+}
+
+#content {
+    height: 100%
+}
+
+.menuicons:hover {
+    color: #858585;
+}
+
+@media only screen and (max-width: 1024px) {
+    .sidenav {
+        height: 100%;
+        /* 100% Full-height */
+        width: 0px;
+        /* 0 width - change this with JavaScript */
+        position: fixed;
+        /* Stay in place */
+        z-index: 0;
+        /* Stay on top */
+        top: 0;
+        /* Stay at the top */
+        left: 0;
+        background-color: #1d2127;
+        overflow-x: hidden;
+        /* Disable horizontal scroll */
+        transition: 0.5s;
+        /* 0.5 second transition effect to slide in the sidenav */
+    }
+    .sidenavCollapsed {
+        height: 100%;
+        /* 100% Full-height */
+        width: 0px;
+        /* 0 width - change this with JavaScript */
+        position: fixed;
+        /* Stay in place */
+        z-index: -2;
+        /* Stay on top */
+        top: 0;
+        /* Stay at the top */
+        left: 0;
+        background-color: #1d2127;
+        /* Black*/
+        transition: 0.5s;
+        /* 0.5 second transition effect to slide in the sidenav */
+    }
+    /* #main[style] {
+   margin-left: 0px !important;
+  } */
+    /* element.style {
+    margin-left: 0px;
+} */
+    .iconContainer {
+        padding-left: 1rem;
+        height: 3.75em;
+        border-bottom-style: solid;
+        border-bottom-width: thin;
+        border-bottom-color: lightgray;
+    }
+    #main {
+        transition: margin-left 0.5s;
+        padding: 0px;
+        margin-left: 0px;
+    }
+    .maincontent {
+        padding-left: 0rem;
+        height: 100%;
+    }
+}
+
+.mt-d {
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+h5 {
+    font-size: 1.25rem;
+    color: #585e6a;
+}
+
+
+/* @media (min-width: 992px){
+.maincontent {
+    padding-left: 0rem;
+    height: 100%;
+}
+}
+@media (min-width: 576px){
+.maincontent {
+    padding-left: 0rem;
+    height: 100%;
+}
+} */
+
+.iconContainer {
+    padding-left: 4rem ;    
+    /* height: 3.75em; */
+    border-bottom-style: solid!important;
+    border-bottom-width: thin!important;
+    border-bottom-color: lightgray!important;
+    background-color: #fff !important;
+    height: 65px !important;
+    border-bottom: 1px #ebeff3 solid !important;
+    padding: 7px;
+    /* display: flex; */
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 30px 0 rgba(149, 130, 172, 0.08) !important;
+}
+
+
+/* // Large devices (desktops, 1024px and up) */
+@media (min-width: 1024px) {
+    .iconContainer {
+
+    padding-left: 4rem !important;    
+    /* height: 3.75em; */
+    border-bottom-style: solid!important;
+    border-bottom-width: thin!important;
+    border-bottom-color: lightgray!important;
+    background-color: #fff !important;
+    height: 65px !important;
+    border-bottom: 1px #ebeff3 solid !important;
+    padding: 7px;
+    /* display: flex; */
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 30px 0 rgba(149, 130, 172, 0.08) !important;
+    }
+ }
+
+
+
+ @media (max-width: 992px) {  .iconContainer {
+
+    padding-left: 1rem;    
+    /* height: 3.75em; */
+    border-bottom-style: solid!important;
+    border-bottom-width: thin!important;
+    border-bottom-color: lightgray!important;
+    background-color: #fff !important;
+    height: 65px !important;
+    border-bottom: 1px #ebeff3 solid !important;
+    padding: 7px;
+    /* display: flex; */
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 30px 0 rgba(149, 130, 172, 0.08) !important;
+    }
+ }
+
+
+ @media (min-width: 992px) and (max-width: 1023.98px) { .iconContainer {
+
+    padding-left: 1rem !important;    
+    /* height: 3.75em; */
+    border-bottom-style: solid!important;
+    border-bottom-width: thin!important;
+    border-bottom-color: lightgray!important;
+    background-color: #fff !important;
+    height: 65px !important;
+    border-bottom: 1px #ebeff3 solid !important;
+    padding: 7px;
+    /* display: flex; */
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 30px 0 rgba(149, 130, 172, 0.08) !important;
+    }
+ }
+
+
+
+ @media (max-width: 575.98px) { 
+     .mt-d {
+         font-size: 16px;
+     }
+  }
+
+
+

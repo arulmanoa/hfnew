@@ -1,0 +1,1039 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="">
+            <app-loading-screen></app-loading-screen>
+
+
+            <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                        aria-hidden="true"></span>
+                    Please wait...
+                </button>
+            </div>
+
+
+
+            <div class="row m-t-b-10" id="navbar" *ngIf="!spinner">
+                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <h4 class=" ">Investment & Deduction Request </h4>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                    <div class="text-right">
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+
+                                <button type="button" class="btn btn-primary" (click)="updateCandidateQCInfo(false, false)">
+                                    <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                                </button>
+                            </li>
+
+                            <li class="list-inline-item">
+                                <button type="button" class="btn upgrade-btn" id="btn_qc_approve" (click)="updateCandidateQCInfo(true, true)"> <i
+                                        class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+                                    Approve
+                                </button>
+                            </li>
+                            <li class="list-inline-item">
+                                <button type="button" class="btn btn-danger" id="btn_qc_reject" (click)="updateCandidateQCInfo(true, false)"> <i
+                                        class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+                                    Reject
+                                </button>
+                            </li>
+
+                            <li class="list-inline-item">
+                                <button class="btn btn-sm btn-default" type="button" (click)="close()" tooltip="Close" tooltip-placement="bottom">
+                                    <i class="mdi mdi-close font-size-md"></i>
+                                </button>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <br>
+
+
+            <div class="content m-b report-content" *ngIf="!spinner">
+
+
+
+
+                <div style="margin-top:1em;margin-left: 1em;" class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small class="form-text text-muted">Employee Code </small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{newEmployeeDetails?.Code}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small class="form-text text-muted">Employee Code </small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{newEmployeeDetails?.FirstName}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small class="form-text text-muted">Designation </small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{newEmployeeDetails?.EmploymentContracts[0].Designation}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small>DOJ</small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{newEmployeeDetails?.EmploymentContracts[0].StartDate | date: 'dd-MM-yyyy'}}
+                            </label>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div style="margin-top:1em;" class="row">
+                    <div class="col-md-12 text-right" style="padding-right: 2em;">
+                        <div class="form-group">
+
+                            <label *ngIf="newEmployeeDetails && newEmployeeDetails.EmployeeInvestmentMaster && newEmployeeDetails.EmployeeInvestmentMaster.SummaryDocumentId>0">
+                                <button class="btn btn-default"
+                                    (click)="downloadDocs(newEmployeeDetails.EmployeeInvestmentMaster)"><i
+                                        class="mdi mdi-download  m-r-xs"></i>Download Form 12BB</button>
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- <div class="row"> -->
+                <div class="col-sm-12" *ngIf="isPreviousEmploymentAvailable">
+                    <div class="qccard">
+                        <div class="qccontainer">
+                            <br />
+                            <span class="qcheader">Previous Employment </span>
+
+                            <table class="qcTable table table-bordered table-condensed" *ngIf="newEmployeeDetails">
+                                <thead>
+                                    <tr>
+                                        <th>Company Name - Date</th>
+                                        <th>Gross Salary / Approved Amt.</th>
+                                        <th>PT / Approved Amt.</th>
+                                        <th>PF / Approved Amt.</th>
+                                        <th>Tax Deducted / Approved Amt.</th>
+                                        <th class="fitToContent">View</th>
+                                        <th class="fitToContent" style="width:20%">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngIf="newEmployeeDetails && newEmployeeDetails.LstemploymentDetails != null && newEmployeeDetails.LstemploymentDetails.length > 0">
+                                        <ng-container *ngFor="let item of newEmployeeDetails.LstemploymentDetails ; let i = index;">
+                                            <tr *ngIf="!item.IsProposed">
+                                                <td>
+                                                    <b> {{item.CompanyName}} - from ({{item.StartDate | date: 'dd-MM-yyyy'}} to {{item.EndDate | date:
+                                                        'dd-MM-yyyy'}})</b>
+                                                </td>
+                                                <td>
+                                                    {{item.GrossSalary | number : '1.2-2'}} / {{item.ApprovedGrossSalary | number : '1.2-2'}}
+                                                </td>
+                                                <td>
+                                                    {{item.PreviousPT | number : '1.2-2'}} / {{item.ApprovedPreviousPT | number : '1.2-2'}}
+                                                </td>
+                                                <td>
+                                                    {{item.PreviousPF | number : '1.2-2'}} / {{item.ApprovedPreviousPF | number : '1.2-2'}}
+                                                </td>
+                                                <td>
+                                                    {{item.TaxDeducted | number : '1.2-2' }} / {{item.ApprovedTaxDeducted | number : '1.2-2'}}
+                                                </td>
+                                                <td class="centerAlignLink"><i tooltip="Preview" (click)="openPreviousEmpDocModal(item,'PreviousEmployment')" class="fa fa-external-link"></i>
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-warning" *ngIf="item.ApprovalStatus == 0" style="display: inline;color:white !important;">
+                                                        Saved
+
+                                                    </span>
+                                                    <span class="badge badge-danger" *ngIf="item.ApprovalStatus == 2" style="display: inline;color:white !important;">
+                                                        Rejected
+                                                    </span>
+                                                    <span class="badge badge-success" *ngIf="item.ApprovalStatus == 1" style="display: inline;color:white !important;">
+
+                                                        Approved
+                                                    </span>
+
+                                                </td>
+
+                                                <!-- <td>
+                          {{item.ApproverRemarks}}
+                        </td> -->
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="qccard">
+                        <div class="qccontainer">
+                            <br />
+                            
+
+
+                            <span class="qcheader">Investments</span>
+
+                            <!--              
+                <div  style="width: 100%; height: 500px; ">
+                  <as-split direction="horizontal">
+                    <as-split-area [size]="60"> -->
+
+                            <table class="qcTable table table-bordered table-condensed" *ngIf="newEmployeeDetails">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Amount Invested</th>
+                                        <th>Amount Approved</th>
+                                        <th class="fitToContent">View</th>
+                                        <th class="fitToContent" style="width:20%">Status</th>
+                                        <!-- <th class="qcRemarks">Remarks</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngIf="newEmployeeDetails && newEmployeeDetails.LstemployeeInvestmentDeductions != null && newEmployeeDetails.LstemployeeInvestmentDeductions.length > 0">
+                                        <ng-container *ngFor="let item of newEmployeeDetails.LstemployeeInvestmentDeductions ; let i = index;">
+                                            <tr *ngIf="!item.IsProposed">
+                                                <td>
+                                                    <b> {{getProductName(item.ProductID)}}</b>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    {{item.Amount | number : '1.2-2'}}
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    {{item.ApprovedAmount | number : '1.2-2' }}
+                                                </td>
+                                                <td class="centerAlignLink"><i tooltip="Preview" (click)="openDocumentAttention_modal(item,'Investment')" class="fa fa-external-link"></i>
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-warning" *ngIf="getCount(item.LstEmployeeInvestmentDocuments,0) > 0" style="display: inline;color:white !important;">
+                                                        Saved ({{getCount(item.LstEmployeeInvestmentDocuments,0)}})
+
+                                                    </span>
+                                                    <span class="badge badge-danger" *ngIf="getCount(item.LstEmployeeInvestmentDocuments,2) > 0" style="display: inline;color:white !important;">
+                                                        Rejected ({{getCount(item.LstEmployeeInvestmentDocuments,2)}})
+                                                    </span>
+                                                    <span class="badge badge-success" *ngIf="getCount(item.LstEmployeeInvestmentDocuments,1) > 0" style="display: inline;color:white !important;">
+
+                                                        Approved ({{getCount(item.LstEmployeeInvestmentDocuments,1)}})
+                                                    </span>
+
+                                                </td>
+
+                                                <!-- <td>
+                        {{item.ApproverRemarks}}
+                      </td> -->
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                </tbody>
+                               
+                                <tbody>
+                                    <ng-container *ngIf="newEmployeeDetails && newEmployeeDetails.LstEmployeeHousePropertyDetails != null && newEmployeeDetails.LstEmployeeHousePropertyDetails.length > 0">
+                                        <ng-container *ngFor="let item of newEmployeeDetails.LstEmployeeHousePropertyDetails ; let i = index;">
+                                            <tr *ngIf="!item.IsProposed">
+
+                                                <td>
+                                                    <b> House Property Details : <b *ngIf="item.LetOut == 'true'">
+                                                            Rented Out </b>
+                                                    <b *ngIf="item.LetOut == 'false'"> Self-Occupied </b> </b>
+                                                </td>
+                                                <td style="text-align: right;" *ngIf="item.LetOut">
+                                                    {{item.GrossAnnualValue | number : '1.2-2'}}
+                                                </td>
+                                                <td style="text-align: right;" *ngIf="!item.LetOut">
+                                                    {{item.InterestAmount | number : '1.2-2'}}
+                                                </td>
+
+                                                <td style="text-align: right;" *ngIf="item.LetOut">
+                                                    {{item.GrossAnnualValueApprovedAmount | number : '1.2-2' }}
+                                                </td>
+                                                <td style="text-align: right;" *ngIf="!item.LetOut">
+                                                    {{item.InterestAmountApprovedAmount | number : '1.2-2' }}
+                                                </td>
+                                                <td class="centerAlignLink"><i tooltip="Preview" (click)="openDocumentAttention_modal(item,'HouseProperty')" class="fa fa-external-link"></i>
+                                                </td>
+
+                                                <td>
+                                                    <span class="badge badge-warning" *ngIf="getCount(item.LstEmployeeInvestmentDocuments,0) > 0" style="display: inline;color:white !important;">
+                                                        Saved ({{getCount(item.LstEmployeeInvestmentDocuments,0)}})
+
+                                                    </span>
+                                                    <span class="badge badge-danger" *ngIf="getCount(item.LstEmployeeInvestmentDocuments,2) > 0" style="display: inline;color:white !important;">
+                                                        Rejected ({{getCount(item.LstEmployeeInvestmentDocuments,2)}})
+                                                    </span>
+                                                    <span class="badge badge-success" *ngIf="getCount(item.LstEmployeeInvestmentDocuments,1) > 0" style="display: inline;color:white !important;">
+
+                                                        Approved ({{getCount(item.LstEmployeeInvestmentDocuments,1)}})
+                                                    </span>
+
+                                                </td>
+                                                <!-- <td>
+                        {{item.ApproverRemarks}} 
+                      </td> -->
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+
+                            <span class="qcheader" *ngIf="newEmployeeDetails && LstemployeeHouseRentDetails != null && LstemployeeHouseRentDetails.length > 0">House Rent Details</span>
+                            <table class="qcTable table table-bordered table-condensed" *ngIf="newEmployeeDetails && LstemployeeHouseRentDetails != null && LstemployeeHouseRentDetails.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th>Duration</th>
+                                        <th>Amount Invested</th>
+                                        <th>Amount Approved</th>
+                                        <th class="fitToContent">View</th>
+                                        <th class="fitToContent" style="width:20%">Status</th>
+                                        <!-- <th class="qcRemarks">Remarks</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngIf="newEmployeeDetails && LstemployeeHouseRentDetails != null && LstemployeeHouseRentDetails.length > 0">
+                                        <ng-container *ngFor="let item of LstemployeeHouseRentDetails ; let i = index;">
+                                            <tr *ngIf="!item.IsProposed">
+
+                                                <td style="text-align: center;">
+                                                    <b > {{item.StartDate | date:'d MMM y'}} -
+                                                        {{item.EndDate | date:'d MMM y'}} </b>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <!-- {{getRentAmount() | number : '1.2-2'}} -->
+                                                    {{item.RentAmount | number : '1.2-2'}}
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <!-- {{getRentApprovedAmount() | number : '1.2-2' }} -->
+                                                    {{item.ApprovedAmount | number : '1.2-2'}}
+                                                </td>
+                                                <td class="centerAlignLink"><i tooltip="Preview" (click)="openDocumentAttention_modal(item,'HRA')" class="fa fa-external-link"></i></td>
+
+                                                <td>
+                                                    <span class="badge badge-warning" *ngIf="getCount(item.LstEmployeeInvestmentDocuments,0) > 0" style="display: inline;color:white !important;">
+                                                        Saved ({{getCount(item.LstEmployeeInvestmentDocuments,0)}})
+
+                                                    </span>
+                                                    <span class="badge badge-danger" *ngIf="getCount(item.LstEmployeeInvestmentDocuments,2) > 0" style="display: inline;color:white !important;">
+                                                        Rejected ({{getCount(item.LstEmployeeInvestmentDocuments,2)}})
+                                                    </span>
+                                                    <span class="badge badge-success" *ngIf="getCount(item.LstEmployeeInvestmentDocuments,1) > 0" style="display: inline;color:white !important;">
+
+                                                        Approved ({{getCount(item.LstEmployeeInvestmentDocuments,1)}})
+                                                    </span>
+
+                                                </td>
+
+                                                <!-- <td>
+                        {{item.ApproverRemarks}}
+                      </td> -->
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
+                                </tbody>
+                                </table>
+                                <br/>
+                            <!-- </as-split-area>
+                    <as-split-area [size]="40">
+                      <p style="padding: 10px;">Attachement</p>
+                      <br/>
+                      <div class="row" style="padding: 10px;"> 
+                        <div class="col-md-6">
+                            <label>LIC</label> 
+                        </div>
+                        <div class="col-md-6 text-right">
+                       
+                          <button class="btn btn-default btn-sm" (click)="validateDocument(true)">
+                              <i class="mdi mdi-checkbox-marked-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+                              Approve</button> &nbsp;
+                          <button class="btn btn-default btn-sm" (click)="validateDocument(false)">
+                              <i class="mdi mdi-close-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+                              Reject&nbsp;</button>
+                      </div>
+                      </div>
+                      <div class="row" style="padding: 10px;"> 
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label">Approved Amount</label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" 
+                                name="amount" placeholder="1,50,000" autocomplete="off"
+                                >
+                    
+                            </label>
+                           
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-label searchbar-label">Remarks</label>
+                            <label class="qcsummarylabel form-text text-muted">
+                              <input class="form-control" type="text"
+                                name="amount" placeholder="Remarks" autocomplete="off" 
+                                >
+                                                </label>
+                           
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <div class="card">
+                            <img style="top: 0 !important; 
+                            right: 0px !important;
+                            position: absolute !important;
+                            z-index: 9;
+                            height: 55px !important;
+                            vertical-align: top;
+                            opacity: inherit;
+                            bottom: unset !important;
+                            left: unset !important;" src="../../../../assets/Images/cielhr.png">
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="iframe-container" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+                     
+                    </div>
+                    </as-split-area>
+                  </as-split>
+                </div> -->
+
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="col-sm-12" *ngIf="_taxExemptionDetails.length > 0">
+                    <div class="qccard">
+                        <!-- <div class="qccontainer"> -->
+
+                        <app-exemption-qc [taxExemptionDetails]="_taxExemptionDetails" [lstlookUpDetails]="lstlookUpDetails" (exemptionChangeHandler)="exemptionChangeHandler($event)"></app-exemption-qc>
+                        <!-- </div> -->
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="qccard">
+                        <div class="qccontainer">
+                            <span class="qcheader"> Overall Remarks
+                            </span>
+                            <textarea style="margin-top: 1rem; margin-bottom:1rem;" class="form-control" rows="5" spellcheck="true" name="OverallRemarks" [(ngModel)]="OverallRemarks" placeholder="Overall Remarks" autocomplete="off">
+                                </textarea>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- </div> -->
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div id="documentItem_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="documentItem_modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- <div class="modal-header">
+              <div class="col-md-8">
+                  <h4 class="modal-title" id="documentItem_modal">{{currentModalHeading}} - {{ApprovalStatusEnumValues[currentModalItem?.Status]}}
+                  </h4>
+                  <div class="form-group">                  
+                  </div> 
+              </div>
+              <div class="col-md-4" style="top: 13px;">
+                  <a class="icon btn-icon pull-right m-l-n-xxxl chrome-back-btn m-t-n-sm" data-dismiss="modal" (click)="clearUrl()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+                  <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                      <app-filedownload [documentId]="currentModalItem?.DocumentId">
+                      </app-filedownload>
+                  </div>
+              </div>
+          </div> -->
+
+            <div class="modal-header" style="padding: 15px !important;">
+                <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                    <small class="header-pretitle"><b>Document Details</b></small>
+                    <h6 class="modal-title subheader_h6" *ngIf="documentItem">
+                        <label *ngIf="whicharea == 'PreviousEmployment'"> Previous Employment </label>
+                        <label *ngIf="whicharea == 'Investment'">{{getProductName(documentItem.ProductID)}} </label>
+                        <label *ngIf="whicharea == 'HRA'">House Rent Details </label>
+                        <label *ngIf="whicharea == 'HouseProperty'"> House Property Details 
+                        </label> ~ <label *ngIf="whicharea == 'Investment'">Amount Invested :
+                            {{documentItem.Amount | number : '1.2-2'}} | Approved :
+                            {{documentItem.QcDisplayAmount | number : '1.2-2'}}</label>
+                        <label *ngIf="whicharea == 'HRA'">Amount Invested :
+                            {{documentItem.Amount | number : '1.2-2'}} | Approved :
+                            {{documentItem.QcDisplayAmount | number : '1.2-2'}}
+                        </label>
+                        <label *ngIf="whicharea == 'HouseProperty' && documentItem.LetOut">Amount Invested :
+                            {{documentItem.GrossAnnualValue | number : '1.2-2'}}| Approved :
+                            {{documentItem.GrossAnnualValueApprovedAmount | number : '1.2-2'}}</label>
+                        <label *ngIf="whicharea == 'HouseProperty' && !documentItem.LetOut">Amount Invested :
+                            {{documentItem.InterestAmount | number : '1.2-2'}}| Approved :
+                            {{documentItem.InterestAmountApprovedAmount | number : '1.2-2'}}</label> |
+
+                        <label *ngIf="whicharea == 'HouseProperty' && documentItem " style="font-weight: 700;
+              color: #f0063c;"> No. of Document(s) : {{documentItem.LstEmployeeInvestmentDocuments.length}} </label>
+                    </h6>
+                </div>
+                <div class="modal-close" (click)="saveDocumentChanges()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                </div>
+            </div>
+
+            <div class="modal-body">
+
+                <div style="margin-top: 0.2em;
+                margin-left: 0.5em;" class="row"
+                    *ngIf="whicharea == 'HouseProperty' && documentItem != null">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small class="form-text text-muted"> Occupancy Type -  Ownership (%)</small>
+                            <label class="qcsummarylabel form-text text-muted" *ngIf="!documentItem.LetOut">
+                                Self-Occupied -   {{documentItem?.OwnershipPercentage}} %
+                            </label>
+                            <label class="qcsummarylabel form-text text-muted" *ngIf="documentItem.LetOut">
+                                Rented Out -   {{documentItem?.OwnershipPercentage}} %
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small class="form-text text-muted"> First-Time Homeowner (Yes/No) </small>
+                            <label class="qcsummarylabel form-text text-muted" *ngIf="!documentItem.FirstTimeHomeOwner">
+                                No
+                            </label>
+                            <label class="qcsummarylabel form-text text-muted" *ngIf="documentItem.FirstTimeHomeOwner">
+                                Yes
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small>Address of Property</small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{documentItem?.AddressDetails}}
+                            </label>
+
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small class="form-text text-muted">Loan Availed Date - Property Possession Date </small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{documentItem?.LoanDate | date: 'dd-MM-yyyy'}} -   {{documentItem?.PossessionDate | date: 'dd-MM-yyyy'}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" *ngIf="documentItem.LetOut">
+                        <div class="form-group">
+                            <small>Annual Rent | Municipal Taxes Paid </small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{documentItem?.GrossAnnualValue}} |  {{documentItem?.MunicipalTax}}
+                            </label>
+
+                        </div>
+                    </div>
+
+                   
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small>Principal Amount   | Interest Paid   </small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{documentItem?.PrincipalAmount}} | {{documentItem?.InterestAmount}}
+                            </label>
+
+                        </div>
+                    </div>
+                    
+                   
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small>Pre-Construction Interest | No of Installment</small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{documentItem?.PreConstructionInterestAmount}} | {{documentItem?.InstallmentNumber}}
+                            </label>
+
+                        </div>
+                    </div>
+                   
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small>Lender Name | PAN </small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{documentItem?.NameOfLender}}  |  {{documentItem?.LenderPANNO}}
+                            </label>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <small>Address of Lender</small>
+                            <label class="qcsummarylabel form-text text-muted">
+                                {{documentItem?.AddressOfLender}} 
+                            </label>
+
+                        </div>
+                    </div>
+                    
+                  
+                    
+
+                </div>
+
+
+                <div class="row" *ngIf="whicharea == 'HRA'">
+
+                    <div class="col-lg-8">
+                        <label *ngIf="documentItem" style="font-weight: 700;">
+
+                            <span *ngIf="documentItem.LandLordDetails != null || documentItem.LandLordDetails != ''">
+                                Landlord PAN :
+                                {{documentItem.LandLordDetails.PAN}} </span>
+                            <span *ngIf="documentItem.LandLordDetails == null || documentItem.LandLordDetails == ''">
+                                Landlord PAN : ---
+                            </span>
+
+                            <span *ngIf="documentItem.LandLordDetails != null && documentItem.LandLordDetails != ''"> |
+                                Landlord Name :
+                                {{documentItem.LandLordDetails.Name}} </span>
+                            <span *ngIf="documentItem.LandLordDetails == null || documentItem.LandLordDetails == ''"> |
+                                Landlord Name : ---
+                            </span>
+                            <br />
+
+                            <span *ngIf="documentItem.LandLordDetails != null && documentItem.LandLordDetails != ''">
+                                Address of
+                                Landlord : {{getlandlordAddressDetails(documentItem.LandLordDetails.AddressDetails)}}
+                            </span>
+                            <span *ngIf="documentItem.LandLordDetails == null || documentItem.LandLordDetails == ''">
+                                Address of
+                                Landlord : --- </span>
+
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="row" *ngIf="whicharea != 'HouseProperty'">
+                    <div class="col-lg-12 text-right">
+                        <label *ngIf="documentItem" style="font-weight: 700;
+            color: #f0063c;"> No. of Document(s) : {{documentItem.LstEmployeeInvestmentDocuments.length}} </label>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-12" *ngIf="documentItem">
+                        <div class="card section4" style="padding: 5px;" *ngFor="let ite of documentItem.LstEmployeeInvestmentDocuments; first as isFirst;  let i= index;">
+                            <div class="card-body" style="padding: 5px;">
+                                <h5 class="card-title">
+
+                                    <label class="qcsummarylabel form-text text-muted"> {{ite.FileName}} |
+                                        <span class="badge badge-warning" *ngIf="ite.Status == 0"
+                                            style="display: inline;color:white !important;">
+                                            {{ApprovalStatusEnumValues[ite.Status]}}
+                                        </span>
+                                        <span class="badge badge-danger" *ngIf="ite.Status == 2"
+                                            style="display: inline;color:white !important;">
+                                            {{ApprovalStatusEnumValues[ite.Status]}}
+                                        </span>
+                                        <span class="badge badge-success" *ngIf="ite.Status == 1"
+                                            style="display: inline;color:white !important;">
+                                            {{ApprovalStatusEnumValues[ite.Status]}}
+                                        </span>
+                                        <div style="float: right;margin-top: -3px;">
+                                            <app-filedownload [documentId]="ite?.DocumentId">
+                                            </app-filedownload>
+                                        </div>
+                                    </label>
+                                </h5>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="iframe-container d-none d-lg-block">
+                                            <!-- <iframe [src]='getUrl(ite)'>
+                         <p>Your browser does not support iframes.</p>
+                      </iframe>  -->
+                                        </div>
+                                        <div class="iframe-container" style="  border: 1px solid #d3d3d3 !important; border-radius: 0rem;height: 400px;">
+                                            <div *ngIf=ite.Url style="height: 100%;">
+                                                <iframe width="100%" height="100%" [src]="ite.Url" frameborder="0" scrolling="yes"></iframe>
+
+                                                <!-- <iframe [src]="contentmodalurl" frameborder="0" scrolling="yes"></iframe> -->
+                                                <!-- <img style="top: 0 !important;
+                        right: 0px !important;
+                        position: absolute !important;
+                        z-index: 9;
+                        height: 55px !important;
+                        vertical-align: top;
+                        opacity: inherit;
+                        bottom: unset !important;
+                        left: unset !important;" src="../../../../assets/Images/cielhr.png"> getMyPropertyAmount(documentItem,ite)-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <ng-container *ngIf="isFirst">
+                                            <div class="col-lg-12" *ngIf="whicharea != 'HouseProperty'">
+                                                <div class="form-group">
+                                                    <label class="form-label searchbar-label">Total Approved
+                                                        Amount</label>
+                                                    <label class="qcsummarylabel form-text text-muted">
+                                                        <input class="form-control" type="text" name="amount"
+                                                            (change)="onChangeApprovedAmount($event,ite)"
+                                                            [(ngModel)]="ite.ApprovedAmount"
+                                                            placeholder="Approved Amount" autocomplete="off">
+                                                    </label>
+                                                    <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="isExceed">Approved
+                                                        Amount must be less than or equal to
+                                                        {{documentItem.Amount}}</label>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12" *ngIf="whicharea == 'HouseProperty' && documentItem.LetOut">
+                                                <div class="form-group">
+                                                    <label class="form-label searchbar-label">Approved Annual Rent
+                                                    </label>
+                                                    <label class="qcsummarylabel form-text text-muted">
+                                                        <input class="form-control" type="text" name="amount"
+                                                            [(ngModel)]="documentItem.GrossAnnualValueApprovedAmount"
+                                                            placeholder="Approved Amount" autocomplete="off">
+                                                    </label>
+                                                    <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem.GrossAnnualValueApprovedAmount > documentItem.GrossAnnualValue">Approved
+                                                        Amount must be less than or equal to
+                                                        {{documentItem.GrossAnnualValue}}</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12" *ngIf="whicharea == 'HouseProperty'">
+                                                <div class="form-group">
+                                                    <label class="form-label searchbar-label">Interest Approved Amt
+                                                    </label>
+                                                    <label class="qcsummarylabel form-text text-muted">
+                                                        <input class="form-control" type="text" name="amount"
+                                                            [(ngModel)]="documentItem.InterestAmountApprovedAmount"
+                                                            placeholder="Approved Amount" autocomplete="off">
+                                                    </label>
+                                                    <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem.InterestAmountApprovedAmount > documentItem.InterestAmount">Approved
+                                                        Amount must be less than or equal to
+                                                        {{documentItem.InterestAmount}}</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12" *ngIf="whicharea == 'HouseProperty' && documentItem.LetOut">
+                                                <div class="form-group">
+                                                    <label class="form-label searchbar-label">Municipal Tax Approved Amt
+                                                    </label>
+                                                    <label class="qcsummarylabel form-text text-muted">
+                                                        <input class="form-control" type="text" name="amount"
+                                                            [(ngModel)]="documentItem.MunicipalTaxApprovedAmount"
+                                                            placeholder="Approved Amount" autocomplete="off">
+                                                    </label>
+                                                    <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem.MunicipalTaxApprovedAmount > documentItem.MunicipalTax">Approved
+                                                        Amount
+                                                        must be less than or equal to
+                                                        {{documentItem.MunicipalTax}}</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12" *ngIf="whicharea == 'HouseProperty'">
+                                                <div class="form-group">
+                                                    <label class="form-label searchbar-label">Pre Construction Interest
+                                                        Approved Amt</label>
+                                                    <label class="qcsummarylabel form-text text-muted">
+                                                        <input class="form-control" type="text" name="amount"
+                                                            [(ngModel)]="documentItem.PreConstructionInterestApprovedAmount"
+                                                            placeholder="Approved Amount" autocomplete="off">
+                                                    </label>
+                                                    <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem.PreConstructionInterestApprovedAmount > documentItem.PreConstructionInterestAmount">Approved
+                                                        Amount must be less than or equal to
+                                                        {{documentItem.PreConstructionInterestAmount}}</label>
+
+                                                </div>
+                                            </div>
+                                        </ng-container>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="form-label searchbar-label">Remarks</label>
+                                                <label class="qcsummarylabel form-text text-muted">
+                                                    <input class="form-control" type="text" name="Remarks"
+                                                        [(ngModel)]="ite.Remarks" placeholder="Remarks"
+                                                        autocomplete="off">
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+
+
+
+                                        <div class="col-lg-12" style="text-align: right; margin-top: 25px;">
+                                            <button class="btn btn-default btn-sm" (click)="validateDocument(true, ite,isFirst, i)">
+                                                <i class="mdi mdi-checkbox-marked-circle  m-r-xs"
+                                                    style="margin-top:3rem;margin-right:6px;"></i>
+                                                Approve</button> &nbsp;
+                                            <button class="btn btn-default btn-sm" (click)="validateDocument(false,ite,isFirst, i)">
+                                                <i class="mdi mdi-close-circle  m-r-xs"
+                                                    style="margin-top:3rem;margin-right:6px;"></i>
+                                                Reject&nbsp;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <!-- <div class="row">
+                  <iframe style="width: 100%;min-height: 400px" src='../../../../assets/Images/fileloader.gif'
+                      [src]="contentmodalurl"></iframe></div> -->
+
+                    <!-- <div class="wrapper"> -->
+                    <!-- <div class="iframe-container" *ngIf="contentmodalurl == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                  <img src="assets/Images/Ciel.png">
+                  <span>
+                      <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                          &nbsp; Please wait...</i>
+                      <span class="sr-only">Please wait...</span>
+                  </span>
+              </div> -->
+
+                </div>
+                <!-- </div> -->
+
+
+            </div>
+            <div class="modal-footer">
+                <!-- <div class="col-md-9">
+        <div class="form-group">
+          <small class="form-text text-muted">Remarks</small>
+          <div>
+            <label></label>
+            <textarea rows="2" style="width: 100%; border-radius: 3px;" [(ngModel)]="RejectionRemarks"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3" style="padding-left:0px;padding-right:0px;"> -->
+
+                <!-- <button class="btn btn-default btn-sm" (click)="validateDocument(true)">
+          <i class="mdi mdi-checkbox-marked-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+          Approve</button> &nbsp;
+        <button class="btn btn-default btn-sm" (click)="validateDocument(false)">
+          <i class="mdi mdi-close-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+          Reject&nbsp;</button> -->
+                <!-- </div> -->
+                <button class="btn btn-default btn-sm" (click)="saveDocumentChanges()">
+                    <i class="mdi mdi-checkbox-marked-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+                    Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="documentItem_prevEmp_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="documentItem_prevEmp_modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+
+            <div class="modal-header" style="padding: 15px !important;">
+                <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                    <small class="header-pretitle"><b>Document Details</b></small>
+                    <h6 class="modal-title subheader_h6" *ngIf="documentItem1">
+                        <label> Previous Employment </label>
+
+                    </h6>
+                    <label *ngIf="documentItem1">Gross Salary :
+                        {{documentItem1.GrossSalary | number : '1.2-2'}} | Previous PT :
+                        {{documentItem1.PreviousPT | number : '1.2-2'}} | Previous PF : {{documentItem1.PreviousPF | number : '1.2-2'}} 
+                      | Tax Deducted : {{documentItem1.TaxDeducted | number : '1.2-2'}} |
+                      Standard Ded. : {{documentItem1.StandardDeduction | number : '1.2-2'}} 
+                      </label>
+                </div>
+                <div class="modal-close" (click)="saveChangesOfPreviousDocs()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                </div>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-12" *ngIf="documentItem1">
+                        <div class="card section4" style="padding: 5px;">
+                            <div class="card-body" style="padding: 5px;">
+                                <h5 class="card-title">
+
+                                    <label class="qcsummarylabel form-text text-muted"> {{documentItem1.FileName}} |
+                                        <span class="badge badge-warning" *ngIf="documentItem1.ApprovalStatus == 0"
+                                            style="display: inline;color:white !important;">
+                                            {{ApprovalStatusEnumValues[documentItem1.ApprovalStatus]}}
+                                        </span>
+                                        <span class="badge badge-danger" *ngIf="documentItem1.ApprovalStatus == 2"
+                                            style="display: inline;color:white !important;">
+                                            {{ApprovalStatusEnumValues[documentItem1.ApprovalStatus]}}
+                                        </span>
+                                        <span class="badge badge-success" *ngIf="documentItem1.ApprovalStatus == 1"
+                                            style="display: inline;color:white !important;">
+                                            {{ApprovalStatusEnumValues[documentItem1.ApprovalStatus]}}
+                                        </span>
+                                        <div style="float: right;margin-top: -3px;">
+                                            <app-filedownload [documentId]="documentItem1?.DocumentId">
+                                            </app-filedownload>
+                                        </div>
+                                    </label>
+                                </h5>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="iframe-container d-none d-lg-block">
+                                            <!-- <iframe [src]='getUrl(ite)'>
+                         <p>Your browser does not support iframes.</p>
+                      </iframe>  -->
+                                        </div>
+                                        <div class="iframe-container" style="  border: 1px solid #d3d3d3 !important; border-radius: 0rem;height: 400px;">
+                                            <div *ngIf=documentItem1.Url style="height: 100%;">
+                                                <iframe width="100%" height="100%" [src]="documentItem1.Url" frameborder="0" scrolling="yes"></iframe>
+
+                                                <!-- <iframe [src]="contentmodalurl" frameborder="0" scrolling="yes"></iframe> -->
+                                                <!-- <img style="top: 0 !important;
+                        right: 0px !important;
+                        position: absolute !important;
+                        z-index: 9;
+                        height: 55px !important;
+                        vertical-align: top;
+                        opacity: inherit;
+                        bottom: unset !important;
+                        left: unset !important;" src="../../../../assets/Images/cielhr.png"> getMyPropertyAmount(documentItem,ite)-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="form-label searchbar-label">Approved Gross Salary</label>
+                                                <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="text" name="ApprovedGrossSalary"
+                                                  [(ngModel)]="documentItem1.ApprovedGrossSalary" placeholder="0" autocomplete="off">
+                                              </label>
+                                                <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem1.ApprovedGrossSalary > documentItem1.GrossSalary"> Approved
+                                              Gross Salary must be less than or equal to {{documentItem1.GrossSalary}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="form-label searchbar-label">Approved Previous PT</label>
+                                                <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="text" name="ApprovedPreviousPT"
+                                                  [(ngModel)]="documentItem1.ApprovedPreviousPT" placeholder="0" autocomplete="off">
+                                              </label>
+                                                <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem1.ApprovedPreviousPT > documentItem1.PreviousPT"> Approved
+                                              Previous PT must be less than or equal to {{documentItem1.PreviousPT}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="form-label searchbar-label">Approved Previous PF</label>
+                                                <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="text" name="ApprovedPreviousPF"
+                                                  [(ngModel)]="documentItem1.ApprovedPreviousPF" placeholder="0" autocomplete="off">
+                                              </label>
+                                                <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem1.ApprovedPreviousPF > documentItem1.PreviousPF"> Approved
+                                              Previous PFmust be less than or equal to {{documentItem1.PreviousPF}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="form-label searchbar-label">Approved Tax Deducted</label>
+                                                <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="text" name="ApprovedTaxDeducted"
+                                                  [(ngModel)]="documentItem1.ApprovedTaxDeducted" placeholder="0" autocomplete="off">
+                                              </label>
+                                                <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem1.ApprovedTaxDeducted > documentItem1.TaxDeducted"> Approved
+                                              Tax Deducted must be less than or equal to {{documentItem1.TaxDeducted}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="form-label searchbar-label">Approved Standard Deduction</label>
+                                                <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="text" name="ApprovedStandardDeduction"
+                                                  [(ngModel)]="documentItem1.ApprovedStandardDeduction" placeholder="0" autocomplete="off">
+                                              </label>
+                                                <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem1.ApprovedStandardDeduction > documentItem1.StandardDeduction"> Approved
+                                              Standard Deduction must be less than or equal to {{documentItem1.StandardDeduction}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label class="form-label searchbar-label">Remarks</label>
+                                                <label class="qcsummarylabel form-text text-muted">
+                                                <input class="form-control" type="text" name="ApproverRemarks"
+                                                  [(ngModel)]="documentItem1.ApproverRemarks" placeholder="0" autocomplete="off">
+                                              </label>
+                                                <!-- <label class="form-label searchbar-label invalid-feedback" style="color: #dc3545 !important;" *ngIf="documentItem1.ApproverRemarks == null || documentItem1.ApproverRemarks ==  '' || documentItem1.ApproverRemarks ==  undefined">Please provide a valid rejection remarks</label> -->
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-lg-12" style="text-align: right; margin-top: 25px;">
+                                            <button class="btn btn-default btn-sm" (click)="validateDocument_approve(true, documentItem1)">
+                                                <i class="mdi mdi-checkbox-marked-circle  m-r-xs"
+                                                    style="margin-top:3rem;margin-right:6px;"></i>
+                                                Approve</button> &nbsp;
+                                            <button class="btn btn-default btn-sm" (click)="validateDocument_approve(false,documentItem1)">
+                                                <i class="mdi mdi-close-circle  m-r-xs"
+                                                    style="margin-top:3rem;margin-right:6px;"></i>
+                                                Reject&nbsp;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-sm" (click)="saveChangesOfPreviousDocs()">
+                    <i class="mdi mdi-checkbox-marked-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+                    Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>

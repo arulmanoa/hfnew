@@ -1,0 +1,233 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+
+    <div class="docs-page" *ngIf="spinner">
+      <div class="Error full-screen">
+        <div><img src="assets/Images/folder.svg" style="height: 6rem;"> </div>
+        <h1><span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true">
+          </span>
+        </h1>
+        <p>Please wait while we set things up for you</p>
+      </div>
+    </div>
+
+    <div class="docs-page" *ngIf="_teamGroupedList?.length == 0 && !spinner">
+      <div class="Error full-screen">
+        <div><img src="assets/Images/antenna.svg" style="height: 6rem;"> </div>
+        <h1>Uh ho
+        </h1>
+        <p>No data found. Something went wrong</p>
+      </div>
+    </div>
+
+
+    <div *ngIf="!spinner && _teamGroupedList?.length > 0">
+
+      <div class="row" style="margin-bottom: 10px;margin-top: -15px;">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+          <div class="text-left">
+            <h6 class="h6_c"> Team Attendance</h6>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+
+        </div>
+      </div>
+
+
+      <div class="content m-b report-content" style="margin-top: -5px;">
+        <div class="row" *ngIf="!spinner" id="navbar" style="margin-top: -10px;">
+          <div class="col-lg-6">
+            <div class="row" *ngIf="IsProxyAvailable">
+              <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-3 col-md-3 col-sm-3 displayinlineblock">
+            <label class="form-label" style="text-align: left;"> Request Option </label>
+            <ng-select [items]="_componentList" placeholder="-- Select an option --" bindLabel="componentName"
+              bindValue="componentId" [(ngModel)]="selectedComponentId" [clearable]="false"
+              (change)="onChange_component($event)">
+            </ng-select>
+          </div> -->
+              <div
+                class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 displayinlineblock">
+                <label class="form-label" style="text-align: left;"> Request Option </label>
+                <ng-select [items]="_proxyUserList" placeholder="-- Select an option --" bindLabel="proxyUserName"
+                  bindValue="proxyUserId" [(ngModel)]="selectedProxyUserId" [clearable]="false"
+                  (change)="onChange_proxy($event)">
+                </ng-select>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-lg-6" style="text-align: right;">
+            <li class="list-inline-item" style="width: 50%;" *ngIf="(HRRoleCode.includes(this.RoleCode) == false)">
+              <div class="form-group form-group-vertical displayinlineblock" *ngIf="_teamGroupedList.length > 5">
+                <label class="form-label" style="text-align: left;">Start searching by Team name </label>
+                <input class="form-control" type="text" name="search" [(ngModel)]="searchText"
+                  autocomplete="none|false|no" placeholder="Start searching by Team name">
+              </div>
+            </li>
+            <li class="list-inline-item" style="margin-top: 30px;" *ngIf="(HRRoleCode.includes(this.RoleCode) == true)"><button
+                 type="button" class="btn btn-primary"
+                (click)="do_view_request()">
+                <i class="mdi mdi-file-eye-outline  m-r-xs"></i> View Attendance
+              </button></li>
+              <!-- <li class="list-inline-item" style="margin-top: 30px;" ><button
+                 type="button" class="btn btn-primary"
+                (click)="do_view_all_request()">
+                <i class="mdi mdi-file-eye-outline  m-r-xs"></i> View All Attendance
+              </button></li> -->
+              <!-- <li class="list-inline-item" style="margin-top: 30px;" ><button
+                type="button" class="btn btn-primary"
+               (click)="do_view_by_manager()"> 
+               <i class="mdi mdi-information-outline  m-r-xs"></i> By Manager
+             </button></li> -->
+          </div>
+        </div>
+        <br>
+
+
+        <div class="row" *ngIf="(HRRoleCode.includes(this.RoleCode) == false)">
+          <div class="col-lg-12 col-md-12 col-xs-12 col-xxs-12"
+            *ngFor="let item of _teamGroupedList | filter: searchText; let i= index" style="padding-bottom: 10px;">
+            <div class="card text-center card-w">
+              <div class="card-header card-head">
+                <div class="row">
+                  <div class="col-lg-1 col-xs-1" style=" display: flex;justify-content: center;">
+                    <img src="assets/Images/group.svg" style="width: 50px;">
+
+                  </div>
+                  <div class="col-lg-11 col-xs-11">
+                    <div class="row">
+                      <div class="col-9" style="margin-top: 10px; font-size: 16px; font-weight: 600;">
+                        {{item.ClientName}}
+                      </div>
+                      <div class="col-3" style="text-align: right;">
+                          <strong style="text-transform: initial;font-size: 10px;"> Attendance : </strong> 
+
+                        <span class="badge badge-soft-secondary" *ngIf="!item.IsPayrollSubmitted" style="display: inline;"> Not
+                          Submitted </span>
+                        <span class="badge badge-soft-green" *ngIf="item.IsPayrollSubmitted" style="display: inline;">
+                          Submitted </span>
+
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top: 25px;">
+                      <div class="col-lg-2 col-sm-6 col-md-3 col-xs-12">
+                        <div class="headerbar-right" style="padding-left: 5px; margin-left: 5px;">
+                          <div class="media" style="width: 100% !important;">
+                            <div class="media-body">
+                              <label>Team Name</label>
+                              <h6 style="font-size: 0.75rem;"> {{item.TeamName}}  
+                                <!-- <span class="badge badge-soft-secondary" *ngIf="UserId == item.ManagerId"
+                                style="display: inline;"> Own </span>
+                              <span class="badge badge-soft-green" *ngIf="UserId != item.ManagerId" style="display: inline;">
+                                Others </span>   -->
+                              </h6>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-2 col-sm-6 col-md-3 col-xs-12">
+                        <div class="headerbar-right divider">
+                          <div class="media" style="width: 100% !important">
+                            <div class="media-body">
+                              <label>Employee Count</label>
+                              <h6 style="font-size: 0.75rem;"> {{item.EmpCount}} </h6>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-sm-6 col-md-3 col-xs-12">
+                        <div class="headerbar-right divider">
+                          <div class="media" style="width: 100% !important">
+                            <div class="media-body">
+                              <label>Attendance Period ~ {{item.AttendancePeriodName}} </label>
+                              <h6 style="font-size: 0.75rem;"> {{item.AttendanceStartDate | date : 'dd-MM-yyyy'}} -
+                                {{item.AttendanceEndDate | date : 'dd-MM-yyyy'}} </h6>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-sm-6 col-md-3 col-xs-12">
+                        <div class="headerbar-right divider">
+                          <div class="media" style="width: 100% !important">
+                            <div class="media-body">
+                              <label>Payroll Period ~ {{item.PayCyclePeriodName}}</label>
+                              <h6 style="font-size: 0.75rem;"> {{item.StartDate | date : 'dd-MM-yyyy'}} - {{item.EndDate
+                                | date : 'dd-MM-yyyy'}} </h6>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-2 col-sm-6 col-md-3 col-xs-12">
+                        <div class="headerbar-right divider">
+                          <div class="media" style="width: 100% !important">
+                            <div class="media-body">
+                              <label style="color: white;"> &nbsp; . </label>
+                              <button class="btn btn-primary" (click)="ontab_team(item)"> Click here</button>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <!-- <div class="card-body card-bdy">
+              
+            </div> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="!spinner && (HRRoleCode.includes(this.RoleCode) == true)">
+
+          <div class="col-lg-12">
+            <angular-slickgrid gridId="grid1" [columnDefinitions]="inEmployeesInitiateColumnDefinitions"
+              [gridOptions]="inEmployeesInitiateGridOptions" [dataset]="inEmployeesInitiateList"
+              (onAngularGridCreated)="inEmployeesInitiateGridReady($event)" gridWidth="100%"
+              (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+              (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+            </angular-slickgrid>
+          </div>
+        </div>
+
+
+        <!-- <div class="row" *ngIf="!spinner" id="navbar">
+          <div class="col-lg-6">
+          </div>
+          <div class="col-lg-6">
+
+            <div class="tx-info">
+              <p style="font-size: 12px;font-weight:600"> 
+                <ng-container *ngIf="RoleCode == HRRoleCode">
+                Here are the steps you can follow to view your pending
+                payroll transaction on Attendance
+              </ng-container>
+              <ng-container *ngIf="RoleCode != HRRoleCode">
+                Here are the steps you can follow to view your pending
+                Attendance transaction 
+              </ng-container>
+                <progressbar [value]="nonSubmitted_count" type="warning" [max]="_teamGroupedList.length"
+                  [striped]="false" style="height: 0.7rem !important;"> {{nonSubmitted_count}}
+                  /{{_teamGroupedList.length}}</progressbar>
+              </p>
+
+            </div>
+
+
+
+          </div>
+        </div> -->
+
+
+
+      </div>
+
+    </div>
+  </div>
+</div>

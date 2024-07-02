@@ -1,0 +1,274 @@
+.card-before-clicked {
+    /* cursor: pointer; */
+    border-width: 2px;
+    border-style: solid;
+    border-color: #b9bbba
+}
+
+.media1 label {
+    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #97a3b9;
+    display: inline-block;
+}
+
+.submit-button {
+    text-align: right;
+    padding: 15px;
+}
+
+
+/* The container */
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* Hide the browser's default checkbox */
+
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+
+/* Create a custom checkbox */
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+
+/* On mouse-over, add a grey background color */
+
+.container:hover input~.checkmark {
+    background-color: #ccc;
+}
+
+
+/* When the checkbox is checked, add a blue background */
+
+.container input:checked~.checkmark {
+    background-color: #2196F3;
+}
+
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+
+/* .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+} */
+
+
+/* Show the checkmark when checked */
+
+.container input:checked~.checkmark:after {
+    display: block;
+}
+
+
+/* Style the checkmark/indicator */
+
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+
+/* tr {
+    border: 1px solid black;
+    border-collapse: collapse;
+} */
+
+#greenCircle {
+    float: left;
+    width: 10px;
+    height: 10px;
+    margin: 6px;
+    shape-outside: circle();
+    -webkit-clip-path: circle();
+    clip-path: circle();
+    background: #1fb538;
+}
+
+#orangeCircle {
+    float: left;
+    width: 10px;
+    height: 10px;
+    margin: 6px;
+    shape-outside: circle();
+    -webkit-clip-path: circle();
+    clip-path: circle();
+    background: #fc780c;
+}
+
+#gryCircle {
+    float: left;
+    width: 10px;
+    height: 10px;
+    margin: 6px;
+    shape-outside: circle();
+    -webkit-clip-path: circle();
+    clip-path: circle();
+    background: #c2c9c3;
+}
+
+.delete-button {
+    width: 64px;
+    font-size: 12px;
+    padding: 4px;
+}
+
+.table-sticky>thead>tr>th,
+.table-sticky>thead>tr>td {
+    top: 0px;
+    position: sticky;
+}
+
+.table-height {
+    display: block;
+    overflow: auto;
+    width: 100%;
+}
+
+.table-sticky>thead th {
+    background-color: rgb(245 245 245)
+    /* rgb(199 199 199) !important; */
+}
+
+.clickedcard {
+    /* background-color: red; */
+    border: 2px solid #1caf9a;
+}
+
+.card-before-clicked {
+    cursor: pointer;
+    border-width: 2px;
+    border-style: solid;
+    /* border-color: #c6f5d7  */
+}
+
+.right-active-arrow::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    /* margin-left: -20px; */
+    border-width: 15px;
+    border-style: solid;
+    border-color: transparent transparent transparent #1caf9a;
+    transform: translate(0%, -50%);
+    /* border-color: transparent transparent transparent #09db72; */
+}
+
+.right-active-arrow::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 99.5%;
+    /* margin-left: -20px; */
+    border-width: 15px;
+    border-style: solid;
+    border-color: transparent transparent transparent #fff;
+    transform: translate(0%, -50%);
+}
+
+.table-th-td td input,
+.table-th-td td select {
+    border: none;
+}
+
+.table-th-td td .input-checkbox {
+    text-align: center;
+    margin-top: 15px;
+}
+
+
+/* .table-sticky>thead th {
+    background-color: rgb(245 245 245) */
+
+
+/* rgb(199 199 199) !important;
+} */
+
+.type-text-boarder {
+    border: white;
+}
+
+.table-th-td td {
+    text-transform: uppercase;
+    height: 35px;
+    padding-top: 10px;
+    padding-right: 0px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    max-height: 30px;
+    font-size: 11px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.table-th-td th {
+    text-transform: uppercase;
+    height: 35px;
+    padding-top: 10px;
+    padding-right: 0px;
+    padding-bottom: 5px;
+    padding-left: 0px;
+    max-height: 30px;
+    font-weight: 300;
+    font-size: 11px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.custom-btn-primary {
+    text-transform: uppercase;
+    color: #fff;
+    background-color: #0a609eeb;
+    border-color: #0a609eeb;
+    border-radius: 0.25rem;
+    border: 1px solid transparent;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    padding-right: 10px;
+    padding-top: 1px;
+    font-size: 12px;
+    line-height: 1.5;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.custom-btn-primary:hover {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}

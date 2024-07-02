@@ -1,0 +1,148 @@
+
+
+
+
+<div class="modal fade show" style="display: block;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="dfc100 overflow-y-auto">
+
+        <div [ngStyle]="{'display': spinner?'flex':'none'}" id="overlay">
+          <div class="w-100 d-flex justify-content-center align-items-center">
+            <div  class="spinner"></div>
+          </div>
+        </div>
+
+        <div class="modal-header">
+          <h5 class="modal-title pull-left">Enter Details</h5>
+          <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()" ><i class="mdi mdi-close font-size-md icon-close"></i></a>
+        </div>
+
+        <div class="modal-body no-padder builtin-calling-wrapper">
+          <div class="flex-column">
+            <div *ngIf="node">
+              <div class="clearfix">
+
+                
+                <div class="row">
+            
+                  <span class="col-11" style="text-align: right;">
+                    <label class="form-label" >Core Entity: </label>
+                  </span>
+            
+                  <span class="col-1">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" [(ngModel)]="node.DataSource.IsCoreEntity"/>
+                      <span class="el-switch-style" ></span>
+                    </label>
+                  </span>
+            
+                </div>
+                
+
+                <div class="row"> 
+
+                  <span class="col">
+                    <label for="DataSource-Type" class="form-label">Data Source Type:</label>
+                    <ng-select   [clearable]="false" [items]="dataSourceTypeNames" bindValue="value" 
+                    bindLabel="label" [(ngModel)]="node.DataSource.Type">
+                    </ng-select>
+                  </span>
+                
+                  <span class="col">
+                    <label for="DataSource" class="form-label"> Data Source Name: </label>  
+                    <input id="DataSource" type="text" class="form-control" [(ngModel)]="node.DataSource.Name">
+                  </span>
+                
+                  <span class="col">
+                    <label for="EntityType" class="form-label"> Entity Type: </label>  
+                    <input id="EntityType" type="text" class="form-control" [(ngModel)]="node.DataSource.EntityType">
+                  </span>
+
+                  <span class="col">
+                    <label for="relation" class="form-label"> Relation with Parent: </label>  
+                    <ng-select   [clearable]="false" [items]="relationWithParentNames" bindValue="value" [disabled]="node.IsParent"
+                    bindLabel="label" [(ngModel)]="node.RelationWithParent">
+                    </ng-select>
+                  </span>
+                </div>
+                <br>
+                <div class="row">
+                  <button class="btn btn-primary" (click)="onClickingConfirmDataSource(node)">Confirm</button>
+                </div>
+
+
+                <div *ngIf="!node.IsParent">
+
+                  <div class="row">
+                    <p>Entity Relation:</p>
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col-4">
+                      <label  class="form-label"> From Data Source: </label>
+                      <ng-select   [clearable]="false" [items]="node.DataSourceList" bindValue="Name"
+                      bindLabel="Name" [(ngModel)]="fromDataSource">
+                      </ng-select>
+                    </div>
+                    
+                    <div class="col-4" *ngIf="fromDataSource !== '' ">
+                      <label  class="form-label"> From column: </label>
+                      <ng-select   [clearable]="false" [items]="importLayoutService.ColumnNamesObject[fromDataSource]" bindValue="value"
+                      bindLabel="label" [(ngModel)]="fromColumn">
+                      </ng-select>
+                    </div>
+                    
+                    <div class="col-4" *ngIf="fromDataSource !== ''">
+                      <label  class="form-label"> To column: </label>
+                      <ng-select   [clearable]="false" [items]="importLayoutService.ColumnNamesObject[node.DataSource.Name]" bindValue="value"
+                      bindLabel="label" [(ngModel)]="toColumn">
+                      </ng-select>
+                    </div>
+                  
+                  </div>
+
+                  <br>
+                  <div class="row">
+                    <button class="btn btn-primary" (click)="onClickingAddRelationButton(node)">Add</button>
+                  </div>
+                  
+                  <div *ngIf="importLayout.EntityRelations[node.DataSource.Name] !== undefined || 
+                  importLayout.EntityRelations[node.DataSource.Name] !== null ">
+                    <div *ngFor="let dataSource of importLayout.EntityRelations[node.DataSource.Name] | keyvalue">
+                      <button (click)="onClickingRemoveDataSourceButton(node , dataSource.key)"><i class="fa fa-remove" style="color:red"></i></button>
+                      {{dataSource.key}}:
+                      <div *ngFor="let column of dataSource.value | keyvalue">
+                        &nbsp;&nbsp;&nbsp; <button (click)="onClickingRemoveColumnButton(node , dataSource.key , column.key)"><i class="fa fa-remove" style="color:red"></i></button>
+                           {{column.key}}->{{column.value}}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-default pull-right" type="button" data-dismiss="modal" (click)="closeModal()">Cancel</button>
+  
+          <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+              <div>
+                  <div>
+                      <button class="btn  btn-primary " type="Submit" name="btnSubmit"  id="btnSubmit" (click)="onSave()" [disabled]="spinner">
+                          <div class="pos-rlt sm-btn-component" > <span> Save </span></div>
+                      </button>
+                  </div>
+              </div>
+          </div>
+        </div>
+    
+      </div>
+    </div>
+  </div>
+</div>

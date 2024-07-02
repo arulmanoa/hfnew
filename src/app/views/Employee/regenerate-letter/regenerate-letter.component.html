@@ -1,0 +1,722 @@
+<div class="page-wrapper">
+    <app-loading-screen></app-loading-screen>
+    <div class="page-content">
+
+        <!-- <div class="row"> -->
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12" *ngIf="!isrendering_spinner">
+            <ul class="list-inline">
+                <li class="list-inline-item subheader__main">
+                    <h5 class="mt-0 p-l-5 subheader__title">Re-Generate Appointment Letter </h5>
+
+                    <span class="subheader__separator subheader__separator--v"></span>
+                    <span class="subheader__desc help-text">
+                        {{_NewCandidateDetails?.FirstName}} | {{ClientName}} </span>
+                </li>
+            </ul>
+        </div>
+
+
+
+        <br>
+        <!-- <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+            <ul class="list-inline">
+                <li class="list-inline-item subheader__main">
+                    <h5 class="mt-0 p-l-5 subheader__title"> Re-Generate Appointment Letter</h5>
+                    <div class="col-md-12">
+                        <span class="qcsummarylabel form-text">
+                            <h6>
+                            Employee - {{_NewCandidateDetails?.FirstName}}
+                        </h6>
+                        </span>
+                    </div>
+
+                     <span class="subheader__separator subheader__separator--v"></span>
+                    <span class="subheader__desc help-text">
+                        {{_NewCandidateDetails?.FirstName}} </span> 
+                </li>
+            </ul>
+        </div> -->
+        <!-- </div> -->
+
+        <div class="text-center ma-5" *ngIf="isrendering_spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                Please wait...
+            </button>
+        </div>
+        <!-- <div class="d-flex align-items-center" *ngIf="isrendering_spinner">
+            <strong class="text-center"> Fetching... &nbsp;&nbsp;&nbsp;</strong>
+             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div> 
+        </div> -->
+        <!-- <div class="alert alert-light alert-elevate" style="margin: 0px 15px 10px 15px;" *ngIf="!isrendering_spinner">
+            <div class="alert-icon"><i class="mdi mdi-information"></i></div>
+            <div class="alert-text">
+                <h6 class="card-title">Information Notice</h6>
+                <span class="help-text"> <span
+                        class="badge badge--inline badge--pill badge--danger badge--rounded">What Next?</span> Please note that you can edit your information multiple times before the final submit. Once information submitted it cannot
+                be edited. </span>
+                <hr>
+
+            </div>
+        </div> -->
+
+
+        <div class="content m-b report-content" *ngIf="!isrendering_spinner" style="margin: 0px 15px 0px 15px;">
+            <div class="">
+
+                <div>
+
+
+
+                    <div class="flex-column">
+
+
+
+                        <div class="col-12 col-md-12 col-sm-12">
+                            <div class="clearfix">
+
+                                <br>
+
+                                <div class="row" *ngIf="!should_spin_onboarding ">
+
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Actual DOJ <span class="required"> *</span> <span
+                                                class="help-text m-l-5">(DD-MM-YYYY)</span> </label>
+                                        <input type="text" class="form-control" readonly bsDatepicker placement="bottom"
+                                            [minDate]="ActualDOJminDate" [maxDate]="ActualDOJmaxDate"
+                                            [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',containerClass:'theme-default'}"
+                                            (ngModelChange)="updateDate_DOJ($event)"
+                                            [ngModel]="_NewCandidateDetails.LstCandidateOfferDetails[0].ActualDateOfJoining  | date: 'dd-MM-yyyy'"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.ActualDateOfJoining }"
+                                            placeholder="12-12-1990" autocomplete="off">
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].ActualDateOfJoining  | date : 'dd-MM-yyyy'}}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.ActualDateOfJoining"
+                                            class="help-block">
+                                            <div> Actual DOJ is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Designation <span class="required"> *</span>
+                                        </label>
+                                        <!-- <input class="form-control" spellcheck="false"
+                                            onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" maxlength="50"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.Designation }"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].Designation  "
+                                            placeholder="Software Engineer" autocomplete="off"> -->
+                                            <ng-select [items]="DesignationList" placeholder="-- select an option --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].DesignationId" [ngClass]="{'ng-touched': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.DesignationId }"
+                                            bindLabel="Name" bindValue="Id" (change)="onChangeDesignation($event)">
+                    
+                                          </ng-select>
+                    
+
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].Designation }}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.DesignationId"
+                                            class="help-block">
+                                            <div> Designation is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Letter Template <span class="required">
+                                                *</span></label>
+                                        <ng-select [items]="LetterTemplateListAL" placeholder="-- select an option --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].AppointmentLetterTemplateId"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.AppointmentLetterTemplateId }"
+                                            bindLabel="Name" bindValue="TemplateId">
+                                        </ng-select>
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].AppointmentLetterTemplateId }}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.AppointmentLetterTemplateId"
+                                            class="help-block">
+                                            <div> Appointment Letter Template is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Employee Contract End Date <span
+                                                class="help-text m-l-5">(DD-MM-YYYY)</span> </label>
+                                        <input type="text" class="form-control" bsDatepicker placement="bottom"
+                                            [minDate]="TenureminDate" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+                                  containerClass:'theme-default' }" (ngModelChange)="updateDate_Enddate($event)"
+                                            [ngClass]="{'is-invalid': this._NewCandidateDetails.LstCandidateOfferDetails[0].TenureType != 0 && !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.EndDate }"
+                                            name="enddate"
+                                            [ngModel]="this._NewCandidateDetails.LstCandidateOfferDetails[0]?.EndDate  | date: 'dd-MM-yyyy'"
+                                            placeholder="12-12-1990" autocomplete="off">
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0]?.EndDate | date : 'dd-MM-yyyy' }}</span> -->
+                                        <div *ngIf="this._NewCandidateDetails.LstCandidateOfferDetails[0].TenureType != 0 && !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.EndDate"
+                                            class="help-block">
+                                            <div> Contract end-date is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Father's Name <span class="required"> *</span> <span
+                                                class="form__length"> {{ fatherName.value?.length }}/50</span>
+                                        </label>
+                                        <input class="form-control" spellcheck="false"
+                                            onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="fatherName"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.FatherName }"
+                                            maxlength="50" #fatherName
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].FatherName"
+                                            placeholder="Father's Name" autocomplete="off">
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].FatherName }}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.FatherName"
+                                            class="help-block">
+                                            <div> Father's Name is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Date of Birth <span class="required"> *</span> <span
+                                                class="help-text m-l-5">(DD-MM-YYYY)</span> </label>
+                                        <input type="text" class="form-control" bsDatepicker placement="bottom"
+                                            [maxDate]="DOBmaxDate" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+                                    containerClass:'theme-default'}" (ngModelChange)="updateDate_DOB($event)"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.DateOfBirth }"
+                                            name="dateOfBirth"
+                                            [ngModel]="this._NewCandidateDetails.DateOfBirth | date: 'dd-MM-yyyy'"
+                                            placeholder="12-12-1990" autocomplete="off">
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.DateOfBirth | date : 'dd-MM-yyyy'}}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.DateOfBirth" class="help-block">
+                                            <div> Date of Birth is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Notice Period 
+                                                  </label>
+                                        <input class="form-control" type="number" maxlength="2" name="NoticePeriod" onkeypress="return /^[0-9]+$/i.test(event.key)" [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.NoticePeriodDays }" [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].NoticePeriodDays"
+                                            placeholder="30" autocomplete="off">
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.NoticePeriodDays" class="help-block">
+                                            <div> Notice Peroid is required
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Notice Period
+                                        </label>
+                                        <ng-select [items]="NoticePeriodDaysList" placeholder="-- select an option --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].NoticePeriodDays"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.NoticePeriodDays }"
+                                            bindLabel="Name" bindValue="Description">
+                                        </ng-select>
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.NoticePeriodDays"
+                                            class="help-block">
+                                            <div> Notice Peroid is required
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label ">Team Name </label>
+
+                                        <!-- <select class="form-control" [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].TeamId">
+                                            <option *ngFor="let i of TeamList" value="{{i.Id}}">{{i.code}}</option>
+                                          
+                                          </select> -->
+
+
+                                        <ng-select [items]="TeamList" placeholder="-- select an option --"
+                                            bindLabel="code" bindValue="Id"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].TeamId"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.TeamId }">
+                                        </ng-select>
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].TeamId }}</span> -->
+                                        <!-- <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.TeamId" class="help-block">
+                                            <div>Team name is required
+                                            </div>
+                                        </div> -->
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label ">Effective Pay Period <span class="required">*</span>
+                                        </label>
+
+                                        <ng-select [items]="EffectivePayPeriodList" placeholder="-- select an option --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].EffectivePayPeriodId"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.EffectivePayPeriodId }"
+                                            bindLabel="PayCyclePeriodName" bindValue="Id" (change)="onChangeEffectivePP($event)">
+                                        </ng-select>
+
+                                      
+
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Industry <span class="required"> *</span></label>
+                                        <ng-select [items]="IndustryList" placeholder="-- select an option --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].IndustryId"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.IndustryId }"
+                                            bindLabel="Name" bindValue="Id" (change)="onChangeIndustryType($event)">
+                                        </ng-select>
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].AppointmentLetterTemplateId }}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.IndustryId"
+                                            class="help-block">
+                                            <div> Industry is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Location <span class="required"> *</span></label>
+                                        <ng-select [items]="ClientLocationList" placeholder="-- select location --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].Location"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.Location }"
+                                            bindLabel="LocationName" bindValue="Id"
+                                            (change)="onChangeOfferLocation($event)">
+                                        </ng-select>
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].AppointmentLetterTemplateId }}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.Location"
+                                            class="help-block">
+                                            <div> Location is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Skill Category <span class="required">
+                                                *</span></label>
+                                        <ng-select #skill [items]="SkillCategoryList" [maxSelectedItems]="6"
+                                            placeholder="-- select skill Category --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].SkillCategory"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.SkillCategory }"
+                                            bindLabel="Name" bindValue="Id">
+                                        </ng-select>
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].AppointmentLetterTemplateId }}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.SkillCategory"
+                                            class="help-block">
+                                            <div> Skill Category is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Zone <span class="required"> *</span></label>
+                                        <ng-select #skill [items]="ZoneList" placeholder="-- select zone --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].Zone"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0]?.zone }"
+                                            bindLabel="Name" bindValue="Id">
+                                        </ng-select>
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].AppointmentLetterTemplateId }}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0]?.Zone"
+                                            class="help-block">
+                                            <div> Zone is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Salary Type <span class="required"> *</span></label>
+                                        <ng-select [items]="salaryType" placeholder="--  select salary Type --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0].SalaryBreakUpType"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.SalaryBreakUpType }"
+                                            bindLabel="name" bindValue="id" (change)="onChangeSalary($event)">
+                                        </ng-select>
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].AppointmentLetterTemplateId }}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.SalaryBreakUpType"
+                                            class="help-block">
+                                            <div> Salary Type is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Pay Structure <span class="required"> *</span></label>
+                                        <ng-select [items]="PayGroupList" placeholder="--  select an option --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0].PayGroupdId"
+                                            [ngClass]="{'is-invalid': !this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.PayGroupdId }"
+                                            bindLabel="Name" bindValue="PayGroupId" (change)="onChangePayGroup($event)">
+                                        </ng-select>
+                                        <!-- <span class="form__length"> {{_OldCandidateDetails.LstCandidateOfferDetails[0].AppointmentLetterTemplateId }}</span> -->
+                                        <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.PayGroupdId"
+                                            class="help-block">
+                                            <div> Pay structure is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label" id='forMonthlyValue'>Do you want to specify Monthly
+                                            Salary? </label>
+
+                                        <div class="p-t-10">
+
+                                            <label class="el-switch el-switch-green">
+                                                <input type="checkbox" name="switch" value="yes"
+                                                    [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0].IsMonthlyValue">
+                                                <!-- (change)="onChangeMonthlySwith($event)" -->
+                                                <span class="el-switch-style"></span>
+                                            </label>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0].IsMonthlyValue==false">
+                                        <label class="form-label">Annual Salary <span class="required"> *</span>
+                                        </label>
+                                        <input class="form-control" type="number" maxlength="10"
+                                            onkeypress="return /^[0-9]+$/i.test(event.key)" name="annualSalary"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0].AnnualSalary"
+                                            [ngClass]="{'is-invalid': this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.AnnualSalary == null }"
+                                            placeholder="500000" autocomplete="off"
+                                            (keyup)="onChangeAnnaulSalary($event.target.value)">
+
+                                        <div *ngIf="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.AnnualSalary  == null"
+                                            class="help-block">
+                                            <div> Annual Salary is required
+                                            </div>
+                                        </div>
+                                        <div *ngIf="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0].AnnualSalary == 0"
+                                            class="help-block">
+                                            <div> Annual Salary should be greater than zero
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0].IsMonthlyValue==true">
+                                        <label class="form-label">Monthly Salary
+                                        </label>
+                                        <input class="form-control" type="number" maxlength="10"
+                                            onkeypress="return /^[0-9]+$/i.test(event.key)" name="MonthlySalary"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0].MonthlySalary"
+                                            [ngClass]="{'is-invalid': this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.MonthlySalary == null }"
+                                            placeholder="500000" autocomplete="off"
+                                            (keyup)="onChangeMonthlySalary($event.target.value)">
+
+                                        <div *ngIf="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.MonthlySalary  == null"
+                                            class="help-block">
+                                            <div> Monthly Salary is required
+                                            </div>
+                                        </div>
+                                        <div *ngIf="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0].MonthlySalary == 0"
+                                            class="help-block">
+                                            <div> Monthly Salary should be greater than zero
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Insurance Plan<span class="required"></span>
+                                        </label>
+                                        <ng-select [items]="InsuranceList" placeholder="-- select an option --"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].InsurancePlan"
+                                            [ngClass]="{'is-invalid': this._NewCandidateDetails.LstCandidateOfferDetails[0].InsurancePlan == null }"
+                                            bindLabel="Name" bindValue="Id" (change)="onChangeInsurancePlan($event)">
+                                        </ng-select>
+                                        <!-- <div *ngIf="!this._NewCandidateDetails.LstCandidateOfferDetails[0].InsurancePlan" class="help-block">
+                                            <div> Insurance Plan is required
+                                            </div>
+                                        </div> -->
+
+                                    </div>
+
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Oncost - Insurance Amt
+                                        </label>
+                                        <input class="form-control" type="number"
+                                            onkeypress="return /^[0-9]+$/i.test(event.key)" name="onCostInsuranceAmount"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].OnCostInsurance"
+                                            placeholder="456" autocomplete="off">
+                                        <!-- <div *ngIf="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.onCostInsuranceAmount  == null" class="help-block">
+                                            <div> Oncost Amount for insurance is required
+                                            </div>
+                                        </div> -->
+
+
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Fixed Deduction - Insurance Amt
+                                        </label>
+                                        <input class="form-control" type="number"
+                                            onkeypress="return /^[0-9]+$/i.test(event.key)" name="fixedDeductionAmount"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].FixedInsuranceDeduction"
+                                            placeholder="456" autocomplete="off">
+                                        <!-- <div *ngIf="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.fixedDeductionAmount  == null" class="help-block">
+                                            <div> Fixed Deduction Amount for insurance is required
+                                            </div>
+                                        </div> -->
+
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">GMC
+                                        </label>
+                                        <input class="form-control" type="number"
+                                            onkeypress="return /^[0-9]+$/i.test(event.key)" name="GMCAmount"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].GMCAmount"
+                                            placeholder="456" autocomplete="off">
+                                        <!-- <div *ngIf="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.fixedDeductionAmount  == null" class="help-block">
+                                            <div> Fixed Deduction Amount for insurance is required
+                                            </div>
+                                        </div> -->
+
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">GPA
+                                        </label>
+                                        <input class="form-control" type="number"
+                                            onkeypress="return /^[0-9]+$/i.test(event.key)" name="GPAAmount"
+                                            [(ngModel)]="this._NewCandidateDetails.LstCandidateOfferDetails[0].GPAAmount"
+                                            placeholder="456" autocomplete="off">
+                                        <!-- <div *ngIf="this._NewCandidateDetails.LstCandidateOfferDetails[0].LstCandidateRateSet[0]?.fixedDeductionAmount  == null" class="help-block">
+                                            <div> Fixed Deduction Amount for insurance is required
+                                            </div>
+                                        </div> -->
+
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label"> Remarks <span class="required"> *</span> </label>
+                                        <textarea class="form-control" rows="3" spellcheck="false"
+                                            [(ngModel)]="Remarks"></textarea>
+
+                                    </div>
+
+
+                                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">Attachment <span class="help-text m-l-5">(Max file
+                                                size 2MB)</span></label>
+                                        <label class="upload control" style="width: 50%; float: left;"
+                                            *ngIf="!FileName">
+                                            <div class="upload-draggable is-primary">
+                                                <section class="section">
+                                                    <div class="has-text-centered">
+                                                        <span class="icon is-large">
+                                                            <span style="padding-left: 10px;"> <i
+                                                                    class="mdi mdi-cloud-upload "
+                                                                    style="color: #9ba7ca;"></i> Upload </span>
+                                                        </span>
+
+                                                    </div>
+                                                </section>
+                                            </div>
+                                            <input type="file" accept="application/msword,  application/pdf, image/*"
+                                                (change)="onFileUpload($event)"
+                                                id="sTest-uploadFile-candidateAddResume">
+
+                                        </label>
+
+                                        <p class="control" *ngIf="FileName">
+                                            <span class="file-name">
+                                                <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a
+                                                        ngbTooltip="Delete Photo"
+                                                        id="sTest-deleteFile-candidateAddResume"
+                                                        style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                                   display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                                                </button>
+
+
+                                                <a target="blank" class="ahref" style="padding: 2px;">
+                                                    {{FileName}}
+                                                </a>
+
+                                            </span>
+
+                                        </p>
+                                    </div>
+
+
+                                    <div class="form-group form-group-vertical col-xs-6  col-sm-6"
+                                        *ngIf="_NewCandidateDetails && _NewCandidateDetails.LstCandidateOfferDetails">
+                                        <label class="form-label">CC E-mail's <i class="mdi mdi-information-outline"
+                                                placement="right" style="cursor: pointer;"
+                                                ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, seperated by comma or space."></i>
+                                            <span class="help-text m-l-5">(Please separate email ids using comma)</span>
+                                        </label>
+
+                                        <div class="editor-tag" (click)="focusTagInput()">
+                                            <span class="tag-item" *ngFor="let tag of ccmailtags">
+                                                {{tag}}
+                                                <span class="remove-tag" (click)="removeTag(tag)">×</span>
+                                            </span>
+                                            <input class="input-tag input_border"
+                                                pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                                                type="text" name="ccemail" [(ngModel)]="ccemail"
+                                                placeholder="example@domain.com" autocomplete="off" #tagInput
+                                                (keyup)="onKeyUp($event)" (change)="onchangeCC($event)">
+                                        </div>
+
+                                        <div class="help-block" *ngIf="CCemailMismatch">Please type your e-mail address
+                                            in the format example@domain.com
+                                        </div>
+
+                                    </div>
+
+
+
+
+                                </div>
+
+                                <div class="modal-footer" *ngIf="!should_spin_onboarding ">
+                                    <div *ngIf="isLoading">
+                                        <!-- <div class="pull-left right-margin-btn">
+                
+                                            <button class="btn btn-default" type="Submit" [disabled]="disableBtn" name="btnSubmit" id="btnSubmit" prevent-double-submit (click)="confirmExit()">
+                                                <div class="pos-rlt sm-btn-component"> <span>  <i class="mdi mdi-av-timer"></i> Cancel </span></div>
+                                            </button>
+                                        </div> &nbsp; &nbsp; -->
+                                        <div class="pull-right m-r-sm">
+                                            <div>
+                                                <div>
+                                                    <button class="btn btn-default" type="Submit"
+                                                        [disabled]="disableBtn" name="btnSubmit" id="btnSubmit"
+                                                        prevent-double-submit (click)="confirmExit()">
+                                                        <div class="pos-rlt sm-btn-component"> <span> <i
+                                                                    class="mdi mdi-av-timer"></i> Cancel </span></div>
+                                                    </button>&nbsp; &nbsp;
+                                                    <button class="btn  btn-primary m-r-sm" [disabled]="disableBtn"
+                                                        type="Submit" name="btnSubmit" id="btnSubmit"
+                                                        prevent-double-submit (click)="previewLetter()">
+                                                        <div class="pos-rlt sm-btn-component"> <span> <i
+                                                                    class="mdi mdi-eye"></i> &nbsp; Preview Letter
+                                                            </span></div>
+                                                    </button>
+                                                    <button class="btn  btn-primary m-r-sm" [disabled]="disableBtn"
+                                                        type="Submit" name="btnSubmit" id="btnSubmit"
+                                                        prevent-double-submit (click)="PreviewCTC()">
+                                                        <div class="pos-rlt sm-btn-component"> <span> <i
+                                                                    class="mdi mdi-file-check m-r-xs"></i> &nbsp; View
+                                                                Salary Breakup </span></div>
+                                                    </button>
+
+                                                    <button class="btn upgrade-btn pull-right" [disabled]="disableBtn"
+                                                        type="button" (click)="reGenerate()"> <i
+                                                            class="mdi mdi-file-restore"></i> &nbsp; Confirm &
+                                                        Re-Generate </button>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center" *ngIf="!isLoading">
+                                        <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                                    </div>
+                                </div>
+
+
+
+
+
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+                <!-- <div>
+                    <div *ngIf="isLoading">
+                        <div class="pull-left left-margin-btn">
+
+                            <button class="btn btn-default" type="Submit" [disabled]="disableBtn" name="btnSubmit" id="btnSubmit" prevent-double-submit (click)="confirmExit()">
+                                <div class="pos-rlt sm-btn-component"> <span>  <i class="mdi mdi-av-timer"></i> Cancel </span></div>
+                            </button>
+                        </div> &nbsp; &nbsp;
+                        <div class="pull-right m-r-sm">
+                            <div>
+                                <div>
+                                    <button class="btn  btn-primary m-r-sm" [disabled]="disableBtn" type="Submit" name="btnSubmit" id="btnSubmit" prevent-double-submit (click)="previewLetter()">
+                                      <div class="pos-rlt sm-btn-component"> <span>  <i class="mdi mdi-eye"></i> &nbsp; Preview Letter  </span></div>
+                                  </button>
+
+                                    <button class="btn upgrade-btn pull-right" [disabled]="disableBtn" type="button" (click)="reGenerate()">  <i class="mdi mdi-file-restore"></i> &nbsp; Confirm & Re-Generate </button>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center" *ngIf="!isLoading">
+                        <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                </div> -->
+                <!-- ---up--- -->
+
+                <!-- 
+                <div class="modal-footer">
+                    <div *ngIf="isLoading">
+                        <div class="pull-left left-margin-btn">
+                            <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban" aria-hidden="true"></i> Cancel</button>
+                        </div>
+                        <div class="pull-right m-r-sm">
+
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="previewLetter()">
+                                  <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i>  Preview Letter</span></div>
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="savebutton()">
+                                      <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i>  Re-Generate </span></div>
+                                    </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center" *ngIf="!isLoading">
+                        <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div>
+
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,119 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+        <div class="row" style=" margin-bottom: 1px !important ;">
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left" style="margin-top: 3px; margin-bottom: 10px !important;">
+                <div class="text-left">
+                    <h1 class="vss-HubTitle">
+                        <div class="vss-HubTitle--titleText">Week off configuration</div>
+                    </h1>
+                </div>
+            </div>
+        </div>
+        <div class="content m-b report-content">
+            <div class='row'>
+                <div class="col-md-4 mb-2">
+                    <label class="form-label "> Select Team(s)</label>
+                    <ng-select [items]="teams" class="mt-1" (change)="onTeamChange($event)" placeholder="select an option" bindLabel="value" bindValue="id" [(ngModel)]="teams.id" [multiple]="true">
+                    </ng-select>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="form-label ">Select Location(s)</label>
+                    <ng-select [items]="locations" class="mt-1" (change)="onTeamChange($event)" placeholder="select an option" bindLabel="value" bindValue="id" [(ngModel)]="locations.id" [multiple]="true">
+                    </ng-select>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="form-label "> Employee Code  </label>
+                    <input type="text" [(ngModel)]="employeeSearchElement" placeholder="Enter Employee Code" class="form-control" />
+
+                </div>
+                <div class="col-md-2 mb-2" style="padding-top: 10px;">
+                    <label class="mt-4">&nbsp;</label>
+                    <button class="btn btn-primary " (click)="clickOnSearch()"><span
+                        class=" mdi mdi-card-search m-r-xs">Search</span></button>
+                </div>
+                <!-- <div class="col-md-4">
+                    <ng-select class="mb-1" [items]="effectiveType" (change)="onChangeType($event)" bindLabel="value" bindValue="id" [(ngModel)]="effectiveId" [searchable]="true">
+                    </ng-select>
+                </div> -->
+                <hr>
+                <div class="col-md-12 text-right mb-2">
+                    <button class="btn btn-primary " (click)="clickonCheckWeekOff()">Change Week Off</button>
+                </div><br><br><br>
+            </div>
+            <div class="table-responsive table-height " style="height:400px">
+                <table class="table-sticky table table-bordered table-th-td" style="text-align: center !important;">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" [(ngModel)]="selectAll" (click)="selectAllEmloyees($event)" /></th>
+                            <th> EMPLOYEE CODE </th>
+                            <th> EMPLOYEE NAME </th>
+                            <th>  WEEK OFF DAYS </th>
+                            <th> EFFECTIVE DATE </th>
+                            <!-- <th>  IS OVERRIDED </th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let list of EmployeesList">
+                            <td>
+                                <input type="checkbox" [(ngModel)]="list.isSelected" (click)="selectListRecords(list,list.isSelected)" style="cursor: pointer;" />
+                            </td>
+                            <td>{{list.empcode}}</td>
+                            <td>{{list.value}}</td>
+                            <td>{{list.weekOffDays}} </td>
+                            <td> {{list.effectiveDate}}</td>
+                            <!-- <td> {{list.isOverride}} </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="weekoffchangepopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="weekoffchangepopup" aria-hidden="true">
+    <form autocomplete="off" (ngSubmit)="submitWeekOff()" class="form-horizontal">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-xs-11">
+                        <h4 class="modal-title" id="weekoffchangepopup"> Week Off change</h4>
+                    </div>
+                    <div class="col-xs-1">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body" style="height: 350px;">
+                    <div class=" row col-xs-12 col-lg-12 col-md-12 mb-2 ">
+                        <div class=" form-group col-md-6">
+                            <label class="form-label ">Select Week Off</label>
+                            <ng-select [items]="weekList" [(ngModel)]="selectWeekOffDays" (change)="onChangeWeek($event)" 
+                                placeholder="Select Week Off Days" bindLabel="name" bindValue="id" [multiple]="true" [searchable]="true">
+                            </ng-select>
+                        </div>
+        
+                        <div class=" form-group col-md-6">
+                            <label class="form-label ">Effective From </label>
+                            <input class="form-control calendar " name="date" [(ngModel)]="_effectiveDate" type="date" id="date" 
+                                autocomplete="off" bsDatepicker placement="bottom" readonly type="text" 
+                                placeholder="29-07-2022" (bsValueChange)="onChangeEffectiveDate($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                        </div>
+        
+                        <div class="form-group  col-xs-12 col-sm-12">
+                            <label class="form-label" style="font-weight:500;">Selected Week Off Days : {{ selectWeekOffDays }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-primary" data-dismiss="modal">Cancel</button> &nbsp;
+                        <button class="btn btn-success" type="submit" prevent-double-submit>
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

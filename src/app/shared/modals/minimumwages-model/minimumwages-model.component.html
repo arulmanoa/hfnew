@@ -1,0 +1,243 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <app-loading-screen></app-loading-screen>
+          <div class="dfc100 overflow-y-auto">
+
+
+            <div class="modal-header">
+              <!-- <h4 class="modal-title pull-left">Add Minimum wages</h4> -->
+              <h4 class="modal-title pull-left">{{header}}</h4>
+              <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+            </div>
+            
+            <div class="modal-body no-padder builtin-calling-wrapper">
+
+              <div class="flex-column">
+
+
+                <form [formGroup]="wagesForm">
+
+                  <div class="col-12 col-md-12 col-sm-12">
+                    <div class="clearfix">
+                      <div class="row">
+
+
+                        <!--Industry-->                    
+                        <!-- <div class="col-md-6 col-sm-6 p-15">
+                          <label> Industry <span class="required">*</span> </label>
+                          <select class="form-control" formControlName="Industry" [ngClass]="{ 'is-invalid': submitted && f.Industry.errors }">
+                              <option value="" disabled>Choose Industry</option>
+                              <option *ngFor="let industry of industrys" [value]="industry.Id">
+                                {{industry.Name}}</option>
+                          </select>
+                          <div *ngIf="submitted && f.Industry.errors" class="invalid-feedback">
+                              <div *ngIf="f.Industry.errors.required">Industry is required</div>
+                          </div>
+                        </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6 p-15" *ngIf="this.wagesForm.controls.Industry">
+                          <label class="form-label">Industry <span class="required"> * </span></label>
+          
+                              <ng-select [items]="industrys" placeholder="Industry" formControlName="Industry" [ngClass]="{ 'ng-touched': submitted && g.Industry.invalid }" bindLabel="Name" bindValue="Id">
+                              </ng-select>
+                              <div *ngIf="submitted && g.Industry.invalid" class="help-block">
+                                  <div *ngIf="g.Industry.errors.required">Industry is required</div>
+                              </div>
+              
+                        </div>
+                        
+                        <!--state-->
+                        <!-- <div class="col-md-6 col-sm-6 p-15">
+                          <label> State <span class="required">*</span> </label>
+                          <select class="form-control" formControlName="State" [ngClass]="{ 'is-invalid': submitted && f.State.errors }">
+                              <option value="" disabled>Choose State</option>
+                              <option *ngFor="let states of LstState" [value]="states.Id">
+                                {{states.Name}}</option>
+                          </select>
+                          <div *ngIf="submitted && f.State.errors" class="invalid-feedback">
+                              <div *ngIf="f.State.errors.required">State is required</div>
+                          </div>
+                        </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6 p-15" *ngIf="this.wagesForm.controls.State">
+                          <label class="form-label">State <span class="required"> * </span></label>
+          
+                              <ng-select [items]="LstState" placeholder="State" formControlName="State" [ngClass]="{ 'ng-touched': submitted && g.State.invalid }" bindLabel="Name" bindValue="Id">
+                              </ng-select>
+                              <div *ngIf="submitted && g.State.invalid" class="help-block">
+                                  <div *ngIf="g.State.errors.required">State is required</div>
+                              </div>
+              
+                        </div>
+
+                        <!--Skill Category-->
+                        <!-- <div class="col-md-6 col-sm-6 p-15">
+                          <label> Skill Category <span class="required">*</span> </label>
+                          <select class="form-control" formControlName="SkillCategory" [ngClass]="{ 'is-invalid': submitted && f.SkillCategory.errors }">
+                              <option value="" disabled>Choose Skill Category</option>
+                              <option *ngFor="let skill of skillCategory" [value]="skill.Id">
+                                {{skill.Name}}</option>
+                          </select>
+                          <div *ngIf="submitted && f.SkillCategory.errors" class="invalid-feedback">
+                              <div *ngIf="f.SkillCategory.errors.required">Skill Category is required</div>
+                          </div>
+                        </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6 p-15" *ngIf="this.wagesForm.controls.SkillCategory">
+                          <label class="form-label">Skill Category <span class="required"> * </span></label>
+          
+                              <ng-select [items]="skillCategory" placeholder="Skill Category" formControlName="SkillCategory" [ngClass]="{ 'ng-touched': submitted && g.SkillCategory.invalid }" bindLabel="Name" bindValue="Id">
+                              </ng-select>
+                              <div *ngIf="submitted && g.SkillCategory.invalid" class="help-block">
+                                  <div *ngIf="g.SkillCategory.errors.required">Skill Category is required</div>
+                              </div>
+              
+                        </div>
+                        
+                        <!--Zone-->
+                        <!-- <div class="col-md-6 col-sm-6 p-15">
+                          <label> Zone <span class="required">*</span> </label>
+                          <select class="form-control" formControlName="Zone" [ngClass]="{ 'is-invalid': submitted && f.Zone.errors }">
+                              <option value="" disabled>Choose Zone</option>
+                              <option *ngFor="let zon of zones" [value]="zon.Id">
+                                {{zon.Name}}</option>
+                          </select>
+                          <div *ngIf="submitted && f.Zone.errors" class="invalid-feedback">
+                              <div *ngIf="f.Zone.errors.required">Zone is required</div>
+                          </div>
+                        </div> -->
+
+
+                        <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6 p-15" *ngIf="this.wagesForm.controls.Zone">
+                          <label class="form-label"> Zone <span class="required"> * </span></label>
+          
+                              <ng-select [items]="zones" placeholder="Zone" formControlName="Zone" [ngClass]="{ 'ng-touched': submitted && g.Zone.invalid }" bindLabel="Name" bindValue="Id">
+                              </ng-select>
+                              <div *ngIf="submitted && g.Zone.invalid" class="help-block">
+                                  <div *ngIf="g.Zone.errors.required">Zone is required</div>
+                              </div>
+              
+                        </div>
+
+                        <!--Product-->
+                        <!-- <div class="col-md-6 col-sm-6 p-15">
+                          <label> Product <span class="required">*</span> </label>
+                          <select class="form-control" formControlName="Product" [ngClass]="{ 'is-invalid': submitted && f.Product.errors }">
+                              <option value="" disabled>Choose Product</option>
+                              <option *ngFor="let product of products" [value]="product.Id">
+                                {{product.Name}}</option>
+                          </select>
+                          <div *ngIf="submitted && f.Product.errors" class="invalid-feedback">
+                              <div *ngIf="f.Product.errors.required">Product is required</div>
+                          </div>
+                        </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6 p-15" *ngIf="this.wagesForm.controls.Product">
+                          <label class="form-label"> Product <span class="required"> * </span></label>
+          
+                              <ng-select [items]="products" placeholder="Product" formControlName="Product" [ngClass]="{ 'ng-touched': submitted && g.Product.invalid }" bindLabel="Name" bindValue="Id">
+                              </ng-select>
+                              <div *ngIf="submitted && g.Product.invalid" class="help-block">
+                                  <div *ngIf="g.Product.errors.required">Product is required</div>
+                              </div>
+              
+                        </div>
+                        
+
+                        <!--Product code-->
+                        <!-- <div class="col-md-6 col-sm-6 p-15">
+                          <label> Product Code </label>
+                              <input type="text" placeholder="Enter ProductCode" class="form-control" formControlName="ProductCode" [ngClass]="{ 'is-invalid': submitted && f.ProductCode.errors }">
+                                <div *ngIf="submitted && f.ProductCode.errors" class="invalid-feedback">
+                                  <div *ngIf="f.ProductCode.errors.required">Product Code is required</div>                         
+                                </div>                            
+                        </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6 p-15" *ngIf="this.wagesForm.controls.ProductCode">
+                          <label class="form-label">Product Code <span class="required"> * </span></label>
+        
+                            <input type="text" class="form-control" placeholder="Product Code" formControlName="ProductCode" [ngClass]="{ 'ng-touched': submitted && g.ProductCode.invalid }" autocomplte="off">
+                        
+                            <div *ngIf="submitted && g.ProductCode.invalid" class="help-block">
+                                <div *ngIf="g.ProductCode.errors.required">Product Code is required</div>
+                            </div>
+              
+                        </div>
+
+                        <!--Product Value-->
+                        <!-- <div class="col-md-6 col-sm-6 p-15">
+                          <label> Product Value </label>
+                              <input type="number" placeholder="Enter ProductValue" class="form-control" formControlName="ProductValue" [ngClass]="{ 'is-invalid': submitted && f.ProductValue.errors }">
+                                <div *ngIf="submitted && f.ProductValue.errors" class="invalid-feedback">
+                                  <div *ngIf="f.ProductValue.errors.required">Amount is required</div>                         
+                                </div>                            
+                        </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6 p-15" *ngIf="this.wagesForm.controls.ProductValue">
+                          <label class="form-label">Product Value <span class="required"> * </span></label>
+        
+                            <input type="number" class="form-control" placeholder="Product Value" formControlName="ProductValue" [ngClass]="{ 'ng-touched': submitted && g.ProductValue.invalid }" autocomplte="off">
+                        
+                            <div *ngIf="submitted && g.ProductValue.invalid" class="help-block">
+                                <div *ngIf="g.ProductValue.errors.required">Product Value is required</div>
+                            </div>
+              
+                        </div>
+
+                        <!--Effective Date-->
+                        <!-- <div class="col-md-6 col-sm-6 p-15">
+                          <label> Effective Date <span class="required">*</span> </label>
+                          <input type="date" placeholder="Effective Date" onkeypress="return /[a-z]/i.test(event.key)" autocomplete="off" class="form-control" formControlName="EffectiveDate" [ngClass]="{ 'is-invalid': submitted && f.EffectiveDate.errors }">
+                          <div *ngIf="submitted && f.EffectiveDate.errors" class="invalid-feedback">
+                              <div *ngIf="f.EffectiveDate.errors.required">Effective Date is required</div>
+                          </div>
+                        </div> -->
+
+                        <div class="form-group form-group-vertical col-xs-12 col-md-6 col-sm-6 p-15" *ngIf="this.wagesForm.controls.EffectiveDate">
+                          <label class="form-label">Effective Date<span class="required">*</span> </label>
+                  
+                          <input type="text" class="form-control" bsDatepicker placement="top" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+                          containerClass:'theme-default' }" name="EffectiveDate" formControlName="EffectiveDate" [ngClass]="{'is-invalid': submitted && g.EffectiveDate.errors }" placeholder="Effective Date" autocomplete="off">
+                          <div *ngIf="submitted && g.EffectiveDate.errors" class="invalid-feedback">
+                              <div *ngIf="g.EffectiveDate.errors.required">EffectiveDate is required
+                              </div>
+                          </div>
+                      </div>
+                                              
+                        <!--status-->
+                        <div class="col-md-6 col-sm-6 p-15">
+                          <label> Status  </label>
+                          <label class="container p-l-0">
+                                  <input type="checkbox" class="form-control"  formControlName="Status" [ngClass]="{ 'is-invalid': submitted && f.Status.errors }">
+                                  <span class="checkmark"></span>
+                            </label>
+                      </div>
+                       
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+
+              <button class="btn btn-default pull-right" type="button" (click)="closeModal()"><i class="mdi mdi-close m-r-xs"></i>Cancel</button>    
+              
+              <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                  <div>
+                      <div>
+                          <button class="btn  btn-primary " type="Submit" name="btnSubmit" [disabled]="!disableBtn" id="btnSubmit" (click)="savebutton()">
+                              <div class="pos-rlt sm-btn-component"><span><i class="mdi mdi-content-save  m-r-xs"></i> Save </span></div>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+            </div>
+
+
+          </div>
+      </div>
+  </div>
+</div>

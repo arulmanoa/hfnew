@@ -1,0 +1,319 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col-xs-11">
+          <h4 class="modal-title">Product Applicability</h4>
+        </div>
+        <div class="col-xs-1">
+          <button type="button" class="close" data-dismiss="modal" (click)="closeModal()" aria-label="Close"><span
+              aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <form [formGroup]="productApplicabilityForm">
+        <div class="modal-body" style="min-height:550px;">
+          <div class="">
+            <input type="radio" (change)="showContent()" checked value="radio1" name="customRadio"
+              [ngModelOptions]="{standalone: true}" [(ngModel)]="radioOptionSelected">
+            <span class="font-weight-bold">By Group</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" (change)="showContent()" value="radio2" name="customRadio"
+              [ngModelOptions]="{standalone: true}" [(ngModel)]="radioOptionSelected">
+            <span class="font-weight-bold">By Product</span>
+
+          </div>
+          &nbsp;&nbsp;
+          <div class="row">
+            <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+              <label class="form-label"> Code <span class="required">*</span> </label>
+              <input type="text" placeholder="Code" class="form-control" formControlName="code"
+                [ngClass]="{ 'is-invalid': submitted && f.code.errors }">
+
+              <div *ngIf="submitted && f.code.errors" class="invalid-feedback">
+                <div *ngIf="f.code.errors.required"> Code is required</div>
+                <div *ngIf="f.code.errors.minlength">Code must be at least 2 characters</div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+              <label class="form-label">Effective Date <span class="required">*</span></label>
+              <!-- <input class="form-control" type="date" name="dateOfBirth" formControlName="dateOfBirth" [ngClass]="{ 'is-invalid': submitted && g.dateOfBirth.errors }" placeholder="12-12-1990" autocomplete="off"> -->
+              <input type="text" class="form-control" bsDatepicker placement="bottom"
+                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                name="effectiveDate" [minDate]="minDate" formControlName="effectiveDate"
+                [ngClass]="{ 'is-invalid': submitted && f.effectiveDate.errors }" 
+                placeholder="01-01-2000" autocomplete="off" readonly required>
+              <div *ngIf="submitted && f.effectiveDate.errors" class="invalid-feedback">
+                <div *ngIf="f.effectiveDate.errors.required">Effective Date is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+              <label class="form-label">Status</label>
+              <div class="p-t-10">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" value="yes" formControlName="status" checked enabled />
+                  <span class="el-switch-style"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="showcontent =='radio1'">
+            <div class="row">
+              <!-- (change)="selectp.filterForeCasts($event.target.value)" -->
+              <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                <label class="form-label">Product Group</label>
+
+                <ng-select #selectp [multiple]="true" [closeOnSelect]="true" [searchable]="false"
+                  [items]="ProductGroupList" placeholder="Choose ..." formControlName="productGrouplist"
+                  (change)="onChangeProductGroupDropdown($event)" bindLabel="Name" bindValue="Id"
+                  [multiple]="true">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search Product Group" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="selectp.filter($event.target.value)" />
+                  </ng-template>
+                  <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                      <span class="ng-value-label">{{item.Name}}</span>
+                      <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 2">
+                      <span class="ng-value-label">{{items.length - 2}} more...</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+                <!-- <div *ngIf="submitted && f.productGrouplist.invalid" class="help-block">
+                              <div *ngIf="f.productGrouplist.errors.required">Product Group is required
+                              </div>
+                          </div> -->
+              </div>
+              <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                <label class="form-label">Exclude Product </label>
+                <ng-select #excludeProduct [multiple]="true" [closeOnSelect]="false" [searchable]="false"
+                  [items]="excludedDataByProduct" placeholder="Choose ..." formControlName="excludedProduct"
+                  bindLabel="Name" bindValue="Id" (change)="onChangeExcludedProduct($event)" [loading]="spinner">
+                  <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                    <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{standalone: true}" />
+                    &nbsp;{{item.Name}}
+                  </ng-template>
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="excludeProduct.filter($event.target.value)" />
+                  </ng-template>
+                  <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                      <span class="ng-value-label">{{item.Name}}</span>
+                      <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 2">
+                      <span class="ng-value-label">{{items.length - 2}} more...</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                <label class="form-label">Perpetual Exclusion Product </label>
+                <ng-select #excludePp [multiple]="true" [closeOnSelect]="false" [searchable]="false"
+                  [items]="perpetualExclusionDataByProduct" placeholder="Choose ..." formControlName="perpetualExclusionProduct"
+                  bindLabel="Name" bindValue="Id" (change)="onChangePerpetualProduct($event)" [loading]="spinner">
+                  <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                    <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{standalone: true}" />
+                    &nbsp;{{item.Name}}
+                  </ng-template>
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="excludePp.filter($event.target.value)" />
+                  </ng-template>
+                  <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                      <span class="ng-value-label">{{item.Name}}</span>
+                      <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 2">
+                      <span class="ng-value-label">{{items.length - 2}} more...</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <!-- <div class="text-center ma-5" *ngIf="spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div> -->
+            <div class="w-100 captionHeader" *ngIf="selectedApplicableData && selectedApplicableData.length > 0">Selected Applicable Product</div>
+            <div class="w-100 table-responsive fixTableHead" *ngIf="selectedApplicableData && selectedApplicableData.length > 0">
+               <table class="table table-bordered">
+                <thead>
+                   <tr class="document_table_tr" style="background-color:#f7f9fc;">
+                     <th scope="col">Code</th>
+                     <th scope="col">Name</th>
+                     <th scope="col">Product Group</th>
+                     <th scope="col">Status </th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let item of selectedApplicableData; let i = index">
+                     <td class="document_table_docName">
+                       {{item.Code}}
+                     </td>
+                     <td class="document_table_docName">
+                       {{item.Name}}
+                     </td>
+                     <td class="document_table_docName">
+                       {{item.ProductGroupName}}
+                     </td>
+                     <td class="document_table_docName">
+                       {{item.Status== '0' ? 'In-Active' : 'Active'}}
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+            </div>
+            <div class="w-100 captionHeader" *ngIf="selectedExcludedData && selectedExcludedData.length > 0">Selected Excluded Product</div>
+            <div class="w-100 table-responsive fixTableHead" *ngIf="selectedExcludedData && selectedExcludedData.length > 0">
+             <table class="table table-bordered">
+                <thead>
+                   <tr class="document_table_tr" style="background-color:#f7f9fc;">
+                     <th scope="col">Code</th>
+                     <th scope="col">Name</th>
+                     <th scope="col">Product Group</th>
+                     <th scope="col">Status </th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let item of selectedExcludedData;">
+                     <td class="document_table_docName">
+                       {{item.Code}}
+                     </td>
+                     <td class="document_table_docName">
+                       {{item.Name}}
+                     </td>
+                     <td class="document_table_docName">
+                       {{item.ProductGroupName}}
+                     </td>
+                     <td class="document_table_docName">
+                       {{item.Status== '0' ? 'In-Active' : 'Active'}}
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+            </div>
+            <div class="w-100 captionHeader" *ngIf="selectedPerptualExcludedData && selectedPerptualExcludedData.length > 0">Selected Perptual Exclusion Product</div>
+           <div class="w-100 table-responsive fixTableHead" *ngIf="selectedPerptualExcludedData && selectedPerptualExcludedData.length > 0">
+             <table class="table table-bordered">
+               <thead>
+                   <!-- <caption class="captionHeader">Selected Excluded Product</caption> -->
+                   <tr class="document_table_tr" style="background-color:#f7f9fc;">
+                     <th scope="col">Code</th>
+                     <th scope="col">Name</th>
+                     <th scope="col">Product Group</th>
+                     <th scope="col">Status </th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let item of selectedPerptualExcludedData;">
+                     <td class="document_table_docName">
+                       {{item.Code}}
+                     </td>
+                     <td class="document_table_docName">
+                       {{item.Name}}
+                     </td>
+                     <td class="document_table_docName">
+                       {{item.ProductGroupName}}
+                     </td>
+                     <td class="document_table_docName">
+                       {{item.Status== '0' ? 'In-Active' : 'Active'}}
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+            </div>
+          </div>
+          <div *ngIf="showcontent=='radio2'" class="w-100">
+            <div class="row">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                <label class="form-label">Applicable Product</label>
+                <ng-select #productApplicable [multiple]="true" [closeOnSelect]="false" [searchable]="false"
+                  [items]="applicableDataByProduct" placeholder="Choose ..." formControlName="applicableProduct"
+                  bindLabel="Name" bindValue="Id" (change)="onChangeApplicableProduct($event)" [loading]="spinner">
+                  <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                    <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{standalone: true}" />
+                    &nbsp;{{item.Name}}
+                  </ng-template>
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search by name" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="productApplicable.filter($event.target.value)" />
+                  </ng-template>
+                  <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                      <span class="ng-value-label">{{item.Name}}</span>
+                      <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">x</span>
+                    </div>
+                    <div class="ng-value" *ngIf="items.length > 2">
+                      <span class="ng-value-label">{{items.length - 2}} more...</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <div class="captionHeader" *ngIf="selectedApplicableData && selectedApplicableData.length > 0">Selected Applicable Product</div>
+            <div class="w-100 table-responsive fixTableHead" *ngIf="selectedApplicableData && selectedApplicableData.length > 0">
+              <table class="table table-bordered">
+                 <thead>
+                    <tr class="document_table_tr" style="background-color:#f7f9fc;">
+                      <th scope="col">Code</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Product Group</th>
+                      <th scope="col">Status </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of selectedApplicableData;">
+                      <td class="document_table_docName">
+                        {{item.Code}}
+                      </td>
+                      <td class="document_table_docName">
+                        {{item.Name}}
+                      </td>
+                      <td class="document_table_docName">
+                        {{item.ProductGroupName}}
+                      </td>
+                      <td class="document_table_docName">
+                        {{item.Status== '0' ? 'In-Active' : 'Active'}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+             </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default pull-right" type="button" (click)="closeModal()">
+            <i class="mdi mdi-close m-r-xs"></i>Cancel
+          </button>
+          <div class="pull-right m-r-sm">
+            <div>
+              <div>
+                <button class="btn btn-primary" type="submit" prevent-double-submit id="btnSubmit"
+                  (click)="saveProductApplicability()">
+                  <div class="pos-rlt sm-btn-component">
+                    <span><i class="mdi mdi-content-save m-r-xs"></i> Save</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

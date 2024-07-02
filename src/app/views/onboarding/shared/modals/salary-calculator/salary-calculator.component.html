@@ -1,0 +1,274 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;">
+
+
+        <div class="row" style="position: sticky;top: 0px;z-index: 100;background: #FFF;">
+          <div class="col-md-12">
+            <h3 class="moudle_name" style="font-weight: 600; text-transform: uppercase;">Salary Calculator</h3>
+            <span style="font-size: 12px;font-weight: 600;"
+              *ngIf="defaultSearchInputs.ClientId > 0">{{defaultSearchInputs.ClientName}} |
+              {{defaultSearchInputs.ClientContractName}}</span>
+          </div>
+        </div>
+
+        <br />
+
+        <div class="d-flex align-items-center" *ngIf="spinner" style=" margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);">
+          <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+
+
+            <form [formGroup]="napsForm" *ngIf="!spinner">
+
+              <div class="row">
+
+
+
+                <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Designation <span class="required">*</span></label>
+              <input class="form-control" type="text" name="Designation" formControlName="Designation"
+                [ngClass]="{'is-invalid': submitted && g.Designation.errors }" placeholder="Junior Software Developer"
+                autocomplete="none|false|no">
+              <div *ngIf="submitted && g.Designation.invalid" class="help-block">
+                <div *ngIf="g.Designation.errors.required">Designation is required
+                </div>
+              </div>
+            </div> -->
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Gender <span class="required">*</span></label>
+                  <ng-select [items]="LstGender" placeholder="-- select Gender --" formControlName="Gender"
+                    [ngClass]="{'ng-touched': submitted && g.Gender.invalid }" bindLabel="name" bindValue="id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.Gender.invalid" class="help-block">
+                    <div *ngIf="g.Gender.errors.required">Gender is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Salary Type <span class="required">*</span></label>
+                  <ng-select [items]="LstSalaryBreakUpType" placeholder="-- select Salary Type --"
+                    formControlName="SalaryType" [ngClass]="{'ng-touched': submitted && g.SalaryType.invalid }"
+                    bindLabel="name" bindValue="id" (change)="onChangeSalary($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && g.SalaryType.invalid" class="help-block">
+                    <div *ngIf="g.SalaryType.errors.required">Salary Type is required
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+                <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Date of Birth <span class="required"> * </span>  </label>
+              <input type="text" class="form-control" bsDatepicker placement="bottom" [maxDate]="DOBmaxDate"
+                (bsValueChange)="onChangeDOB($event)" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+          containerClass:'theme-default' }" name="DOB" formControlName="DOB"
+                [ngClass]="{'is-invalid': submitted && g.DOB.errors }" placeholder="12-12-1990"
+                autocomplete="none|false|no">
+              <div *ngIf="submitted && g.DOB.errors" class="invalid-feedback">
+                <div *ngIf="g.DOB.errors.required">DOB is required
+                </div>
+              </div>
+            </div> -->
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">State<span class="required">*</span></label>
+                  <ng-select [items]="regionJson.StateList" placeholder="-- select an option --" formControlName="State"
+                    [ngClass]="{'ng-touched': submitted && g.State.invalid }" bindLabel="Name" bindValue="Id"
+                    (change)="onChangeState($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && g.State.invalid" class="help-block">
+                    <div *ngIf="g.State.errors.required">State is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">City<span class="required">*</span></label>
+                  <ng-select [items]="LstCity" placeholder="-- select an option --" formControlName="City"
+                    [ngClass]="{'ng-touched': submitted && g.City.invalid }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.City.invalid" class="help-block">
+                    <div *ngIf="g.City.errors.required">City is required
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+
+
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Pay Structure <span class="required">*</span></label>
+                  <ng-select [items]="LstPayGroup" placeholder="-- select Pay Structure --" formControlName="PayGroupId"
+                    [ngClass]="{'ng-touched': submitted && g.PayGroupId.invalid }" bindLabel="Name"
+                    bindValue="PayGroupId" (change)="onChangePayStructure($event ,'DOM')">
+                  </ng-select>
+                  <div *ngIf="submitted && g.PayGroupId.invalid" class="help-block">
+                    <div *ngIf="g.PayGroupId.errors.required">Pay Structure is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- 
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Team <span class="required">*</span></label>
+              <ng-select [items]="LstTeam" placeholder="-- select Team --" formControlName="Team"
+                [ngClass]="{'ng-touched': submitted && g.Team.invalid }" bindLabel="Name" bindValue="Id"
+                (change)="onChangeTeam($event ,'DOM')">
+              </ng-select>
+              <div *ngIf="submitted && g.Team.invalid" class="help-block">
+                <div *ngIf="g.Team.errors.required">Team is required
+                </div>
+              </div>
+            </div> -->
+
+
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label">Annual Salary<span class="required">*</span>
+                  </label>
+                  <input class="form-control" type="number" maxlength="10"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" name="Stipend" formControlName="Stipend"
+                    [ngClass]="{'is-invalid': submitted && g.Stipend.errors }"
+                    (keyup)="onChangeAnnaulSalary($event.target.value)" placeholder="500000"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.Stipend.errors" class="invalid-feedback">
+                    <div *ngIf="g.Stipend.errors.required">Annual Salary is required
+                    </div>
+                  </div>
+                  <div *ngIf="SalaryFormat == 0" class="help-block">
+                    <div> Annual Salary should be greater than zero
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                  <label class="form-label" id='forMonthlyValue'>Do you want to use
+                    Minimum Wages? </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" value="yes" formControlName="IsMinimumWagesEnabled"
+                        (change)="onChangeMinimumWages($event)" />
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                  *ngIf="napsForm.controls.IsMinimumWagesEnabled.value == true">
+                  <label class="form-label">Industry Type <span class="required">*</span></label>
+                  <ng-select [items]="LstIndustry" placeholder="-- select an option --" formControlName="Industry"
+                    [ngClass]="{'ng-touched': submitted && g.Industry.invalid }" bindLabel="Name" bindValue="Id"
+                    (change)="onChangeIndustry($event)">
+                  </ng-select>
+                  <div *ngIf="submitted && g.Industry.invalid" class="help-block">
+                    <div *ngIf="g.Industry.errors.required">Industry is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                  *ngIf="napsForm.controls.IsMinimumWagesEnabled.value == true">
+                  <label class="form-label">Skill Category<span class="required">*</span></label>
+                  <ng-select [items]="LstSkillCategory" placeholder="-- select an option --"
+                    formControlName="SkillCategory" [ngClass]="{'ng-touched': submitted && g.SkillCategory.invalid }"
+                    bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.SkillCategory.invalid" class="help-block">
+                    <div *ngIf="g.SkillCategory.errors.required">Skill Category is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                  *ngIf="napsForm.controls.IsMinimumWagesEnabled.value == true">
+                  <label class="form-label">Zone<span class="required">*</span></label>
+                  <ng-select [items]="LstZone" placeholder="-- select an option --" formControlName="Zone"
+                    [ngClass]="{'ng-touched': submitted && g.Zone.invalid }" bindLabel="Name" bindValue="Id">
+                  </ng-select>
+                  <div *ngIf="submitted && g.Zone.invalid" class="help-block">
+                    <div *ngIf="g.Zone.errors.required">Zone is required
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Start Date <span class="required">*</span></label>
+              <input type="text" onkeydown="return (event.keyCode!=13);" class="form-control"
+                (ngModelChange)="onChangeDOJ($event)" bsDatepicker placement="top"
+                [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                name="StartDate" formControlName="StartDate"
+                [ngClass]="{'is-invalid': submitted && g.StartDate.errors }" placeholder="12-12-2020"
+                autocomplete="none|false|no" readonly>
+              <div *ngIf="submitted && g.StartDate.errors" class="invalid-feedback">
+                <div *ngIf="g.StartDate.errors.required">Start Date is required
+                </div>
+              </div>
+            </div> -->
+
+
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+        <div class="row" *ngIf="IsFailedStatus">
+          <div class="col-lg-12 text-center">
+            <ngb-alert [dismissible]="false">
+              <strong> Calculation Remarks : {{CalculationRemarks}}</strong>
+            </ngb-alert>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center" style="margin: 0;
+        position: absolute;
+        top: 90%;
+        left: 53%;
+        transform: translate(0%, -50%);">
+          <img src="assets/Images/SalaryBreakup.svg" style="padding: 30px;">
+        </div>
+
+
+
+        <div class="row">
+          <div class="col-md-12 text-right footer_">
+            <button class="btn btn-link" type="button"
+              style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="doCancel('Modal Closed')">
+              &nbsp; &nbsp; Cancel &nbsp; &nbsp; </button>
+            <button class="btn btn-primary" (click)="PreviewSalaryBreakup()" [disabled]="spinner"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Calculate &nbsp; &nbsp;
+            </button>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,87 @@
+<div style="font-family: Roboto, sans-serif;" class="d-block modal fade show">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col-xs-11">
+          <h6 class="modal-title"> Create New Activity </h6>
+        </div>
+        <div class="col-xs-1">
+          <button type="button" class="close" data-dismiss="modal" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true" style="font-size: 1.25em;">&times;</span>
+          </button>
+        </div>
+      </div>
+      <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+            Please wait...
+        </button>
+      </div>
+      <form [formGroup]="createActivityForm" >
+        <div class="modal-body" *ngIf="!spinner">
+          <div class="row">
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label  class="form-label fw-400">Project <span class="required">*</span> </label>
+              <ng-select [items]="data.projects" [searchable]="true" placeholder="Choose..." [clearable]="false" 
+                bindValue="Id" bindLabel="Name" formControlName="ProjectId" [ngClass]="{ 'is-invalid': submitted && f.ProjectId.errors }">
+              </ng-select>
+              <div *ngIf="submitted && f.ProjectId.invalid" class="help-block">
+                <div *ngIf="f.ProjectId.errors.required">Project is required</div>
+              </div>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label fw-400"> Status </label>
+              <div class="p-t-10">
+                <label class="el-switch el-switch-green">
+                    <input type="checkbox" name="status" formControlName="Status" readonly />
+                    <span class="el-switch-style"></span>
+                </label>
+              </div>
+              <div *ngIf="submitted && g.status.invalid" class="help-block">
+                <div *ngIf="g.status.errors.required">Status is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label class="form-label fw-400">Activity Code <span class="required">*</span> </label>
+              <input type="text" placeholder="Activity Code" class="form-control" formControlName="Code"
+              maxlength="20" [ngClass]="{ 'is-invalid': submitted && f.Code.errors }" required>
+              <div *ngIf="submitted && f.Code.invalid" class="help-block">
+                <div *ngIf="f.Code.errors.required">Activity Code is required</div>
+              </div>
+            </div>
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label class="form-label fw-400">Activity Name <span class="required">*</span> </label>
+              <input type="text" placeholder="Activity Name" class="form-control" formControlName="Name"
+                [ngClass]="{ 'is-invalid': submitted && f.Name.errors }" maxlength="20" required>
+              <div *ngIf="submitted && f.Name.invalid" class="help-block">
+                <div *ngIf="f.Name.errors.required">Activity Name is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+              <label class="form-label fw-400"> Description </label>
+              <textarea class="form-control" rows="3" spellcheck="false" id="description"
+              formControlName="Description" placeholder="Enter some comments" maxlength="200" ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-right">
+            <button class="btn btn-default btn-outline mt-0 m-r-sm" type="button" (click)="closeModal()">
+              Cancel
+            </button>
+            <button class="btn btn-primary action-btn m-r-sm" type="submit" prevent-double-submit id="btnSubmit"
+              (click)="saveActivityByEmployee()" [disabled]="spinner">
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

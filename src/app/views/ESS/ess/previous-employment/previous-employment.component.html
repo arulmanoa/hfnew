@@ -1,0 +1,439 @@
+<div class="page-wrapper ff" *ngIf="isESSLogin == true">
+    <div class="page-content">
+
+
+        <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;">
+            <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" [fullScreen]="true">
+                <p style="color: #0a609eeb"> Loading... </p>
+            </ngx-spinner> -->
+            <app-loading-screen></app-loading-screen>
+            <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                        aria-hidden="true"></span>
+                    Please wait...
+                </button>
+            </div>
+
+            <div class="row" *ngIf="!spinner && isESSLogin == true">
+                <div class="col-lg-6 col-xs-12 col-sm-12">
+                    <div class="headerbar">
+                        <div>
+                            <h2 class="header_title">Previous Employment</h2>
+                            <p class="subheader_title" *ngIf="employeedetails != null">Name : {{employeedetails.FirstName}} ~ Code : {{employeedetails.Code}}
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 text-right">
+                    <div class="text-right">
+                        <ul class="list-inline" *ngIf="allowedToSave && !spinner && !isInvestmentUnderQC">
+                            <li class="list-inline-item">
+                                <button type="button" class="btn btn-primary" (click)="addPreviousEmployment()"> <i
+                                        class="mdi mdi-database-plus  m-r-xs"></i> Add New
+                                </button>
+                            </li>
+
+                            <li class="list-inline-item">
+                                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(false)">
+                                    <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div *ngIf="!spinner">
+
+                <ng-container *ngTemplateOutlet="mydocumentTemplate">
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="isESSLogin == false && !spinner ">
+    <ng-container *ngTemplateOutlet="mydocumentTemplate">
+    </ng-container>
+</div>
+
+
+<ng-template #mydocumentTemplate>
+
+    <div class="row" *ngIf="!spinner && isInvestmentUnderQC">
+        <div class="col-lg-12" style="TEXT-ALIGN: CENTER;">
+            <span class="text-center">Your Previous Employment Proof verification is underway. Please wait until it is
+                completed.
+            </span>
+            <br />
+            <br />
+        </div>
+    </div>
+
+
+    <div class="row" *ngIf="!spinner && isESSLogin == false && !isInvestmentUnderQC">
+        <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12" style="margin-bottom:0px;">
+            <div class="text-right">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <button *ngIf="isEnbleBankBtn && allowedToSave" type="button" class="btn btn-primary" (click)="addPreviousEmployment()"> <i class="mdi mdi-database-plus  m-r-xs"></i> Add New
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row" *ngIf="!spinner && !isInvestmentUnderQC &&  (LstemploymentDetails.length == undefined || LstemploymentDetails.length == 0) ">
+        <div class="col-12"><b class="text-center" style="display: block;">No records found!</b>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="!spinner && !isInvestmentUnderQC">
+        <div class="col-lg-6" *ngFor="let item of LstemploymentDetails " style="padding: 10px;">
+            <div class="card card2" style="padding: 10px;">
+                <div class="row">
+                    <!-- // bug fixes 16.2 -->
+                    <div class="col-md-12" style="padding-left: 30px; margin-bottom: 25px;">
+                        <h6 class="city" style="    font-weight: 700;letter-spacing: 1px;margin-bottom: 5px !important;">
+                            <span style="font-size: 12px;
+                      border: 1px solid #d3d3d3;
+                      border-radius: 5px;
+                      padding: 4px;
+                      letter-spacing: 0px;
+                      background: #f6f6f6;
+                    
+                      margin-right: 15px;"> {{item.FinancialYearName}} </span> {{item.CompanyName}}
+
+                            <div style="text-align: right;display: inline;">
+
+
+                                <span class="badge badge-warning" *ngIf="item.ApprovalStatus == 0" style="display: inline;color:white !important;cursor: pointer;">
+                                    Saved
+
+
+                                </span>
+                                <span class="badge badge-danger" *ngIf="item.ApprovalStatus == 2" style="display: inline;color:white !important;cursor: pointer;">
+                                    Rejected
+
+                                </span>
+                                <span class="badge badge-success" *ngIf="item.ApprovalStatus == 1" style="display: inline;color:white !important;cursor: pointer;">
+
+                                    Approved
+
+                                </span>
+
+
+                            </div>
+
+                        </h6>
+                        <span class="description" style="font-size: 12px; font-weight: 600;letter-spacing: 1px;">
+                            {{item.StartDate | date : 'dd-MM-yyyy'}} -
+                            {{item.EndDate | date : 'dd-MM-yyyy'}} </span>
+
+                        <div class="media-right" style="margin-top: -15px;">
+
+                            <a href="javascript:;" class="btn action-edit pull-right" style="margin-right: 5px" (click)="document_file_view(item)" *ngIf="item.DocumentId > 0 ">
+                                <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                            </a>
+                            <a href="javascript:;" class="btn action-edit pull-right" style="margin-right: 5px" (click)="editPreviousEmployment(item)" *ngIf="item.ApprovalStatus != 1">
+                                <i class="fa fa-pencil" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                            </a>
+                        </div>
+                        <!-- <span *ngIf="item.TransactionRemarks">| {{item.TransactionRemarks}} </span> -->
+                    </div>
+
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label">Gross Salary <span class="required"></span></label>
+                            <p class="date">{{item.GrossSalary | number : '1.2-2'}} / {{item.ApprovedGrossSalary | number : '1.2-2'}}</p>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label">Previous PF<span class="required"></span></label>
+                            <p class="date">{{item.PreviousPF | number : '1.2-2'}} / {{item.ApprovedPreviousPF | number : '1.2-2'}}</p>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label">Previous PT<span class="required"></span></label>
+                            <p class="date">{{item.PreviousPT | number : '1.2-2'}} / {{item.ApprovedPreviousPT | number : '1.2-2'}}</p>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label">Tax Deducted <span class="required"></span></label>
+                            <p class="date">{{item.TaxDeducted | number : '1.2-2'}} / {{item.ApprovedTaxDeducted | number : '1.2-2'}}</p>
+
+                        </div>
+
+                    </div>
+                    <!-- bug fixes 16.2  -->
+                    <div class="col-md-6">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label">Input Remarks  <span class="required"></span></label>
+                            <p class="date" *ngIf="item.InputsRemarks != null && item.InputsRemarks !=''">{{item.InputsRemarks}}</p>
+                            <p class="date" *ngIf="item.InputsRemarks == null || item.InputsRemarks == ''">---</p>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6" *ngIf="item.DocumentId > 0 ">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label"> Appr. Remarks<span class="required"></span></label>
+                            <p class="date">{{item.ApproverRemarks}}</p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- <hr> -->
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<nz-drawer [nzVisible]="previousemployment_slidervisible" [nzWidth]="840" nzTitle="Previous Employment" (nzOnClose)="close_preEmploymentSlider()">
+
+    <form [formGroup]="employeeForm">
+
+        <div class="col-12 col-md-12 col-sm-12">
+            <div class="clearfix">
+
+                <div class="row">
+                    <!-- <div class="form-group form-group-vertical col-xs-push-12 col-sm-6">
+                        <label class="form-label">Employee Code <span class="required">*</span> </label>
+                        <input class="form-control" disabled type="text" name="employeecode"
+                            formControlName="employeecode"
+                            [ngClass]="{ 'is-invalid': submitted && g.employeecode.errors }" placeholder="40001"
+                            autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.employeecode.errors" class="invalid-feedback">
+                            <div *ngIf="g.employeecode.errors.required">Employee Code is required
+                            </div>
+                        </div>
+
+
+                    </div> -->
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 ">
+                        <label class="form-label ">Financial Year <span class="required">*</span></label>
+
+                        <ng-select [items]="FicalYearList" placeholder="-- select an option --" formControlName="prevEmpfinancialYear" [ngClass]="{ 'ng-touched': g.prevEmpfinancialYear.errors }" bindLabel="code" bindValue="Id">
+
+                        </ng-select>
+
+                        <div *ngIf="g.prevEmpfinancialYear.errors" class="help-block">
+                            Financial Year is required
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="form-group form-group-vertical col-xs-push-12 col-sm-6">
+                        <label class="form-label">Company Name <span class="required">*</span> </label>
+                        <input class="form-control" type="text" name="companyName" formControlName="companyName" [ngClass]="{ 'is-invalid': submitted && g.companyName.errors }" placeholder="Integrum Technologies" autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.companyName.errors" class="invalid-feedback">
+                            <div *ngIf="g.companyName.errors.required">Company Name is required
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label">Start Date <span class="required">*</span></label>
+                        <input class="form-control" name="startdate" formControlName="startdate" bsDatepicker placement="bottom" readonly (bsValueChange)="onChangeStartDate($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            placeholder="01-01-2000" [ngClass]="{ 'is-invalid': submitted && g.startdate.errors }" type="text" autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.startdate.errors" class="invalid-feedback">
+                            <div *ngIf="g.startdate.errors.required">Start Date is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label">End Date <span class="required">*</span> </label>
+                        <input class="form-control" name="enddate" bsDatepicker placement="bottom" readonly [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" type="text" formControlName="enddate" placeholder="01-01-2000" [minDate]="EnddateminDate"
+                            [ngClass]="{ 'is-invalid': submitted && g.enddate.errors }" type="text" autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.enddate.errors" class="invalid-feedback">
+                            <div *ngIf="g.enddate.errors.required">End Date is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label">Gross Salary<span class="required">*</span></label>
+                        <input class="form-control" name="grossSalary" formControlName="grossSalary" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987" [ngClass]="{ 'is-invalid': submitted && g.grossSalary.errors }" autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.grossSalary.errors" class="invalid-feedback">
+                            <div *ngIf="g.grossSalary.errors.required">Gross Salary is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label">Previous PT<span class="required">*</span></label>
+                        <input class="form-control" name="previousPT" formControlName="previousPT" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987" [ngClass]="{ 'is-invalid': submitted && g.previousPT.errors }" autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.previousPT.errors" class="invalid-feedback">
+                            <div *ngIf="g.previousPT.errors.required">Previous PT is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label">Previous PF<span class="required">*</span></label>
+                        <input class="form-control" name="previousPF" formControlName="previousPF" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987" [ngClass]="{ 'is-invalid': submitted && g.previousPF.errors }" autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.previousPF.errors" class="invalid-feedback">
+                            <div *ngIf="g.previousPF.errors.required">Previous PF is required
+                            </div>
+                        </div>
+                    </div>
+                    <!-- // bug fixes 16.2 -->
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label">Tax Deducted<span class="required">*</span></label>
+                        <input class="form-control" name="taxDeducted" formControlName="taxDeducted" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987" [ngClass]="{ 'is-invalid': submitted && g.taxDeducted.errors }" autocomplete="none|false|no">
+                        <div *ngIf="submitted && g.taxDeducted.errors" class="invalid-feedback">
+                            <div *ngIf="g.taxDeducted.errors.required">Tax Deducted is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label">Remarks<span class="required">*</span></label>
+                        <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" formControlName="InputsRemarks"></textarea>
+
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                        <label class="form-label">Attachment <span class="required">*</span> <span
+                                class="help-text m-l-5">(Max file
+                                size 2MB)</span></label>
+                        <label class="upload control" style="width: 50%; float: left;" *ngIf="!FileName">
+                            <div class="upload-draggable is-primary">
+                                <section class="section">
+                                    <div class="has-text-centered">
+                                        <span class="icon is-large">
+                                            <span style="padding-left: 10px;"> <i class="fa fa-upload"
+                                                    style="color: #9ba7ca;"></i> Upload
+                                            </span>
+                                        </span>
+
+                                    </div>
+                                </section>
+                            </div>
+                            <input type="file" accept="application/msword,  application/pdf, image/*"
+                                (change)="onFileUpload($event)" id="sTest-uploadFile-candidateAddResume">
+
+                        </label>
+                        <div *ngIf="g.Prev_DocumentId.errors" class="help-block">
+                            <div>Attachment is required
+                            </div>
+                        </div>
+                        <p class="control" *ngIf="FileName">
+                            <span class="file-name">
+                                <button class="btn btn-danger c-btn" (click)="doDeleteFile()" [disabled]="!isLoading"><a
+                                        ngbTooltip="Trash Attachment" id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                   display: block ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                                </button>
+                                <a target="blank" class="ahref" style="padding: 2px;">
+                                    {{FileName}}
+                                </a>
+
+                            </span>
+
+                        </p>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+    <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+        <div class="col-lg-12">
+            <div class="text-right">
+                <ul class="list-inline">
+                    <li class="list-inline-item"><button type="button" class="btn upgrade-btn" (click)="updatePreviousEmplyment()"> <i class="mdi mdi-database-plus  m-r-xs"></i>
+                            Update Now
+                        </button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</nz-drawer>
+
+
+
+<div id="popup_viewDocs" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_viewDocs" aria-hidden="true">
+    <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" *ngIf="!spinner && employeedetails">
+
+                <div class="modal-header" style="padding: 15px !important;">
+
+                    <div class="col-md-8">
+                        <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                                {{employeedetails.FirstName}} ~ {{employeedetails.Code}}</b></small>
+                        <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+                        </h6>
+                    </div>
+                    <div class="col-md-4" style="top: 13px;">
+                        <div class="modal-close" *ngIf="!shouldRendering" (click)="modal_dismiss4()" style="margin-top: -15px;"><span class="mdi mdi-close pull-left"></span>
+                        </div>
+
+                        <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                            <app-file-download [documentId]="documentURLId">
+                            </app-file-download>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="iframe-container" *ngIf="documentURL == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                        <img src="assets/Images/logo_menu.png" style="opacity: 0.2;">
+                        <span>
+                            <i class="mdi mdi-cached mdi-spin"
+                                style="text-align: center;font-weight: 600;font-size: 16px;">
+                                &nbsp; Please wait...</i>
+                            <span class="sr-only">Please wait...</span>
+                        </span>
+                    </div>
+                    <div class="iframe-container" *ngIf="documentURL != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+                        <iframe [src]="documentURL" frameborder="0" scrolling="yes" style="width: 100%;height: 100%;"></iframe>
+                        <img style="top: 0 !important;
+            right: 0px !important;
+            position: absolute !important;
+            z-index: 9;
+            height: 25px !important;
+            vertical-align: top;
+            opacity: 0.3;
+            bottom: unset !important;
+            left: unset !important;" src="../../../../assets/Images/logo_menu.png">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

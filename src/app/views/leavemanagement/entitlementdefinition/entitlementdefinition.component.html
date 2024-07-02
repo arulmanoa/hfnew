@@ -1,0 +1,778 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="padding-top: 10px;">
+          <h6 class="h6_c"> Entitlement Definition </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="onSave()">
+                <i class="mdi mdi-content-save  m-r-xs"></i>Save
+              </button>
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onClose()">
+                <i class="mdi mdi-close  m-r-xs"></i>Close
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="content m-b report-content" style="margin-top: -5px;" *ngIf="!spinner">
+
+      <form [formGroup]="academicForm">
+        <div class="row">
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Entitlement </label>
+            <ng-select [items]="EntitlementList" (open)="onClickDropdowns($event, 'Entitlement', 'EntitlementList')"
+              [searchable]="true" placeholder="-- select an option --" [loading]="isLoading"  bindValue="Id"
+              bindLabel="Code" formControlName="EntitlementId"
+              [ngClass]="{'ng-touched': submitted && g.EntitlementId.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.EntitlementId.invalid" class="help-block">
+              <div *ngIf="g.EntitlementId.errors.required">Entitlement is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Entitlement Type</label>
+            <ng-select [items]="EntitlementType" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="EntitlementType"
+              [ngClass]="{'ng-touched': submitted && g.EntitlementType.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.EntitlementType.invalid" class="help-block">
+              <div *ngIf="g.EntitlementType.errors.required">Entitlement Type is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Code </label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="Code" [ngClass]="{'is-invalid': submitted
+          && g.Code.errors }" placeholder="Code" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.Code.errors" class="invalid-feedback">
+              <div *ngIf="g.Code.errors.required">Code is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Display Name </label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="DisplayName"
+              [ngClass]="{'is-invalid': submitted
+        && g.DisplayName.errors }" placeholder="Display Name" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.DisplayName.errors" class="invalid-feedback">
+              <div *ngIf="g.DisplayName.errors.required">Display Name is required
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Description </label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="Description"
+              [ngClass]="{'is-invalid': submitted
+      && g.Description.errors }" placeholder="Description" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.Description.errors" class="invalid-feedback">
+              <div *ngIf="g.Description.errors.required">Description is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsAllowedToUseDuringNoticePeriod'>Is Allowed To Use During Notice
+              Period</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsAllowedToUseDuringNoticePeriod">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='AllowCarryForward'>Allow Carry Forward</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="AllowCarryForward">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsShareable'>Is Shareable</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsShareable">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Round Off Mode</label>
+            <ng-select [items]="RoundOffMode" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="RoundOffMode"
+              [ngClass]="{'ng-touched': submitted && g.RoundOffMode.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.RoundOffMode.invalid" class="help-block">
+              <div *ngIf="g.RoundOffMode.errors.required">Round Off Mode is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Round Off Value </label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="RoundOffValue"
+              [ngClass]="{'is-invalid': submitted
+      && g.RoundOffValue.errors }" placeholder="Round Off Value" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.RoundOffValue.errors" class="invalid-feedback">
+              <div *ngIf="g.RoundOffValue.errors.required">Round Off Value is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsShareable'>Is Encasheable</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsEncasheable">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>Is Credit Based On DOJ</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsCreditBasedOnDOJ">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsCreditRequired</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsCreditRequired">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Credit Calendar</label>
+            <ng-select [items]="EntitlementCalendar" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="CreditCalendar"
+              [ngClass]="{'ng-touched': submitted && g.CreditCalendar.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.CreditCalendar.invalid" class="help-block">
+              <div *ngIf="g.CreditCalendar.errors.required">Credit Calendar is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Credit Cycle</label>
+            <ng-select [items]="EntitlementCycle" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="CreditCycle"
+              [ngClass]="{'ng-touched': submitted && g.CreditCycle.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.CreditCycle.invalid" class="help-block">
+              <div *ngIf="g.CreditCycle.errors.required">Credit Cycle is required</div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Credit Cycle Identifier Type</label>
+            <ng-select [items]="EntitlementCycleIdentifierType" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="CreditCycleIdentifierType"
+              [ngClass]="{'ng-touched': submitted && g.CreditCycleIdentifierType.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.CreditCycleIdentifierType.invalid" class="help-block">
+              <div *ngIf="g.CreditCycleIdentifierType.errors.required">Credit Cycle Identifier Type is required</div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Credit Cycle Identifier</label>
+            <input class="form-control" type="CreditCycleIdentifier" name="text" spellcheck="false" formControlName="CreditCycleIdentifier"
+              [ngClass]="{'is-invalid': submitted
+      && g.CreditCycleIdentifier.errors }" placeholder="CreditCycleIdentifier" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.CreditCycleIdentifier.errors" class="invalid-feedback">
+              <div *ngIf="g.CreditCycleIdentifier.errors.required">Credit Cycle Identifier is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Credit Unit Type</label>
+            <ng-select [items]="EntitlementUnitType" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="CreditUnitType"
+              [ngClass]="{'ng-touched': submitted && g.CreditUnitType.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.CreditUnitType.invalid" class="help-block">
+              <div *ngIf="g.CreditUnitType.errors.required">Credit Unit Type is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Credit Units</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="CreditUnits"
+              [ngClass]="{'is-invalid': submitted
+      && g.CreditUnits.errors }" placeholder="CreditUnits" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.CreditUnits.errors" class="invalid-feedback">
+              <div *ngIf="g.CreditUnits.errors.required">Credit Units is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Credit Scale</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="CreditScale"
+              [ngClass]="{'is-invalid': submitted
+      && g.CreditScale.errors }" placeholder="CreditScale" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.CreditScale.errors" class="invalid-feedback">
+              <div *ngIf="g.CreditScale.errors.required">Credit Scale is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Credit Scale Attribute</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="CreditScaleAttribute"
+              [ngClass]="{'is-invalid': submitted
+      && g.CreditScaleAttribute.errors }" placeholder="Credit Scale Attribute" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.CreditScaleAttribute.errors" class="invalid-feedback">
+              <div *ngIf="g.CreditScaleAttribute.errors.required">Credit Scale Attribute is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Credit RuleId</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="CreditRuleId"
+              [ngClass]="{'is-invalid': submitted
+      && g.CreditRuleId.errors }" placeholder="CreditRuleId" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.CreditRuleId.errors" class="invalid-feedback">
+              <div *ngIf="g.CreditRuleId.errors.required">Credit RuleId is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsUpfrontCredit</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsUpfrontCredit">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IncludeNewJoinerArrearPeriods</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IncludeNewJoinerArrearPeriods">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsNewJoinerProrationRequired</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsNewJoinerProrationRequired">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsLapseRequired</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsLapseRequired">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Lapse Calendar</label>
+            <ng-select [items]="EntitlementCalendar" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="LapseCalendar"
+              [ngClass]="{'ng-touched': submitted && g.LapseCalendar.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.LapseCalendar.invalid" class="help-block">
+              <div *ngIf="g.LapseCalendar.errors.required">Lapse Calendar is required</div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Lapse Cycle</label>
+            <ng-select [items]="EntitlementCycle" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="LapseCycle"
+              [ngClass]="{'ng-touched': submitted && g.LapseCycle.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.LapseCycle.invalid" class="help-block">
+              <div *ngIf="g.LapseCycle.errors.required">Lapse Cycle is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Lapse Cycle Identifier Type</label>
+            <ng-select [items]="EntitlementCycleIdentifierType" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="LapseCycleIdentifierType"
+              [ngClass]="{'ng-touched': submitted && g.LapseCycleIdentifierType.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.LapseCycleIdentifierType.invalid" class="help-block">
+              <div *ngIf="g.LapseCycleIdentifierType.errors.required">Lapse Cycle Identifier Type is required</div>
+            </div>
+          </div>
+
+          
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Lapse Cycle Identifier</label>
+            <input class="form-control" type="LapseCycleIdentifier" name="text" spellcheck="false" formControlName="LapseCycleIdentifier"
+              [ngClass]="{'is-invalid': submitted
+      && g.LapseCycleIdentifier.errors }" placeholder="LapseCycleIdentifier" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.LapseCycleIdentifier.errors" class="invalid-feedback">
+              <div *ngIf="g.LapseCycleIdentifier.errors.required">Lapse Cycle Identifier is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Lapse Unit Type</label>
+            <ng-select [items]="EntitlementUnitType" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="LapseUnitType"
+              [ngClass]="{'ng-touched': submitted && g.LapseUnitType.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.LapseUnitType.invalid" class="help-block">
+              <div *ngIf="g.LapseUnitType.errors.required">Lapse Unit Type is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Lapse Units</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="LapseUnits"
+              [ngClass]="{'is-invalid': submitted
+      && g.LapseUnits.errors }" placeholder="LapseUnits" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.LapseUnits.errors" class="invalid-feedback">
+              <div *ngIf="g.LapseUnits.errors.required">Lapse Units is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Lapse Scale</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="LapseScale"
+              [ngClass]="{'is-invalid': submitted
+      && g.LapseScale.errors }" placeholder="LapseScale" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.LapseScale.errors" class="invalid-feedback">
+              <div *ngIf="g.LapseScale.errors.required">Lapse Scale is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Lapse Scale Attribute</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="LapseScaleAttribute"
+              [ngClass]="{'is-invalid': submitted
+      && g.LapseScaleAttribute.errors }" placeholder="LapseScaleAttribute" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.LapseScaleAttribute.errors" class="invalid-feedback">
+              <div *ngIf="g.LapseScaleAttribute.errors.required">Lapse Scale Attribute is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Lapse RuleId</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="LapseRuleId"
+              [ngClass]="{'is-invalid': submitted
+      && g.LapseRuleId.errors }" placeholder="LapseRuleId" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.LapseRuleId.errors" class="invalid-feedback">
+              <div *ngIf="g.LapseRuleId.errors.required">Lapse RuleId is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>Lapse All</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="LapseAll">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Max Balance</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="MaxBalance"
+              [ngClass]="{'is-invalid': submitted
+      && g.MaxBalance.errors }" placeholder="MaxBalance" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.MaxBalance.errors" class="invalid-feedback">
+              <div *ngIf="g.MaxBalance.errors.required">Max Balance is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">Min Balance</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="MinBalance"
+              [ngClass]="{'is-invalid': submitted
+      && g.MinBalance.errors }" placeholder="MinBalance" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.MinBalance.errors" class="invalid-feedback">
+              <div *ngIf="g.MinBalance.errors.required">Min Balance is required
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsPaymentRequired</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsPaymentRequired">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsAutoPaymentInititation</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsAutoPaymentInititation">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Payment Calendar</label>
+            <ng-select [items]="EntitlementCalendar" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="PaymentCalendar"
+              [ngClass]="{'ng-touched': submitted && g.PaymentCalendar.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.PaymentCalendar.invalid" class="help-block">
+              <div *ngIf="g.PaymentCalendar.errors.required">Payment Calendar is required</div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Payment Cycle</label>
+            <ng-select [items]="EntitlementCycle" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="PaymentCycle"
+              [ngClass]="{'ng-touched': submitted && g.PaymentCycle.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.PaymentCycle.invalid" class="help-block">
+              <div *ngIf="g.PaymentCycle.errors.required">Payment Cycle is required</div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> Payment Cycle Identifier Type</label>
+            <ng-select [items]="EntitlementCycleIdentifierType" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="PaymentCycleIdentifierType"
+              [ngClass]="{'ng-touched': submitted && g.PaymentCycleIdentifierType.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.PaymentCycleIdentifierType.invalid" class="help-block">
+              <div *ngIf="g.PaymentCycleIdentifierType.errors.required">Payment Cycle Identifier Type is required</div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">PaymentCycleIdentifier</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="PaymentCycleIdentifier"
+              [ngClass]="{'is-invalid': submitted
+      && g.PaymentCycleIdentifier.errors }" placeholder="PaymentCycleIdentifier" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.PaymentCycleIdentifier.errors" class="invalid-feedback">
+              <div *ngIf="g.PaymentCycleIdentifier.errors.required">PaymentCycleIdentifier is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">PaymentAmount</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="PaymentAmount"
+              [ngClass]="{'is-invalid': submitted
+      && g.PaymentAmount.errors }" placeholder="PaymentAmount" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.PaymentAmount.errors" class="invalid-feedback">
+              <div *ngIf="g.PaymentAmount.errors.required">PaymentAmount is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">PaymentScale</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="PaymentScale"
+              [ngClass]="{'is-invalid': submitted
+      && g.PaymentScale.errors }" placeholder="PaymentScale" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.PaymentScale.errors" class="invalid-feedback">
+              <div *ngIf="g.PaymentScale.errors.required">PaymentScale is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">PaymentScaleAttribute</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="PaymentScaleAttribute"
+              [ngClass]="{'is-invalid': submitted
+      && g.PaymentScaleAttribute.errors }" placeholder="PaymentScaleAttribute" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.PaymentScaleAttribute.errors" class="invalid-feedback">
+              <div *ngIf="g.PaymentScaleAttribute.errors.required">PaymentScaleAttribute is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">PaymentRuleId</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="PaymentRuleId"
+              [ngClass]="{'is-invalid': submitted
+      && g.PaymentRuleId.errors }" placeholder="PaymentRuleId" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.PaymentRuleId.errors" class="invalid-feedback">
+              <div *ngIf="g.PaymentRuleId.errors.required">PaymentRuleId is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsAttendanceProrationRequired</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsAttendanceProrationRequired">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsNegativeBalanceAllowed</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsNegativeBalanceAllowed">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">MaxNegativeBalanceAllowed</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="MaxNegativeBalanceAllowed"
+              [ngClass]="{'is-invalid': submitted
+      && g.MaxNegativeBalanceAllowed.errors }" placeholder="MaxNegativeBalanceAllowed" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.MaxNegativeBalanceAllowed.errors" class="invalid-feedback">
+              <div *ngIf="g.MaxNegativeBalanceAllowed.errors.required">MaxNegativeBalanceAllowed is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">NegativeBalanceScale</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="NegativeBalanceScale"
+              [ngClass]="{'is-invalid': submitted
+      && g.NegativeBalanceScale.errors }" placeholder="NegativeBalanceScale" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.NegativeBalanceScale.errors" class="invalid-feedback">
+              <div *ngIf="g.NegativeBalanceScale.errors.required">NegativeBalanceScale is required
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">NegativeBalanceScaleAttribute</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="NegativeBalanceScaleAttribute"
+              [ngClass]="{'is-invalid': submitted
+      && g.NegativeBalanceScaleAttribute.errors }" placeholder="NegativeBalanceScaleAttribute" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.NegativeBalanceScaleAttribute.errors" class="invalid-feedback">
+              <div *ngIf="g.NegativeBalanceScaleAttribute.errors.required">NegativeBalanceScaleAttribute is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">NegativeBalanceRuleId</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="NegativeBalanceRuleId"
+              [ngClass]="{'is-invalid': submitted
+      && g.NegativeBalanceRuleId.errors }" placeholder="NegativeBalanceRuleId" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.NegativeBalanceRuleId.errors" class="invalid-feedback">
+              <div *ngIf="g.NegativeBalanceRuleId.errors.required">NegativeBalanceRuleId is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> OverallUsageLimitType</label>
+            <ng-select [items]="UsageLimitType" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="OverallUsageLimitType"
+              [ngClass]="{'ng-touched': submitted && g.OverallUsageLimitType.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.OverallUsageLimitType.invalid" class="help-block">
+              <div *ngIf="g.OverallUsageLimitType.errors.required">OverallUsageLimitType is required</div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">OverallMinUsageLimit</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="OverallMinUsageLimit"
+              [ngClass]="{'is-invalid': submitted
+      && g.OverallMinUsageLimit.errors }" placeholder="OverallMinUsageLimit" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.OverallMinUsageLimit.errors" class="invalid-feedback">
+              <div *ngIf="g.OverallMinUsageLimit.errors.required">OverallMinUsageLimit is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">OverallMaxUsageLimit</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="OverallMaxUsageLimit"
+              [ngClass]="{'is-invalid': submitted
+      && g.OverallMaxUsageLimit.errors }" placeholder="OverallMaxUsageLimit" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.OverallMaxUsageLimit.errors" class="invalid-feedback">
+              <div *ngIf="g.OverallMaxUsageLimit.errors.required">OverallMaxUsageLimit is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> UtilizationCycle</label>
+            <ng-select [items]="EntitlementCycle" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="UtilizationCycle"
+              [ngClass]="{'ng-touched': submitted && g.UtilizationCycle.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.UtilizationCycle.invalid" class="help-block">
+              <div *ngIf="g.UtilizationCycle.errors.required">UtilizationCycle is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">UtilizationCycleStartDate</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="UtilizationCycleStartDate"
+              [ngClass]="{'is-invalid': submitted
+      && g.UtilizationCycleStartDate.errors }" placeholder="UtilizationCycleStartDate" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.UtilizationCycleStartDate.errors" class="invalid-feedback">
+              <div *ngIf="g.UtilizationCycleStartDate.errors.required">UtilizationCycleStartDate is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">UtilizationCycleEndDate</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="UtilizationCycleEndDate"
+              [ngClass]="{'is-invalid': submitted
+      && g.UtilizationCycleEndDate.errors }" placeholder="UtilizationCycleEndDate" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.UtilizationCycleEndDate.errors" class="invalid-feedback">
+              <div *ngIf="g.UtilizationCycleEndDate.errors.required">UtilizationCycleEndDate is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> UsageLimitTypePerUtilizationCycle</label>
+            <ng-select [items]="UsageLimitType" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="UsageLimitTypePerUtilizationCycle"
+              [ngClass]="{'ng-touched': submitted && g.UsageLimitTypePerUtilizationCycle.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.UsageLimitTypePerUtilizationCycle.invalid" class="help-block">
+              <div *ngIf="g.UsageLimitTypePerUtilizationCycle.errors.required">UsageLimitTypePerUtilizationCycle is required</div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label"> UtilizationUnitType</label>
+            <ng-select [items]="EntitlementUnitType" [searchable]="true" placeholder="-- select an option --"
+              bindValue="id" bindLabel="name" formControlName="UtilizationUnitType"
+              [ngClass]="{'ng-touched': submitted && g.UtilizationUnitType.errors }">
+            </ng-select>
+            <div *ngIf="submitted && g.UtilizationUnitType.invalid" class="help-block">
+              <div *ngIf="g.UtilizationUnitType.errors.required">UtilizationUnitType is required</div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">MaxUsageLimitPerUtilizationCycle</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="MaxUsageLimitPerUtilizationCycle"
+              [ngClass]="{'is-invalid': submitted
+      && g.MaxUsageLimitPerUtilizationCycle.errors }" placeholder="MaxUsageLimitPerUtilizationCycle" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.MaxUsageLimitPerUtilizationCycle.errors" class="invalid-feedback">
+              <div *ngIf="g.MaxUsageLimitPerUtilizationCycle.errors.required">MaxUsageLimitPerUtilizationCycle is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">MinUsageInOneShot</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="MinUsageInOneShot"
+              [ngClass]="{'is-invalid': submitted
+      && g.MinUsageInOneShot.errors }" placeholder="MinUsageInOneShot" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.MinUsageInOneShot.errors" class="invalid-feedback">
+              <div *ngIf="g.MinUsageInOneShot.errors.required">MinUsageInOneShot is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label">MaxUsageInOneShot</label>
+            <input class="form-control" type="text" name="text" spellcheck="false" formControlName="MaxUsageInOneShot"
+              [ngClass]="{'is-invalid': submitted
+      && g.MaxUsageInOneShot.errors }" placeholder="MaxUsageInOneShot" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.MaxUsageInOneShot.errors" class="invalid-feedback">
+              <div *ngIf="g.MaxUsageInOneShot.errors.required">MaxUsageInOneShot is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsApprovalRequired</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsApprovalRequired">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsOptionRequiredToUploadDocuments</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsOptionRequiredToUploadDocuments">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>AreSupportingDocumentsMandatory</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="AreSupportingDocumentsMandatory">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>IsHolidayInclusive</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="IsHolidayInclusive">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>ImpingeOnServicePeriod</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="ImpingeOnServicePeriod">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+            <label class="form-label" id='IsCreditBasedOnDOJ'>ConsiderEarlierUsage</label>
+            <div class="p-t-10">
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="switch" value="yes" formControlName="ConsiderEarlierUsageForContinuityIndeterminingMaxUsagePerShot">
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+
+
+
+
+
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

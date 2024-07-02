@@ -1,0 +1,238 @@
+<div class="page-wrapper">
+  <div class="page-content" (scroll)="onWindowScroll($event)">
+
+    <app-loading-screen></app-loading-screen>
+    
+    <div class="">
+      <div class="row m-t-b-10" id="navbar" *ngIf="activeTabName == 'claimed' && isHistoryHidden">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+          <ul class="list-inline">
+
+            <li class="list-inline-item">
+              <button type="button" class="btn upgrade-btn" id="btn_qc_approve"
+                (click)="updateQcELCTransaction(true)"> <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+              </button>
+            </li>
+            <li class="list-inline-item">
+              <button type="button" class="btn btn-danger" id="btn_qc_reject" (click)="updateQcELCTransaction(false)">
+                <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Reject
+              </button>
+            </li>
+            
+          </ul>
+        </div>
+        <div class="col-lg-6 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+              <!-- <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="addCandidates()"><i class="mdi mdi-library-plus m-r-xs"></i> New
+                              Request</button></li> -->
+
+              <li *ngIf="this.activeTabName!='search'" class="list-inline-item"><button type="button"
+                  class="btn btn-primary" (click)="refreshCurrentTab()"><i class="mdi mdi-refresh m-r-xs"></i>
+                  Refresh</button></li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row m-t-b-10" id="navbar" *ngIf="activeTabName == 'unclaimed' && isHistoryHidden">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+          <ul class="list-inline">
+
+            <div class="showGirdActionButtons" *ngIf="this.selected_Unclaimed_ModuleProcessTransactionsIds?.length">
+              <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                <div class="massOperationsPanel d-i-b">
+
+
+                  <button class="btn btn-default btn-sm m-r-sm " (click)="claimRequest()">
+                    <i class="mdi mdi-thumb-up-outline"></i> Claim Requests
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ul>
+        </div>
+        <div class="col-lg-6 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+              <!-- <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="addCandidates()"><i class="mdi mdi-library-plus m-r-xs"></i> New
+                              Request</button></li> -->
+
+              <li *ngIf="this.activeTabName!='search'" class="list-inline-item"><button type="button"
+                  class="btn btn-primary" (click)="refreshCurrentTab()"><i class="mdi mdi-refresh m-r-xs"></i>
+                  Refresh</button></li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="content m-b report-content" *ngIf="isHistoryHidden">
+
+        <div class="history-button" *ngIf="!spinner  && isAllenDigital">
+          <button (click)="fetchElcHistory()"><i class="fa fa-eye m-r-xs"></i> View Transaction History</button>
+        </div>
+
+        <ngb-tabset (tabChange)="loadData($event)" [(activeId)]="activeTabName">
+          <ngb-tab id="claimed">
+            <ng-template ngbTabTitle><i class="mdi mdi-thumb-up-outline" aria-hidden="true"></i>&nbsp;&nbsp;{{AlternativeText}}
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+              <div *ngIf="!spinner">
+                <angular-slickgrid gridId="grdclaimed" [columnDefinitions]="claimedColumnDefinitions"
+                  [gridOptions]="claimedGridOptions" [dataset]="claimedDataset"
+                  (sgOnSelectedRowsChanged)="onClaimedSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  (onAngularGridCreated)="claimedGridReady($event)" gridWidth="100%">
+                </angular-slickgrid>
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+          <ngb-tab id="unclaimed" *ngIf="IsExtraTabRequired">
+            <ng-template ngbTabTitle><i class="fa fa-bitbucket" aria-hidden="true"></i>&nbsp;&nbsp;{{AlternativeText1}}
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+              <div *ngIf="!spinner">
+
+
+                <angular-slickgrid gridId="grdUnclaimed" [columnDefinitions]="unclaimedColumnDefinitions"
+                  [gridOptions]="unclaimedGridOptions" [dataset]="unclaimedDataset"
+                  (onAngularGridCreated)="unClaimedGridReady($event)"
+                  (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  gridWidth="100%">
+                </angular-slickgrid>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="search" *ngIf="!isAllenDigital">
+            <ng-template ngbTabTitle><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search All
+            </ng-template>
+            <ng-template ngbTabContent>
+              <p>Content for search</p>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div>
+
+      <div class="content report-content m-b" *ngIf="!isHistoryHidden">
+
+        <div class="text-center ma-5" *ngIf="spinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+              <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                  role="status" aria-hidden="true"></span>
+              Please wait...
+          </button>
+        </div>
+
+        <div class="history-button" (click)="hideElcHistory()" *ngIf="!spinner">
+          <button><i class="fa fa-eye-slash m-r-xs"></i> Hide Transaction History</button>
+        </div>
+  
+        <div *ngIf="!spinner" class="m-t-50" >
+          <angular-slickgrid gridId="historyGrid" [columnDefinitions]="historyColumnDefinitions" 
+          [gridOptions]="historyGridOptions" [dataset]="historyDataset" 
+          (onAngularGridCreated)="historyGridReady($event)" 
+          gridWidth="100%">
+          </angular-slickgrid>
+        </div>
+
+        <div class="row" style="margin-top: -10px;;" *ngIf="!spinner">
+          <div class="col-lg-6">
+  
+          </div>
+          <div class="col-lg-6" style="text-align: right;">
+            <label> <b> Total Result(s) : <b> {{historyDataset?.length}}</b></b></label>
+          </div>
+        </div>
+  
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Salary Breakup modal  -->
+<div id="viewCTC" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewCTC"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="viewCTC"> View Salary Breakup</h6>
+            <div class="modal-close" (click)="modal_dismiss_Current_SalaryBreakup()"><span
+                class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                <table class="table table-bordered table-container responsive">
+                  <thead>
+                    <tr class="document_table_tr">
+                      <th scope="col" style="width: 40%; text-align: left!important">Product Code</th>
+                      <!-- <th scope="col" style="width: 20%;text-align: center">Is Overidable</th>                                     -->
+                      <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+                      <th scope="col" style="width: 20%;text-align: center">Annually</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let item of modalRateset?.RatesetProducts; let i = index"
+                      [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                      <td class="table-td-center">
+                        <span class="productName_span"> {{item.DisplayName}} </span>
+                      </td>
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value.toFixed(2)}}
+                        </label>
+                        <!-- <input type="number" max="" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value.toFixed(2)}}"
+                          class="form-control"> -->
+                      </td>
+
+                      <td class="txt-align document_table_validFrom table-td-center">
+                        <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value * 12 | number : '1.2-2'}}
+                        </label>
+                        <!-- <input type="text" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value * 12}}"
+                          class="form-control"> -->
+                      </td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+

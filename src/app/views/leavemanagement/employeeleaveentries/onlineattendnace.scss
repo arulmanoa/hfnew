@@ -1,0 +1,392 @@
+
+.table {
+    font-size: 12px;
+  }
+  
+  .table tr td {
+    height: 10px;
+    // width: 10px;
+  }
+  
+  tr {
+    line-height: 35px;
+    min-height: 20px;
+    height: 20px;
+    // font-weight: 600;
+  }
+  
+  .left-margin-btn {
+    margin: 0 auto;
+    margin-left: 0px;
+  }
+  
+  .table td {
+    padding: .25rem;
+  }
+  
+  .table-td-center {
+    vertical-align: middle !important;
+  }
+  
+  .cal-header  {
+    font-weight: 400 !important;
+  }
+  
+  body {
+  }
+  
+  
+  .rtable {
+    /*!
+    // IE needs inline-block to position scrolling shadows otherwise use:
+    // display: block;
+    // max-width: min-content;
+    */
+    // display: inline-block;
+    vertical-align: top;
+    font-size: 11px;
+    // max-width: 100%;
+    font-family: verdana, sans-serif;
+    overflow-x: auto;
+    
+    // optional - looks better for small cell values
+    white-space: nowrap;
+  
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  
+  .rtable,
+  .rtable--flip tbody {
+    // optional - enable iOS momentum scrolling
+    -webkit-overflow-scrolling: touch;
+    
+    // scrolling shadows
+    background: radial-gradient(left, ellipse, rgba(0,0,0, .2) 0%, rgba(0,0,0, 0) 75%) 0 center,
+                radial-gradient(right, ellipse, rgba(0,0,0, .2) 0%, rgba(0,0,0, 0) 75%) 100% center;
+    background-size: 10px 100%, 10px 100%;
+    background-attachment: scroll, scroll;
+    background-repeat: no-repeat;
+  }
+  
+  // change these gradients from white to your background colour if it differs
+  // gradient on the first cells to hide the left shadow
+  // .rtable td:first-child,
+  // .rtable--flip tbody tr:first-child {
+  //   // background-image: linear-gradient(to right, rgba(255,255,255, 1) 50%, rgba(255,255,255, 0) 100%);
+  //   background-repeat: no-repeat;
+  //   background-size: 20px 100%;
+  //   background: #f0efef;
+  // }
+  
+  // gradient on the last cells to hide the right shadow
+  // .rtable td:last-child,
+  // .rtable--flip tbody tr:last-child {
+  //   background-image: linear-gradient(to left, rgba(255,255,255, 1) 50%, rgba(255,255,255, 0) 100%);
+  //   background-repeat: no-repeat;
+  //   background-position: 100% 0;
+  //   background-size: 20px 100%;
+  // }
+  
+  .rtable th {
+    font-size: 11px;
+    text-align: left;
+    // text-transform: uppercase;
+    background: #ededed;
+  }
+  
+  .rtable th,
+  .rtable td {
+    padding: 5px 12px;
+    border: 1px solid #d9d7ce;
+    text-transform: uppercase;
+  }
+  
+  .rtable--flip {
+    display: flex;
+    overflow: hidden;
+    background: none;
+  }
+  
+  .rtable--flip thead {
+    display: flex;
+    flex-shrink: 0;
+    // min-width: min-content;
+  }
+  
+  .rtable--flip tbody {
+    display: flex;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  
+  .rtable--flip tr {
+    display: flex;
+    flex-direction: column;
+    // min-width: min-content;
+    flex-shrink: 0;
+  }
+  
+  .rtable--flip td,
+  .rtable--flip th {
+    display: block;
+  }
+  
+  .rtable--flip td {
+    background-image: none !important;
+    // border-collapse is no longer active
+    border-left: 0;
+  }
+  
+  // border-collapse is no longer active
+  // .rtable--flip th:not(:last-child),
+  // .rtable--flip td:not(:last-child) {
+  //   border-bottom: 0;
+  // }
+  
+
+  .btn {
+    font-size: 12px;
+    font-weight: 800 !important;
+  }
+  .btn i {
+    font-size: 14px;
+  }
+  .h6_c {
+    font-weight: bold;
+font-size: 16px;
+line-height: 20px;
+color: rgb(35, 54, 78);
+margin-top: 10px;
+display: inline;
+
+}
+
+  @media (min-width: 992px){
+    .modal-lg, .modal-xl {
+        max-width: 875px;
+    }
+    }
+
+  .form-label {
+    color: rgb(96,111,123) !important;
+  }
+ 
+  .breakdowns-list-separator {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid hsla(0,0%,100%,.6);
+    border-top: 1px solid rgba(178,224,247,.6);
+}
+
+    .tw-tracking-wider {
+      letter-spacing: .05em;
+  }
+  .tw-uppercase {
+      text-transform: uppercase;
+  }
+  .tw-text-gray-700 {
+      --text-opacity: 1;
+      color: #606f7b;
+      color: rgba(96,111,123,var(--text-opacity));
+  }
+  .tw-mb-8 {
+      margin-bottom: 2rem;
+  }
+  .tw-text-xs {
+      font-size: .75rem;
+  }
+  .tw-font-bold {
+      font-weight: 700;
+  }
+
+
+
+
+.card {
+  margin-bottom: 1.5rem;
+  border-color: #edf2f9;
+  // box-shadow: 0 0.75rem 1.5rem #12263f08;
+  box-shadow: 0 0 20px 0 #0000000d, 0 0 5px 0 #0000000d;
+}
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid #edf2f9;
+  border-radius: .5rem;
+}
+.card-body {
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1.5rem;
+}
+h6 {
+  font-size: .625rem; 
+}
+.h2, h2 {
+  font-size: 1.25rem;
+}
+.align-items-center {
+  align-items: center!important;
+}
+h6.text-uppercase {
+  letter-spacing: .08em;
+}
+.text-muted {
+  color: #95aac9!important;
+}
+.text-uppercase {
+  text-transform: uppercase!important;
+}
+.mb-2, .my-2 {
+  margin-bottom: .375rem!important;
+}
+.badge-soft-success {
+  color: #00d97e;
+  background-color: #ccf7e5;
+}
+.badge {
+  vertical-align: middle;
+}
+.mt-n1, .my-n1 {
+  margin-top: -.1875rem!important;
+}
+.badge {
+  display: inline-block;
+  padding: .33em .5em;
+  font-size: 76%;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .375rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.badge-soft-warning {
+  color: #b0810e;
+  background-color: #fdf3d9;
+}
+.badge-soft-danger {
+  color: #e63757;
+  background-color: #fad7dd;
+}
+.badge-soft-secondary {
+  color: #6e84a3;
+  background-color: #e2e6ed;
+}
+
+// approver screen
+.col-auto {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+}
+.avatar-sm {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: .83333rem;
+}
+.avatar {
+    position: relative;
+    display: inline-block;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1rem;
+}
+
+.avatar-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 0;
+    background-color: #b1c2d9;
+    color: #fff;
+}
+.font-size-lg {
+    font-size: 1.0625rem!important;
+}
+.bg-primary-soft {
+    background-color: #e6effc!important;
+}
+.text-primary {
+    color: #2c7be5!important;
+}
+.rounded-circle {
+    border-radius: 50%!important;
+}
+
+
+// --- RADIO BUTTON ACTIONS --
+.cursor-pointer {
+  cursor: pointer;
+  color: #42a5f5;
+}
+
+.pic {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.card-block {
+  width: 75px;
+  border: 1px solid lightgrey;
+  border-radius: 5px !important;
+  background-color: #fafafa;
+  // margin-bottom: 30px
+}
+
+// .card-body.show {
+//   display: block
+// }
+
+// .card {
+//   padding-bottom: 20px;
+//   box-shadow: 2px 2px 6px 0px rgb(200, 167, 216)
+// }
+
+.radio {
+  display: inline-block;
+  border-radius: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  color: #000;
+  font-weight: 500;
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
+.radio:hover {
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.radio.selected {
+  box-shadow: 0px 8px 16px 0px #eeeeee;
+  -webkit-filter: grayscale(0%);
+  -moz-filter: grayscale(0%);
+  -o-filter: grayscale(0%);
+  -ms-filter: grayscale(0%);
+  filter: grayscale(0%);
+  border-color: #75a5ce;
+}
+
+.selected {
+  background-color: #e0f2f1;
+}
+
+.a {
+  justify-content: center !important;
+}
+.p-0 {
+  padding: 0px;
+}

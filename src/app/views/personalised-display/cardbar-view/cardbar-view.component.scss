@@ -1,0 +1,223 @@
+
+  // grid
+
+  .grid.simple {
+    border-radius: 4px;
+    box-shadow: 0 2px 8px 0 #989ea503, 0 6px 24px 0 rgba(0,0,0,.04);
+    -webkit-box-shadow: 0 2px 8px 0 rgba(152, 158, 165, 0.01), 0 6px 24px 0 rgba(0,0,0,.04);
+    -moz-box-shadow: 0 2px 8px 0 rgba(152, 158, 165, 0.01), 0 6px 24px 0 rgba(0,0,0,.04);
+}
+.grid.simple {
+    border: 1px solid #f2f3f5;
+}
+.grid.simple {
+    padding: 0px !important;
+}
+.grid {
+    margin-bottom: 20px;
+}
+.border-2px {
+    border-width: 2px!important;
+    border-style: solid!important;
+}
+.grid {
+    margin-bottom: 20px;
+}
+.grid {
+    clear: both;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding: 0px;
+}
+.grid.simple .grid-body {
+    color: #38454e;
+    padding: 19px 30px 20px 30px;
+    border-radius: 4px;
+}
+.grid.simple .grid-body {
+    color: #333c46;
+    padding: 15px 25px 20px 25px;
+    border-radius: 4px;
+}
+.grid.simple .grid-body, .grid.simple .grid-title {
+    border: none !important;
+}
+.grid.simple .grid-body {
+    background-color: #ffffff;
+    padding: 11px 22px;
+    /* padding-bottom: 6px!important; */
+    border: 1px solid #dddddd;
+    color: #6f7b8a;
+}
+.ats-stats .grid-body {
+    // height: 125px;
+}
+.grid-body {
+    clear: both;
+    padding: 0;
+}
+.title-height {
+    height: 42px;
+}
+.f-s-29 {
+    font-size: 29px;;
+}
+.m-b-0-i {
+    margin-bottom: 0!important;
+}
+.bold {
+    font-weight: bold;
+}
+.size-34 {
+    font-size: 34px;
+    line-height: 34px;
+}
+.semi-bold {
+    font-weight: 600;
+}
+.circle-box {
+    display: inline;
+}
+.nowrap {
+    white-space: nowrap;
+}
+.grid.simple .grid-title {
+    color: #333c46!important;
+    font-weight: 700;
+    padding: 15px 30px 15px 30px !important;
+    border-radius: 4px;
+}
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+.p-r-25 {
+    padding-right: 25px;
+}
+.p-t-10 {
+    padding-top: 10px;
+}
+.text-warning {
+    color: #FF6600!important;
+}
+.font-size-26 {
+    font-size: 26px !important;
+}
+.m-r-10 {
+    margin-right: 10px;
+}
+.text-warning {
+    color: #fbb05e !important;
+}.text-danger, .grid.simple .grid-title.text-danger {
+    color: #da0000 !important;
+}
+.color-38454e {
+    color: #333c46;
+}
+.btn-link_approve, .btn-link_approve:focus, .btn-link_approve:hover {
+    --text-opacity: 1;
+    font-weight: 400 !important;
+    color: #00d97e;
+    // color: rgba(235,87,87,var(--text-opacity));
+}
+.btn-link_danger, .btn-link_danger:focus, .btn-link_danger:hover {
+    --text-opacity: 1;
+    color: #eb5757;
+    font-weight: 400 !important;
+    color: rgba(235,87,87,var(--text-opacity));
+}.btn-link {
+    background-color: transparent;
+    text-decoration: none;
+    cursor: pointer;
+}
+.tw-p-0 {
+    padding: 0;
+}
+.tw-mx-6 {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+.tw-bg-transparent {
+    background-color: transparent;
+}
+
+.pb-10 {
+    padding-bottom: 10px;
+}
+
+
+.displayinlineblock {
+  display: inline-block !important;
+} 
+
+.d-flex {
+  display: flex!important;
+}
+.flex {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+} 
+.card-body {
+  flex: 1 1 auto;
+  padding: 1.25rem;
+}
+.row-sm {
+  margin-left: -.5rem;
+  margin-right: -.5rem;
+}
+.mb-2, .my-2 {
+  margin-bottom: .5rem!important;
+}
+small {
+  font-size: .825rem;
+}
+.small, small {
+
+  font-weight: 400;
+}
+.text-md {
+  font-size: 1.25rem;
+}
+
+section {
+  min-width: 200px;
+  width: 33.33%;
+  height: 200px;
+  padding: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  cursor: pointer;
+  transition: 0.3s linear;
+  &:nth-child(2n + 1){
+    background: rgba(#000,0.1);
+  }
+  &:hover {
+      background: rgba(#000,0.3) ;
+  }
+
+  @media (max-width: 768px ) {
+     width: 50%;
+  }
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+
+}
+$base: #263238;
+$lite:  #FFF;
+$brand: #FF3D00;
+$size: 48px;
+.loader-1 {
+  width : $size;
+  height: $size;
+  border: 5px solid $lite;
+  border-bottom-color: $brand;
+  border-radius: 50%;
+  display: inline-block;
+  animation: rotation 1s linear infinite;
+}

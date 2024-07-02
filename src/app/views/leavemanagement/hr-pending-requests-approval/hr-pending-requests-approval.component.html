@@ -1,0 +1,314 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="content m-b report-content" *ngIf="!spinner">
+      <div class="row w-100">
+        <div class="form-group-vertical col-3">
+          <label class="form-label searchbar-label">Select Type</label>
+          <ng-select [items]="dropdownOptions" class="mt-1" (change)="onDropdownValueChange($event)"
+            placeholder="Choose..." bindLabel="Name" bindValue="Id" [(ngModel)]="selectedValue" [clearable]="false">
+          </ng-select>
+        </div>
+      </div>
+      <div class="row w-100">
+        <div class="form-group-vertical col-12" style="text-align: right;">
+          <button class="btn btn-primary btn-sm" (click)="onSearchBtnCLicked()"
+            style="margin-top: -5px;margin-right: 10px;" [disabled]="!selectedValue">
+            <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner">
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left"></div>
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+          <div class="text-right" *ngIf="pendingRequestsDataset && pendingRequestsDataset.length > 0">
+            <ul class="list-inline mb-2">
+              <li class="list-inline-item">
+                <button type="button" class="btn upgrade-btn" id="btn_qc_approve"
+                  [disabled]="pendingRequestsSelectedItems.length == 0" (click)="bulk_approve_reject(true)"> <i
+                    class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+                </button>
+              </li>
+              <li class="list-inline-item">
+                <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                  [disabled]="pendingRequestsSelectedItems.length == 0" (click)="bulk_approve_reject(false)"> <i
+                    class="mdi mdi-close-circle  m-r-xs"></i>
+                  Reject
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12" *ngIf="pendingRequestsDataset && pendingRequestsDataset.length > 0">
+          <angular-slickgrid gridId="gridPendingRequests" [columnDefinitions]="pendingRequestsColumnDefinitions"
+            [gridOptions]="pendingRequestsGridOptions" [dataset]="pendingRequestsDataset"
+            (onAngularGridCreated)="pendingRequestsGridReady($event)" gridWidth="100%"
+            (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+            (sgOnSelectedRowsChanged)="onSelectRowChange($event.detail.eventData, $event.detail.args)">
+          </angular-slickgrid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_edit_attendance" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;"
+              *ngIf="rowData && rowData.Status != 600">Applied Leave Request</small>
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;"
+              *ngIf="rowData && rowData.Status == 600">Applied Cancel Leave Request</small>
+
+
+          </div>
+
+          <div class="modal-close" (click)="close_leaverequest_approval_slider()"
+            style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+
+
+          <div class="row" style="margin-bottom: -16px;">
+
+            <div class="col-lg-8">
+              <div class="row">
+                <div class="col-lg-12">
+                  <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon"
+                    style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{_employeeName}} </span>
+                </div>
+              </div>
+              <div class="row" style="margin-top: 15px;" *ngIf="isOpened">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <form [formGroup]="leaveForm">
+                    <div class="row">
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                        <label class="form-label" style="margin-bottom: -2px;">Applied From
+                        </label>
+                        <span style="font-size: 12px;">{{leaveForm.get('AppliedFrom').value |
+                          date :'dd-MM-yyyy'}}
+                        </span>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3"
+                        *ngIf="employeeEntitlement && !employeeEntitlement.Entitlement.IsOptionalHoliday && leaveForm.get('IsAppliedForFirstHalf').value">
+                        <label class="form-label">First half (from date)</label>
+                        <div class="">
+                          <label class="el-checkbox el-checkbox-red">
+                            <input type="checkbox" name="IsAppliedForFirstHalf" disabled
+                              formControlName="IsAppliedForFirstHalf" />
+                            <span class="el-checkbox-style"></span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3"
+                        *ngIf="employeeEntitlement && !employeeEntitlement.Entitlement.IsOptionalHoliday && leaveForm.get('IsAppliedFromSecondHalf').value">
+                        <label class="form-label">Second half</label>
+                        <div class="">
+                          <label class="el-checkbox el-checkbox-red">
+                            <input type="checkbox" name="IsAppliedFromSecondHalf" disabled
+                              formControlName="IsAppliedFromSecondHalf" />
+                            <span class="el-checkbox-style"></span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                        <label class="form-label" style="margin-bottom: -2px;"> Applied Till
+                        </label>
+                        <span style="font-size: 12px;">{{leaveForm.get('AppliedTill').value |
+                          date :'dd-MM-yyyy'}}
+                        </span>
+                      </div>
+
+
+
+                      <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3"
+                        *ngIf="employeeEntitlement && !employeeEntitlement.Entitlement.IsOptionalHoliday &&  leaveForm.get('IsAppliedTillFirstHalf').value">
+                        <label class="form-label">First half (till date)</label>
+                        <div class="">
+                          <label class="el-checkbox el-checkbox-red">
+                            <input type="checkbox" name="IsAppliedTillFirstHalf" disabled
+                              formControlName="IsAppliedTillFirstHalf" />
+                            <span class="el-checkbox-style"></span>
+                          </label>
+                        </div>
+
+                      </div>
+
+                      <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-3"
+                        *ngIf="employeeEntitlement && !employeeEntitlement.Entitlement.IsOptionalHoliday && leaveForm.get('IsAppliedTillSecondHalf').value">
+                        <label class="form-label">Second half</label>
+                        <div class="">
+                          <label class="el-checkbox el-checkbox-red">
+                            <input type="checkbox" name="IsAppliedTillSecondHalf" disabled
+                              formControlName="IsAppliedTillSecondHalf" />
+                            <span class="el-checkbox-style"></span>
+                          </label>
+                        </div>
+
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                        *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsAdditionalDateInputRequired">
+                        <label class="form-label" style="margin-bottom: 7px;">
+                          {{employeeEntitlement.Definition.AdditionalDateLabelName}}
+                        </label>
+                        <span style="font-size: 12px;">{{leaveForm.get('AdditionalDateInput').value
+                          |
+                          date :'dd-MM-yyyy'}}
+                        </span>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                        *ngIf="isAllowedToViewDocument && leaveForm.get('AdditionalDocumentId').value > 0 && leaveForm.get('AdditionalDocumentId').value != null">
+                        <label class="form-label" style="margin-bottom: -2px;"> Attachment
+                        </label>
+                        <span style="font-size: 12px;">{{leaveForm.get('AdditionalDocumentName').value}}
+                          <span *ngIf="!isZipFile()" (click)="viewAttachments()"
+                            style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                            matTooltip="view attachment" title="view attachment">
+                            <i class="mdi mdi-file-document-outline"
+                              style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                          </span>
+
+                          <span *ngIf="isZipFile()" (click)="downloadAttachments()"
+                            style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                            matTooltip="download attachment" title="download attachment">
+                            <i class="mdi mdi-download"
+                              style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                          </span>
+
+
+                        </span>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label" style="margin-bottom: -2px;"> Requested On
+                        </label>
+                        <span style="font-size: 12px;"><b style="color: black;">
+                            {{leaveForm.get('AppliedOn').value |
+                            date :'EEEE, MMMM d, y'}} </b>
+                        </span>
+
+                      </div>
+
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                        *ngIf="rowData && rowData.Status != '600'"> -->
+                      <!-- ! fix for bug 5810 -->
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label" style="margin-bottom: -2px;"> Day(s) of leave
+                        </label>
+                        <span style="font-size: 12px;"><b style="color: black;">
+                            {{leaveForm.get('CalculatedAppliedUnits').value}} </b>
+                        </span>
+
+                      </div>
+
+
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                        *ngIf="rowData && rowData.Status != '600'"> -->
+                      <!-- ! fix for bug 5810 -->
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label" style="margin-bottom: -2px;">Type of leave
+                        </label>
+                        <span style="font-size: 12px;"><b style="color: black;">
+                            {{getLeaveType(leaveForm.get('Entitlement').value)}} </b>
+                        </span>
+
+                      </div>
+                      <!-- COMP OFF -->
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                        *ngIf="employeeEntitlement && employeeEntitlement.Definition && employeeEntitlement.Definition.IsCompOff">
+                        <label class="form-label">
+                          {{employeeEntitlement.Definition.AdditionalDateLabelName}}
+                        </label>
+                        <span style="font-size: 12px;">{{leaveForm.get('compOffDates').value}}
+                        </span>
+                      </div>
+
+                      <!-- Bereavement leave  -->
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                        *ngIf="employeeEntitlement && employeeEntitlement.Definition && employeeEntitlement.Definition.IsBereavementLeave">
+                        <label class="form-label"> {{employeeEntitlement.Definition.AdditionalDateLabelName}} </label>
+                        <span style="font-size: 12px;">{{leaveForm.get('relationshipId').value}} </span>
+                      </div>
+
+
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <!-- <input class="form-control" name="AppliedUnits" disabled type="number"
+                          formControlName="AppliedUnits" placeholder="5.5"
+                          onkeypress="return /^-?[0-9.--]\d*(\.\d+)?$/i.test(event.key)"
+                          (onkeypress)="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+                          onpaste="return false;" autocomplete="off"> -->
+                      </div>
+
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label">Eligible Units </label>
+                        <input class="form-control" name="EligibleUnits" formControlName="EligibleUnits"
+                          placeholder="5.5" disabled type="text" autocomplete="off">
+                      </div> -->
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                        <label class="form-label" style="margin-bottom: -2px;"> Comments
+                        </label>
+                        <span style="font-size: 12px;">{{leaveForm.get('ApplierRemarks').value}}
+                        </span>
+
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="row" style="width:100%">
+            <div class="col-lg-6 pull-left"></div>
+
+            <div class="col-lg-6 pull-right">
+              <button type="submit" (click)="do_approve_reject(true)" style="width: 45%;border-radius: 20px;"
+                class="btn upgrade-btn"><i class="mdi mdi-check-all  m-r-xs"></i> Approve
+              </button> &nbsp;
+
+              <button type="button" class="btn btn-danger" id="btn_qc_reject" style="width: 45%;border-radius: 20px;"
+                (click)="do_approve_reject(false)">
+                <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

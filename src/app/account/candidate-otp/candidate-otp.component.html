@@ -1,0 +1,64 @@
+<!-- Live website login for everyone  -->
+
+
+<div class="form-body" *ngIf="isAuthorized">
+    <div class="website-logo">
+        <a href="JavaScript:;">
+            <div class="logo">
+                <img class="logo-size" src="assets/Images/clientlogo/appmainlogo.png" alt="">
+            </div>
+        </a>
+    </div>
+
+    <div class="row" style="    position: fixed !important;
+    margin-left: 0;
+    margin-right: 0;
+    height: 100%;
+    min-height: 100% !important;
+    min-width: 100% !important;">
+        <div class="img-holder">
+            <div class="bg"></div>
+            <div class="info-holder">
+                <img src="assets/Images/graphic5.svg" alt="">
+            </div>
+        </div>
+        <div class="form-holder">
+            <div class="form-content">
+                <div class="form-items ">
+
+
+                    <div id="overlay">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+
+                    <!--  start deputees login both Forsm and Google provider -->
+
+                    <div class="log-in-htm">
+                        <h5 class="text-center">One Time Password (OTP)</h5>
+                        <br>
+                        <p class="text-center">One Time Password(OTP) has been sent to your mobile and email. Please enter the same here to continue.</p>
+
+                        <div class="form-group">
+                            <input type="text" [(ngModel)]="OTP" onkeypress="return /^[0-9]+$/i.test(event.key)" class="form-control" autocomplete="off" placeholder="OTP" />
+                        </div>
+                        <div class="form-button">
+                            <button id="submit" type="submit" class="ibtn" (click)="VerifyOTP()">Validate your OTP
+                          &nbsp; &nbsp; <span *ngIf="SpinnerShouldhide"  class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          </button>
+                        </div>
+
+                    </div>
+                    <!-- end deputees login  -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end live website login -->
+
+<div class="alert alert-danger" role="alert" style="margin: 10rem;" *ngIf="!isAuthorized">
+    We are sorry, you are not authorized user
+</div>

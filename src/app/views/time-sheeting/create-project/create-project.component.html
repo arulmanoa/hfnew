@@ -1,0 +1,121 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" 
+      [fullScreen]="true">
+      <p style="color: #0a609eeb"> Loading... </p>
+    </ngx-spinner>
+    <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+            Please wait...
+        </button>
+    </div>
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="!spinner">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="headerbar">
+            <div><h5 class="" *ngIf="!isEdit">Create Project</h5>
+              <h5 class="" *ngIf="isEdit">Update Project</h5></div>
+          </div>
+        </div>
+        <div class="col-md-4 text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item ng-star-inserted">
+              <button class="btn btn-sm btn-default" tooltip="Close" tooltip-placement="bottom"
+                (click)="redirectToMainListingScreen()">
+                <i class="mdi mdi-close font-size-md"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex p-0">
+          <div class="col-3 col-md-3" *ngIf="businessType == 3">
+            <label class="form-label ">Client<span class="required">*</span></label>
+            <ng-select [items]="clientsList" class="mt-1" (change)="onClientChange($event)" placeholder="Choose..." 
+              bindLabel="Name" bindValue="Id" [(ngModel)]="selectedClient" [multiple]="false">
+            </ng-select>
+          </div>
+          <div class="col-3 col-md-3" *ngIf="businessType == 3">
+              <label class="form-label ">Client Contract<span class="required">*</span></label>
+              <ng-select [items]="clientContractList" class="mt-1" (change)="onClientContractChange($event)" 
+                placeholder="Choose..." [disabled]="selectedClient == null || selectedClient == undefined"
+                bindLabel="Name" bindValue="Id" [(ngModel)]="selectedClientContract" [multiple]="false">
+              </ng-select>
+          </div>
+          <div class="col-3 col-md-3">
+              <label class="form-label ">Team<span class="required">*</span></label>
+              <ng-select [items]="teamsList" class="mt-1" (change)="onTeamChange($event)" 
+                placeholder="Choose..." [disabled]="selectedClient == null || selectedClient == undefined"
+                bindLabel="Name" bindValue="Id" [(ngModel)]="selectedTeam" [multiple]="false">
+              </ng-select>
+          </div>
+          <div class="col-3 col-md-3">
+            <label class="form-label ">Location<span class="required">*</span></label>
+            <ng-select [items]="locationList" class="mt-1" (change)="onLocationChange($event)" 
+              placeholder="Choose..."  [disabled]="selectedClient == null || selectedClient == undefined"
+              bindLabel="LocationName" bindValue="Id" [(ngModel)]="selectedLocation" [multiple]="false">
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex p-0">
+          <div class="col-sm-12 col-md-3">
+            <label class="form-label ">Project Code<span class="required">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="selectedProjectCode"
+            maxlength="20" [disabled]="isEdit" />
+          </div>
+          <div class="col-sm-12 col-md-3">
+            <label class="form-label ">Project Name<span class="required">*</span></label>
+            <input type="text" class="form-control" maxlength="100" [(ngModel)]="selectedProjectName" />
+          </div>
+          <div class="col-sm-12 col-md-5">
+            <label class="form-label ">Description</label>
+            <textarea placeholder="" rows="3" class="form-control" maxlength="500" [(ngModel)]="description"></textarea>
+          </div>  
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-12 d-flex p-0">
+          <div class="col-sm-12 col-md-3">
+            <label class="form-label ">Start Date<span class="required">*</span></label>
+            <input class="form-control" type="text" name="startDate" bsDatepicker placement="bottom"
+            (ngModelChange)="onChangeStartDate($event)" placeholder="DD-MM-YYYY" [minDate]="minDate" 
+            [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+            [(ngModel)]="selectedPeriodStartDate" autocomplete="off" readonly required>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <label class="form-label ">End Date<span class="required">*</span></label>
+            <input class="form-control" type="text" name="endDate" [(ngModel)]="selectedPeriodEndDate" 
+            bsDatepicker placement="bottom" [minDate]="selectedPeriodStartDate" (ngModelChange)="onChangeEndDate($event)"
+            [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+            placeholder="DD-MM-YYYY" autocomplete="off"  readonly required>
+        </div>
+        <div class="col-3 mt-3 text-left">
+          <label class="form-label">Is Billable ?</label>
+          <label class="el-switch el-switch-green">
+            <input type="checkbox" id="status-input" name="Status" checked enabled [(ngModel)]="isBillable" />
+              <span class="el-switch-style"></span>
+          </label>
+        </div>
+        <div class="col-3 mt-3 text-left">
+          <label class="form-label">Status</label>
+          <label class="el-switch el-switch-green">
+            <input type="checkbox" id="status-input" name="Status" checked enabled [(ngModel)]="isActive" />
+              <span class="el-switch-style"></span>
+          </label>
+        </div>
+      </div>
+      </div>
+      <div class="row ml-1 mt-5">
+        <div class="ml-auto mr-3">
+          <button type="button" class="btn btn-default" style="margin-right: 8px;" (click)="redirectToMainListingScreen()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="submitProjectCreated()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

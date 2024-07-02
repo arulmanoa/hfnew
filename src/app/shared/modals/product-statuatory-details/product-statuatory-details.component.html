@@ -1,0 +1,111 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="dfc100 overflow-y-auto">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left" *ngIf="!onEdit">Add Product Statuatory Scale Details</h4>
+                    <h4 class="modal-title pull-left" *ngIf="onEdit">Edit Product Statuatory Scale Details</h4>
+                    <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()"><i
+                            class="mdi mdi-close font-size-md icon-close"></i></a>
+                </div>
+                <div class="modal-body no-padder builtin-calling-wrapper">
+                    <div class="flex-column">
+                        <form [formGroup]="productScaleForm">
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="clearfix">
+                                    <div class="row">
+                                        <!-- Effective Date -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label>Effective Date <span class="required">*</span> </label>
+                                            <input type="text" class="form-control" onpaste="return false;" bsDatepicker
+                                                placement="bottom" [bsConfig]="{
+                                                  isAnimated: true,
+                                                  dateInputFormat: 'DD-MM-YYYY',
+                                                  containerClass: 'theme-default'
+                                                }" name="effectiveDate" formControlName="effectiveDate" [ngClass]="{
+                                                  'is-invalid': f.effectiveDate.invalid && f.effectiveDate.touched
+                                                }" placeholder="Effective Date" autocomplete="off" />
+
+                                            <div *ngIf="submitted && f.effectiveDate.errors" class="invalid-feedback">
+                                                <div *ngIf="f.effectiveDate.errors.required">Effective Date is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- product ID -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">Product</label>
+                                            <ng-select [items]="productList" placeholder="-- select type --"
+                                                formControlName="productId" [ngClass]="{
+                                            'is-invalid': submitted && f.productId.invalid
+                                          }" bindLabel="Name" bindValue="ProductId">
+                                            </ng-select>
+                                            <div *ngIf="submitted && f.productId.invalid" class="help-block">
+                                                <div *ngIf="f.productId.errors.required">
+                                                    Product is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Scale id -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label>Scale<span class="required">*</span> </label>
+                                            <ng-select [items]="scaleList" placeholder="Select scale"
+                                                formControlName="scaleId" bindValue="Id" bindLabel="Name"
+                                                (change)="onScaleChange($event)" [ngClass]="{
+                                                    'is-invalid': submitted && f.scaleId.invalid
+                                                  }">
+                                            </ng-select>
+                                            <div *ngIf="submitted && f.scaleId.invalid" class="help-block">
+                                                <div *ngIf="f.scaleId.errors.required">
+                                                    Scale is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- scale code -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label>Scale Code<span class="required">*</span> </label>
+                                            <input type="text" class="form-control" placeholder="Scale code"
+                                                formControlName="scaleCode" disabled />
+                                        </div>
+
+                                        <!-- Is Range value 2 Applicable -->
+                                        <div class="col-md-6 col-sm-6 p-15">
+                                            <label class="form-label">IsRangeValue2Applicable<span
+                                                    class="required">*</span>
+                                            </label>
+                                            <label class="el-switch el-switch-green">
+                                                <input type="checkbox" name="switch"
+                                                    formControlName="isRangeValue2Applicable"
+                                                    [ngClass]="{ 'is-invalid': submitted && f.isRangeValue2Applicable.errors }" />
+                                                <span class="el-switch-style"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default pull-right" type="button" data-dismiss="modal"
+                        (click)="closeModal()">Cancel</button>
+
+
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                                    (click)="savebutton()">
+                                    <div class="pos-rlt sm-btn-component"> <span> Save </span></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

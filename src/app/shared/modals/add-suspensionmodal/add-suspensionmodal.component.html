@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+      <label class="form-label ">Suspension Type<span class="required">*</span></label>
+      <!-- <ng-select [items]="suspensionTypeList" id="SuspensionType" name="SuspensionType"
+          placeholder="-- select an option --" bindLabel="Name" bindValue="Id" #SuspensionType="ngModel"
+          [(ngModel)]="employeeDeduction.SuspensionType" (change)="onChangeSuspension($event)">
+      </ng-select> -->
+  </div>
+</div>
+<div class="row">
+  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+      <label class="form-label ">Start Period<span class="required">*</span></label>
+      <ng-select [items]="payperiodList" id="SuspensionFromPeriod" name="SuspensionFromPeriod" placeholder="-- select an option --"
+          bindLabel="PayCyclePeriodName" bindValue="Id" #SuspensionFromPeriod="ngModel"
+          [(ngModel)]="employeeDeduction.SuspensionFromPeriodId">
+      </ng-select>
+  </div>
+  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+      <label class="form-label ">Start Period<span class="required">*</span></label>
+      <ng-select [items]="payperiodList" id="SuspensionToPeriod" name="SuspensionToPeriod" placeholder="-- select an option --"
+          bindLabel="PayCyclePeriodName" bindValue="Id" #SuspensionToPeriod="ngModel"
+          [(ngModel)]="employeeDeduction.SuspensionToPeriodId">
+      </ng-select>
+  </div>
+</div>

@@ -1,0 +1,215 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <div class="bg-white">
+      <div class="content pt-3 mt-0">
+        <div class="text-center ma-5" *ngIf="spinnerForInitialAPICall">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+        <ng-container *ngIf="!spinnerForInitialAPICall">
+        <h5>Employees Directory</h5>
+        <form [formGroup]="employeeForm" class="form-inline form-box">
+          <div class="filter-group w-100 justify-content-between">
+            <div class="form-group custom-input w-18">
+              <label class="font-sm" for="employeeName">Employee Code</label>
+              <input type="text" class="form-control w-100" id="employeeName" placeholder="Enter Employe Code..."
+                formControlName="EmployeeCode" appAutocompleteOff name="Employee Name" />
+            </div>
+
+            <div class="form-group custom-input w-18">
+              <label class="font-sm" for="employeeName">Employee Name</label>
+              <input type="text" class="form-control w-100" id="employeeName" placeholder="Enter Employe Name..."
+                formControlName="EmployeeName" appAutocompleteOff name="Employee Name" />
+            </div>
+
+            <div class="form-group custom-input w-18">
+              <label class="font-sm" for="designation">Designation</label>
+              <ng-select class="font-sm" #designation [items]="onboardingAdditionalInfo.LstEmployeeDesignation"
+                formControlName="Designation" placeholder="Choose..."
+                [ngClass]="{'ng-touched': submitted && g.Designation.errors }" bindLabel="Name" bindValue="Id"
+                [searchable]="false">
+                <ng-template ng-header-tmp>
+                  <div class="form-group has-feedback">
+                    <input type="text" class="form-control w-100" placeholder="Search"
+                      (input)="designation.filter($event.target.value)" />
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="form-group custom-input w-18">
+              <label class="font-sm" for="department">Department</label>
+              <ng-select class="font-sm" #department [items]="onboardingAdditionalInfo.LstEmployeeDepartment"
+                formControlName="Department" placeholder="Choose..."
+                [ngClass]="{'ng-touched': submitted && g.Designation.errors }" bindLabel="Name" bindValue="Id"
+                [searchable]="false">
+                <ng-template ng-header-tmp>
+                  <div class="form-group has-feedback">
+                    <input type="text" class="form-control w-100" placeholder="Search"
+                      (input)="department.filter($event.target.value)" />
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="form-group custom-input w-18">
+              <label class="font-sm" for="division">Division</label>
+              <ng-select class="font-sm" #division [items]="onboardingAdditionalInfo.LstEmployeeDivision"
+                formControlName="Division" placeholder="Choose..."
+                [ngClass]="{'ng-touched': submitted && g.Designation.errors }" bindLabel="Name" bindValue="Id"
+                [searchable]="false">
+                <ng-template ng-header-tmp>
+                  <div class="form-group has-feedback">
+                    <input type="text" class="form-control w-100" placeholder="Search"
+                      (input)="division.filter($event.target.value)" />
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <div class="button-group">
+            <button type="reset" (click)="clearForm()" class="btn ml-4 mb-2 font-md text-secondary">Clear</button>
+            <button type="submit" (click)="onClickSearch()" class="btn btn-submit ml-4 mr-2 mb-2">Submit</button>
+          </div>
+        </form>
+        <div class="text-center ma-5" *ngIf="spinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+        <div *ngIf="employees.length!=0" class="d-flex justify-content-between mb-2">
+          <h5 class="mt-3">{{getSearchResult().length}} Employees</h5>
+          <div class="mt-3">
+            <input class="form-control search-input" type="text" name="search" placeholder="Search"
+              [(ngModel)]="searchText" (ngModelChange)="getSearchResult()">
+          </div>
+        </div>
+        <div *ngIf="getSearchResult().length!=0" class="table-responsive cursor-default">
+          <table class="table employee-table">
+            <thead class="header-row">
+              <tr>
+
+                <th id="header-membername" class="w-15 border-left-0 sortable-header" (click)="SortData('MemberName')">
+                  <span class="d-flex font-sm sort-button">Employee
+                        <button>
+                          <span class="mdi icone" [class.visible]="sortColumn === 'MemberName'" [ngClass]="{'mdi-arrow-up': sortOrder==='asc', 'mdi-arrow-down': sortOrder==='desc'}" ></span>
+                        </button>
+                  </span>
+                </th>
+
+
+                <th>
+                  <span class="font-sm w-18">Contact Details</span>
+                </th>
+                <th id="header-designation" class="w-13 sortable-header" (click)="SortData('Designation')">
+                  <span class="font-sm d-flex sort-button">Designation
+                    <button>
+                      <span class="mdi icone" [ngClass]="{'mdi-arrow-up': sortOrder==='asc', 'mdi-arrow-down': sortOrder==='desc'}" ></span>
+                    </button>
+                  </span>
+                </th>
+                <th class="w-9">
+                  <span class="font-sm d-flex">Birthday</span>
+                </th>
+                <th id="header-locationname" class="w-9 sortable-header" (click)="SortData('LocationName')">
+                  <span class="font-sm d-flex sort-button">Location
+                    <button>
+                      <span class="mdi icone" [ngClass]="{'mdi-arrow-up': sortOrder==='asc', 'mdi-arrow-down': sortOrder==='desc'}" ></span>
+                    </button>
+                  </span>
+                </th>
+                <th id="header-department" class="w-13 sortable-header" (click)="SortData('Department')">
+                  <span class="font-sm d-flex sort-button">Department
+                    <button>
+                      <span class="mdi icone" [ngClass]="{'mdi-arrow-up': sortOrder==='asc', 'mdi-arrow-down': sortOrder==='desc'}" ></span>
+                    </button>
+                  </span>
+                </th>
+
+                <th id="header-division" (click)="SortData('Division')" class="w-13 border-right-0 sortable-header">
+                  <span class="font-sm d-flex sort-button target">Division
+                    <button>
+                      <span class="mdi icone" [ngClass]="{'mdi-arrow-up': sortOrder==='asc', 'mdi-arrow-down': sortOrder==='desc'}" ></span>
+                    </button>
+                  </span>
+                </th>
+
+                <th id="header-division" (click)="SortData('ManagerName')" class="w-13 border-right-0 sortable-header">
+                  <span class="font-sm d-flex sort-button target">Reporting Manager
+                    <button>
+                      <span class="mdi icone" [ngClass]="{'mdi-arrow-up': sortOrder==='asc', 'mdi-arrow-down': sortOrder==='desc'}" ></span>
+                    </button>
+                  </span>
+                </th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let employee of getSearchResult() | paginate: { itemsPerPage: 10, currentPage: pageNumber }">
+                <td>
+                  <div class="d-flex align-center">
+                    <div class="profile-img">
+                      <img src="./assets/Images/profileIcon.svg" style="height: 100%;" alt="img">
+                    </div>
+                    <div class="employee-details" style="width: calc(100% - 54px);">
+                      <div class="font-sm" title="{{employee.MemberName}}">{{ employee.MemberName }}</div>
+                      <div class="font-sm"><small>{{ employee.EmployeeCode }}</small></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex">
+                    <a class="font-sm text-dark d-flex" href="tel:{{ employee.MobileNumber }}">
+                      <span class="mdi mdi-phone d-inline-block font-15 mr-1 text-secondary"></span>
+                      <span class="align-item-center ">{{ employee.MobileNumber }}</span>
+                    </a>
+                  </div>
+                  <div class="d-flex">
+                    <span class="mdi mdi-email  d-inline-block font-15 mr-1 text-secondary"></span>
+                <a href="mailto:{{ employee.email }}" title="{{employee.EmailId }}"class="email">{{employee.EmailId }}</a>
+                  </div>
+                </td>
+                <td class="font-sm">{{ employee.Designation }}</td>
+                <td class="font-sm">{{ employee.Birthday }}</td>
+                <td class="font-sm">{{ employee.LocationName }}</td>
+                <td class="font-sm">{{ employee.Department }}</td>
+                <td class="font-sm">{{ employee.Division }}</td>
+                <td class="font-sm">{{ employee.ManagerName }}<span *ngIf="employee.ManagerCode">
+                  ({{employee.ManagerCode}})
+                </span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="d-inline-block font-md text-secondary">
+            <p>{{1 + (pageNumber-1)*10}} - {{ (10 + (pageNumber - 1) * 10) <= getSearchResult().length ? (10 +
+                (pageNumber - 1) * 10) : getSearchResult().length }} of {{getSearchResult().length}} Results</p>
+          </div>
+          <div class="font-sm pagination" *ngIf="getSearchResult().length>10">
+            <ngb-pagination [collectionSize]="getSearchResult().length" [pageSize]="10" [(page)]="pageNumber"
+              [boundaryLinks]="true" [ellipses]="true" [maxSize]="3">
+            </ngb-pagination>
+          </div>
+        </div>
+        <div *ngIf="employees.length == 0 && !isSearchPerformed" class="customBox">
+          <div style="display: block;">
+            <img class="noData-img" src="./assets/Images/NoEmployeeDataFound.svg" alt="img">
+            <p style="text-align: center;" class="font-md mt-2">Adjust above filter for better result</p>
+          </div>
+        </div>
+        
+        <div *ngIf="employees.length == 0 && isSearchPerformed && isFilterApplied()" class="customBox">
+          <div style="display: block;">
+          <img class="noData-img" src="./assets/Images/NoEmployeeDataFound.svg" alt="img">
+          <p style="text-align: center;" class="font-md mt-2">No Results Found!</p>
+        </div>
+        </div>
+
+        <div class="zerosrchreslt" *ngIf="searchText != undefined && this.searchText != '' && getSearchResult().length == 0">
+          <p>No Results Found!</p>
+        </div>
+      </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

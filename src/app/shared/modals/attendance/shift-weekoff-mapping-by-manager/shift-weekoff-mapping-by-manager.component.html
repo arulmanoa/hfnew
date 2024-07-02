@@ -1,0 +1,113 @@
+<div id="modal_aside_left_popup" class="d-block modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div id="Shift_WeekOff_Popup" class="modal-dialog modal-lg modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document"> 
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-modal-title"><b>Map {{title}}</b></small>
+        </div>
+        <div class="modal-close" (click)="doCloseModal()" style="margin-top: -7px;">
+          <span class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+      <div class="modal-body no-padder">
+        <div class="d-flex align-items-center" *ngIf="isLoading">
+          <strong class="text-right"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+        <div class="w-100" *ngIf="!isLoading">
+          <form [formGroup]="shiftWeekOffForm">
+            <div class="col-12 col-md-12 col-sm-12">
+              <div class="form-row">
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label ">Employee <span class="required"> * </span></label>
+                  <ng-select [items]="employeeList" #selectEmp class="mt-1" (change)="onChangeEmpDropdown($event)"  [clearable]="false"
+                    placeholder="Choose..." bindLabel="LabelName" bindValue="Code" formControlName="EmployeeCode" 
+                    [searchable]="false" [multiple]="true">
+                    <ng-template ng-header-tmp>
+                      <input placeholder="Search Employee" type="text" class="form-control"
+                        style="border: none;border-radius: 0px !important;background: white"
+                        (input)="selectEmp.filter($event.target.value)" />
+                    </ng-template>
+                  </ng-select>
+                  <div *ngIf="submitted && g.EmployeeCode .errors " class="invalid-feedback ">
+                    <div *ngIf="g.EmployeeCode.errors.required ">Select atleast one employee
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label ">{{title}} <span class="required"> * </span></label>
+                  <ng-select [items]="shiftWeekOffList" class="mt-1" (change)="onChangeShiftWoDropdown($event)" [clearable]="false"
+                    placeholder="Choose..."  bindLabel="Name" bindValue="Code" formControlName="ShiftWeekOffCode" [multiple]="isMultipleSelectionAllowedForShiftWeekOff"
+                    [closeOnSelect]="true">
+                    <ng-template ng-label-tmp let-item="item" *ngIf="title == 'Shift'">
+                      <span>{{item.Name + ' (' + item.formattedStartTime + ' - ' + item.formattedEndTime + ')'}}</span>
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index" *ngIf="title == 'Shift'">
+                      <span>{{item.Name + ' (' + item.formattedStartTime + ' - ' + item.formattedEndTime + ')'}}</span>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label ">Period From <span class="required"> * </span></label>
+                  <input class="form-control" type="text" name="effectiveFromDate" bsDatepicker placement="bottom"
+                  (bsValueChange)="onChangeEffectiveFromDate($event)" placeholder="DD-MM-YYYY" 
+                  [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+                 formControlName="EffectiveFrom" autocomplete="off" readonly required>
+                </div>
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label ">Period To <span class="required"> * </span></label>
+                  <input class="form-control" type="text" name="effectiveToDate" bsDatepicker placement="bottom"
+                  (bsValueChange)="onChangeEffectiveToDate($event)" placeholder="DD-MM-YYYY" [minDate]="effectiveToMinDate" 
+                  [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+                 formControlName="EffectiveTo" autocomplete="off" readonly required>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="row m-1" *ngIf="shiftWeekValidatedData && shiftWeekValidatedData.length > 0">
+          <div class="d-block table table-responsive table-height" style="height: 300px;">
+            <table class="table-bordered">
+              <thead class="fixed-header">
+                <tr>
+                  <th>Employee Code</th>
+                  <th *ngIf="title == 'Week Off'"> WeekOff </th>
+                  <th *ngIf="title == 'Shift'"> Shift Code </th>
+                  <th>Effective From </th>
+                  <th>Effective To </th>
+                  <th>Error Message</th>
+                </tr>
+              </thead>
+              <tbody class="scrollable-body">
+                <tr *ngFor="let item of shiftWeekValidatedData">
+                  <td>{{ item['EmployeeCode'] }}</td>
+                  <td *ngIf="title == 'Week Off'">{{item['Day_Name']}}</td>
+                  <td *ngIf="title == 'Shift'">{{ item['ShiftCode'] }}</td>
+                  <td>{{ item['EffectiveFrom'] }}</td>
+                  <td>{{ item['EffectiveTo'] }}</td>
+                  <td style="color: red">{{ item['ErrorMessage'] }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="width: 100%; " *ngIf="!isLoading">
+        <div>
+          <div class="pull-right m-r-sm">
+            <button class="btn btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" [disabled]="shiftWeekOffForm.invalid" (click)="doSave()">
+              <div class="pos-rlt sm-btn-component">
+                <span> <i class="mdi mdi-check-all" aria-hidden="true"></i> &nbsp;Save </span>
+              </div>
+            </button>
+          </div>
+          <button class="btn btn-danger m-r-sm pull-right" type="button" (click)="doCloseModal()"> 
+            <i class="mdi mdi-close-circle-outline" aria-hidden="true"></i> &nbsp; Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

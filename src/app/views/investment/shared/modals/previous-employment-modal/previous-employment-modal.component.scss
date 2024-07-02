@@ -1,0 +1,91 @@
+
+.border-success {
+  border-left: 4px solid #28a745;
+}
+
+.border-blank {
+  border-left: 4px solid #3f51b5;
+}
+
+.border-pending {
+  border-left: 4px solid #f3c74d;
+}
+
+.border-rejected {
+  border-left: 4px solid #dc3545;
+}
+
+
+.badge-success1 {
+  background: #E2FEEE;
+  color: #2DA05E;
+  border-radius: 2px;
+  display: inline;
+  font-size: 10px !important;
+
+}
+
+.badge-warning1 {
+  background: #FFE9C7;
+  color: #EE9A15;
+  border-radius: 2px;
+  display: inline;
+  font-size: 12px;
+  font-size: 10px !important;
+}
+
+.badge-danger1 {
+  background: #FFE4E1;
+  color: #E74C3C;
+  border-radius: 2px;
+  display: inline;
+  font-size: 10px !important;
+}
+
+.badge-remarks {
+  background: #D4EFFF;
+  color: #146BA2;
+  border-radius: 2px;
+  display: inline;
+}
+
+.badge-declaration {
+  background: #d0d6f9;
+  color: #3f51b5;
+  border-radius: 2px;
+  display: inline;
+  font-size: 10px !important;
+}
+
+.modal .modal-dialog-aside {
+  // width: 350px;
+  // max-width: 80%;
+  height: 100%;
+  margin: 0;
+  transform: translate(0);
+  transition: transform .2s;
+}
+
+.modal .modal-dialog-aside .modal-content {
+  height: inherit;
+  border: 0;
+  border-radius: 0;
+}
+
+.modal .modal-dialog-aside .modal-content .modal-body {
+  overflow-y: auto
+}
+
+.modal.fixed-left .modal-dialog-aside {
+  margin-left: auto;
+  transform: translateX(100%);
+}
+
+.modal.fixed-right .modal-dialog-aside {
+  margin-right: auto;
+  transform: translateX(-100%);
+}
+
+.modal.show .modal-dialog-aside {
+  transform: translateX(0);
+}

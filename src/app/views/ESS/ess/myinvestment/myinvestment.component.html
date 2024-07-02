@@ -1,0 +1,1564 @@
+<div class="page-wrapper ff" *ngIf="isESSLogin == true">
+    <div class="page-content">
+        <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;">
+            <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" [fullScreen]="true">
+                <p style="color: #0a609eeb"> Loading... </p>
+            </ngx-spinner> -->
+
+            <app-loading-screen></app-loading-screen>
+            <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+            </div>
+
+            <div class="row" *ngIf="!spinner">
+                <div class="col-lg-6 col-xs-12 col-sm-12">
+                    <div class="headerbar">
+                        <div>
+                            <h2 class="header_title">My Investments </h2>
+                            <p class="subheader_title" *ngIf="employeedetails != null">Name : {{employeedetails.FirstName}} ~ Code : {{employeedetails.Code}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-right">
+                    <div class="text-right">
+                        <ul class="list-inline" *ngIf="!spinner && !isInvestmentUnderQC">
+                            <li class="list-inline-item" *ngIf="TaxDeclaration != 1">
+                                <button type="button" class="btn btn-default" (click)="preview12BBForm('child')">
+                  <i class="mdi mdi-eye m-r-xs" title="Preview" style="cursor:pointer"></i>
+                  Preview Form 12BB
+                </button>
+                            </li>
+                            <li class="list-inline-item" *ngIf="_SelectedFinId == CurrentFinancialYearId">
+                                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(false)">
+                  <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                </button>
+                            </li>
+                            <li class="list-inline-item" *ngIf="_SelectedFinId == CurrentFinancialYearId && ispendingInvestmentExist && TaxDeclaration != 1 ">
+                                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(true)">
+                  <i class="mdi mdi-content-save  m-r-xs"></i> Submit Investment
+                </button>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!spinner">
+                <ng-container *ngTemplateOutlet="mydocumentTemplate">
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isESSLogin == false && !spinner">
+    <ng-container *ngTemplateOutlet="mydocumentTemplate">
+    </ng-container>
+</div>
+
+<ng-template #mydocumentTemplate>
+
+
+
+    <div class="row" *ngIf="isESSLogin == false && !spinner && !isInvestmentUnderQC && isPreviewButtonRequired">
+        <div class="col-lg-6">
+        </div>
+        <div class="col-lg-6 text-right">
+            <div class="text-right">
+                <ul class="list-inline" *ngIf="!spinner && !isInvestmentUnderQC">
+                    <li class="list-inline-item" *ngIf="TaxDeclaration != 1">
+                        <button type="button" class="btn btn-default" (click)="preview12BBForm('child')">
+              <i class="mdi mdi-eye m-r-xs" title="Preview" style="cursor:pointer"></i>
+              Preview Form 12BB
+            </button>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br/>
+
+    <div class="row" *ngIf="!spinner && isInvestmentUnderQC">
+        <div class="col-lg-12" style="TEXT-ALIGN: CENTER;">
+            <span class="text-center">Your Investment Proof verification is underway. Please wait until it is completed.
+      </span>
+            <br />
+            <br />
+        </div>
+    </div>
+    <div class="row" *ngIf="!spinner && isInvestmentUnderQC && summaryDocumentId > 0">
+        <div class="col-lg-12" style="TEXT-ALIGN: CENTER;">
+            <button type="button" class="btn btn-default" (click)="download12BB(false)">
+        <i class="mdi mdi-download  m-r-xs"></i> Download Form 12BB
+      </button>
+            <br />
+        </div>
+    </div>
+    <div class="row" *ngIf="!spinner && !isInvestmentUnderQC && isInvestmentQcRejected">
+        <br />
+        <div class="col-lg-12" style="TEXT-ALIGN: CENTER;COLOR: RED;" *ngIf="employeedetails.EmployeeInvestmentMaster.Remarks">
+            <span class="text-center"> Rejection Remarks :
+        {{this.employeedetails.EmployeeInvestmentMaster.Remarks}} </span>
+            <br />
+            <br />
+        </div>
+    </div>
+
+
+    <div class="row" *ngIf="!IsPriorDOJ && indicateSubmissionSlotEnddate && indicateSubmissionSlotIsAfter && indicateSubmissionSlotIsBefore && !isInvestmentUnderQC">
+        <div class="col-lg-12 text-center">
+            <ngb-alert [dismissible]="false">
+                <strong> The investment submission date will close on {{InvestmentClosedDate | date:'dd-MM-yyyy'}} </strong>
+            </ngb-alert>
+        </div>
+        <br />
+        <br />
+    </div>
+
+    <div class="row" *ngIf="!IsPriorDOJ && indicateSubmissionSlotEnddate && !indicateSubmissionSlotIsAfter && !indicateSubmissionSlotIsBefore && !isInvestmentUnderQC">
+        <div class="col-lg-12 text-center">
+            <ngb-alert [dismissible]="false">
+                <strong> The investment submission date will close on {{InvestmentClosedDate | date:'dd-MM-yyyy'}} </strong>
+            </ngb-alert>
+        </div>
+        <br />
+        <br />
+    </div>
+    <div class="row" *ngIf="!IsPriorDOJ && !indicateSubmissionSlotEnddate && indicateSubmissionSlotIsAfter && !indicateSubmissionSlotIsBefore && !isInvestmentUnderQC">
+        <div class="col-lg-12 text-center">
+            <ngb-alert [dismissible]="false">
+                <strong> Submission time has been closed.  Please contact the Technical Assistance Administration </strong>
+            </ngb-alert>
+        </div>
+        <br />
+        <br />
+    </div>
+    <div class="row" *ngIf="!IsPriorDOJ && !indicateSubmissionSlotEnddate && !indicateSubmissionSlotIsAfter && indicateSubmissionSlotIsBefore && !isInvestmentUnderQC">
+        <div class="col-lg-12 text-center">
+            <ngb-alert [dismissible]="false">
+                <strong> Submission time not yet underway. Please contact the Technical Assistance Administration </strong>
+            </ngb-alert>
+        </div>
+        <br />
+        <br />
+    </div>
+
+
+    <div *ngIf="!spinner && !isInvestmentUnderQC">
+        <form [formGroup]="employeeForm">
+            <div class="row">
+                <div class="form-group form-group-vertical col-xs-12 col-md-2 col-lg-2 col-sm-12">
+                    <label class="form-label"> Financial Year </label>
+                    <select class="form-control" id="financialYear" name="financialYear" [disabled]="!isESSLogin" (change)="OnChangeFinYear($event.target.value)" formControlName="financialYear" placeholder="Select an option">
+            <option *ngFor="let year of FicalYearList" [value]="year.Id" class="ng-star-inserted">
+              {{year.code}}</option>
+          </select>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-md-2 col-lg-2 col-sm-12">
+                    <label class="form-label"> Tax Mode </label>
+                    <input type="checkbox" [checked]="TaxDeclaration == '1' ? false : true" class="toggle" disabled id="toggle" />
+                    <label for="toggle" style=" float: right;">
+            <span class="on">Proof</span>
+            <span class="off">Declarations</span>
+          </label>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-md-2 col-lg-2 col-sm-12">
+                    <label class="form-label"> New Tax Regime </label>
+                    <input type="checkbox" class="toggle1" id="toggle1" (change)="onChangeTaxRegime()" name="IsNewTaxRegimeOpted" formControlName="IsNewTaxRegimeOpted" />
+                    <label for="toggle1" style=" float: right;">
+            <span class="on">Yes</span>
+            <span class="off">No</span>
+          </label>
+                </div>
+                <!-- <div *ngIf="isESSLogin == false" class=" col-md-6 text-right">
+          <button type="button" class="btn btn-primary" (click)="uploadFormPopup()">
+            <i class="mdi mdi-eye m-r-xs" title="Preview" style="cursor:pointer"></i> 
+            Form 12BB
+          </button>
+        </div> -->
+            </div>
+
+        </form>
+
+        <div class="row">
+            <div class="col-12 col-xl-6 col-xs-12 col-sm-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-header-title">
+                            Investments
+                        </h4>
+                        <a href="javascript:;" *ngIf="_SelectedFinId == CurrentFinancialYearId" class="btn btn-sm btn-white" (click)="addInvestmentCategory()">
+                            <i class="mdi mdi-link-variant"></i> Add
+                        </a>
+                        <!-- <a href="javascript:;" class="btn btn-sm btn-white" 
+            (click)="addInvestmentCategory()">
+            <i class="mdi mdi-link-variant"></i> Add
+          </a> -->
+
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush my-n3">
+                            <p class="norecord_text" *ngIf="_SelectedFinId == CurrentFinancialYearId && dynamicPFInvestments.length == 0 && Lstinvestment.length == 0">
+                                No records!
+                            </p>
+                            <ng-container *ngIf="_SelectedFinId == CurrentFinancialYearId">
+                                <div class="list-group-item" *ngFor="let investment of dynamicPFInvestments">
+                                    <div class="row align-items-center" style="cursor: pointer;" *ngIf="investment.AmtInvested > 0">
+                                        <div class="col-auto">
+                                            <a href="javascript:;" class="avatar">
+                                                <img src="assets/Images/accounting.png" alt="..." class="avatar-img rounded" style="width:40px">
+                                            </a>
+                                        </div>
+                                        <div class="col ml-n2">
+                                            <h4 class="font-weight-normal mb-1">
+                                                <a href="javascript:;" style="color: #5c5c5c; font-weight: 600 !important;">{{investment.Name}}</a>
+                                            </h4>
+                                            <small class="text-muted" style="letter-spacing: 1px;"> Amt Declared : <b> ₹
+                        {{investment.AmtInvested}}</b>
+                      <span *ngIf="TaxDeclaration != 1"> | Amt Approved : <b> ₹ {{investment.AmtInvested}}</b>
+                      </span>
+
+                    </small>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="media-right">
+                                            </div>
+                                            <div class="vertical-align-middle link-to-details" style="margin-top: 2.5rem;">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <div class="list-group-item" *ngFor="let investment of Lstinvestment">
+                                <div class="row align-items-center" style="cursor: pointer;">
+                                    <div class="col-auto">
+                                        <a href="javascript:;" class="avatar">
+                                            <img src="assets/Images/accountinghome.png" alt="..." class="avatar-img rounded" style="width:40px">
+                                        </a>
+                                    </div>
+                                    <div class="col ml-n2">
+                                        <h4 class="font-weight-normal mb-1">
+                                            <a href="javascript:;" style="color: #5c5c5c;font-weight: 600 !important;">{{getLetterSpace(investment.Name)}}</a>
+                                        </h4>
+                                        <small class="text-muted" style="letter-spacing: 1px;">
+                      Amt Invested : <b> ₹ {{investment.AmtInvested}}</b>
+                      <span *ngIf="TaxDeclaration != 1">
+                        |
+                        Amt Approved : <b> ₹ {{investment.AmtApproved}}</b>
+                      </span>
+                    </small>
+
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="media-right">
+
+                                            <a href="javascript:;" *ngIf="(TaxDeclaration != 1 || toCheckDocumentCount(investment.DocumentDetails) == true)" class="btn action-edit pull-right" style="margin-right: 5px">
+                                                <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #838383;" [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="left"></i>
+                                            </a>
+                                            <a href="javascript:;" *ngIf="!isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="deleteInvestment(investment)">
+                                                <i class="fa fa-trash" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                            </a>
+
+                                            <a href="javascript:;" *ngIf="!isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="editInvestment(investment)">
+                                                <i class="fa fa-pencil" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                            </a>
+
+                                            <div *ngIf="investment.Name != 'PF'">
+                                                <a href="javascript:;" *ngIf="isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="deleteInvestment(investment)">
+                                                    <i class="fa fa-trash" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                                </a>
+
+                                                <a href="javascript:;" *ngIf="isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="editInvestment(investment)">
+                                                    <i class="fa fa-pencil" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                                </a>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="vertical-align-middle link-to-details" style="margin-top: 2.5rem;">
+
+                                            <span class="badge badge-warning" *ngIf="getStatusCount(investment.DocumentDetails,0) > 0" style="display: inline;color:white !important;">
+                        Saved
+                        ({{getStatusCount(investment.DocumentDetails,0)}})
+
+                      </span>
+                                            <span class="badge badge-danger" *ngIf="getStatusCount(investment.DocumentDetails,2) > 0" style="display: inline;color:white !important;">
+                        Rejected
+                        ({{getStatusCount(investment.DocumentDetails,2)}})
+                      </span>
+                                            <span class="badge badge-success" *ngIf="getStatusCount(investment.DocumentDetails,1) > 0" style="display: inline;color:white !important;">
+
+                        Approved
+                        ({{getStatusCount(investment.DocumentDetails,1)}})
+                      </span>
+
+
+                                        </div>
+
+                                        <ng-template #popContent>
+                                            <div class="row" *ngFor="let i of investment.DocumentDetails" style="padding-bottom: 5px;">
+                                                <div class="col-lg-6">
+                                                    {{i.FileName}}
+                                                </div>
+                                                <div class="col-lg-6 text-right">
+                                                    <button class="btn btn-default btn-sm m-r-sm " style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="document_file_view(i, 'Documents')"><i class="fa fa-eye m-r-xs"></i>
+                                                        View </button>
+                                                </div>
+                                                <div *ngIf="i.Status==2" style="margin-left: 10px;">
+                                                    <label> Input Remarks:</label><span style="padding-left: 5px;">{{i.Remarks}}</span>
+                                                    <br>
+                                                    <label>Approver Remarks:</label><span style="padding-left: 5px;">{{investment.Remarks}}</span>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template #popTitle> Preview <span style="color: transparent;">dummay text for content</span> Document Details
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-6 col-xs-12 col-sm-12 col-lg-6">
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-header-title">
+                            Deductions
+                        </h4>
+                        <!-- <a href="javascript:;" class="btn btn-sm btn-white" *ngIf="!isESSLogin" (click)="addDeductionCategory()">
+            <i class="mdi mdi-link-variant"></i> Add
+          </a> -->
+                        <a href="javascript:;" *ngIf="_SelectedFinId == CurrentFinancialYearId" class="btn btn-sm btn-white" (click)="addDeductionCategory()">
+                            <i class="mdi mdi-link-variant"></i> Add
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush my-n3">
+                            <p class="norecord_text" *ngIf="Lstdeduction_Exemption.length == 0">
+                                No records!</p>
+                            <div class="list-group-item" *ngFor="let deducExemp of Lstdeduction_Exemption">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <a href="javascript:;" class="avatar">
+                                            <img src="assets/Images/accountinghome.png" alt="" class="avatar-img rounded" style="width:40px">
+                                        </a>
+
+                                    </div>
+                                    <div class="col ml-n2">
+                                        <h4 class="font-weight-normal mb-1">
+                                            <a href="javascript:;" style="color: #5c5c5c;font-weight: 600 !important;">{{getLetterSpace(deducExemp.Name)}}</a>
+
+                                        </h4>
+                                        <small class="text-muted" style="letter-spacing: 1px;">
+                      Amt Declared : <b> ₹ {{deducExemp.AmtInvested}}</b>
+                      <span *ngIf="TaxDeclaration != 1">
+                        |
+                        Amt Approved : <b> ₹ {{deducExemp.AmtApproved}}</b>
+                      </span>
+                    </small>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="media-right">
+                                            <a href="javascript:;" *ngIf="(TaxDeclaration != 1 || toCheckDocumentCount(deducExemp.DocumentDetails) == true)" class="btn action-edit pull-right" style="margin-right: 5px">
+                                                <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #838383;" [ngbPopover]="popContent" [popoverTitle]="popTitle" placement="left"></i>
+                                            </a>
+                                            <a href="javascript:;" *ngIf="!isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="deleteDeduction(deducExemp)">
+                                                <i class="fa fa-trash" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                            </a>
+
+                                            <a href="javascript:;" *ngIf="!isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="editDeduction(deducExemp)">
+                                                <i class="fa fa-pencil" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                            </a>
+
+                                            <a href="javascript:;" *ngIf="isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="deleteDeduction(deducExemp)">
+                                                <i class="fa fa-trash" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                            </a>
+
+                                            <a href="javascript:;" *ngIf="isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="editDeduction(deducExemp)">
+                                                <i class="fa fa-pencil" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="vertical-align-middle link-to-details" style="margin-top: 2.5rem;">
+                                            <div class="vertical-align-middle link-to-details" style="margin-top: 2.5rem;">
+
+                                                <span class="badge badge-warning" *ngIf="getStatusCount(deducExemp.DocumentDetails,0) > 0" style="display: inline;color:white !important;cursor: pointer;">
+                          Saved
+                          ({{getStatusCount(deducExemp.DocumentDetails,0)}})
+
+                        </span>
+                                                <span class="badge badge-danger" *ngIf="getStatusCount(deducExemp.DocumentDetails,2) > 0" style="display: inline;color:white !important;cursor: pointer;">
+                          Rejected
+                          ({{getStatusCount(deducExemp.DocumentDetails,2)}})
+                        </span>
+                                                <span class="badge badge-success" *ngIf="getStatusCount(deducExemp.DocumentDetails,1) > 0" style="display: inline;color:white !important;cursor: pointer;">
+
+                          Approved
+                          ({{getStatusCount(deducExemp.DocumentDetails,1)}})
+                        </span>
+
+
+                                            </div>
+                                        </div>
+                                        <ng-template #popContent>
+                                            <div class="row" *ngFor="let i of deducExemp.DocumentDetails" style="padding-bottom: 5px;">
+                                                <div class="col-lg-6">
+                                                    {{i.FileName}}
+                                                </div>
+
+                                                <div class="col-lg-6 text-right">
+                                                    <button class="btn btn-default btn-sm m-r-sm " style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="document_file_view(i, 'Documents')"><i class="fa fa-eye m-r-xs"></i>
+                            View </button>
+
+                                                </div>
+                                                <div *ngIf="i.Status==2" style="margin-left: 10px;">
+                                                    <label> Input Remarks:</label><span style="padding-left: 5px;">{{deducExemp.Remarks}}</span>
+                                                    <br>
+                                                    <label>Approver Remarks:</label><span style="padding-left: 5px;">{{i.Remarks}}</span>
+                                                </div>
+                                            </div>
+
+
+                                        </ng-template>
+                                        <ng-template #popTitle> Preview
+                                            <span style="color: transparent;">dummay text for content</span> Document Details
+                                        </ng-template>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-6 col-xs-12 col-sm-12 col-lg-6">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-header-title">
+                            Exemptions
+                        </h4>
+                        <!-- <a href="javascript:;" class="btn btn-sm btn-white" *ngIf="!isESSLogin" (click)="addExceptionCategory()">
+            <i class="mdi mdi-file-document-outline"></i> Add Bill
+          </a> -->
+                        <a href="javascript:;" *ngIf="_SelectedFinId == CurrentFinancialYearId" class="btn btn-sm btn-white" (click)="addExceptionCategory()">
+                            <i class="mdi mdi-file-document-outline"></i> Add Bill
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush my-n3">
+                            <p class="norecord_text" *ngIf="dynamicExeptions.length == 0">
+                                No records!
+                            </p>
+                            <div class="list-group-item" *ngFor="let deducExemp of dynamicExeptions">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <a href="javascript:;" class="avatar">
+                                            <img src="assets/Images/accountinghome.png" alt="..." class="avatar-img rounded" style="width:40px">
+                                        </a>
+
+                                    </div>
+                                    <div class="col ml-n2">
+                                        <h4 class="font-weight-normal mb-1">
+                                            <a href="javascript:;" style="color: #5c5c5c;
+                                                                    font-weight: 600 !important;">{{getLetterSpace(deducExemp.ProductName)}}</a>
+
+                                        </h4>
+                                        <small class="text-muted" style="letter-spacing: 1px;">
+                      Submitted Bill Amt. :
+                      <b> ₹
+                        {{deducExemp.Amount}}</b>
+                      <span *ngIf="TaxDeclaration != 1">
+                        |
+                        Amt Approved :
+                        <b> ₹
+                          {{deducExemp.ApprovedAmount}}</b>
+                      </span>
+                    </small>
+
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="media-right">
+
+                                            <a href="javascript:;" *ngIf="(TaxDeclaration != 1 || toCheckDocumentCount(deducExemp.LstEmployeeExemptionBillDetails) == true)" class="btn action-edit pull-right" style="margin-right: 5px">
+                                                <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #838383;" [ngbPopover]="popContent1" [popoverTitle]="popTitle" placement="left"></i>
+                                            </a>
+                                            <a href="javascript:;" *ngIf="!isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="chooseCategory(deducExemp,'exemption')">
+                                                <i class="fa fa-pencil" matTooltip="View Bills" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                            </a>
+                                            <a href="javascript:" *ngIf="isESSLogin && _SelectedFinId == CurrentFinancialYearId" class="btn action-edit pull-right" style="margin-right: 5px" (click)="chooseCategory(deducExemp,'exemption')">
+                                                <i class="fa fa-pencil" matTooltip="View Bills" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="vertical-align-middle link-to-details" style="margin-top: 2.5rem;">
+                                            <div class="vertical-align-middle link-to-details" style="margin-top: 2.5rem;">
+
+                                                <span class="badge badge-warning" *ngIf="getStatusCount1(deducExemp.LstEmployeeExemptionBillDetails,0) > 0" style="display: inline;color:white !important;cursor: pointer;">
+                          Saved
+                          ({{getStatusCount1(deducExemp.LstEmployeeExemptionBillDetails,0)}})
+
+                        </span>
+                                                <span class="badge badge-danger" *ngIf="getStatusCount1(deducExemp.LstEmployeeExemptionBillDetails,2) > 0" style="display: inline;color:white !important;cursor: pointer;">
+                          Rejected
+                          ({{getStatusCount1(deducExemp.LstEmployeeExemptionBillDetails,2)}})
+                        </span>
+                                                <span class="badge badge-success" *ngIf="getStatusCount1(deducExemp.LstEmployeeExemptionBillDetails,1) > 0" style="display: inline;color:white !important;cursor: pointer;">
+
+                          Approved
+                          ({{getStatusCount1(deducExemp.LstEmployeeExemptionBillDetails,1)}})
+                        </span>
+
+
+                                            </div>
+                                        </div>
+                                        <ng-template #popContent1>
+                                            <div class="row" *ngFor="let i of deducExemp.LstEmployeeExemptionBillDetails" style="padding-bottom: 5px;">
+                                                <div class="col-lg-6">
+                                                    {{i.FileName}}
+                                                </div>
+                                                <div class="col-lg-6 text-right">
+                                                    <button class="btn btn-default btn-sm m-r-sm " style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" (click)="document_file_view1(i, 'Documents')"><i class="fa fa-eye m-r-xs"></i>
+                            View </button>
+
+
+                                                </div>
+                                                <div *ngIf="i.Status==2" style="margin-left: 10px;">
+                                                    <label> Input Remarks:</label><span style="padding-left: 5px;">{{i.Remarks}}</span>
+                                                    <br>
+                                                    <label>Approver Remarks:</label><span style="padding-left: 5px;">{{i.RejectedRemarks}}</span>
+                                                </div>
+                                            </div>
+
+
+                                        </ng-template>
+                                        <ng-template #popTitle> Preview
+                                            <span style="color: transparent;">dummay
+                        text for content</span> Document Details
+                                        </ng-template>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-xl-12 col-xs-12 col-sm-12 col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-lg-4 order-lg-2">
+                                <div class="text-center">
+                                    <img src="https://dashkit.goodthemes.co/assets/img/illustrations/happiness.svg" alt="..." class="img-fluid mt-n5 mt-lg-0 mb-4 mr-md-n5" style="max-width: 272px;">
+                                </div>
+
+                            </div>
+                            <div class="col-12 col-lg-8 px-4 py-3 order-lg-1">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Tax
+                        Liability</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                        0.00 /-
+                      </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label searchbar-label">Tax
+                        Saved</label>
+                                            <label class="qcsummarylabel form-text text-muted">
+                        0.00 /-
+                      </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-muted">
+                                    This is a true story and totally not made up. This is going to be better in the long run but for now this is the way it is.
+                                </p>
+                                <a href="javascript:;" class="btn btn-primary lift" onclick="alert('Coming Soon...')">
+                  Tax Calculator
+                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</ng-template>
+
+
+
+
+
+
+<div id="popup_chooseCategory_investment" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_chooseCategoryDeduction" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated fadeInDownBig">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Investments - Category</b></small>
+                        <h6 class="modal-title subheader_h6" id="popup_release_AL" *ngIf="employeedetails != null">
+                            {{employeedetails.FirstName}} <span>
+                - </span> {{employeedetails.Code}} </h6>
+                    </div>
+                    <div class="modal-close" (click)="modal_dismiss2('investment')" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12  col-sm-4  p-r-50">
+                            <img src="assets/Images/designer-life.svg" style="position: absolute; /* bottom: 0px; */
+                            height: auto;
+                            width: 100%;
+                            text-align: center;padding: 55px;">
+                        </div>
+                        <div class="col-xs-12  col-sm-8  p-r-50">
+                            <h5 style="text-transform: uppercase;font-size: 14px;margin-bottom: 10px;">Commonly Used
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-6 mb10 mt10" *ngFor="let category of TaxationCategory_Investment" style="margin-bottom:10px" (click)="chooseCategory(category,'investment')">
+                                    <a href="javascript:;" style="text-decoration: none !important;">
+                                        <div style="box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 2px, rgba(0, 0, 0, 0.117647) 0 1px 2px; padding: 3px; height: 137px;text-decoration: none;
+                                    border-radius: 10px;
+                                    border: 1px solid #f3f2f2;">
+                                            <img class="aligncenter size-full wp-image-25227 img-responsive" alt="80C" width="50" height="50" src="assets/Images/accounting.png">
+                                            <p class="mb0 pt5" style="font-size: 11px;margin-bottom: 5px;
+                                    color: #4C5656;
+                                    margin-top: 5px;
+                                    z-index: 1000;
+                                    transition: color 0.3s ease-out;
+                                    font-weight: 500;
+                                    text-align: center;"><b>{{getLetterSpace(category.ProductName)}}</b></p>
+                                            <p class="mb0 pt5" style="text-align: center; font-size: 10px;" *ngFor="let child of category.b">
+                                                {{child.Code}}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <p class="center_text" *ngIf="TaxationCategory_Investment.length == 0">No records found!
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+                            <h5 style="font-size: 14px;text-transform: uppercase;margin-bottom: 10px;">Other Investments
+                            </h5>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-6 mb10 mt10" *ngFor="let othercategory of TaxationOtherCategory_Investment" (click)="chooseCategory(othercategory,'investment')" style="margin-bottom:10px">
+                                    <a href="javascript:;" style="text-decoration: none !important;">
+                                        <div style="box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 2px, rgba(0, 0, 0, 0.117647) 0 1px 2px; padding: 3px; height: 137px;text-decoration: none;
+                                    border-radius: 10px;
+                                    border: 1px solid #f3f2f2;">
+                                            <img class="aligncenter size-full wp-image-25227 img-responsive" alt="80C" width="50" height="50" src="assets/Images/accounting.png">
+                                            <p class="mb0 pt5" style="font-size: 11px;margin-bottom: 5px;
+                                    color: #4C5656;
+                                    margin-top: 5px;
+                                    z-index: 1000;
+                                    transition: color 0.3s ease-out;
+                                    font-weight: 500;
+                                    text-align: center;"><b>{{getLetterSpace(othercategory.ProductName)}}</b></p>
+                                            <p class="mb0 pt5" style="text-align: center; font-size: 10px;" *ngFor="let child of othercategory.b">
+                                                {{child.Code}}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="center_text" *ngIf="TaxationOtherCategory_Investment.length == 0">No records found!
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left left-margin-btn">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popup_chooseCategoryDeduction" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_chooseCategoryDeduction" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated fadeInDownBig">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b> Deductions </b></small>
+                        <h6 class="modal-title subheader_h6" id="popup_release_AL" *ngIf="employeedetails != null">
+                            {{employeedetails.FirstName}} <span>
+                - </span> {{employeedetails.Code}} </h6>
+                    </div>
+                    <div class="modal-close" (click)="modal_dismiss2('deduction')" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12  col-sm-4  p-r-50">
+                            <img src="assets/Images/designer-life.svg" style="position: absolute;
+                            /* bottom: 0px; */
+                            height: auto;
+                            width: 100%;
+                            text-align: center;padding: 55px;">
+                        </div>
+                        <div class="col-xs-12  col-sm-8  p-r-50">
+                            <h5 style="
+                            text-transform: uppercase;font-size: 14px;
+                            margin-bottom: 10px;">Commonly Used</h5>
+                            <div class="row">
+
+                                <div class="col-md-3 col-xs-6 mb10 mt10" *ngFor="let category of TaxationCategory" style="margin-bottom:10px" (click)="chooseCategory(category,'duduction')">
+                                    <a href="javascript:;" style="text-decoration: none !important;">
+                                        <div style="box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 2px, rgba(0, 0, 0, 0.117647) 0 1px 2px; padding: 3px; height: 137px;text-decoration: none;
+                                    border-radius: 10px;
+                                    border: 1px solid #f3f2f2;">
+                                            <img class="aligncenter size-full wp-image-25227 img-responsive" alt="80C" width="50" height="50" src="assets/Images/tax.png">
+                                            <p class="mb0 pt5" style="font-size: 11px;margin-bottom: 5px;
+                                    color: #4C5656;
+                                    margin-top: 5px;
+                                    z-index: 1000;
+                                    transition: color 0.3s ease-out;
+                                    font-weight: 500;
+                                    text-align: center;"><b>{{getLetterSpace(category.ProductName)}}</b></p>
+                                            <p class="mb0 pt5" style="text-align: center; font-size: 10px;" *ngFor="let child of category.b">
+                                                {{child.Code}}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <h5 style="font-size: 14px;
+                    text-transform: uppercase;
+                    margin-bottom: 16px;">Other Deductions </h5>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-3 col-xs-6 mb10 mt10" *ngFor="let othercategory of TaxationOtherCategory" style="margin-bottom:10px" (click)="chooseCategory(othercategory,'duduction')">
+                                    <a href="javascript:;" style="text-decoration: none !important;">
+                                        <div style="box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 2px, rgba(0, 0, 0, 0.117647) 0 1px 2px; padding: 3px; height: 137px;text-decoration: none;
+                                    border-radius: 10px;
+                                    border: 1px solid #f3f2f2;">
+                                            <img class="aligncenter size-full wp-image-25227 img-responsive" alt="80C" width="50" height="50" src="assets/Images/tax.png">
+                                            <p class="mb0 pt5" style="font-size: 11px;margin-bottom: 5px;
+                                    color: #4C5656;
+                                    margin-top: 5px;
+                                    z-index: 1000;
+                                    transition: color 0.3s ease-out;
+                                    font-weight: 500;
+                                    text-align: center;"><b>{{getLetterSpace(othercategory.ProductName)}}</b></p>
+                                            <p class="mb0 pt5" style="text-align: center; font-size: 10px;" *ngFor="let child of othercategory.b">
+                                                {{child.Code}}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="center_text" *ngIf="TaxationOtherCategory.length == 0">No records found!</p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left left-margin-btn">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="popup_chooseCategory_Exemptions" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_chooseCategoryExemptions" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated fadeInDownBig">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Exemptions - Category</b></small>
+                        <h6 class="modal-title subheader_h6" id="popup_release_AL" *ngIf="employeedetails != null">
+                            {{employeedetails.FirstName}} <span>
+                - </span> {{employeedetails.Code}} </h6>
+                    </div>
+                    <div class="modal-close" (click)="modal_dismiss2('exemptions')" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12  col-sm-4  p-r-50">
+                            <img src="assets/Images/designer-life.svg" style="position: absolute; /* bottom: 0px; */
+                            height: auto;
+                            width: 100%;
+                            text-align: center;padding: 55px;">
+                        </div>
+                        <div class="col-xs-12  col-sm-8  p-r-50">
+                            <!-- <h5 style="text-transform: uppercase;font-size: 14px;margin-bottom: 10px;">Commonly Used
+                            </h5> -->
+                            <div class="row" *ngIf="popupTaxBills != null && popupTaxBills.length > 0 ">
+                                <div class="col-md-3 col-xs-6 mb10 mt10" *ngFor="let category of popupTaxBills" style="margin-bottom:10px" (click)="chooseCategory(category,'exemption')">
+                                    <a href="javascript:;" style="text-decoration: none !important;">
+                                        <div style="box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 2px, rgba(0, 0, 0, 0.117647) 0 1px 2px; padding: 3px; height: 137px;text-decoration: none;
+                                    border-radius: 10px;
+                                    border: 1px solid #f3f2f2;">
+                                            <img class="aligncenter size-full wp-image-25227 img-responsive" alt="80C" width="50" height="50" src="assets/Images/accounting.png">
+                                            <p class="mb0 pt5" style="font-size: 11px;margin-bottom: 5px;
+                                    color: #4C5656;
+                                    margin-top: 5px;
+                                    z-index: 1000;
+                                    transition: color 0.3s ease-out;
+                                    font-weight: 500;
+                                    text-align: center;"><b>{{getLetterSpace(category.ProductName)}}</b></p>
+                                            <p class="mb0 pt5" style="text-align: center; font-size: 10px;" *ngFor="let child of category.b">
+                                                {{child.Code}}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <p class="center_text" *ngIf="TaxationOtherCategory_Exemption.length == 0">No records found!
+                                </p>
+                            </div>
+                            <br>
+                            <br>
+                            <!-- <h5 style="font-size: 14px;text-transform: uppercase;margin-bottom: 10px;">Other Investments
+                            </h5> -->
+                            <br>
+                            <!-- <div class="row">
+                                <div class="col-md-3 col-xs-6 mb10 mt10"
+                                    *ngFor="let othercategory of TaxationOtherCategory_Exemption"
+                                    (click)="chooseCategory(othercategory,'investment')" style="margin-bottom:10px">
+                                    <a href="javascript:;" style="text-decoration: none !important;">
+                                        <div style="box-shadow: rgba(0, 0, 0, 0.117647) 0 1px 2px, rgba(0, 0, 0, 0.117647) 0 1px 2px; padding: 3px; height: 137px;text-decoration: none;
+                                    border-radius: 10px;
+                                    border: 1px solid #f3f2f2;">
+                                            <img class="aligncenter size-full wp-image-25227 img-responsive" alt="80C"
+                                                width="50" height="50"
+                                                src="https://image.flaticon.com/icons/svg/3003/3003268.svg">
+                                            <p class="mb0 pt5" style="font-size: 11px;margin-bottom: 5px;
+                                    color: #4C5656;
+                                    margin-top: 5px;
+                                    z-index: 1000;
+                                    transition: color 0.3s ease-out;
+                                    font-weight: 500;
+                                    text-align: center;"><b>{{getLetterSpace(othercategory.ProductName)}}</b></p>
+                                            <p class="mb0 pt5" style="text-align: center; font-size: 10px;"
+                                                *ngFor="let child of othercategory.b">
+                                                {{child.Code}}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div> -->
+                            <p class="center_text" *ngIf="TaxationOtherCategory_Exemption.length == 0">No records found!
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left left-margin-btn">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popup_preview_12BB_from" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_preview_12BB_from" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated fadeInDownBig ">
+        <div class="modal-dialog modal-lg modal-dialog-centered" style="
+        max-width: 800px !important;
+    ">
+            <div class="modal-content ">
+                <div class="modal-header" style="padding: 15px !important;">
+                    Form 12BB
+                    <div class="modal-close" (click)="preview12BBClose()" style="margin-top: -10px;"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div>
+                    <div #content class="modal-body " id="contentToConvert">
+                        <div class="print" id="printid" style="font-size:12px !important;margin: 30px !important;
+            ">
+
+                            <div class="text-center">
+                                <h3 class="tbl-main-title">FORM NO.12BB</h3>
+                                <p class="tbl-sub-title">[<i>See</i> rule 26C]</p>
+                            </div>
+                            <div>
+                                <h3 class="tbl-page-title"> Statement showing particulars of claims by an employee for deduction of tax under section 192
+                                </h3>
+
+                                <ol class="tbl-ol-list" type="1" style="list-style-type: auto;">
+                                    <li>
+                                        Name and address of the employee:<strong *ngIf="employeedetails != null"> {{employeedetails.FirstName}},{{_empAddress}}</strong>
+                                    </li>
+
+                                    <li>
+                                        [Permanent Account Number or Aadhaar Number] of the employee:<strong *ngIf="employeedetails != null">{{employeedetails.PAN}}</strong>
+                                    </li>
+                                    <li>
+                                        Financial year:<strong *ngIf="employeedetails != null"> {{_financialYear}}</strong>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div>
+                                <div class="table-responsive" style="width: 96%;">
+                                    <h6 class="tbl-caption"> DETAILS OF CLAIMS AND EVIDENCE THEREOF</h6>
+                                    <table class="table table-bordered" style="font-size: 12px !important;">
+
+                                        <tr>
+                                            <th class="text-center" style="width :40px;">
+                                                Sl.No
+                                            </th>
+                                            <th class="text-center" style="width :auto;">Nature of claim </th>
+                                            <th class="text-center" style="width :160px;">Amount (Rs.) </th>
+                                            <th class="text-center" style="width :100px;">Evidence/ particulars</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" style="width :40px;">(1) </th>
+                                            <th class="text-center" style="width :auto;">(2) </th>
+                                            <th class="text-center" style="width :160px;">(3) </th>
+                                            <th class="text-center" style="width :100px;">(4) </th>
+                                        </tr>
+
+                                        <tbody>
+                                            <tr>
+                                                <td rowspan="5" style="vertical-align: top;">1.</td>
+
+                                                <td>
+                                                    House Rent Allowance:
+
+                                                </td>
+                                                <td>
+                                                    &nbsp;
+
+                                                </td>
+                                                <td>
+                                                    &nbsp;
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>(i) Rent paid to the landlord</td>
+                                                <td> {{_totalHraRent}}</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>(ii) Name of the landlord</td>
+                                                <td> <span *ngIf="_hraDetails && _hraDetails.AdditionalList && _hraDetails.AdditionalList.length>0  ">{{_hraDetails.AdditionalList[0].NameofLandlord}}
+                          </span></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>(iii) Address of the landlord</td>
+                                                <td> <span *ngIf="_hraDetails && _hraDetails.AdditionalList && _hraDetails.AdditionalList.length>0">{{_hraDetails.AdditionalList[0].RentalHouseAddress}}
+                          </span>
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>(iv) [Permanent Account Number or AadhaarNumber] of the landlord
+                                                    <br> Note : [Permanent Account Number or Aadhaar Number] shall be furnished if the aggregate rent paid during the previous year exceeds one lakh rupees
+                                                </td>
+                                                <td> <span *ngIf="_hraDetails  &&_hraDetails.AdditionalList && _hraDetails.AdditionalList.length>0">{{_hraDetails.AdditionalList[0].PANofLandlord}}
+                          </span></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td [attr.rowspan]=ltaRowspan style="vertical-align: top;">2.</td>
+                                                <td>
+                                                    {{sec10NameForForm12BB}}
+                                                </td>
+                                                <td></td>
+                                                <td>
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
+                                            <!-- <tr *ngIf="exceptionList &&exceptionList.length>0">
+                                                <td>
+                                                    <ul style="margin-left: 20px;" type="none">
+                                                        <li *ngFor="let expList of exceptionList" style='list-style-type: disc;'>{{expList.Name}}
+                                                        </li>
+                                                    </ul>
+
+                                                </td>
+                                                <td>
+                                                    <ul>
+                                                        <li *ngFor="let expList of exceptionList" style='list-style-type: none;'>
+                                                            {{expList.amount}} </li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    &nbsp;
+                                                </td>
+                                            </tr> -->
+                                            <ng-container *ngIf="exceptionList &&exceptionList.length>0">
+                                                <tr *ngFor="let expList of exceptionList">
+
+                                                    <td>
+                                                        <ul style="margin-left: 20px;" type="a">
+                                                            <li style='list-style-type: disc;'>{{expList.Name}}
+                                                            </li>
+
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        <ul>
+                                                            <li style='list-style-type: none;'>
+                                                                {{expList.amount}}
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </ng-container>
+                                            <tr>
+                                                <td rowspan="8" style="vertical-align: top;">
+                                                    3.
+                                                </td>
+                                                <td>
+                                                    Deduction of interest on borrowing:
+
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    &nbsp;
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>(i) Interest payable/paid to the lender</td>
+                                                <td><span *ngIf="_hpDetails ">
+                            {{_hpDetails.InterestPaid}}</span> </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>(ii) Name of the lender</td>
+                                                <td><span *ngIf="_hpDetails">
+                            {{_hpDetails.NameOfLender}}</span> </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>(iii) Address of the lender</td>
+                                                <td><span *ngIf="_hpDetails ">
+                            {{ _hpDetails.addressOfLender}}</span> </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>(iv) [Permanent Account Number or Aadhaar Number] of the lender</td>
+                                                <td><span *ngIf="_hpDetails ">
+                            {{_hpDetails.PANofLender}}</span> </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>(a) Financial Institutions (if available)</td>
+                                                <td>&nbsp; </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td> (b) Employer (if available)</td>
+                                                <td>&nbsp; </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td> (c) Others</td>
+                                                <td>&nbsp; </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td [attr.rowspan]=_rowSpan style="vertical-align: top;">4.</td>
+                                                <td>
+                                                    Deduction under Chapter VI-A
+
+
+                                                </td>
+                                                <td>
+                                                    &nbsp;
+
+                                                </td>
+                                                <td>
+                                                    &nbsp;
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td> (A) Sections 80C, 80CCC and 80CCD</td>
+                                                <td>&nbsp; </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td> (i) Section 80C</td>
+                                                <td>&nbsp; </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <!-- <tr *ngIf="dynamicPFInvestments &&dynamicPFInvestments.length>0">
+
+                                                <td>
+                                                    <ul style="margin-left: 20px;" type="none">
+                                                        <li *ngFor="let pfObj of dynamicPFInvestments" style='list-style-type: disc;'>{{pfObj.Name}}
+                                                        </li>
+                                                    </ul>
+                                                    <ul style="margin-left: 20px;" type="none" *ngIf=" _section80C && _section80C.length>0">
+                                                        <li *ngFor="let invObj of _section80C" style='list-style-type: disc;'>{{invObj.Name}} </li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <ul>
+                                                        <li *ngFor="let pfObj of dynamicPFInvestments" style='list-style-type: none;'>
+                                                            {{pfObj.AmtInvested}} </li>
+                                                    </ul>
+                                                    <ul *ngIf=" _section80C && _section80C.length>0">
+                                                        <li *ngFor="let invObj of _section80C" style='list-style-type: none;'>{{invObj.AmtInvested}}
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr> -->
+
+                                            <ng-container *ngIf="_section80C &&_section80C.length>0">
+                                                <tr *ngFor="let invObj of _section80C">
+
+                                                    <td>
+                                                        <ul style="margin-left: 20px;" type="a">
+                                                            <li style='list-style-type: disc;'>{{invObj.Name}}
+                                                            </li>
+
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        <ul>
+                                                            <li style='list-style-type: none;'>
+                                                                {{invObj.AmtInvested}}
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </ng-container>
+                                            <tr>
+
+                                                <td> (ii) Section 80CCC</td>
+                                                <td>&nbsp; </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr *ngIf=" _section80Ccc && _section80Ccc.length>0">
+
+                                                <td>
+                                                    <ul style="margin-left: 20px;" type="none">
+                                                        <li *ngFor="let invObj of _section80Ccc" style='list-style-type: disc;'>{{invObj.Name}}
+                                                        </li>
+
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <ul>
+                                                        <li *ngFor="let invObj of _section80Ccc" style='list-style-type: none;'>
+                                                            {{invObj.AmtInvested}}
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td> (iii) Section 80CCD</td>
+                                                <td>&nbsp; </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <!-- <tr *ngIf="  && _section80CcD.length>0">
+
+                                                <td>
+                                                    <ul style="margin-left: 20px;" type="none">
+                                                        <li *ngFor="let invObj of _section80CcD" style='list-style-type: disc;'>{{invObj.Name}}
+                                                        </li>
+
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <ul>
+                                                        <li *ngFor="let invObj of _section80CcD" style='list-style-type: none;'>
+                                                            {{invObj.AmtInvested}}
+                                                        </li>
+
+                                                    </ul>
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr> -->
+                                            <ng-container *ngIf=" _section80CcD && _section80CcD.length>0">
+                                                <tr *ngFor="let invObj of _section80CcD">
+
+                                                    <td>
+                                                        <ul style="margin-left: 20px;" type="a">
+                                                            <li style='list-style-type: disc;'>{{invObj.Name}}
+                                                            </li>
+
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        <ul>
+                                                            <li style='list-style-type: none;'>
+                                                                {{invObj.AmtInvested}}
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </ng-container>
+                                            <tr>
+
+                                                <td> (B) Other sections (e.g. 80E, 80G, 80TTA, etc.) under Chapter VI-A</td>
+                                                <td>&nbsp; </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <!-- <tr *ngIf=" _otherSecDetails && _otherSecDetails.length>0">
+
+                                                <td>
+                                                    <ul style="margin-left: 20px;" type="a">
+                                                        <li *ngFor="let otherObj of _otherSecDetails" style='list-style-type: disc;'>{{otherObj.Name}}
+                                                        </li>
+
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <ul>
+                                                        <li *ngFor="let otherObj of _otherSecDetails" style='list-style-type: none;'>
+                                                            {{otherObj.AmtInvested}}
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr> -->
+                                            <ng-container *ngIf=" _otherSecDetails && _otherSecDetails.length>0">
+                                                <tr *ngFor="let otherObj of _otherSecDetails">
+
+                                                    <td>
+                                                        <ul style="margin-left: 20px;" type="a">
+                                                            <li style='list-style-type: disc;'>{{otherObj.Name}}
+                                                            </li>
+
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        <ul>
+                                                            <li style='list-style-type: none;'>
+                                                                {{otherObj.AmtInvested}}
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+
+                            <div class="tbl-footer">
+                                <h5 class="text-center tbl-verfiy">Verification</h5>
+                                <p class="tbl-param">I,
+                                    <span> <strong *ngIf="employeedetails != null" >{{employeedetails.FirstName}}</strong></span> son/daughter of <span> <strong *ngIf="employeedetails != null" >{{employeedetails.FatherName}}</strong> </span> do hereby
+                                    certify that the information given above is complete and correct
+                                </p>
+                            </div>
+                            <div class="tbl-footer2">
+                                <div class=" tbl-place-sign-conainer">
+                                    <div class="tbl-place">Place :</div>
+                                    <div class="tbl-sign"> </div>
+                                </div>
+                                <div class="tbl-Date-sign-conainer">
+                                    <div class="tbl-Date flex">Date :
+                                        <p style="margin-bottom: auto;" *ngIf="employeedetails != null">{{_form12BBDate}}</p>
+                                    </div>
+                                    <div class="tbl-sign-label">(Signature of the employee)</div>
+                                </div>
+                                <div class="tbl-desig-name-conainer">
+                                    <div class="tbl-desig flex">Designation :
+                                        <p style="margin-bottom: auto;" *ngIf="employeedetails != null && employeedetails.EmploymentContracts && employeedetails.EmploymentContracts.length>0">
+                                            {{employeedetails && employeedetails.EmploymentContracts && employeedetails.EmploymentContracts[0].Designation}}
+                                        </p>
+                                    </div>
+                                    <div class="tbl-name flex">Full Name:
+                                        <p style="margin-bottom: auto;" *ngIf="employeedetails != null">{{employeedetails.FirstName}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left ">
+                        <button class="btn mdi mdi-download" style=" color :honeydew !important;background-color:  #0f3653 !important;" (click)="form12BBDownload()">download</button>
+                    </div>
+                    <!-- <div class="pull-left right-margin-btn">
+            <button class="btn mdi mdi-download">upload</button>
+          </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <style>
+  .btn-success {
+    color: #fff !important;
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+</style> -->
+
+<div id="popup_Form12BBUpload" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_Form12BBUpload" aria-hidden="true">
+    <div style="display: block;" class="modal fade show animated fadeInDownBig">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    Investment Confirmation
+                    <div class="modal-close" (click)="uploadFormPoppopClose()" style="margin-top: 0px;"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-2">
+                        <label>Step 1: &nbsp;</label>
+                        <button type="button" class="btn btn-primary col-3 btn-sm mr-2 " style="    font-size: 14px;
+              padding: 5px;" (click)="preview12BBForm('parent')">
+              <i class="mdi mdi-eye m-r-xs" title="Preview" style="cursor:pointer"></i>
+              Preview</button>
+                        <label class="form-label searchbar-label">(Please proceed to upload the signed Form 12BB, if you have
+              already downloaded) </label>
+                        <!-- <button type="button" class="btn btn-primary col-2 btn-sm" (click)=Formupload(true)>Upload</button> -->
+
+                    </div>
+                    <br>
+                    <div class="clearfix">
+                        <label style="float: left;">Step 2: &nbsp;</label>
+                        <label class="upload control" style="float: left;">
+              <div class="upload-draggable is-primary mr-2" style="float:left;">
+                <section class="section">
+                  <div class="has-text-centered">
+                    <span class="icon is-large">
+                      <span style="padding-left: 10px;">
+                        <i class="fa fa fa-cloud-upload" style="color: #9ba7ca;"></i>
+                        &nbsp; Choose File </span>
+                    </span>
+                  </div>
+                </section>
+
+              </div>
+              <div style="float:left;">
+                <label class="form-label searchbar-label">Upload Form 12BB<span class="required">*</span> <br> <span
+                    class="help-text m-l-5"> <i style="font-size: 10px;"> (Max file
+                      size
+                      5MB)</i> </span> </label>
+
+                        <input type="file" accept="application/msword,  application/pdf, image/*" (change)="onFileUpload($event,true)" (click)="$event.target.value=null" id="sTest-uploadFile-candidateAddResume">
+                        <!-- <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                  <div *ngIf="g.DocumentId.errors.required">Receipt is required
+                  </div>
+                </div> -->
+
+                    </div>
+                    </label>
+                </div>
+                <div>
+                    <p class="control ml-5" *ngIf="FileName">
+                        <span class="file-name">
+                <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a ngbTooltip="Delete file"
+                    id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                               display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                </button>
+                <a target="blank" class="ahref" style="padding: 2px;">
+                  {{FileName}}
+                </a>
+              </span>
+                    </p>
+                </div>
+                <br>
+                <div class="text-right">
+                    <button type="button" class="btn btn-primary  btn-sm mr-3" [disabled]="!FileName" (click)="fileUploadConfirmation(FileUrl,FileName)">
+              <i class="mdi mdi-content-save  m-r-xs"></i>
+              Upload & Submit</button>
+                    <!-- <button type="button" class="btn btn-primary  btn-sm mr-3" 
+              (click)=preview12BBForm()>Preview</button> -->
+                    <button type="button" class="btn btn-primary  btn-sm  " (click)=uploadFormPoppopClose()>
+              <i class="mdi mdi-close  m-r-xs"></i>
+              Cancel</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="popup_viewDocs1" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_viewDocs1" aria-hidden="true">
+    <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header" style="padding: 15px !important;">
+
+                    <div class="col-md-8">
+                        <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                  Employee Documents</b></small>
+                        <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+                        </h6>
+                    </div>
+                    <div class="col-md-4" style="top: 13px;">
+                        <div class="modal-close" (click)="modal_dismiss_docs()" style="margin-top: -15px;"><span class="mdi mdi-close pull-left"></span>
+                        </div>
+
+                        <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                            <app-filedownload [documentId]="documentURLId">
+                            </app-filedownload>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="iframe-container" *ngIf="documentURL == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                        <img src="assets/Images/logo_menu.png" style="opacity: .5;">
+                        <span>
+                <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                  &nbsp; Please wait...</i>
+                <span class="sr-only">Please wait...</span>
+                        </span>
+                    </div>
+                    <div class="iframe-container" *ngIf="documentURL != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 350px;">
+
+                        <iframe [src]="documentURL" frameborder="0" scrolling="yes" height="100%" style="width: 100%;height: 100%;"></iframe>
+                        <img style="top: 0 !important; 
+            right: 0px !important;
+            position: absolute !important;
+            z-index: 9;
+            height: 55px !important;
+            vertical-align: top;
+            opacity: inherit;
+            bottom: unset !important;
+            left: unset !important;" src="../../../../assets/Images/logo_menu.png">
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">        
+      <div>
+        <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+          (click)="modal_dismiss()">
+          <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Close </span></div>
+        </button>
+
+      </div>
+
+    </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popup_viewDocs" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_viewDocs" aria-hidden="true">
+    <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" *ngIf="!spinner && employeedetails">
+
+                <div class="modal-header" style="padding: 15px !important;">
+
+                    <div class="col-md-8">
+                        <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                  {{employeedetails.FirstName}} ~ {{employeedetails.Code}}</b></small>
+                        <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+                        </h6>
+                    </div>
+                    <div class="col-md-4" style="top: 13px;">
+                        <div class="modal-close" *ngIf="!shouldRendering" (click)="modal_dismiss4()" style="margin-top: -15px;">
+                            <span class="mdi mdi-close pull-left"></span>
+                        </div>
+
+                        <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                            <app-filedownload [documentId]="documentURLId">
+                            </app-filedownload>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="iframe-container" *ngIf="documentURL == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                        <img src="assets/Images/logo_menu.png" style="opacity: .5;">
+                        <span>
+                <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                  &nbsp; Please wait...</i>
+                <span class="sr-only">Please wait...</span>
+                        </span>
+                    </div>
+                    <div class="iframe-container" *ngIf="documentURL != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+                        <iframe [src]="documentURL" frameborder="0" scrolling="yes" style="width: 100%;height: 100%;"></iframe>
+                        <img style="top: 0 !important;
+            right: 0px !important;
+            position: absolute !important;
+            z-index: 9;
+            height: 55px !important;
+            vertical-align: top;
+            opacity: inherit;
+            bottom: unset !important;
+            left: unset !important;" src="../../../../assets/Images/logo_menu.png">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

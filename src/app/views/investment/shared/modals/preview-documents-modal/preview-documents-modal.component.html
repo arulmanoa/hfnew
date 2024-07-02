@@ -1,0 +1,66 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside" role="document">
+      <div class="modal-content">
+          <div class="modal-header" style="padding: 15px !important;">
+
+
+              <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                  <small class="header-pretitle"><b>{{employeedetails.FirstName}} ~ {{employeedetails.Code}}</b>
+
+        </small>
+                  <h6 class="modal-title subheader_h6" id="popup_release_AL">
+                      Preview</h6>
+              </div>
+              <div style="margin-top: 5px;">
+                  <app-file-download-new [documentId]="documentURLId">
+                  </app-file-download-new>
+              </div>
+
+          </div>
+
+
+          <div class="modal-body">
+              <div class="iframe-container" *ngIf="documentURL == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                  <img src="assets/Images/logo_menu.png" style="opacity: .5;width: 25px;">
+                  <span>
+          <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+            &nbsp; Please wait...</i>
+          <span class="sr-only">Please wait...</span>
+                  </span>
+              </div>
+              <div class="iframe-container" *ngIf="documentURL != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+                  <iframe [src]="documentURL" frameborder="0" scrolling="yes" style="width: 100%;height: 100%;"></iframe>
+                  <img style="top: 0 !important;
+right: 0px !important;
+position: absolute !important;
+z-index: 9;
+height: 25px !important;
+vertical-align: top;
+opacity: inherit;
+opacity: .5;
+bottom: unset !important;
+left: unset !important;" src="../../../../assets/Images/logo_menu.png">
+              </div>
+
+          </div>
+
+
+          <div class="modal-footer">
+              <div class="pull-left left-margin-btn">
+
+              </div>
+              <div class="pull-right m-r-sm">
+                  <div>
+                      <div>
+                          <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit" (click)="closeModal()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+            </button>
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

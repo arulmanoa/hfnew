@@ -1,0 +1,27 @@
+<!-- <div class="modal-header">
+    <span>{{ modalHeader }}</span>
+    <button class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+    {{ modalContent }}
+</div>
+<div class="modal-footer">
+    <button class="btn btn-md btn-default" (click)="close()">Cancel</button>
+    <button class="btn btn-md btn-primary" (click)="confirm()">Okay</button>
+</div> -->
+
+
+<h1 mat-dialog-title>
+    {{title}}
+</h1>
+
+<div mat-dialog-content>
+    <p>{{message}}</p>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="onDismiss()">No</button>
+    <button mat-raised-button color="primary" (click)="onConfirm()">Yes</button>
+</div>

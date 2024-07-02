@@ -1,0 +1,151 @@
+<div class="page-wrapper mt-3">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner">
+      <div class="row">
+        <div class="form-group-vertical ol-xs-12 col-sm-6 col-md-4 col-lg-3">
+          <label class="form-label searchbar-label">City </label>
+          <div class="form-group m-t-m5">
+            <ng-select #citySelect [items]="citiesList" [searchable]="true" placeholder="Choose City..."
+            bindLabel="Name" bindValue="Id" [(ngModel)]="selectedCity" [clearable]="false">
+            <ng-template ng-header-tmp>
+              <input placeholder="Search" type="text" class="form-control"
+                style="border: none;border-radius: 0px !important;background: white"
+                (input)="citySelect.filter($event.target.value)" />
+            </ng-template>
+          </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group-vertical col-12" style="text-align: right;">
+          <button class="btn btn-primary btn-sm" (click)="onCitySearchClicked()"
+            [disabled]="selectedCity === ''" style="margin-top: -5px;margin-right: 10px;">
+            <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search &nbsp;&nbsp;
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mb-3" *ngIf="!spinner && showTable">
+      <div class="col-sm-12 col-lg-6 text-left">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let m of message">
+            {{m}}
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm-12 col-lg-6 text-right" [ngClass]="{'mt-0': message && message.length <= 2,'mt-4': message && message.length === 3,'mt-5': message && message.length > 3}">
+        <div class="text-right">
+          <ul class="list-inline d-flex">
+            <li class="list-inline-item">
+              <button class="btn btn-default btn-sm" (click)="undo()">
+                <i class="fa fa-undo"></i>
+                &nbsp;Undo last change
+              </button>
+            </li>
+            <li class="list-inline-item">
+              <button class="btn btn-default" (click)="refresh()">
+                <i class="fa fa-undo"></i>
+                &nbsp;Undo all changes
+              </button>
+            </li>
+            <li class="list-inline-item">
+              <button class="btn btn-primary" (click)="save()">
+                <i class="fa fa-save"></i>
+                &nbsp;Submit
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner && showTable">
+      <div class="row">
+        <div class="col-12">
+          <angular-slickgrid gridId="gridMasterData" (onAngularGridCreated)="angularGridReady($event)"
+            (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)"
+            (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+            (sgOnValidationError)="onCellValidation($event.detail.eventData, $event.detail.args)"
+            [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset">
+          </angular-slickgrid>
+        </div>
+        <div class="col-12 text-right" *ngIf="dataset && dataset.length > 0">
+          <p>Total Records: {{dataset.length}}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONFIRM SLIDER  -->
+<nz-drawer [nzVisible]="showSlider" [nzClosable]="false" [nzWidth]="980" nzTitle="Confirmation">
+  <div class="row w-100 mx-auto">
+    <ngb-alert [dismissible]="false" type="warning" class="text-center mx-auto">
+      <strong>Please review the updated details. Post submission, you cannot edit these employees</strong>
+    </ngb-alert>
+  </div>
+  
+  <div class="row w-100 table-responsive table-height">
+    <table class="table table-sticky fixed-table">
+        <thead class="fixed-table-header">
+          <tr>
+            <th class="text-bold text-center">Employee Name & Code</th>
+            <th class="text-bold text-center">Effective Date</th>
+            <th class="text-bold text-center">Field Name</th>
+            <th class="text-bold text-center">Old Value</th>
+            <th class="text-bold text-center">New Value</th>
+          </tr>
+        </thead>
+        <tbody class="fixed-table-body">
+          <ng-container *ngFor="let data of table_data">
+            <tr *ngFor="let item of data.items; let i = index">
+              <ng-container *ngIf="i === 0">
+                <td [attr.rowspan]="data.rowspan">{{ item.EmployeeName }} ( {{ item.EmployeeCode }} )</td>
+                <td [attr.rowspan]="data.rowspan">{{ item.EffectiveDate }}</td>
+              </ng-container>
+              <td>{{ item.FieldName }}</td>
+              <td>{{ item.OldValue }}</td>
+              <td>{{ item.NewValue }}
+                <span class="m-1" *ngIf="item.FieldName === 'Manager'">
+                  {{ getManagerName(item) }}
+                </span>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+    </table>
+  </div>
+
+  <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+    <div class="col-lg-6">
+      <ul class="list-inline">
+      </ul>
+    </div>
+    <div class="col-lg-6 text-right">
+      <div class="text-right">
+        <ul class="list-inline">
+          <li class="list-inline-item"> <button class="btn btn-default" type="button" (click)="closeSlider()">
+              <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+              Cancel</button>
+          </li>
+          <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit"
+              (click)="submitEmployeeMasterData()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Submit
+                </span></div>
+            </button>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</nz-drawer>

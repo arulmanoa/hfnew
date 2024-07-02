@@ -1,0 +1,205 @@
+/* 
+.breadcrumb
+{
+    background-color: #e4eef3;
+    border-radius: 0.5em;
+    padding-left: 2em;
+    color: #4d5669;
+    align-content: space-evenly;
+    min-height: 20px;
+    max-height: 16px;
+    border-bottom-style: none;
+    border-bottom-width: thin;
+    border-bottom-color: papayawhip;
+    margin-bottom: 0px;
+} */
+
+[class^="slickgrid_"],
+[class^="slickgrid_"] div {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+     box-sizing: content-box;
+}
+
+/* .pgheader
+{
+    background-color: aliceblue;
+    min-height: 3em;
+    max-height: 3em;
+    padding-left: 3em;
+    align-content: center;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    border-bottom-color: #e1e7ec;
+    color: #3f4144;
+} */
+
+fieldset {
+    margin-top: 8px;
+    border: 1px solid #e8d6cb;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: white;
+}
+
+legend {
+    padding-left: 2px;
+    padding-right: 2px;
+    width:auto;
+    font-size: larger;
+    margin-bottom:0;
+}
+
+.inpCtrl{
+    width: 95%;
+    border-width: thin;
+    margin-left: 5px;
+    margin-bottom: 0.5em;
+    border-radius: 0px; height: 2.3em;
+}
+
+.inplbl
+{
+    margin-top: 0rem;
+    margin-bottom: 0.1rem;
+    font-size: small;
+    margin-top: 0.8rem;
+}
+
+.toolbar {
+    position: sticky;
+    top: 62px;
+    z-index: 100;
+    border-color: #eaeaea;
+    margin-left: 1px;
+    margin-right: 0px;
+    background-image: linear-gradient(#f2f6f7,lightgray);
+    border-style: solid;
+    border-width: thin;
+    padding: 3px;
+    border-radius: 2px;
+    border-radius: 2px;
+    margin-left:30px;
+  }
+
+  .toolbar-button
+  {
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 1.5rem;
+    font-size: x-small;
+    color: #39393a;
+    /* border-width: thin; */
+    border-style: none;
+    background-color: transparent;
+  }
+
+  .delete
+  {
+      /* background-color: whitesmoke; */
+  }
+
+  .add
+  {
+      /* background-color: whitesmoke; */
+  }
+
+  .add:hover{
+    background-color: chocolate;
+    color: white;
+  }
+
+  .lblw
+  {
+    min-width: 91px;
+    padding-right: 0px;
+  }
+
+  .delete:hover{
+    background-color: chocolate;
+    color: white;
+  }
+
+  .view:hover{
+    background-color: chocolate;
+    color: white;
+  }
+
+  .edit:hover{
+    background-color: chocolate;
+    color: white;
+  }
+
+  .save:hover{
+    background-color: chocolate;
+    color: white;
+  }
+
+  .edit
+  {
+    /* background-color: whitesmoke; */
+  }
+
+  .view
+  {
+    /* background-color: whitesmoke; */
+  }
+
+ *:focus {
+    outline: 0 !important;
+}
+
+.btnOk
+{
+    background-color: steelblue;
+    color: white;
+    height: 1.75em;
+    font-family: 'open sans', sans-serif;
+    font-size: small;
+    height: 2.3em;
+    padding-top: 4px;
+    border-radius: 0px;
+}
+
+.btnWarning
+{
+    background-color: #dc9035;
+    color: white;
+    height: 1.75em;
+    font-family: 'open sans', sans-serif;
+    font-size: small;
+    height: 2.3em;
+    padding-top: 4px;
+    border-radius: 0px;
+}
+
+.hide
+{
+    display:none;
+}
+/* .ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; 
+  }
+  .ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; 
+  } */
+  /* .modal-xl > .modal-dialog {
+    max-width: 1490px !important;
+    min-width: 971px !important;   
+    width: 95% !important;
+} */
+
+/* ::ng-deep .modal-xl .modal-dialog { 
+    max-width: 80%;
+    width: 80%;
+} */
+@media (min-width: 768px) {
+    .hugeModal > .modal-dialog {
+      width: 90%;
+      max-width: 1200px; /* or 90% or whatever */
+    }
+  }
+/* .hugeModal > .modal-dialog {
+    max-width: 90% !important;
+   width: 90% !important;
+} */

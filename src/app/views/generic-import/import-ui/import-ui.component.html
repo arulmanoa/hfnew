@@ -1,0 +1,189 @@
+<div class="page-wrapper" style="margin-top: 0px;">
+    <div class="page-content ">
+
+        <app-loading-screen></app-loading-screen>
+
+        <div class="text-center ma-5" *ngIf="fullSpinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                    role="status" aria-hidden="true"></span>
+                Please wait...
+            </button>
+        </div>
+        
+        <div class="row m-b" *ngIf="!fullSpinner">
+            <div class="col-6">
+                <label class="form-label">Choose Import type</label>
+                <ng-select [(ngModel)]="code" (change)="onCodeChange()" [items]="importLayoutList" 
+                    bindLabel="Name" bindValue="Code" [disabled]="disableCodeInput" >
+                    <!-- <ng-option value="RateSet">Employee Rate Set</ng-option>
+                    <ng-option value="Investment">Employee Investment</ng-option>
+                    <ng-option value="HouseRent">Employee House rent allowance</ng-option>
+                    <ng-option value="HouseProperty"> Employee LossOrProfit From HouseProperty</ng-option>
+                    <ng-option value="InvestementDependend"> Employee Deduction (Sec 80)</ng-option>
+                    <ng-option value="PreviousEmployer">Employee Previous Employer Details</ng-option>
+                    <ng-option value="SalaryRevision">Employee Salary Revision</ng-option>
+                    <ng-option value="BankUpload">Bank Upload</ng-option> -->
+                </ng-select>
+            </div>
+            <div class="col-6" *ngIf="code && importLayout?.CreateExcelConfiguration.FillWithDataAllowed">
+                
+                <div class="row"  style="padding-top: 30px;">
+                    <span class="col" style="text-align: right;">Fill with data? :</span>
+                    <span class="col">
+                    <label class="el-switch el-switch-green">
+                        <input type="checkbox" [(ngModel)]="fillExcel"/>
+                        <span class="el-switch-style" ></span>
+                    </label>
+                    </span>
+                </div>
+                  
+            </div>
+        </div>
+
+        <div class="content m-b report-content" *ngIf = "importLayout != undefined &&  importLayout != null && !fullSpinner"> 
+            <ngb-tabset (tabChange)="beforeTabChange($event)" [(activeId)]="activeTabName">
+                <ngb-tab id="Download">
+                  <ng-template ngbTabTitle><i class="fa fa-download" aria-hidden="true"></i>&nbsp;&nbsp;Download Template</ng-template>
+                  <ng-template ngbTabContent>
+                    
+                    <div class="text-center ma-5" *ngIf="spinner">
+                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                                role="status" aria-hidden="true"></span>
+                            Please wait...
+                        </button>
+                    </div>
+                    
+                    <div *ngIf = "importLayout != null && fillExcel && code != '' && !spinner" >
+                        <app-searchbar-view *ngIf="importLayout" [Content]="'General'" [searchConfiguration]="importLayout.CreateExcelConfiguration.SearchConfiguration"
+                        (searchButtonClicked)="onClickingSearchButton($event)"></app-searchbar-view>
+                    </div>
+
+                    <div *ngIf="importLayout != null  && !spinner">
+                        <!-- Buttons -->
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                                <div class="text-left">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+                                            <button *ngIf = "importLayout && code" class="btn btn-default" style="margin-right : 10px"
+                                            (click)="onClickingDownloadTemplateButton()" >
+                                            <i class="mdi mdi-download m-r-xs"></i>Download Template
+                                            </button>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                        </div> 
+                        
+                        <!-- Grids -->
+                        <div *ngIf="columnDefinition != null && columnDefinition.length > 0" style="margin-top: 10px;">
+                            <angular-slickgrid *ngIf="fillExcel" gridId="grid1" [columnDefinitions]="columnDefinition" [gridOptions]="gridOptions"
+                            [dataset]="dataset" gridWidth="100%" 
+                            (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            (onAngularGridCreated)="angularGridReady($event)">
+                            </angular-slickgrid>
+                        </div>
+                        <!-- Row to show Count -->
+                        <div class="row" style="margin-top: -10px;margin-bottom: -17px;" *ngIf="columnDefinition != null && columnDefinition.length > 0 && fillExcel">
+                            <div class="col-lg-6">
+                    
+                            </div>
+                            <div class="col-lg-6" style="text-align: right;">
+                            <label> <b> Total Record(s) : <b> {{dataset?.length}}</b>
+                                &nbsp; &nbsp; &nbsp; Selected Record(s) : <b> {{selectedItems?.length}}</b></b></label>
+                            </div>
+                        </div>
+                    </div>
+
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab id="Upload">
+                  <ng-template ngbTabTitle><i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;Upload Excel</ng-template>
+                  <ng-template ngbTabContent>
+                    
+                    <div class="text-center ma-5" *ngIf="spinner">
+                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                                role="status" aria-hidden="true"></span>
+                            Please wait...
+                        </button>
+                    </div>
+
+                    <div *ngIf="importLayout != null  && !spinner">
+                        
+                        <!-- Buttons -->
+                        <div class="row" style="margin-top : 30px">
+                            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                                <div class="text-left">
+                                    <ul class="list-inline">
+                                    
+                                        <li class="list-inline-item">
+                                            <button type="button" class="btn btn-primary-custom" (click)="onUploadButtonClicked(); fileInput.click()">
+                                            <span><i class="mdi mdi-upload m-r-xs"></i>Upload Excel</span>
+                                            <input #fileInput id="fileUpload" type="file" (change)="handleFileInput($event.target.files)" 
+                                            style="display:none;">
+                                            </button>
+                                            <span>{{file != undefined && file != null  ? file.name : ''}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right" *ngIf="uploaded">
+                                <div class="text-right">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+                                            <button *ngIf = "importLayout && code" class="btn btn-primary" style="margin-right : 10px"
+                                            (click)="onClickingSubmitExcelButton()" >
+                                            <i class="mdi mdi-add_task m-r-xs"></i>Submit
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> 
+                        
+                        <!-- Grids -->
+                        <div *ngIf="beforeUploadColumnDefinition != null && beforeUploadColumnDefinition.length > 0" style="margin-top: 10px;">
+                            <angular-slickgrid *ngIf="uploaded && beforeUploadColumnDefinition != null" gridId="grid2" 
+                            [columnDefinitions]="beforeUploadColumnDefinition" [gridOptions]="beforeUploadGridOptions"
+                            [dataset]="beforeUploadDataset" gridWidth="100%" 
+                            (sgOnSelectedRowsChanged)="onbeforeUploadSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            (onAngularGridCreated)="angularBeforeUploadGridReady($event)">
+                            </angular-slickgrid>
+
+                            <angular-slickgrid *ngIf="apiResultReceived && apiResultColumnDefinition != null" gridId="grid2" 
+                            [columnDefinitions]="apiResultColumnDefinition" [gridOptions]="apiResultGridOptions"
+                            [dataset]="apiResultDataset" gridWidth="100%"
+                            (sgOnSelectedRowsChanged)="onApiResultSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            (onAngularGridCreated)="angularApiResultGridReady($event)">
+                            </angular-slickgrid>
+                        </div>
+
+                        <!-- Row to show Count -->
+                        <div class="row" style="margin-top: -10px;margin-bottom: -17px;" 
+                        *ngIf="beforeUploadColumnDefinition != null && beforeUploadColumnDefinition.length > 0 && 
+                        uploaded && beforeUploadColumnDefinition != null">
+                            <div class="col-lg-6">
+                    
+                            </div>
+                            <div class="col-lg-6" style="text-align: right;">
+                            <label> <b> Total Record(s) : <b> {{beforeUploadDataset?.length}}</b>
+                                <!-- &nbsp; &nbsp; &nbsp; Selected Record(s) : <b> {{selectedItems?.length}}</b> -->
+                            </b></label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+            </ngb-tabset>
+        </div>
+        
+    </div>
+</div>
+
+

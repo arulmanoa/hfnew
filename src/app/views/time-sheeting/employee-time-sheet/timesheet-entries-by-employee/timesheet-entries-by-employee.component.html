@@ -1,0 +1,171 @@
+<div class="row w-100">
+  <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" 
+    [fullScreen]="true">
+    <p style="color: #0a609eeb"> Loading... </p>
+  </ngx-spinner> -->
+  <div class="text-center mx-auto" *ngIf="spinner">
+    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+      Please wait...
+    </button>
+  </div>
+  <div class="col-12 color-white" *ngIf="!spinner">
+    <!-- date picker -->
+    <div class="row" *ngIf="showSelector">
+      <div class="col-xs-12 col-12 col-md-4 form-group">
+        <ng-select [items]="dateRangeList" placeholder="Choose..." [(ngModel)]="selectedDateRange" bindLabel="date"
+          bindValue="id" [clearable]="false" (change)="onDropdownChangeFn($event)">
+        </ng-select>
+      </div>
+    </div>
+    <!-- charts -->
+    <div class="row">
+      <div class="col-12 col-xl-6 col-md-6" *ngIf="showDonutChart">
+        <div class="time-sheet-card">
+          <canvas baseChart height="100" width="66" [labels]="doughnutChartLabels" [datasets]="doughnutChartDatasets"
+            [options]="doughnutChartOptions" [legend]="true" [chartType]="doughnutChartType"
+            [colors]="doughnutChartColors" [plugins]="donutChartPlugins">
+          </canvas>
+        </div>
+      </div> 
+      <!-- <div class="col-12 col-xl-4 col-md-4">
+        <div class="time-sheet-card d-flex">
+          <div class="col-lg-6 mt-3 text-left">
+            <small class="over-time-text">00 hrs</small>
+            <label class="over-time-label">Overtime</label>
+          </div>
+          <div class="col-lg-6 mt-4 text-right">
+            <div class="over-time-card">
+              <a href="#"><i class="fa fa-hourglass-end fa-lg"></i></a>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <!-- <div class="col-12 col-xl-6 col-md-6" *ngIf="showTotalWorkingHrsCard">
+        <div class="time-sheet-card d-flex">
+          <div class="col-lg-6 mt-5 text-left">
+            <small class="over-time-text">{{getTotalWorkingHoursInCard()}} hrs</small>
+            <label class="over-time-label">Working Hours</label>
+          </div>
+          <div class="col-lg-6 mt-5 text-right">
+            <div class="working-hrs-card">
+              <a href="#"><span class="mdi mdi-clock-outline"></span></a>
+            </div>
+          </div>
+        </div>
+      </div> -->
+       <div class="col-12 col-xl-6 col-md-6" *ngIf="showDonutChart || showTotalWorkingHrsCard">
+        <div class="time-sheet-line-card">
+          <div class="col-4">
+            <ng-select [items]="projectForLineChartDropdown" class="custom-drpdwn pt-2" placeholder="Choose..." [(ngModel)]="selectedProjectForLineChart"
+              bindLabel="Name" bindValue="Id" [clearable]="false" (change)="onProjectChangeInLineChart($event)">
+            </ng-select>
+          </div>
+          <div class="col-12">
+            <canvas #myCanvas baseChart width="400" height="100" [chartType]="lineChartType" [datasets]="lineChartData"
+              [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors"
+              [plugins]="lineChartPlugins" [legend]="lineChartLegend">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- timesheet entries -->
+    <div class="row">
+      <div class="flex-column w-100" style="padding-top: 0 !important;padding-left: 0.5rem !important;">
+        <div class="accordion" >
+          <section *ngFor="let item of timesheetDates;let idx = index;" [ngClass]="{'accordion__section--active': activeIndex === idx}">
+            <button class="accordion accordion__title" (click)="setActive(idx)">
+              <span class="date-label">
+                <i class="mdi mdi-plus-box-outline icon-color-grey" [ngClass]="{ 'd-none': activeIndex === idx }"></i> 
+                {{item.date}} <span *ngIf="item.text != ''" class="purple-text">| {{item.text}}</span>
+              </span>
+              <span class="workingHours-label ml-2 p-2" [ngClass]="{ 'd-none': activeIndex !== idx }">{{ item.totalHoursForEachRecord }} hrs</span>
+              <!-- <span class="workingHours-label ml-2 p-2" [ngClass]="{ 'd-none': activeIndex !== idx }">{{getWorkingHoursForEachRecord(item)}} hrs</span> -->
+            </button>
+            <div  class="accordion__content">
+              <ng-container *ngFor="let child of item.childProperties;let i = index;">
+                <div class="d-flex">
+                  <div class="col-11 highlightFormArrDiv">
+                    <div class="form-row">
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Project</label>
+                        <ng-select [items]="item.projects" placeholder="Choose..." [(ngModel)]="child.project"
+                          bindLabel="Name" bindValue="Id" [clearable]="false" (change)="onProjectChange($event, item, i)">
+                        </ng-select>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Activity
+                          <span class="form__length createNew cursor-pointer" *ngIf="isCreateActivityNeedToBeShownForEmployee"
+                          (click)="addNewActivityByEmployee(item, i)"> + Create New </span>
+                        </label>
+                        <ng-select [items]="activityList" placeholder="Choose..." [(ngModel)]="child.title"
+                          bindLabel="Name" bindValue="Id" [clearable]="false" [loading]="activityListLoader" 
+                          (open)="onLoadActivityForSelectedProject(child.project)">
+                        </ng-select>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-2">
+                        <div>
+                          <label class="form-label">Start Time</label>
+                          <input class="form-control timepicker" type="time" name="startTime" [(ngModel)]="child.startTime"
+                          step="60" placeholder="09:00 AM" (input)="onChangeStartTime($event, item, i)">
+                        </div>
+                        <div *ngIf="child.isStartTimeExists" class="error-feedback">
+                          <div>Please check start time</div>
+                        </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-2">
+                        <div>
+                          <label class="form-label">End Time </label>
+                          <input class="form-control timepicker" type="time" name="endTime" [(ngModel)]="child.endTime"
+                          placeholder="06:00 PM" (input)="onChangeEndTime($event, item, i)" step="60">
+                        </div>
+                        <div *ngIf="child.isEndTimeExists" class="error-feedback">
+                          <div>Please check end time</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Break Hours </label>
+                        <div class="input-group mt-0">
+                          <input class="form-control b-r-0" type="text" name="breakHrs" [(ngModel)]="child.breakHrs"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)" placeholder="00"
+                            (input)="onBreakHrsChangeFn($event, item, i)" maxlength="3">
+                          <div class="input-group-append" style="background: white;">
+                            <span class="input-group-text input-append-text">MINS</span>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Notes</label>
+                        <input class="form-control" type="text" name="notes" [(ngModel)]="child.notes"
+                          placeholder="Give some notes about this task">
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                        <label class="form-label">Working Hours </label>
+                        <input class="form-control" type="text" name="workingHrs" maxlength="100" #workingHrs
+                          spellcheck="false" [(ngModel)]="child.workingHrs" placeholder="8:00" disabled/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-1 text-center mt-5">
+                    <button type="button" class="m-1 btn btn-default btn-delete" (click)="removeSelectedEntry(item,i)">
+                      <i class="fa fa-trash-o"></i>
+                    </button>
+                    <button type="button" class="m-1 btn btn-default btn-add" (click)="addTimeSheetEntry(item,i)">
+                      <i class="fa fa-plus-square-o"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </ng-container>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- End of region - timesheet entries -->
+  </div>
+</div>

@@ -1,0 +1,391 @@
+<nav class="topbar-nav">
+
+
+
+    <ul class="list-unstyled topbar-nav float-right mb-0">
+        <!-- <li class="hide-phone app-search hidden-sm" *ngIf="LstClients.length > 0">
+
+            <select class="custom-select" (change)="onChangeClientName($event.target.value)" [(ngModel)]="selectedClientName"> 
+                <option value="" disabled>Choose your Company</option>
+                <option *ngFor="let client of LstClients" [value]="client.Id"  >{{client.Name}}</option>
+             </select>
+            
+        </li> -->
+        <!-- <li class="hide-phone app-search hidden-sm">
+            <div class="beacon-search-bar d-flex align-items-center" (click)="openBeaconBar()">
+                <img width="22px" height="22px" class="beaconIcon" src="assets/Images/smart-robo.svg" alt="">
+                <div class="ml-2">What are you looking for?</div>
+            </div>  
+        </li> -->
+
+        <li class="hide-phone app-search hidden-sm"
+            *ngIf="RoleName !='Employee' && BusinessType != 3 && LstClientContract.length > 0">
+
+            <select class="custom-select" (change)="onChangeClientContractName($event.target.value)"
+                [(ngModel)]="selectedClientContractName">
+                <option value="" disabled>Choose your Company</option>
+                <option *ngFor="let cc of LstClientContract" [value]="cc.Id">{{cc.Name}}</option>
+            </select>
+
+        </li>
+
+
+        <li class="hide-phone app-search hidden-sm" *ngIf="LstAccessRoles.length > 1">
+
+            <select class="custom-select" (change)="onChangeRole($event.target.value)" [(ngModel)]="selectedRole" [disabled]="!roleDropDownEnabled">
+                <!-- <option value="" disabled>Choose your role</option> -->
+                <option *ngFor="let role of LstAccessRoles" [value]="role.Id">{{role.Name}}</option>
+            </select>
+            <!-- <ng-select [items]="LstAccessRoles" bindLabel="Name" bindValue="Id" placeholder=" -- Choose Role --" [(ngModel)]="selectedRole" class="form-control" (change)="onChangeRole($event)">
+            </ng-select> -->
+            <!-- <form role="search" class="">
+                <a href="javascript:;"><i class="mdi mdi-magnify" style="margin-top: 10px;"></i>
+            </a>
+
+                <input type="text" placeholder="Search..." class="form-control">
+                <a href="javascript:;"><i class="mdi mdi-magnify" style="margin-top: 10px;"></i>
+                </a>
+            </form> -->
+        </li>
+        <!-- <li class="hide-phone app-search hidden-sm">
+
+            <form role="search" class="">
+                <a href="javascript:;"><i class="mdi mdi-magnify" style="margin-top: 10px;"></i>
+                </a>
+
+                <input type="text" placeholder="&nbsp;Search..." class="form-control">
+                <a href="javascript:;"><i class="mdi mdi-magnify" style="margin-top: 10px;"></i>
+                    </a>
+            </form>
+        </li> -->
+
+        <!-- <li class="hidden-sm" style="font-size: 22px;">
+            <a class="nav-link dropdown-toggle waves-effect waves-light" style="color: #0c8;" data-toggle="dropdown" href="javascript:;" role="button" aria-haspopup="false" aria-expanded="false">
+
+                <i class="mdi mdi-plus-circle"></i>
+            </a>
+
+
+            <div class="dropdown-menu dropdown-menu-right dropdown-lg pull-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: -10px;">
+                <a class="dropdown-item" href="javascript:;"><i class="mdi mdi-account-outline text-muted mr-2"></i> Company</a>
+                <a class="dropdown-item" href="javascript:;"><i class="dripicons-wallet text-muted mr-2"></i> Contact</a>
+                <a class="dropdown-item" href="javascript:;"><i class="dripicons-gear text-muted mr-2"></i> Email</a>
+                <a class="dropdown-item" href="javascript:;"><i class="dripicons-lock text-muted mr-2"></i> Role</a>
+
+
+            </div>
+
+        </li> -->
+
+        <!-- <li class="dropdown notification-list">
+            <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-toggle="dropdown" href="javascript:;" role="button" aria-haspopup="false" aria-expanded="true">
+                <i class="mdi mdi-information noti-icon"></i>
+            </a>
+        </li> -->
+
+        <li class="dropdown notification-list">
+            <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect notifications" data-toggle="dropdown"
+                href="javascript:;" (click)="GetNotifications()" role="button" aria-haspopup="false"
+                aria-expanded="false">
+
+                <i class="mdi mdi-bell-ring noti-icon">
+
+                </i>
+                <span class="badge" *ngIf="NotificationCount > 0">{{NotificationCount}}</span>
+                <!-- <span class="badge badge-danger badge-pill noti-icon-badge">2</span> -->
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-lg"
+                style="position: absolute; will-change: auto;  top: 0px; left: 0px; transform: translate3d(46px, 70px, 0px);height: 404px;z-index: 10000;"
+                x-placement="bottom-end">
+
+                <div class="row border-b " style="margin: 0px;">
+                    <div class="col-md-6">
+                        <h6 class="dropdown-item-text h6-fontsize">Notifications</h6>
+
+                    </div>
+                    <div class="col-md-6" >
+                        <button *ngIf="notificationList.length > 0" class="btn btn-blank" (click)="dismissAllorMarkAsRead('70')"> <i
+                                class="mdi mdi-check-all"></i>
+                            &nbsp;Mark all as read</button>
+
+                    </div>
+                </div>
+
+
+
+                <div class="slimScrollDiv"
+                    style="position: relative; overflow: hidden; width: auto; height: 310px !important;">
+
+
+
+                    <div class="slimscroll notification-list" style="overflow: hidden; width: auto; height: 312px;">
+
+                        <div class="center-div" *ngIf="!notifySpinner && notificationList.length == 0">
+
+                            <img src="assets/Images/notificationbackground.png" style="margin: 0 auto;">
+                            <h6>No new notifications found</h6>
+                            <span>
+                                You have currently no notifications. We will notify you when something new arrives
+                            </span>
+                        </div>
+
+                        <div class="d-flex justify-content-center" style="padding: 10px;" *ngIf="notifySpinner">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="!notifySpinner">
+                            <a href="javascript:;" class="dropdown-item notify-item"
+                                style="border-bottom: 1px solid #f5f4f4 ;" *ngFor="let item of notificationList"
+                                (mouseover)="item.hover=true" (mouseleave)="item.hover=false">
+                                <div class="row" (click)="onRead(item)">
+                                    <div class="col-md-1">
+                                        <span class="circle" *ngIf="item.Status < 70"></span>
+                                        <span class="readcircle" *ngIf="item.Status >= 70"></span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p class="notify-details" style="color: #000;font-size: 12px; font-weight: 600;"                                           >
+                                            {{item.Title}}<small style="color: #000;">{{item.Body}}</small></p>
+                                        <small class="text-muted"> {{timeSince(item.CreatedOn)}} </small>
+                                    </div>
+                                    <div class="col-md-2" style="display: flex;
+                                justify-content: center;                               
+                                margin: auto;
+                                width: 50%;">
+                                        <div class="" *ngIf="item.Category == 1 && (item.hover==false)">
+                                            <img style="width: 22px;" src="assets/Images/about.png">
+                                        </div>
+                                        <div class="" *ngIf="item.Category == 2 && (item.hover==false)">
+                                            <img style="width: 22px;" src="assets/Images/caution.png">
+                                        </div>
+                                        <div class="" *ngIf="item.Category == 5 && (item.hover==false)">
+                                            <img style="width: 22px;" src="assets/Images/notificationring.png">
+                                        </div>
+                                        <div class="" *ngIf="item.Category == 3 && (item.hover==false)">
+                                            <img  style="width: 22px;" src="assets/Images/confetti.png">
+                                        </div>
+                                        <div class="" *ngIf="item.Category == 4 && (item.hover==false)">
+                                            <img  style="width: 22px;" src="assets/Images/clap.png">
+                                        </div>
+                                        <div class="" *ngIf="item.Category == 6 && (item.hover==false)">
+                                            <img  style="width: 22px;" src="assets/Images/clipboard.png">
+                                        </div>
+                                        <div class="" *ngIf="(item.hover==true)">
+
+                                            <span (click)="dismissIndividual(item)">
+                                                <i class="mdi mdi-notification-clear-all"
+                                                    style="font-size: 16px;position: relative;top: 3px; color: #337ab7;font-weight: 600"></i>
+                                                <span style="padding-right: 5px;  color: #337ab7;font-weight: 600"> Dismiss </span>
+                                            </span>
+
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </a>
+
+
+                        </ng-container>
+                    </div>
+                    <div class="slimScrollBar"
+                        style="background: rgb(224, 229, 241); width: 7px; position: absolute; top: 0px; opacity: 1; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 158.689px;">
+                    </div>
+                    <div class="slimScrollRail"
+                        style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;">
+                    </div>
+                </div>
+                <!-- <div class="col-lg-12"
+                                    style="text-align: right; font-size: 13px;font-weight: 700;cursor: pointer;color: #146BA2;"
+                                    (click)="dismissAllorMarkAsRead('80')" *ngIf="notificationList.length > 0">
+                                    <span> <span style="padding-right: 5px;"> Dismiss All </span>
+                                        <i class="mdi mdi-check-all" style="font-size: 17px;position: relative;top: -2px;"></i> </span>
+                                    <br>
+                                </div> -->
+                <a href="javascript:;" (click)="dismissAllorMarkAsRead('80')" *ngIf="notificationList.length > 0"
+                    class="dropdown-item text-center text-primary border-t "> <span>
+                        <i class="mdi mdi-notification-clear-all"
+                            style="font-size: 16px;position: relative;top: 3px;  color: #337ab7;font-weight: 600"></i>
+                        <span style="padding-right: 5px;  color: #337ab7;font-weight: 600;"> Dismiss All </span>
+                    </span>
+                </a>
+            </div>
+        </li>
+
+        <!-- <li class="dropdown hidden-sm" style="margin-top: 15px;"> -->
+        <!-- <div class="kt-header__topbar-user"> -->
+        <!-- <span class="top_bar_welcome">Hi, </span> -->
+        <!-- <span class="badge badge-soft-danger" style="margin-top: 17px;">{{RoleName}}</span> -->
+        <!-- <span class="bg-soft-danger rounded-pill px-3 py-1 font-weight-bold">{{RoleName}}</span> -->
+        <!-- </div> -->
+        <!-- </li> -->
+
+        <!-- <li class="dropdown show" >
+            <div class="kt-header__topbar-user">
+                <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="javascript:;" role="button" aria-haspopup="false" aria-expanded="true">
+                     <img src="https://mannatthemes.com/metrica/light/assets/images/users/user-4.jpg" alt="profile-user" class="rounded-circle"> 
+
+                    <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">{{userName | uppercase}} </span>
+
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right dropmenu_2" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: -10px !important; transform: translate3d(-28px, 70px, 0px);z-index: 10000000;">
+                     <a class="dropdown-item" href="javascript:;" (click)="view_profile()"><i class="mdi mdi-account-outline text-muted mr-2 dropdown_i"></i> Profile </a> 
+                     <a class="dropdown-item" href="javascript:;"><i class="mdi mdi-help-circle-outline text-muted mr-2 dropdown_i"></i> Help</a>
+                    <a class="dropdown-item" href="javascript:;"><i class="mdi mdi-settings text-muted mr-2 dropdown_i"></i> Settings</a> 
+                    <a class="dropdown-item" href="javascript:;" (click)="changepassword()"><i class="mdi mdi-lock-open-outline text-muted mr-2 dropdown_i"></i> Change Password</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="javascript:;" (click)="onLogout()"><i class="mdi mdi-logout-variant text-muted mr-2 dropdown_i"></i> Logout</a>
+
+                </div>
+            </div>
+        </li> -->
+        <!-- using the ngbDropdown to fix bug 3240 -->
+        <li class="dropdown show">
+            <div ngbDropdown placement="bottom-right" class="kt-header__topbar-user">
+                <button ngbDropdownToggle class="nav-link dropdown-toggle waves-effect waves-light nav-user"
+                    type="button" id="dropdownMenuButton1" aria-expanded="false">
+                    <span class="kt-badge kt-badge--username kt-badge--unified-success 
+                    kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">{{userName | uppercase}} </span>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1" class="custom-effect-for-header-dropdown">
+                    <a ngbDropdownItem class="dropdown-item" href="javascript:;" (click)="changepassword()" *ngIf="showChangePassword">
+                        <i class="mdi mdi-lock-open-outline text-muted mr-2 dropdown_i"></i> Change Password
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a ngbDropdownItem class="dropdown-item" href="javascript:;" (click)="mfaSettings()">
+                        <i class="mdi mdi-two-factor-authentication text-muted mr-2 dropdown_i"></i> MFA Setting
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a ngbDropdownItem class="dropdown-item" href="javascript:;" (click)="onLogout()">
+                        <i class="mdi mdi-logout-variant text-muted mr-2 dropdown_i"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </li>
+
+    </ul>
+
+
+</nav>
+<!-- <ul class="list-unstyled topbar-nav float-right mb-0">
+    <li class="hidden-sm"><a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="javascript:;" role="button" aria-haspopup="false" aria-expanded="false">English <img src="../assets/images/flags/us_flag.jpg" class="ml-2" height="16" alt=""> <i class="mdi mdi-chevron-down"></i></a>
+        <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-70px, 5px, 0px);" x-out-of-boundaries=""><a class="dropdown-item" href="javascript:;"><span>German </span><img src="../assets/images/flags/germany_flag.jpg" alt="" class="ml-2 float-right" height="14"></a><a class="dropdown-item" href="javascript:;"><span>Italian </span><img src="../assets/images/flags/italy_flag.jpg" alt="" class="ml-2 float-right" height="14"></a>
+            <a class="dropdown-item" href="javascript:;"><span>French </span><img src="../assets/images/flags/french_flag.jpg" alt="" class="ml-2 float-right" height="14"></a><a class="dropdown-item" href="javascript:;"><span>Spanish </span><img src="../assets/images/flags/spain_flag.jpg" alt="" class="ml-2 float-right" height="14"></a>
+            <a class="dropdown-item" href="javascript:;"><span>Russian </span><img src="../assets/images/flags/russia_flag.jpg" alt="" class="ml-2 float-right" height="14"></a>
+        </div>
+    </li>
+    <li class="dropdown notification-list"><a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-toggle="dropdown"  href="javascript:;" role="button" aria-haspopup="false" aria-expanded="false"><i class="dripicons-bell noti-icon"></i> <span class="badge badge-danger badge-pill noti-icon-badge">2</span></a>
+        <div class="dropdown-menu dropdown-menu-right dropdown-lg" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(46px, 70px, 0px);" x-placement="bottom-end">
+         
+            <h6 class="dropdown-item-text">Notifications (18)</h6>
+            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 294.4px;">
+                <div class="slimscroll notification-list" style="overflow: hidden; width: auto; height: 294.4px;">
+                    <a href="javascript:void(0);" class="dropdown-item notify-item active">
+                        <div class="notify-icon bg-success"><i class="mdi mdi-cart-outline"></i></div>
+                        <p class="notify-details">Your order is placed<small class="text-muted">Dummy text of the printing and typesetting industry.</small></p>
+                    </a>
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <div class="notify-icon bg-warning"><i class="mdi mdi-message"></i></div>
+                        <p class="notify-details">New Message received<small class="text-muted">You have 87 unread messages</small></p>
+                    </a>
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <div class="notify-icon bg-info"><i class="mdi mdi-glass-cocktail"></i></div>
+                        <p class="notify-details">Your item is shipped<small class="text-muted">It is a long established fact that a reader will</small></p>
+                    </a>
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <div class="notify-icon bg-primary"><i class="mdi mdi-cart-outline"></i></div>
+                        <p class="notify-details">Your order is placed<small class="text-muted">Dummy text of the printing and typesetting industry.</small></p>
+                    </a>
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <div class="notify-icon bg-danger"><i class="mdi mdi-message"></i></div>
+                        <p class="notify-details">New Message received<small class="text-muted">You have 87 unread messages</small></p>
+                    </a>
+                </div>
+                <div class="slimScrollBar" style="background: rgb(224, 229, 241); width: 7px; position: absolute; top: 0px; opacity: 1; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 158.689px;"></div>
+                <div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
+            </div>
+           <a href="javascript:void(0);" class="dropdown-item text-center text-primary">View all <i class="fi-arrow-right"></i></a></div>
+    </li>
+    <li class="dropdown">
+        <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown"  href="javascript:;" role="button" aria-haspopup="false" aria-expanded="false"><img src="../assets/images/users/user-4.jpg" alt="profile-user" class="rounded-circle"> <span class="ml-1 nav-user-name hidden-sm">Amelia <i class="mdi mdi-chevron-down"></i></span></a>
+        <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-96px, 70px, 0px);"><a class="dropdown-item"  href="javascript:;"><i class="dripicons-user text-muted mr-2"></i> Profile</a> <a class="dropdown-item"  href="javascript:;"><i class="dripicons-wallet text-muted mr-2"></i> My Wallet</a> <a class="dropdown-item"  href="javascript:;"><i class="dripicons-gear text-muted mr-2"></i> Settings</a>            <a class="dropdown-item"  href="javascript:;"><i class="dripicons-lock text-muted mr-2"></i> Lock screen</a>
+            <div class="dropdown-divider"></div><a class="dropdown-item"  href="javascript:;"><i class="dripicons-exit text-muted mr-2"></i> Logout</a></div>
+    </li>
+</ul> -->
+
+
+<!-- <ul class="list-unstyled topbar-nav mb-0">
+    <li><button class="button-menu-mobile nav-link waves-effect waves-light"><i class="dripicons-menu nav-icon"></i></button></li>
+    <li class="hide-phone app-search">
+        <form role="search" class=""><input type="text" placeholder="Search..." class="form-control"> <a href=""><i class="fas fa-search"></i></a></form>
+    </li>
+</ul> -->
+<!-- <ul class="list-unstyled topbar-nav mb-0">
+    <li><button class="button-menu-mobile nav-link waves-effect waves-light"><i class="dripicons-menu nav-icon"></i></button></li>
+    <li class="hide-phone app-search">
+        <form role="search" class=""><input type="text" placeholder="Search..." class="form-control"> <a href=""><i class="fas fa-search"></i></a></form>
+    </li>
+</ul> class="list-unstyled topbar-nav mb-0">
+    <li><button class="button-menu-mobile nav-link waves-effect waves-light"><i class="dripicons-menu nav-icon"></i></button></li>
+    <li class="hide-phone app-search">
+        <form role="search" class=""><input type="text" placeholder="Search..." class="form-control"> <a href=""><i class="fas fa-search"></i></a></form>
+    </li>
+</ul> -->
+
+
+
+<div id="popup_profile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_profile"
+    aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content" style="border-radius : 5px;overflow: hidden; background-color: #231e39;">
+                <!-- <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="popup_profile"> Life cycle - Transaction</h6>
+            <div class="modal-close" (click)="modal_dismiss()"><span class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div> -->
+                <div class="modal-body card-container" style="min-height: 25rem; background-color: #231e39;">
+                    <div class="modal-close" (click)="modal_dismiss()" style="z-index: 1000;"><span
+                            class="mdi mdi-close pull-left"></span></div>
+
+                    <div class="card-container">
+                        <span class="pro">{{userStatus}}</span>
+                        <img class="round" src="assets/Images/useravatar.png" style="height: 100px;" alt="user" />
+                        <h3>{{userName_1}}</h3>
+                        <h6>{{RoleName}}</h6>
+                        <p>
+                            {{CompanyName}} <br />
+
+                        </p>
+                        <div class="buttons">
+                            <!-- <button class="primary">
+                        Message
+                    </button> -->
+                            <button class="primary ghost">
+                                Following
+                            </button>
+                        </div>
+                        <!-- <div class="skills">
+                    <h6>Skills</h6>
+                    <ul>
+                        <li>UI / UX</li>
+                        <li>Front End Development</li>
+                        <li>HTML</li>
+                        <li>CSS</li>
+                        <li>JavaScript</li>
+                        <li>React</li>
+                        <li>Node</li>
+                    </ul>
+                </div> -->
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>

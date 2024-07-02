@@ -1,0 +1,448 @@
+<ng-container *ngIf="isAuthorized">
+    <!-- Live website login for everyone  -->
+
+
+    <div class="form-body" *ngIf="isLive">
+        <div class="website-logo">
+            <a href="javascript:;">
+                <div class="logo" *ngIf="!isAllen">
+                    <img class="logo-size" src="assets/Images/clientlogo/appmainlogo.png" alt="">
+                </div>
+                <div class="logo" *ngIf="isAllen">
+                  <img class="logo-size" src="assets/Images/clientlogo/AllenLogo.png" alt="">
+              </div>
+            </a>
+        </div>
+
+        <div class="row" style="    position: fixed !important;
+    margin-left: 0;
+    margin-right: 0;
+    height: 100%;
+    min-height: 100% !important;
+    min-width: 100% !important;">
+            <div class="img-holder">
+                <div class="bg"></div>
+                <div class="info-holder">
+                    <img src="assets/Images/graphic3.svg" alt="">
+                </div>
+            </div>
+            <div class="form-holder">
+                <div class="form-content">
+
+                    <div class="form-items" *ngIf="isEnableTFAForWeb">
+
+                        <div class="card" style="border: none;padding: 20px;">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <a href="javascript:;">
+                                        <img class="logo-size" src='assets/Images/antivirus_lock.png' alt="logo"
+                                            style="height: 50px;text-align: center;margin: 0 auto;    padding-top: 8px;display: block;">
+                                    </a>
+                                </div>
+                                <div class="col-lg-12">
+                                    <h6 class="h5s text-center">Authenticate Your Account</h6>
+                                    <p class="p1 text-center"> Please confirm your account by using the Authenticator
+                                        Assistance app and entering the six-digit security code. </p>
+                                </div>
+
+                                <!-- <div class="col-lg-12">
+                            
+          
+                            <input class="form-control" id="otp1" #otp1 required placeholder="#" maxLength="1" [(ngModel)]="TFACode"
+                              (keyup)="otpController($event,'otp2','')">
+          
+                            <input id="otp2" class="form-control" #otp2 required  placeholder="#" maxLength="1" [(ngModel)]="TFACode1"
+                              (keyup)="otpController($event,'otp3','otp1')">
+          
+                            <input id="otp3" class="form-control" #otp3 required placeholder="#" maxLength="1"[(ngModel)]="TFACode2"
+                              (keyup)="otpController($event,'otp5','otp2')">
+          
+                            <input id="otp5" class="form-control" #otp5 required placeholder="#" maxLength="1"[(ngModel)]="TFACode3"
+                              (keyup)="otpController($event,'otp6','otp3')">
+          
+                            <input id="otp6" class="form-control" #otp6 required placeholder="#" maxLength="1" [(ngModel)]="TFACode4"
+                              (keyup)="otpController($event,'otp4','otp5')">
+          
+                            <input id="otp4" class="form-control" #otp4 required placeholder="#" maxLength="1" [(ngModel)]="TFACode5"
+                              (keyup)="otpController($event,'','otp6')">
+          
+          
+                           
+                          </div> -->
+
+                                <div class="col-lg-12">
+                                    <input type="tel" [(ngModel)]="TFACode" (input)="doCheckMax($event)"
+                                        onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
+                                        class="form-control" maxlength="6" autocomplete="off" placeholder="### - ###" />
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="row" *ngIf="hasErrorOccurred">
+                                <div class="col-lg-12 text-center" style="color: red;">
+                                    <!-- <ngb-alert [dismissible]="false"> -->
+                                    <strong>{{FailerMessage}}</strong>
+                                    <!-- </ngb-alert> -->
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4 text-left">
+                                    <a href="javascript:;" [disabled]="SpinnerShouldhide"
+                                        style="margin-top: 10rem !important;float: right;" (click)="backtoLogin()">Go to
+                                        Login</a>
+                                </div>
+
+
+                                <div class="col-lg-8 text-right">
+                                    <div class="form-button ">
+                                        <button id="submit" (click)="doVerifyTFACode()" type="submit" class="ibtn"
+                                            [disabled]="SpinnerShouldhide"
+                                            style="background-color: #0a609eeb;color: white">Verify &nbsp; <span
+                                                *ngIf="SpinnerShouldhide" class="spinner-border spinner-border-sm"
+                                                role="status" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-items" *ngIf="!isEnableTFAForWeb">
+
+                        <h5 class="h5s">Welcome!</h5>
+
+                        <p class="font-14">Sign in to continue</p>
+                        <br>
+
+                        <!-- <div class="page-links">
+
+                        <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label style="color: black" for="tab-1" class="tab" (click)="activeDeputy()">Employee</label> &nbsp;
+                        <input id="tab-2" type="radio" name="tab" class="sign-up"><label style="color: black" for="tab-2" class="tab" (click)="activeClient()">Client</label>
+
+                    </div> -->
+
+
+                        <div id="overlay">
+                            <div class="w-100 d-flex justify-content-center align-items-center">
+                                <div class="spinner"></div>
+                            </div>
+                        </div>
+
+                        <!--  start deputees login both Forsm and Google provider -->
+
+                        <div class="log-in-htm" *ngIf="isClassLoginActive">
+
+                            <form (ngSubmit)="generateToken()" [formGroup]="loginForm" *ngIf="_isAuthTypEmployeeForm">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="username" formControlName="UserName"
+                                        [ngClass]="{ 'is-invalid': submitted && f.UserName.errors }" (click)="unfreezeInput($event)"
+                                        placeholder="User Name" autocomplete="off" required>
+                                    <div *ngIf="submitted && f.UserName.errors" class="invalid-feedback">
+                                        <div *ngIf="f.UserName.errors.required">Username is required</div>
+                                    </div>
+                                </div>
+                                <input class="form-control" type="password" name="password" formControlName="Password"
+                                    [ngClass]="{ 'is-invalid': submitted && f.Password.errors }" placeholder="Password "
+                                    autocomplete="off" (click)="unfreezeInput($event)" required>
+                                <div *ngIf="submitted && f.Password.errors" class="invalid-feedback">
+                                    <div *ngIf="f.Password.errors.required">Password is required</div>
+                                </div>
+
+                                <div class="form-group" style="margin-left: 2.4rem;"
+                                    *ngIf="isCaptchaVerificationRequired">
+
+                                    <ngx-recaptcha2 #captchaElem [siteKey]="siteKey" (reset)="handleReset()"
+                                        (success)="handleSuccess($event)" [useGlobalDomain]="false" [size]="size"
+                                        [hl]="lang" [theme]="theme" [type]="type" formControlName="recaptcha">
+                                    </ngx-recaptcha2>
+
+                                </div>
+                                <div *ngIf="submitted && !captchaSuccess && isCaptchaVerificationRequired"
+                                    class="invalid-feedback" style="text-align: center !important;display: block;">
+                                    <div>reCAPTCHA Verification is required</div>
+                                </div>
+                                <div class="form-button ">
+                                    <button id="submit" type="submit " class="ibtn" #LoginButton
+                                        style="background-color: #0a609eeb;color: white">Login &nbsp; &nbsp; <span
+                                            *ngIf="SpinnerShouldhide" class="spinner-border spinner-border-sm"
+                                            role="status" aria-hidden="true"></span></button> <a href="javascript:;"
+                                        (click)="forgot_password('employee')" style="color: black" *ngIf="_isAuthTypEmployeeForm">forgot password?</a>
+                                </div>
+                            </form>
+
+
+
+                            <div class="other-links txt-center" *ngIf="_isAuthTypEmployeeGoogle">
+                                <span style="color: black" *ngIf="_isAuthTypEmployeeForm && _isAuthTypEmployeeGoogle"> or </span>
+                                <br>
+                                <br>
+                                <!-- <button type="button" class="google-button" (click)="signInWithGoogle()"> -->
+                                <button type="button" class="google-button" (click)="signInWithGoogleSSO()">
+                                    <span class="google-button__icon">
+                                        <svg viewBox="0 0 366 372" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M125.9 10.2c40.2-13.9 85.3-13.6 125.3 1.1 22.2 8.2 42.5 21 59.9 37.1-5.8 6.3-12.1 12.2-18.1 18.3l-34.2 34.2c-11.3-10.8-25.1-19-40.1-23.6-17.6-5.3-36.6-6.1-54.6-2.2-21 4.5-40.5 15.5-55.6 30.9-12.2 12.3-21.4 27.5-27 43.9-20.3-15.8-40.6-31.5-61-47.3 21.5-43 60.1-76.9 105.4-92.4z"
+                                                id="Shape" fill="#EA4335" />
+                                            <path
+                                                d="M20.6 102.4c20.3 15.8 40.6 31.5 61 47.3-8 23.3-8 49.2 0 72.4-20.3 15.8-40.6 31.6-60.9 47.3C1.9 232.7-3.8 189.6 4.4 149.2c3.3-16.2 8.7-32 16.2-46.8z"
+                                                id="Shape" fill="#FBBC05" />
+                                            <path
+                                                d="M361.7 151.1c5.8 32.7 4.5 66.8-4.7 98.8-8.5 29.3-24.6 56.5-47.1 77.2l-59.1-45.9c19.5-13.1 33.3-34.3 37.2-57.5H186.6c.1-24.2.1-48.4.1-72.6h175z"
+                                                id="Shape" fill="#4285F4" />
+                                            <path
+                                                d="M81.4 222.2c7.8 22.9 22.8 43.2 42.6 57.1 12.4 8.7 26.6 14.9 41.4 17.9 14.6 3 29.7 2.6 44.4.1 14.6-2.6 28.7-7.9 41-16.2l59.1 45.9c-21.3 19.7-48 33.1-76.2 39.6-31.2 7.1-64.2 7.3-95.2-1-24.6-6.5-47.7-18.2-67.6-34.1-20.9-16.6-38.3-38-50.4-62 20.3-15.7 40.6-31.5 60.9-47.3z"
+                                                fill="#34A853" />
+                                        </svg>
+                                    </span>
+                                    <span class="google-button__text" style="font-size: 13px; font-weight: 500; 
+                                    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+                                    color: #737474  !important">Sign in with
+                                        Google</span>
+                                </button>
+
+
+                            </div>
+                        </div>
+                        <!-- end deputees login  -->
+
+                        <!-- [@enterAnimation] -->
+                        <!-- start client login  -->
+
+                        <div class="sign-up-htm" *ngIf="isClassClientActive">
+                            <form (ngSubmit)="ClientCodeSubmit()" [formGroup]="ClientCodeForm">
+                                <div class="form-group">
+                                    <input class="form-control " type="text" name="Code" formControlName="Code"
+                                        [ngClass]="{ 'is-invalid': Clientsubmitted && d.Code.errors }"
+                                        placeholder="Client Code" autocomplete="off" required>
+                                    <div *ngIf="Clientsubmitted && d.Code.errors" class="invalid-feedback">
+                                        <div *ngIf="d.Code.errors.required">Client Code is required</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-button ">
+                                    <button type="submit " class="ibtn "
+                                        style="background-color: #0a609eeb;color: white">Verify &nbsp; &nbsp; <span
+                                            *ngIf="SpinnerShouldhide"
+                                            class="spinner-border spinner-border-sm color-white" role="status"
+                                            aria-hidden="true"></span></button>
+                                </div>
+                            </form>
+                        </div>
+
+
+                        <div class="sign-up-htm" *ngIf="isClientCodeActivated">
+                            <form (ngSubmit)="ClientSubmit()" [formGroup]="ClientForm" *ngIf="!_isAuthTypClientForm">
+
+                                <div class="form-group">
+                                    <input class="form-control " type="text" name="username" formControlName="UserName"
+                                        [ngClass]="{ 'is-invalid': _client_submitted && c.UserName.errors }"
+                                        placeholder="User Name" autocomplete="off" required>
+                                    <div *ngIf="_client_submitted && c.UserName.errors" class="invalid-feedback">
+                                        <div *ngIf="c.UserName.errors.required">Username is required</div>
+                                    </div>
+                                </div>
+                                <input class="form-control " type="password" name="password" formControlName="Password"
+                                    [ngClass]="{ 'is-invalid': _client_submitted && c.Password.errors }"
+                                    placeholder="Password " autocomplete="off" required>
+                                <div *ngIf="_client_submitted && c.Password.errors" class="invalid-feedback">
+                                    <div *ngIf="c.Password.errors.required">Password is required</div>
+                                </div>
+                                <div class="form-button ">
+
+                                    <button id="submit" type="submit " class="ibtn" #LoginButton
+                                        style="background-color: #0a609eeb;color: white">Login &nbsp; &nbsp; <span
+                                            *ngIf="SpinnerShouldhide" class="spinner-border spinner-border-sm"
+                                            role="status" aria-hidden="true"></span></button> <a href="javascript:;"
+                                        (click)="forgot_password('client')" style="color: black">forgot password?</a>
+                                </div>
+
+                            </form>
+
+                            <div class="other-links txt-center" *ngIf="!_isAuthTypClientGoogle">
+                                <span style="color: black"> login with</span>
+                                <br>
+                                <br>
+                                <button type="button" class="google-button" (click)="signInWithGoogle()">
+                                    <span class="google-button__icon">
+                                        <svg viewBox="0 0 366 372" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M125.9 10.2c40.2-13.9 85.3-13.6 125.3 1.1 22.2 8.2 42.5 21 59.9 37.1-5.8 6.3-12.1 12.2-18.1 18.3l-34.2 34.2c-11.3-10.8-25.1-19-40.1-23.6-17.6-5.3-36.6-6.1-54.6-2.2-21 4.5-40.5 15.5-55.6 30.9-12.2 12.3-21.4 27.5-27 43.9-20.3-15.8-40.6-31.5-61-47.3 21.5-43 60.1-76.9 105.4-92.4z"
+                                                id="Shape" fill="#EA4335" />
+                                            <path
+                                                d="M20.6 102.4c20.3 15.8 40.6 31.5 61 47.3-8 23.3-8 49.2 0 72.4-20.3 15.8-40.6 31.6-60.9 47.3C1.9 232.7-3.8 189.6 4.4 149.2c3.3-16.2 8.7-32 16.2-46.8z"
+                                                id="Shape" fill="#FBBC05" />
+                                            <path
+                                                d="M361.7 151.1c5.8 32.7 4.5 66.8-4.7 98.8-8.5 29.3-24.6 56.5-47.1 77.2l-59.1-45.9c19.5-13.1 33.3-34.3 37.2-57.5H186.6c.1-24.2.1-48.4.1-72.6h175z"
+                                                id="Shape" fill="#4285F4" />
+                                            <path
+                                                d="M81.4 222.2c7.8 22.9 22.8 43.2 42.6 57.1 12.4 8.7 26.6 14.9 41.4 17.9 14.6 3 29.7 2.6 44.4.1 14.6-2.6 28.7-7.9 41-16.2l59.1 45.9c-21.3 19.7-48 33.1-76.2 39.6-31.2 7.1-64.2 7.3-95.2-1-24.6-6.5-47.7-18.2-67.6-34.1-20.9-16.6-38.3-38-50.4-62 20.3-15.7 40.6-31.5 60.9-47.3z"
+                                                fill="#34A853" />
+                                        </svg>
+                                    </span>
+                                    <span class="google-button__text" style="color: #737474  !important">Sign in with
+                                        Google</span>
+                                </button>
+
+
+                            </div>
+
+
+                        </div>
+                        <!-- end client login  -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end live website login -->
+
+
+
+
+
+    <!--  start company employee's login (Forms and Google)  -->
+
+
+    <div class="form-body without-side" *ngIf="isCoreEmployee">
+        <div class="website-logo">
+            <a href="login/core">
+                <div class="logo">
+                    <img class="logo-size" src="assets/Images/clientlogo/{{apploginlogo}}" alt="">
+                </div>
+            </a>
+        </div>
+        <div class="row">
+            <div class="img-holder">
+                <div class="bg"></div>
+                <div class="info-holder">
+                    <img src="assets/Images/hero-1-img.png" alt="">
+                </div>
+            </div>
+            <div class="form-holder">
+                <div class="form-content">
+                    <div class="form-items">
+                        <h5 class="text-center h5s">Welcome!</h5>
+                        <br>
+                        <p class="text-center">Sign in to continue</p>
+
+                        <div id="overlay">
+                            <div class="w-100 d-flex justify-content-center align-items-center">
+                                <div class="spinner"></div>
+                            </div>
+                        </div>
+
+                        <form (ngSubmit)="coreLogin()" [formGroup]="loginForm" *ngIf="!_isAuthTypCompanyForm">
+                            <div class="form-group">
+                                <input class="form-control " type="text" name="username" formControlName="UserName"
+                                    [ngClass]="{ 'is-invalid': submitted && f.UserName.errors }" placeholder="User Name"
+                                    autocomplete="off" required>
+                                <div *ngIf="submitted && f.UserName.errors" class="invalid-feedback">
+                                    <div *ngIf="f.UserName.errors.required">Username is required</div>
+                                </div>
+                            </div>
+                            <input class="form-control " type="password" name="password" formControlName="Password"
+                                [ngClass]="{ 'is-invalid': submitted && f.Password.errors }" placeholder="Password "
+                                autocomplete="off" required>
+                            <div *ngIf="submitted && f.Password.errors" class="invalid-feedback">
+                                <div *ngIf="f.Password.errors.required">Password is required</div>
+                            </div>
+                            <div class="form-button ">
+                                <button id="submit" type="submit" class="ibtn" #LoginButton
+                                    style="background-color: #0a609eeb;color: white">Login &nbsp; <span
+                                        *ngIf="SpinnerShouldhide" class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span></button> <a href="javascript:;"
+                                    (click)="forgot_password('company')">forgot password?</a>
+                            </div>
+                        </form>
+
+
+                        <!-- google authetication SSO  -->
+                        <div class="other-links text-center" *ngIf="!_isAuthTypCompanyGoogle">
+                            <div class="text"></div>
+
+                            <button type="button" class="google-button wrap" (click)="signInWithGoogle()">
+                                <span class="google-button__icon">
+                                    <svg viewBox="0 0 366 372" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M125.9 10.2c40.2-13.9 85.3-13.6 125.3 1.1 22.2 8.2 42.5 21 59.9 37.1-5.8 6.3-12.1 12.2-18.1 18.3l-34.2 34.2c-11.3-10.8-25.1-19-40.1-23.6-17.6-5.3-36.6-6.1-54.6-2.2-21 4.5-40.5 15.5-55.6 30.9-12.2 12.3-21.4 27.5-27 43.9-20.3-15.8-40.6-31.5-61-47.3 21.5-43 60.1-76.9 105.4-92.4z"
+                                            id="Shape" fill="#EA4335" />
+                                        <path
+                                            d="M20.6 102.4c20.3 15.8 40.6 31.5 61 47.3-8 23.3-8 49.2 0 72.4-20.3 15.8-40.6 31.6-60.9 47.3C1.9 232.7-3.8 189.6 4.4 149.2c3.3-16.2 8.7-32 16.2-46.8z"
+                                            id="Shape" fill="#FBBC05" />
+                                        <path
+                                            d="M361.7 151.1c5.8 32.7 4.5 66.8-4.7 98.8-8.5 29.3-24.6 56.5-47.1 77.2l-59.1-45.9c19.5-13.1 33.3-34.3 37.2-57.5H186.6c.1-24.2.1-48.4.1-72.6h175z"
+                                            id="Shape" fill="#4285F4" />
+                                        <path
+                                            d="M81.4 222.2c7.8 22.9 22.8 43.2 42.6 57.1 12.4 8.7 26.6 14.9 41.4 17.9 14.6 3 29.7 2.6 44.4.1 14.6-2.6 28.7-7.9 41-16.2l59.1 45.9c-21.3 19.7-48 33.1-76.2 39.6-31.2 7.1-64.2 7.3-95.2-1-24.6-6.5-47.7-18.2-67.6-34.1-20.9-16.6-38.3-38-50.4-62 20.3-15.7 40.6-31.5 60.9-47.3z"
+                                            fill="#34A853" />
+                                    </svg>
+                                </span>
+                                <span class="google-button__text" style="color: #737474  !important"
+                                    (click)="signInWithGoogle()">Google</span>
+                            </button>
+
+                            <!-- <a class="default-text block pull-left">
+                            Google <img class="pull-left m-r-xs"
+                                src="https://arrr.salesmate.io/assets/Images/google-icon.svg"><i></i>
+                        </a> -->
+                        </div>
+                        <!-- end sso login  -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end company employee's login -->
+</ng-container>
+
+
+
+<div class="row" style="margin: 1rem;margin: 0;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%)" *ngIf="!isAuthorized">
+    <div class="col-lg-12">
+        <div class="logo">
+            <img class="logo-size" style="display: block; margin: 0 auto;" src="assets/Images/securityrisk.png" alt="">
+        </div>
+    </div>
+
+    <div class="col-lg-12" style="text-align: center;margin: 10px;">
+        <p style="font-size: 20px;font-weight: 600;"> Warning: Potential Security Risk Ahead </p>
+        <p style="font-size: 16px;"> This pages content may have been removed or the link you clicked on was invalid for
+            some reason. If
+            you believe this not to
+            be the case please contact the support admin. </p>
+    </div>
+
+
+</div>
+
+<!-- <div class="row" style="margin: 1rem;margin: 0;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%)" *ngIf="!isAuthorized">
+    <div class="col-lg-4">
+        <div class="logo">
+            <img class="logo-size" src="assets/Images/securityrisk.png" alt="">
+        </div>
+    </div>
+
+    <div class="col-lg-12" style="text-align: center;margin: 10px;">
+        <p style="font-size: 20px;font-weight: 600;"> Warning: Potential Security Risk Ahead </p>
+        <p style="font-size: 16px;"> This pages content may have been removed or the link you clicked on was invalid for
+            some reason. If
+            you believe this not to
+            be the case please contact the support admin. </p>
+    </div>
+
+
+</div> -->

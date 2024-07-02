@@ -1,0 +1,166 @@
+<div class="modal-header" style="font-size: 17px;
+
+ background-color: aliceblue;
+ color: #073952;">
+    <span><i class="fa fa-file-text">&nbsp;</i>{{ modalHeader }}</span>
+    <button class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" style="padding-top:0px;padding-bottom:0px;padding-left:1rem;padding-right:1rem">
+   
+    <!-- <iframe src="https://docs.google.com/gview?url=http://35.196.231.3/mint.api/api/downloadbytes?DocumentId=327&embedded=true" width="80%" height="300px"></iframe> 
+        <iframe src='https://view.officeapps.live.com/op/embed.aspx?src=http://35.196.231.3/mint.api/api/downloadbytes?DocumentId=324' width='136px' height='623px' frameborder='0'></iframe> -->
+    
+
+    <form>
+        <div class="input-group input-group-sm fieldset" style="display:block;margin-top:0px;">
+            <!-- <label for="isActive" style="font-size: small;float:right">
+                            <input type="checkbox" id="isActive" style="border-width: thin;width:15px;vertical-align: text-bottom;"
+                                text="Is Active" [checked]="ruleset.Status==1">Is Active</label> -->
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="code" class="inplbl">Code</label>
+                    <input type="text" id="code" [(ngModel)]="ruleset.Code" [ngModelOptions]="{standalone: true}"
+                        placeholder="Code" class="form-control inpCtrl" style="width:95%" required />
+                </div>
+                <div class="col-md-6">
+                    <label for="name" class="inplbl">Name</label>
+                    <input type="text" id="name" [(ngModel)]="ruleset.Name" [ngModelOptions]="{standalone: true}"
+                        placeholder="Name" class="form-control inpCtrl" style="width:95%" required="true" />
+                </div>
+            </div>
+          
+            <div class="row">
+                <div class="col-md-6"> 
+                    <label for="implComp" class="inplbl">Company</label>
+                    <select id="implComp" (change)="onCompanyChange(selectElem.value)" [value]="ruleset.ImplementationCompanyId"
+                        #selectElem class="form-control inpCtrl" style="width:95%">
+                        <option value="0">All</option>
+                        <option *ngFor="let implComp of implCompCodeList" value={{implComp.ImplementationCompanyId}}>
+                            {{implComp.Name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="client" class="inplbl">Client</label>
+                    <select id="client" (change)="onClientChange(selectClient.value)" [value]="ruleset.ClientId"
+                        #selectClient class="form-control inpCtrl" style="width:95%">
+                        <option value="0">All</option>
+                        <option *ngFor="let client of clientCodeList" value={{client.Id}} [selected]="client.Id == ruleset.ClientId">
+                            {{client.Name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="contract" class="inplbl">Contract</label>
+                    <select id="contract" (change)="onContractChange(selectContract.value)" [value]="ruleset.ClientContractId" #selectContract class="form-control inpCtrl"
+                        style="width:95%">
+                        <option value="0">All</option>
+                        <option *ngFor="let contract of contractCodeList" value={{contract.Id}} [selected]="contract.Id == ruleset.ClientContractId">
+                            {{contract.Code}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="group" class="inplbl">Group</label>
+                    <select id="group" (change)="onGroupChange(selectgroup.value)" #selectgroup [value]="ruleset.GroupId" class="form-control inpCtrl" >
+                        <option value="0">All</option>
+                        <option *ngFor="let lookupGroup of lookupGroupList" value={{lookupGroup.Id}} [selected]="lookupGroup.Id == ruleset.GroupId">
+                            {{lookupGroup.Code}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                    <div class="col-md-6">
+                        <label for="businessSystem" class="inplbl">Business System</label>
+                        <select id="businessSystem" (change)="onBSChange(selectbs.value)" #selectbs [value]="ruleset.BusinessSystemId" class="form-control inpCtrl" >
+                                <option value="0">Choose a System</option>
+                            <option *ngFor="let system of businessSystemList" value={{system.Id}} [selected]="system.Id == ruleset.BusinessSystemId">
+                                {{system.Code}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="desc" class="inplbl">Description</label>
+                    <textarea id="desc" [(ngModel)]="ruleset.Description" [ngModelOptions]="{standalone: true}"
+                        placeholder="Description" class="form-control inpCtrl" rows="4" style="height:4em;width: 97.5%"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+
+    <button class="btn btn-default btnOk" (click)="saveAndClose()"><i class="fas fa-check"> &nbsp;</i>Save</button>
+
+    <button class="btn btn-default btnWarning" (click)="closeModal()"><i class="fas fa-times"> &nbsp;</i>Cancel</button>
+
+</div>
+
+<!-- <div class="modal-header" style="display:block;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="font-size:18px">RuleSet </h4>
+            </div>
+            <div class="modal-body" style="padding-left: 1.5em;">
+                <div class="input-group input-group-sm fieldset" style="display:block;margin-top:0px;">
+                    <label for="isActive" style="font-size: small;float:right">
+                        <input type="checkbox" id="isActive" style="border-width: thin;width:15px;vertical-align: text-bottom;"
+                            text="Is Active">Is Active</label>
+
+                   
+                    <label for="code" class="inplbl" >Code</label>
+                    <input type="text" id="code" placeholder="Code" class="form-control inpCtrl" 
+                    [ngClass]="{ 'is-invalid': true}" style="width:95%" required />
+
+                    <label for="name" class="inplbl">Name</label>
+                    <input type="text" id="name" placeholder="Name" class="form-control inpCtrl" style="width:95%" required="true"/>
+
+                    <label for="implComp" class="inplbl">Company</label>
+                    <select id="implComp" #selectElem class="form-control inpCtrl" style="width:95%">
+                        <option value="0">--All--</option>
+                        
+                    </select>
+
+                    <table style="margin:0px;padding:0px;">
+                        <tr>
+                            <td style="width:86%"> <label for="group" class="inplbl">Group</label>
+                                <select id="group" #selectElem class="form-control inpCtrl" style="    border-radius: 0px;
+    height: 2.3em;">
+                                    <option value="0">--All--</option>
+                                   
+                                </select></td>
+                            <td style="width:14%;padding-top: 13px;"><button id="addGroup" class="form-control"
+                                    style="height: 2.3em;
+    padding: 0px;
+    margin-top: 3px;
+    border-radius: 0px;
+    color: white;
+    background-color: forestgreen;
+    max-width: 3em;">+</button></td>
+                        </tr>
+                    </table>
+
+
+
+
+                    <label for="desc" class="inplbl">Description</label>
+                    <textarea id="desc" placeholder="Description" class="form-control inpCtrl" rows="4" style="height:4em;width: 95%"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer" >
+                <button type="button" class="btn btn-default btnOk" data-dismiss="modal"><i class="fa fa-save">&nbsp;</i>Save</button>
+                <button type="button" class="btn btn-default btnWarning" data-dismiss="modal"><i class="fa fa-times">&nbsp;</i>Discard Changes</button>
+            </div>
+        </div>
+
+    </div> -->

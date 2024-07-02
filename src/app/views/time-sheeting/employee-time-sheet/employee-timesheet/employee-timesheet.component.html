@@ -1,0 +1,82 @@
+<div class="page-wrapper pt-0">
+  <div class="page-content">
+
+    <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" 
+      [fullScreen]="true">
+      <p style="color: #0a609eeb"> Loading... </p>
+    </ngx-spinner> -->
+    <div class="row mt-2 mb-2">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left">
+            <h1 class="vss-HubTitle header-text">
+              <div class="vss-HubTitle--titleText" style="margin-top: 20px;">Timesheet</div>
+            </h1>
+        </div>
+      </div>
+    </div>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="content m-b report-content" *ngIf="!spinner && (configurations && configurations.length > 0)">
+      <div class="row">
+        <div class="col-12">
+          <ngb-tabset class="timeSheetTabs" (tabChange)="loadTabData($event)" [(activeId)]="getActiveTabName">
+            <ngb-tab id="TimeEntires">
+              <ng-template ngbTabTitle>Time Entries</ng-template>
+              <ng-template ngbTabContent>
+                <div>
+                  <app-timesheet-entries-by-employee #entries></app-timesheet-entries-by-employee>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="SavedRecords">
+              <ng-template ngbTabTitle>Saved Records</ng-template>
+              <ng-template ngbTabContent>
+                <div>
+                  <app-employee-saved-timesheet #saved></app-employee-saved-timesheet>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="SubmittedRecords">
+              <ng-template ngbTabTitle>Submitted Records</ng-template>
+              <ng-template ngbTabContent>
+                <div>
+                  <app-employee-submitted-timesheet #submitted [detailsData]="emptyArr"></app-employee-submitted-timesheet>
+                </div>
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+        </div>
+      </div>
+    </div>
+    <div class="fixed-footer" *ngIf="getActiveTabName == 'TimeEntires'">
+      <div class="row">
+          <div class="col-sm-6 text-left"></div>
+          <div class="col-sm-6 text-right">
+            <button class="btn btn-default btn-outline mt-3 mb-2 m-1" 
+            (click)="doSaveOrSubmitTimesheetEntries('save')" [disabled]="isSubmitted">
+              Save
+            </button>
+            <button class="btn btn-primary action-btn mt-3 mb-2 m-1" 
+            (click)="doSaveOrSubmitTimesheetEntries('submit')" [disabled]="isSubmitted">
+              Submit for approval
+            </button>
+          </div>
+      </div>
+    </div>
+
+    <!-- <div class="fixed-footer" *ngIf="getActiveTabName == 'SubmittedRecords' && this.RoleCode == 'Manager'">
+      <div class="row">
+        <div class="col-sm-6 text-left"></div>
+        <div class="col-sm-6 text-right">
+          <button class="btn btn-default btn-outline mt-3 mb-2 m-1" (click)="approveOrRejectAllTimeSheet('reject')">Reject All</button>
+          <button class="btn btn-primary action-btn mt-3 mb-2 m-1" (click)="approveOrRejectAllTimeSheet('approve')">Approve All</button>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>

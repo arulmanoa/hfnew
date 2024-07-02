@@ -1,0 +1,91 @@
+<div class="page-wrapper pt-0" #managerListing>
+  <div class="page-content">
+
+    <app-loading-screen></app-loading-screen>
+    <div class="row mt-2 mb-2">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left">
+          <h1 class="vss-HubTitle header-text">
+            <div class="vss-HubTitle--titleText" style="margin-top: 20px;">Timesheet Requests</div>
+          </h1>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <button class="btn btn-link history-btn" (click)="showRequestHistory()">
+            <i class="mdi mdi-refresh"></i> Request History
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner && showNoData">
+      <div class="text-center ma-5" *ngIf=" !spinner && showNoData">
+        <span>No records found!</span>
+      </div>
+    </div>
+    <div class="content m-b report-content" *ngIf="!spinner && !showNoData">
+      <div class="row w-100">
+        <div class="col-12 color-white">
+          <div class="w-100">
+            <table class="table custom-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" [checked]="isSelectAll" (change)="onCheckboxAllClicked($event)"></th>
+                  <th>Employee</th>
+                  <th>Tag Name</th>
+                  <th>Requested Week</th>
+                  <th>Total Working Hours</th>
+                  <th>Submitted On</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="cursor-pointer" *ngFor="let data of pagedDataList" (click)="onRowClicked($event, data)">
+                  <td>
+                    <input type="checkbox" class="cursor-pointer" [checked]="data.isSelected"
+                      (click)="onCheckboxClicked($event, data); $event.stopPropagation()" />
+                  </td>
+                  <td>
+                    <div>
+                      <p class="m-0">{{data.EmployeeName}}</p>
+                      <p class="m-0">{{data.EmployeeCode}}</p>
+                    </div>
+                  </td>
+                  <td>{{data.TagName}}</td>
+                  <td>{{ data.formattedDateRange }}</td>
+                  <td>{{ data.TotalHours }}</td>
+                  <td>{{ data.SubmittedOn | date: 'dd MMM yyyy' }}</td>
+                  <td>
+                    <button class="btn text-color" (click)="rejectSelectedTimeSheet(data);$event.stopPropagation()">Reject</button>
+                    <button class="btn btn-primary action-btn" (click)="approveSelectedTimeSheet(data);$event.stopPropagation()">Approve</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="custom-table-pagination float-right">
+              <button class="btn prev" [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+              <span class="page" *ngFor="let page of pages" [class.active]="page === currentPage"
+                (click)="changePage(page)">{{ page }}</span>
+              <button class="btn next" [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fixed-footer" *ngIf="showFooterBtns && !showNoData">
+      <div class="row">
+          <div class="col-sm-6 text-left"></div>
+          <div class="col-sm-6 text-right">
+            <button class="btn btn-default btn-outline mt-3 mb-2 m-1" (click)="approveOrRejectAllTimesheetEntries('reject')">Reject All</button>
+            <button class="btn btn-primary action-btn btn-big mt-3 mb-2 m-1" (click)="approveOrRejectAllTimesheetEntries('approve')">Approve All</button>
+          </div>
+      </div>
+  </div>
+</div>

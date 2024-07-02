@@ -1,0 +1,1325 @@
+<div class="page-wrapper ff">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+
+
+
+
+        <div class="row" style="margin-bottom: 15px;margin-top: -15px;" *ngIf="!spinner">
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left">
+                    <h6 class="h6_c" style="font-size: 16px;
+          font-weight: 600;"> My Attendance</h6>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+              <ul class="list-inline">
+                <li class="list-inline-item" *ngIf="!spinner">
+                  <button type="button" class="btn btn-primary" (click)="viewShiftsByEmployee()">
+                    <i class="mdi mdi-eye m-r-xs"></i>View Shift
+                  </button>
+                </li>
+                <!--  ! : 16.2 for panasonic  -->
+                <li class="list-inline-item" *ngIf="!spinner && _attendanceConfiguration != null && 
+                  _attendanceConfiguration.IsEmployeeAllowToRegularizeAttendance && _attendanceConfiguration.RegularizationType == 1">
+                  <button [disabled]="selectedDays.length == 0" type="button" class="btn upgrade-btn" (click)="doMarkAsPresent()">
+                    <i class="mdi mdi-checkbox-marked m-r-xs"></i> Mark as Present
+                  </button>
+                </li>
+                <!--  ! : allen changes  -->
+                <li class="list-inline-item" *ngIf="!spinner && _attendanceConfiguration != null && 
+                _attendanceConfiguration.IsEmployeeAllowToRegularizeAttendance && _attendanceConfiguration.RegularizationType == 2">
+                  <button [disabled]="selectedDays.length == 0" type="button" class="btn upgrade-btn" (click)="doRegularizeDetailType()">
+                    Regularize
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="!spinner">
+                  <button type="button" class="btn btn-primary" (click)="onSubmit()">
+                    <i class="mdi mdi-checkbox-multiple-marked-circle  m-r-xs"></i> Submit
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="!spinner">
+                  <button type="button" class="btn btn-default" (click)="onRefresh()">
+                    <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                  </button>
+                </li>
+              </ul>
+            </div>
+        </div>
+
+
+
+
+        <div class="docs-page" *ngIf="spinner">
+
+            <div class="d-flex align-items-center" style="display: none;text-align: center;margin: 0 auto;">
+                <div class="spinner-border ml-auto" role="status" style="text-align: center; display: block;  margin: 0 auto;" aria-hidden="true"></div>
+            </div>
+
+
+            <div class="Error full-screen">
+
+                <!-- <h1><span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true">
+          </span>
+        </h1> -->
+
+                <!-- <p style="color: black;margin-bottom: 0px;">Please wait while we set things up for you</p> -->
+
+                <div class="cu-mind__content ng-tns-c1053-135">
+                    <div class="cu-mind__quotes cu-mind__quotes_open ng-tns-c1053-135"><svg width="116px" height="92px" viewBox="449 454 116 92" version="1.1" class="ng-tns-c1053-135">
+              <path d="M449.1,513.55 C449.1,533.85 461.7,545.4 476.05,545.4 C489.35,545.4 499.85,534.55 499.85,
+          521.6 C499.85,508.65 490.75,499.55 479.2,499.55 C476.75,499.55 473.95,499.9 473.25,500.25 C475.35,
+          488.35 487.25,474 498.45,467.35 L481.65,454.05 C462.4,467.7 449.1,489.4 449.1,513.55 L449.1,
+          513.55 Z M513.85,513.55 C513.85,533.85 526.45,545.4 540.8,545.4 C554.1,545.4 564.6,534.55 564.6,
+          521.6 C564.6,508.65 555.5,499.55 543.95,499.55 C541.5,499.55 538.7,499.9 538,500.25 C540.1,
+          488.35 552,474 563.2,467.35 L546.4,454.05 C527.15,467.7 513.85,489.4 513.85,513.55 L513.85,513.55 Z" id="“"
+                stroke="none" fill-opacity="0.0758888134" fill="#9688AE" fill-rule="evenodd" class="ng-tns-c1053-135">
+              </path>
+            </svg></div>
+                    <div class="cu-mind__text ng-tns-c1053-135"> I have not failed. I’ve just found 10,000 ways that won’t work. <cite class="ng-tns-c1053-135"> - Thomas Edison</cite>
+                    </div>
+                    <div class="cu-mind__quotes cu-mind__quotes_close ng-tns-c1053-135"><svg width="117px" height="92px" viewBox="876 492 117 92" version="1.1" class="ng-tns-c1053-135">
+              <path d="M903.6,584 C916.9,584 927.4,573.15 927.4,560.2 C927.4,547.25 918.3,538.15 906.75,
+          538.15 C904.3,538.15 901.5,538.5 900.8,538.85 C902.9,526.95 914.8,512.6 926,505.95 L909.2,
+          492.65 C889.95,506.3 876.65,528 876.65,552.15 C876.65,572.45 889.25,584 903.6,584 Z M941.4,
+          552.15 C941.4,572.45 954,584 968.35,584 C981.65,584 992.15,573.15 992.15,560.2 C992.15,
+          547.25 983.05,538.15 971.5,538.15 C969.05,538.15 966.25,538.5 965.55,538.85 C967.65,526.95 979.55,
+          512.6 990.75,505.95 L973.95,492.65 C954.7,506.3 941.4,528 941.4,552.15 L941.4,552.15 Z" id="“" stroke="none"
+                fill-opacity="0.0758888134" fill="#9688AE" fill-rule="evenodd"
+                transform="translate(934.400000, 538.325000) rotate(-180.000000) translate(-934.400000, -538.325000) "
+                class="ng-tns-c1053-135"></path>
+            </svg></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row" *ngIf="!spinner && _EmployeeEntitlement.length > 0">
+            <ng-container *ngFor="let item of _EmployeeEntitlement">
+                <div class="col-12 col-lg-3 col-xl-3" style="padding-bottom: 5px;" *ngIf="item.IsQuickApplyRequired==true">
+                    <div class="card">
+                        <div class="card-body padding-card-body" style="padding: 1.6rem 1.81rem !important;">
+                            <div class="row align-items-center">
+                                <div class="col">
+
+                                    <h6 class="text-uppercase text-muted mb-2" style="font-weight: 600;font-size: 12px;">
+                                        {{item.DisplayName}}
+                                    </h6>
+                                    <span class="h2 mb-0" style="font-size: 11px;font-weight: 600;" *ngIf="item.ShowBalanceInUI == true">
+                  Available : {{item.AvailableUnits}} | Eligible : {{item.EligibleUnits}}
+                </span>
+                                    <span class="h2 mb-0" style="font-size: 11px;font-weight: 600;" *ngIf="item.ShowBalanceInUI == false"> &nbsp;&nbsp;
+                  
+                </span>
+
+                                </div>
+                                <div class="col-auto" style="overflow: hidden;">
+                                    <img src="assets/Images/documentleave.png" style="width: 25px;">
+                                    <!-- <span class="h2 mdi mdi-calendar-blank text-muted mb-0"></span> -->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="content m-b report-content" style="margin-top: 6px;padding: 16px !important;" *ngIf="!spinner">
+
+
+
+
+            <!-- <div class="col-md-3" *ngFor="let item of LstEmployeeLeaveRequest; let i = index">
+          <a href="javascript:;">
+            <div class="grid simple border-2px" style="border-color: #c6f5d7;">
+              <div class="grid-body">
+                <img
+                  src="https://img-premium.flaticon.com/png/512/1386/premium/1386386.png?token=exp=1624566230~hmac=9807d0502e1ef3b8cba5d5774251a10f"
+                  style="width: 25px;">
+                <p class="m-b-0" style="color: #000;">{{item.EntitlmentName}} </p>
+                <div style="clear: both"></div>
+
+                <span class="f-s-12">
+                  Applied ({{getCountApplied(item.list)}}) <span class="border_slice"> | </span> Approved
+                  ({{getCountApproved(item.list)}}) <span class="border_slice"> | </span> Rejected
+                  ({{getCountRejected(item.list)}})
+                </span>
+              </div>
+            </div>
+          </a>
+        </div> -->
+
+            <!-- <div class="col-md-4">
+          <a href="javascript:;">
+            <div class="grid simple border-2px" style="border-color: #ffebb4;">
+              <div class="grid-body">
+                <p class="m-b-0" style="height: 42px;">Approved - {{NameofMonth}} &nbsp;{{NameofYear}}</p>
+                <div class="nowrap">
+                  <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #63E59F"></i>
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #63E59F; opacity: 0.3"></i>
+                    </span></div>
+                  <span class="size-34 semi-bold">
+                    {{count_approved}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-4">
+          <a href="javascript:;">
+            <div class="grid simple border-2px" style="border-color: #D8ECFF;">
+              <div class="grid-body">
+                <p class="m-b-0" style="height: 42px;">Rejected - {{NameofMonth}} &nbsp;{{NameofYear}}</p>
+                <div class="nowrap">
+                  <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #f44336"></i>
+                      <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #f44336; opacity: 0.3"></i>
+                    </span></div>
+                  <span class="size-34 semi-bold">
+                    {{count_rejected}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div> -->
+            <!-- <div class="col-md-6 d-flex">
+          <div class="card flex" data-sr-id="11"
+            style="visibility: visible; transform: none; opacity: 1; transition: none 0s ease 0s;">
+            <div class="card-body">
+              <div class="row row-sm">
+                <div class="col-sm-12">
+                  <div class="mb-2"><small class="text-muted">This month</small></div>
+                  <div class="row row-sm">
+                    <div class="col-6">
+                      <div class="text-highlight text-md">{{count_totalDays}}</div><small>No of request</small>
+                    </div>
+                    <div class="col-6">
+                      <div class="text-danger text-md">{{count_totalDays}}</div><small>Requests to be approved</small>
+                    </div>                  
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+
+
+
+            <!-- <div class="row">
+        <div class="col-lg-12">
+
+          <owl-carousel-o [options]="customOptions">
+            <ng-container *ngFor="let item of AttendanceCycleList">
+              <ng-template carouselSlide [id]="item.Id">
+                <div class="card text-center card-w"
+                  [ngStyle]="item.IsCurrentPeriod?{'background-color': '#ddd35952'} :  item.IsSettled ? {'background-color': 'rgb(15 223 23 / 32%)'} : ''"
+                  style="border-radius: 0px;"
+                  [ngClass]="{ 'stripes_attd' : item.IsUpcoming, 'down-arrow' : item.IsCurrentPeriod}">
+                  <div class="card-header card-head">
+                    {{item.AttendanceMonth}}
+                  </div>
+                  <div class="card-body card-bdy">
+                    <h6 class="card-title card-bdy-h6">{{item.AttendanceCycle}}</h6>
+                    <p class="card-text card-bdy-p">{{item.Status}} </p>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+
+          </owl-carousel-o>
+
+          <br>
+
+        </div>
+      </div> -->
+
+            <!-- <div class="row" style="margin-bottom: 20px;">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+          <div class="text-left">
+
+            <div class="row" style="background: #f9fafb;padding: 10px;font-size: 12px;">
+              <div class="col-lg-6">
+                <div class="text-center">
+                  <p class="text-center" style="margin-bottom: 0px;">
+                    Shift Description </p>
+                  {{LstworkShiftMapping.Name}}
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="text-center">
+                  <p class="text-center" style="margin-bottom: 0px;"> Working Hours </p>
+                  {{LstworkShiftMapping.StartTime}} - {{LstworkShiftMapping.EndTime}}
+                </div>
+
+              </div>
+            </div> -->
+
+
+
+            <!-- <ul class="list-inline">
+
+              <li class="list-inline-item">
+                <div class="radio-group a" style="margin-top: -10px;">
+                  <div class="col-auto mr-sm-2 mx-1 card-block py-0 text-center radio p-0 " style="top: 8px;"
+                    [ngClass]="IsMusterroll ? 'selected' : ''" title="List view" (click)="onClickMode('MusterRoll')">
+                    <div class="flex-row">
+                      <div class="col p-0">
+                        <div class=""> <img class="irc_mut img-fluid"
+                            src="https://www.flaticon.com/svg/vstatic/svg/507/507205.svg?token=exp=1613376803~hmac=e6a1bc9c523d8d452da6e588aa969153"
+                            width="15">
+                        </div>
+                        <p style="font-size:10px; margin-bottom:0px">List</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-auto ml-sm-2 mx-1 card-block py-0 text-center radio p-0" style="top: 8px;"
+                    [ngClass]="IsMusterroll ? '' : 'selected'" title="Tabular view"
+                    (click)="onClickMode('NonMusterRoll')">
+                    <div class="flex-row">
+                      <div class="col p-0">
+                        <div class=""> <img class="irc_mut img-fluid"
+                            src="https://www.flaticon.com/svg/vstatic/svg/832/832686.svg?token=exp=1613376846~hmac=24a33c034a358d54e8e0aa2ccd88ec02"
+                            width="15"> </div>
+                        <p style="font-size:9px; margin-bottom:0px">Tabular</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul> -->
+            <!-- </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right"> -->
+            <!-- [ngClass]="{'col-lg-8' :  LSO == '--:--' , 'col-lg-12' : LSO != '--:--'}" -->
+            <!-- <div class="row" *ngIf="_attendanceConfiguration.IsDailyPunchRequired && !_attendanceConfiguration.IsAllowMultiplePunches"> -->
+            <!-- <div class="row"
+            *ngIf="_attendanceConfiguration.IsDailyPunchRequired && !_attendanceConfiguration.IsAllowMultiplePunches">
+            <div class="col-lg-8" [ngClass]="{'col-lg-8' :  LSO == '--:--' , 'col-lg-12' : LSO != '--:--'}">
+              <div class="row" style="background: #f9fafb;padding: 10px;font-size: 12px;">
+                <div class="col-lg-6">
+                  <div class="text-center">
+                    <p class="text-center" style="margin-bottom: 0px;">
+                      {{currentDate| date :'dd-MM-yyyy'}}</p>
+                    First sign in {{FSI}}
+                  </div>
+
+
+                </div>
+                <div class="col-lg-6" *ngIf="!_attendanceConfiguration.IsAutoPunchOutEnabled">
+                  <div class="text-center">
+                    <p class="text-center" style="margin-bottom: 0px;"> {{currentDate| date :'dd-MM-yyyy'}}</p>
+                    Last sign out {{LSO}}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4" *ngIf="LSO == '--:--'">
+              <button (click)="toggleTimer()"
+                class="BaseButton-bgdhxz-0 iTvYZO Button-sc-1bi0g0l-0 ClockInOut__StyledButton-sc-2ail3n-1 fdnWHc kind-primary-default size-large"
+                loading="false" type="button" kind="primary" style="width: 100%;margin-top: 10px;">
+                <div color="primary" class="ant-spin-nested-loading">
+                  <div class="ant-spin-container"><i type="mdi mdi-eye" font-size="20px !important"
+                      class="Icon-s3zgp6-0 jZVCwM uil-stopwatch"></i> <span *ngIf="!punchInSpinner"> {{PunchInOutText}}
+                    </span>
+
+                    <span *ngIf="punchInSpinner"
+                      class="spinner-border spinner-border-sm m-r-10 primary-color text-center" style="color: white;"
+                      role="status" aria-hidden="true"></span>
+
+
+
+                    &nbsp; <div id="datetime"></div>
+                  </div>
+                </div>
+              </button>
+            </div>
+
+          </div> -->
+            <!-- <div class="text-right">
+            <ul class="list-inline">
+
+              <li class="list-inline-item">
+                <button type="button" class="btn btn-primary" (click)="applyleave()">
+                  <i class="mdi mdi-spellcheck  m-r-xs"></i> Apply Leave
+                </button>
+              </li>
+              <li class="list-inline-item"><button type="button" class="btn btn-default">
+                  <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                </button>
+              </li>
+
+            </ul>
+          </div> -->
+            <!-- </div>
+      </div> -->
+            <!-- <br /> -->
+
+
+
+            <ng-template #customCellTemplate let-day="day" let-locale="locale">
+                <div class="cal-cell-top">
+                    <span *ngFor="let event of day.events">
+                    <!--  ! : allen changes  -->
+                    <span  *ngIf="_attendanceConfiguration != null && _attendanceConfiguration.IsEmployeeAllowToRegularizeAttendance 
+                      && _attendanceConfiguration.RegularizationType == 2">
+                    <input type="checkbox"  style="text-align: center; 
+                    margin-left: 7px;margin-right: 5px; cursor: pointer;" [ngModel]="event.meta.isChecked" (change)="selectDay($event,event,event.meta)" (click)="$event.stopPropagation()"  />
+                  </span>
+                   <!--  ! : 16.2 for panasonic  -->
+                    <span  *ngIf="(event.color.primary === '#ad2121') && _attendanceConfiguration != null 
+                      && _attendanceConfiguration.IsEmployeeAllowToRegularizeAttendance && _attendanceConfiguration.RegularizationType == 1 &&
+                       (event.meta.WFHStatus == 0 || event.meta.WFHStatus == 200) && 
+                       (event.meta.ODStatus == 0 || event.meta.ODStatus == 200)">
+            <input type="checkbox"  style="text-align: center; 
+            margin-left: 7px;margin-right: 5px; cursor: pointer;" [ngModel]="event.meta.isChecked"   (change)="selectDay($event,event,event.meta)" (click)="$event.stopPropagation()"  />
+          </span>
+
+                    <span class="badge badge-self" style="display: inline;text-align: center;  background-color: #0db9c1;
+          margin-left: 7px;" *ngIf="_permissionConfigClientBased  != null && !_permissionConfigClientBased.IsIcon && event.meta && event.meta.breakupObject && event.meta.breakupObject.Permissions && event.meta.breakupObject.Permissions.length>0" (click)="calenderPermissionList($event,event.meta.breakupObject.Permissions)">{{_permissionConfigClientBased.Text}}
+          </span>
+                    <span class="badge badge-self" style="display: inline;text-align: center;  background-color: #75d6db; margin-left: 7px;" *ngIf="_permissionConfigClientBased && _permissionConfigClientBased.IsIcon && event.meta && event.meta.breakupObject && event.meta.breakupObject.Permissions && event.meta.breakupObject.Permissions.length>0"
+                        (click)="calenderPermissionList($event,event.meta.breakupObject.Permissions)"><i
+              class="{{_permissionConfigClientBased.IconCSS}}"></i>
+          </span>
+                    <span *ngIf="event.meta.ODStatus == 100 || event.meta.ODStatus == 300" [ngClass]="event.meta.ODStatus == 100 ? 'badge badge-self yellow' :'badge badge-self green'" style="display: inline;text-align: center;">OD
+          </span>
+                    <span *ngIf="event.meta.WFHStatus == 100 || event.meta.WFHStatus == 300" [ngClass]="event.meta.WFHStatus == 100 ? 'badge badge-self yellow' :'badge badge-self green'" style="display: inline;text-align: center;">WFH
+          </span>
+                    <!-- (click)="event.stopPropagation()"  -->
+                    <!-- (click)="calenderPermissionList(event.meta.breakupObject.Permissions) -->
+                    <span class="badge badge-self" style="display: inline;text-align: center;
+            margin-left: 7px;" *ngIf="event.meta.isHoliday"> H
+          </span>
+                    <span class="badge badge-self" style="display: inline; text-align: center;
+          margin-left: 7px;" *ngIf="event.meta.isNonPayableday"> NP
+          </span>
+                    </span>
+                    <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+                    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+                </div>
+                <small style="margin: 5px;">
+        <span *ngFor="let event of day.events">
+          <!-- HALF DAY PRESENT  -->
+          <span class="badge badge-success" style="display: inline;"
+            *ngIf="event.meta.breakupObject !=null && event.meta.isFirstHalf && !event.meta.isSecondHalf && (event.color.primary === '#3BBD72' || event.color.primary === '#ad2121' || event.color.primary === '#e3bc08')">
+            P </span>
+
+          <span class="badge badge-warning" style="display: inline; text-align: center;"
+            *ngIf="(event.color.primary === '#e3bc08' || event.color.primary === '#3BBD72') && event.meta.isLeaveRequested">
+            {{event.meta.LeaveattendanceType}}
+          </span>
+
+          <span class="badge badge-danger" style="display: inline;"
+            *ngIf="event.color.primary === '#ad2121' && !event.meta.isLeaveRequested && (event.meta.attendanceType != 'WO' && event.meta.attendanceType !='WeekOff') && !event.meta.isHoliday && (event.meta.WFHStatus == 0 || event.meta.WFHStatus == 200) && (event.meta.ODStatus == 0 || event.meta.ODStatus == 200)">
+            {{event.meta.attendanceType}}
+          </span>
+
+          <span class="badge badge-success" style="display: inline;font-size: 10px;background-color: #c9c3b2 !important;line-height: 5px;
+          width: 10%;"
+          *ngIf="event.color.primary === '#ad2121' && !event.meta.isLeaveRequested && (event.meta.attendanceType == 'WO' || event.meta.attendanceType =='WeekOff') && !event.meta.isHoliday && (event.meta.WFHStatus == 0 || event.meta.WFHStatus == 200) && (event.meta.ODStatus == 0 || event.meta.ODStatus == 200)">
+          {{event.meta.attendanceType}}
+        </span>
+
+        
+
+          <span class="badge badge-danger" style="display: inline;"
+            *ngIf="event.color.primary === '#ad2121' && event.meta.isLeaveRequested && (event.meta.LeaveattendanceType != 'WO' && event.meta.LeaveattendanceType !='WeekOff') && (event.meta.WFHStatus == 0 || event.meta.WFHStatus == 200) && (event.meta.ODStatus == 0 || event.meta.ODStatus == 200)">
+            {{event.meta.LeaveattendanceType}}
+          </span>
+
+          <span class="badge badge-success" style="display: inline;font-size: 10px;background-color: #c9c3b2 !important;line-height: 5px;
+          width: 10%;"
+          *ngIf="event.color.primary === '#ad2121' && event.meta.isLeaveRequested && event.meta.leaveObject.Status != 600 &&(event.meta.LeaveattendanceType == 'WO' || event.meta.LeaveattendanceType =='WeekOff') && (event.meta.WFHStatus == 0 || event.meta.WFHStatus == 200) && (event.meta.ODStatus == 0 || event.meta.ODStatus == 200)">
+          {{event.meta.LeaveattendanceType}}
+          </span>
+          <span [ngClass]="event.meta.leaveObject.Status == 600 ? 'badge badge-self yellow' :''" style="display: inline;font-size: 10px;line-height: 5px;
+          width: 10%;"
+          *ngIf="event.color.primary === '#ad2121' && event.meta.isLeaveRequested && event.meta.leaveObject.Status == 600  && (event.meta.LeaveattendanceType == 'WO' || event.meta.LeaveattendanceType =='WeekOff') && (event.meta.WFHStatus == 0 || event.meta.WFHStatus == 200) && (event.meta.ODStatus == 0 || event.meta.ODStatus == 200)">
+          {{event.meta.LeaveattendanceType}}
+        </span>
+
+          <span class="badge badge-success" style="display: inline;"
+            *ngIf="event.meta && event.meta.breakupObject && event.meta.breakupObject.AttendanceBreakUpDetailsType !=0 && event.color.primary === '#3BBD72'  && !event.meta.isLeaveRequested">
+            {{event.meta.attendanceType}} </span>
+
+          <!-- HALF DAY PRESENT  -->
+
+          <span class="badge badge-success" style="display: inline;"
+            *ngIf="event.meta.breakupObject !=null &&  !event.meta.isFirstHalf && event.meta.isSecondHalf && (event.color.primary === '#3BBD72' || event.color.primary === '#ad2121' || event.color.primary === '#e3bc08')">
+            P </span>
+
+          <span style="float: right;" *ngIf="showTotalHours">
+            {{getnoOfHours(event)}} {{getnoOfHours1(event)}}
+          </span>
+
+          <span style="float: right;" *ngIf="!showTotalHours">
+            {{getDayHoursConsidered(event)}}
+          </span>
+
+
+
+
+          <span *ngIf="checkIsCurrentDate(event) && punchInSpinner"
+            class="spinner-border spinner-border-sm m-r-10 primary-color text-center" style="color: #2ad25f;"
+            role="status" aria-hidden="true"></span>
+        </span>
+
+        <span *ngIf=" day.events == null">
+        </span>
+
+
+
+      </small>
+            </ng-template>
+
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-lg-6 pull-left">
+                    <div class="pull-left">
+                        <a href="javascript:;" (click)="decrement()" tooltip="Previous Month" tooltip-placement="bottom" class="btn action-edit pull-left" style="margin-right: 5px;margin-left: 5px;">
+                            <i class="fa fa-angle-left" aria-hidden="true" style="font-size: 20px;
+                    color: #000;
+                    margin-top: 3px; margin-left: -2px;"></i>
+                        </a>
+                        <a class="btn action-edit pull-left" (click)="increment()" tooltip="Next Month" tooltip-placement="bottom">
+                            <i class="fa fa-angle-right" aria-hidden="true" style="font-size: 20px;
+                  color: #000;
+                  margin-top: 3px;margin-left: 2px;"></i>
+                        </a>
+                    </div>
+                    <h6 style="margin-top: 3px;">&nbsp;&nbsp; {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h6>
+                </div>
+                <div class="col-lg-6 pull-right">
+
+                </div>
+            </div>
+
+            <div class="row" *ngIf="!spinner">
+                <div class="col-lg-12">
+                    <div [ngSwitch]="view">
+                        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event)" [refresh]="refresh" (dayClicked)="dayClicked($event.day)" (beforeViewRender)="beforeMonthViewRender($event)" [cellTemplate]="customCellTemplate"
+                            [excludeDays]="excludeDays">
+                        </mwl-calendar-month-view>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-4 p-t-20" style="padding-top: 20px;">
+
+          <div class="vertical-center" *ngIf="LstEmployeeLeaveRequest.length == 0">
+            <i class="mdi mdi-emoticon-sad-outline"></i>
+            <p> No record will be displayed</p>
+          </div>
+
+
+          <div class="accordion" id="accordionExample-faq">
+            <div class="card shadow-none border mb-1" *ngFor="let item of LstEmployeeLeaveRequest; let i = index">
+              <div class="card-header" id="headingTwo">
+                <h5 class="my-0"><button class="btn btn-link ml-4 collapsed" type="button" data-toggle="collapse"
+                    [attr.data-target]="'#test' + i" aria-expanded="false" aria-controls="onBoardingCollapse">
+                    <p class="card-header-title" style="margin-top: 12px !important;
+                    margin-bottom: 1rem;float: left;color: black;"> <i class="material-icons p-r-10"
+                        style="padding-right: 10px;">
+                        assignment_ind </i> {{item.EntitlmentName}} </p>
+                  </button></h5>
+              </div>
+              <div id="test{{i}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample-faq">
+                <div class="card-body">
+                  <div class="row" *ngFor="let ii of item.list" style="padding: 5px;
+                  border: 1px solid #d3d3d3;
+                  border-radius: 10px;margin: 2px;">
+                    <div class="col-lg-2">
+                      <i class="mdi mdi-information-outline"></i>
+                    </div>
+                    <div class="col-lg-10">
+                      {{ii.LeaveDate | date :'dd-MM-yyyy'}}  <span style="font-size: 12px;
+                      color: black;
+                      float: right;"> {{ii.StatusName}} ({{ii.ApprovedUnits}}) </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+        </div> -->
+
+
+            </div>
+
+            <div class="row" style="padding-top: 10px;padding-bottom: 10px;">
+
+                <div class="col-lg-6 pull-left">
+                  <!-- ! Commenting below code : Hiding this since shifts can be at day level. And view shifts btn can be used to view shifts for a period (at day level) -->
+                    <!-- <div class="row">
+                        <div class="col-lg-6">
+                            <div>
+                                <p style="margin-bottom: 0px;
+                font-size: 12px;
+                color: #747474;">
+                                    SHIFT DESCRIPTION </p>
+                                <span style="color: black;font-weight: 500;"> {{LstworkShiftMapping.Name}} </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div>
+                                <p style="margin-bottom: 0px;
+                font-size: 12px;
+                color: #747474;">WORKING HOURS </p>
+                                <span style="color: black;font-weight: 500;"> {{LstworkShiftMapping.StartTime}} -
+                  {{LstworkShiftMapping.EndTime}} </span>
+                            </div>
+
+                        </div>
+                    </div> -->
+
+                </div>
+                <div class="col-lg-6 pull-right" style="margin-top: 15px;">
+                    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+                        <span class="text-self" style="font-size: 12px; color: #75d6db !important;">●</span> Permission
+                    </p>
+                    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+                        <span class="text-self" style="font-size: 12px;">●</span> Holiday
+                    </p>
+                    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+                        <span class="text-info" style="font-size: 12px;">●</span> Applied Leave
+                    </p>
+                    <p class="small mb-0" style="font-size: 12px;float:right;margin-right: 10px;">
+                        <span class="text-danger" style="font-size: 12px;">●</span> Absent
+                    </p>
+                    <p class="small mb-0" style="font-size: 12px;float:right">
+                        <span class="text-success" style="font-size: 12px;">●</span> Present &nbsp;
+                    </p>
+                    <p class="small mb-0" style="font-size: 12px;float:right">
+                        <span class="text-success" style="font-size: 12px;color: #c9c3b2  !important;">●</span> Week Off &nbsp;
+                    </p>
+                </div>
+
+                <!-- 
+      <div class="row" *ngIf="IsMusterroll" style=" padding-left: 20px; padding-right: 20px;
+">
+        <table cellspacing="0" id="gvMain" style="width:100%;border-collapse:collapse;">
+
+          <tr class="GridViewScrollHeader">
+
+            <th>Date</th>
+            <th>First Half </th>
+            <th>Second half</th>
+            <th> Hours Worked </th>
+            <th> Remarks </th>
+            <th> Status </th>
+            <th> Action </th>
+          </tr>
+
+
+          <tr class="GridViewScrollItem" *ngFor="let item of employeeObject.attendance">
+            <td>{{item.date}}
+            </td>
+            <td>
+              <span style="font-size: 12px;" *ngIf="item.firsthalf"> <span class="badge badge-success"
+                  style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                  P
+                </span></span>
+              <span style="font-size: 12px;" *ngIf=" !item.firsthalf"> <span class="badge"
+                  [ngClass]="{'badge-warning' : item.status == '1', 'badge-danger' :  item.status == '2'}"
+                  style="display: inline;padding: 0px 6px 0px;border-radius: 10px;"> {{item.leavetype}}
+                </span> </span>
+            </td>
+            <td> <span style="font-size: 12px;" *ngIf="item.secondhalf"> <span class="badge badge-success"
+                  style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                  P
+                </span></span>
+              <span style="font-size: 12px;" *ngIf=" !item.secondhalf"> <span class="badge"
+                  [ngClass]="{'badge-warning' : item.status == '1', 'badge-danger' :  item.status == '2'}"
+                  style="display: inline;padding: 0px 6px 0px;border-radius: 10px;"> {{item.leavetype}}
+                </span> </span>
+            </td>
+            <td> {{item.totalhrs}} hrs</td>
+            <td> <input type="text"> </td>
+            <td> <b *ngIf="item.status == '1'"> Pending </b> <b *ngIf="item.status == '2'"> Approved </b> <b
+                *ngIf="item.status == '0'"> --- </b> </td>
+            <td>
+              <button type="button" class="btn btn-default" placement="left" ngbPopover="more actions"
+                popoverTitle="Popover" style="padding: 0px;
+            font-size: 19px;
+            border: none;
+            padding-left: 4px;
+            margin: -10px;
+            text-align: center;
+            display: block;
+            margin: 0;
+            margin-top: -10px;
+            margin-bottom: -10px;">
+                <i class="mdi mdi-dots-vertical  m-r-xs"></i>
+              </button>
+            </td>
+
+
+          </tr>
+
+        </table>
+      </div> -->
+
+
+                <!-- <div class="row" >
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxs-12" *ngFor="let item of employeeObject.attendance; let i= index"
+          style="padding-bottom: 10px;">
+          <div class="card text-center card-w"
+            [ngStyle]="item.status == '1' ?{'background-color': '#ddd35952'} : item.status == '2' ? {'background-color': 'rgb(15 223 23 / 32%)'} : ''" [ngClass]="{'box_highlights' : i == 5}">
+            <div class="card-header card-head">
+              {{item.date}}
+            </div>
+            <div class="card-body card-bdy">
+              <div class="headerbar-right">
+                <div class="media" style="width: 50% !important;">
+                  <div class="media-body">
+                    <h6 style="font-size: 0.75rem;"> <span style="font-size: 12px;" *ngIf="item.firsthalf"> <span
+                          class="badge badge-success" style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          P
+                        </span></span>
+                      <span style="font-size: 12px;" *ngIf=" !item.firsthalf"> <span class="badge"
+                          [ngClass]="{'badge-warning' : item.status == '1', 'badge-danger' :  item.status == '2'}"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;"> {{item.leavetype}}
+                        </span> </span> |
+
+                      <span style="font-size: 12px;" *ngIf="item.secondhalf"> <span class="badge badge-success"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;">
+                          P
+                        </span></span>
+                      <span style="font-size: 12px;" *ngIf=" !item.secondhalf"> <span class="badge"
+                          [ngClass]="{'badge-warning' : item.status == '1', 'badge-danger' :  item.status == '2'}"
+                          style="display: inline;padding: 0px 6px 0px;border-radius: 10px;"> {{item.leavetype}}
+                        </span> </span>
+                    </h6>
+                  </div>
+                </div>
+                <div class="media" style="width: 50% !important;">
+                  <div class="media-body">
+                    <h6 style="font-size: 0.75rem;"> {{item.totalhrs}} hrs</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="popup_donext" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_donext" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="text-center ma-5" *ngIf="spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+                </div>
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Attendance Entry or Request Leave</b></small>
+                        <h6 class="modal-title subheader_h6" id="popup_release_AL"> --
+                        </h6>
+                    </div>
+                    <div class="modal-close" (click)="modal_dismiss()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="migrate-date-wrapper flex-wrap">
+                                <li class="import-from-csv import-block m-r-lg" style="flex: inherit !important;" [ngStyle]="{'width': isMobileResolution ?'100%' : '27.5333%'}" (click)="onClickLeaveRequest()"><img class="m-b-md" height="42" src="assets/Images/spreadsheet.svg">
+                                    <h4 class="m-b-sm"> Leave Request </h4>
+                                    <div class="secondary-text m-b-sm">If you have a desire to take a leave you can click here and request it
+                                    </div>
+                                </li>
+                                <!-- <li *ngIf="_attendanceConfiguration.IsDailyPunchRequired && _attendanceConfiguration.IsAllowToPunchOnHoliday&& dayClcikEvent_events " [ngClass]="(IsWeekHalf || isPastMonth ) ? 'import-from-csv import-block m-r-lg  disableDiv' : 'import-from-csv import-block m-r-lg '" -->
+                                <li *ngIf=" dayClcikEvent_events " [ngClass]="(IsWeekHalf || (dayClcikEvent_events[0].meta.isHoliday && !_attendanceConfiguration.IsAllowToPunchOnHoliday)) ? 'import-from-csv import-block m-r-lg  disableDiv' : 'import-from-csv import-block m-r-lg '" style="flex: inherit !important; "
+                                    [ngStyle]="{'width': isMobileResolution ?'100%' : '27.5333%'}" (click)="onClickAttendanceEntry()">
+                                    <img class="m-b-md" height="42" src="assets/Images/activities.svg">
+                                    <h4 class="m-b-sm"> Attendance entry </h4>
+                                    <div class="secondary-text m-b-sm">use this option to create your daily punch In/Out logs</div>
+                                </li>
+                                <li *ngIf="_permissionConfig" [ngClass]="(_permissionConfig.IsAllowedToRequestPermission && this.isPastDateAllowed && IsWeekHalf == false)? 'import-from-csv import-block m-r-lg ' : 'import-from-csv import-block m-r-lg disableDiv'" style="flex: inherit !important;"
+                                    [ngStyle]="{'width': isMobileResolution ?'100%' : '27.5333%'}" (click)="onClickPermission()">
+                                    <!-- <li [ngClass]="1===0? 'import-from-csv import-block m-r-lg disableDiv' : 'import-from-csv import-block m-r-lg'"  style="width:44% !important;flex: inherit !important; "
+                  (click)="onClickPermission()"> -->
+                                    <img class="m-b-md" height="42" src="assets/Images/spreadsheet.svg">
+                                    <h4 class="m-b-sm"> Permission </h4>
+                                    <div class="secondary-text m-b-sm">use this option to take permission </div>
+                                </li>
+                                <!-- [ngClass]="{'disableDiv':disbleKey}" -->
+                                <li [ngClass]="((IsWeekHalf || IsHolidayForWOH) && dayClcikEvent_events[0].meta.attendanceType != 'LOP') ? 'import-from-csv import-block m-r-lg ': 'import-from-csv import-block m-r-lg disableDiv'" style="flex: inherit !important; " [ngStyle]="{'width': isMobileResolution ?'100%' : '27.5333%'}"
+                                    (click)="onClickWoWFn()">
+                                    <img class="m-b-md" height="42" src="assets/Images/spreadsheet.svg">
+                                    <h4 class="m-b-sm"> work on week off or holiday </h4>
+                                    <div class="secondary-text m-b-sm">use this option to Put Request to Work on Week-off Or holiday Request </div>
+                                </li>
+
+
+                                <li *ngIf="dayClcikEvent_events" [ngClass]="(isNextMonth || dayClcikEvent_events[0].meta.isHoliday || dayClcikEvent_events[0].meta.ODStatus == 100 || dayClcikEvent_events[0].meta.ODStatus == 300 || (dayClcikEvent_events[0].meta.leaveObject && (dayClcikEvent_events[0].meta.leaveObject.Status == 400 || dayClcikEvent_events[0].meta.leaveObject.Status == 100))) ? 'import-from-crm import-block import-from-crm-for-testing  disableDiv': 'import-from-crm import-block import-from-crm-for-testing '"
+                                    style="flex: inherit !important;" [ngStyle]="{'width': isMobileResolution ?'100%' : '27.5333%'}" (click)="onClickOdFn()">
+                                    <img class="m-b-md" height="42" src="assets/Images/spreadsheet.svg">
+                                    <h4 class="m-b-sm"> On Duty </h4>
+                                    <div class="secondary-text m-b-sm">use this option to create On Duty Request &nbsp; &nbsp;</div>
+                                </li>
+                                <li *ngIf="dayClcikEvent_events" [ngClass]="(isNextMonth || dayClcikEvent_events[0].meta.isHoliday || dayClcikEvent_events[0].meta.WFHStatus == 100 || dayClcikEvent_events[0].meta.WFHStatus == 300 || (dayClcikEvent_events[0].meta.leaveObject && (dayClcikEvent_events[0].meta.leaveObject.Status == 400 || dayClcikEvent_events[0].meta.leaveObject.Status == 100))) ? 'import-from-crm import-block import-from-crm-for-testing  disableDiv': 'import-from-crm import-block import-from-crm-for-testing '"
+                                    style="flex: inherit !important;" [ngStyle]="{'width': isMobileResolution ?'100%' : '27.5333%'}" (click)="onClickWfhFn()">
+                                    <img class="m-b-md" height="42" src="assets/Images/spreadsheet.svg">
+                                    <h4 class="m-b-sm"> Work From Home </h4>
+                                    <div class="secondary-text m-b-sm">use this option to create Work From Home Request </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- <div class="row col-md-6">
+                <ul class="migrate-date-wrapper">
+                  <li class="import-from-csv import-block m-r-lg " (click)="onClickPermission()">
+                    <img class="m-b-md" height="42" src="assets/Images/spreadsheet.svg">
+                    <h4 class="m-b-sm"> permission </h4>
+                    <div class="secondary-text m-b-sm">use this option to take permission </div>
+                  </li>
+                </ul>
+            </div> -->
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- *ngIf="!_attendanceConfiguration.IsPresentByDefault && _attendanceConfiguration.IsDailyPunchRequired" -->
+
+
+
+<ng-template #popContent>
+    <div class="row" style="padding-bottom: 5px;">
+        <div class="col-lg-6">
+            <button> test </button>
+        </div>
+        <div class="col-lg-6 text-right">
+            <button> test 2 </button>
+        </div>
+    </div>
+
+
+</ng-template>
+
+<ng-template #popTitle> Preview <span style="color: transparent;">dummay
+    text for content</span> Document Details
+</ng-template>
+
+<div id="popup_permission" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_permission" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="text-center ma-5" *ngIf="spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+                </div>
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Permission Request</b></small>
+                        <h3 class="modal-title subheader_h6" id="popup_release_AL"> New
+                        </h3>
+                    </div>
+                    <div class="modal-close" style="top: 1 !important; right: 10px !important;" (click)="closePermissionPopup()">
+                        <span class="mdi mdi-close pull-left " style="margin-top: 5px;"></span>
+                    </div>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="row mx-0">
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                    <label class="form-label ">Date <span class="required">*</span></label>
+                                    <input class="form-control calendar " name="date" [(ngModel)]="_date" type="date" id="date" autocomplete="off" bsDatepicker placement="bottom" readonly type="text" placeholder="01-01-2021" (bsValueChange)="onChangeExpenseDate($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                        [maxDate]="_MaxDate" [minDate]="_MinDate">
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                    <label *ngIf="this._submittedHours" class="form-label "> Total Hours</label>
+                                    <h3 *ngIf="this._submittedHours">{{this._submittedHours}}</h3>
+                                </div>
+                                <div class=" md-form form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Start Time <span class="required">*</span></label>
+                                    <input class="form-control timepicker" name="startTime" [(ngModel)]="_startTime" type="time" id="startTime" (blur)="onSearchStartChange($event.target.value)" required>
+                                    <!-- min="_minTime" -->
+                                    <!-- (blur)="onSearchChange($event.target.value)" required -->
+                                </div>
+
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">End Time <span class="required">*</span></label>
+                                    <input class="form-control timepicker " name="endTime" placeholder="00:00" [(ngModel)]="_endTime" type="time" id="endTime" (blur)="onSearchChange($event.target.value)" min="10:10" max="23:59" required>
+                                </div>
+
+
+                            </div>
+                            <div class="row mx-0">
+                                <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                                    <label class="form-label ">Reason<span class="required">*</span></label>
+                                    <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="_remarks" name="Remarks"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+                            <div class="row mx-0">
+                                <ng-container *ngIf=" recentRequests && recentRequests.length > 0">
+                                    <label class="form-label col-md-12"> Recent Requests</label>
+                                    <div class="col-md-12 col-sm-12 col-xs-12 mb-2" *ngFor="let reqObj of recentRequests  let i = index">
+
+                                        <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7 !important">
+                                            <div class="card-header" style="background-color: white;border: none;padding: 5px;">
+
+                                                <span class="badge badge-soft-danger" style="display: inline;"> {{reqObj.Date}}
+                        </span>
+
+                                                <span *ngIf="reqObj.Status==300" class="badge badge-soft-danger" style=" color:green">
+                          Approved
+                        </span>
+                                                <span *ngIf="reqObj.Status==200" class="badge badge-soft-danger" style=" color:red">
+                          Reject
+                        </span>
+                                                <span *ngIf="reqObj.Status==100" class="badge badge-soft-danger" style=" color:orange">
+                          Applied
+                        </span>
+
+                                            </div>
+                                            <div class="card-body" style="background-color: #f3f8ff;padding:10px; padding-right: 6px !important;">
+                                                <div class="row align-items-center">
+                                                    <div class="col">
+                                                        <span style="font-size: 11px;">Time: {{reqObj.totalTime}}</span>
+                                                        <br />
+                                                        <span class="pull-left" style="font-size: 11px; ">Start: {{reqObj.StartTime}}</span>
+
+                                                        <span class="pull-right" style="font-size: 11px;">End: {{reqObj.EndTime}} </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <span style="font-size: 13px; color: #1890ff; font-weight: 600;">check</span>
+                        <br />
+                        <span style="font-size: 11px;" title="check first"> check second
+                        </span>
+                      </div>
+                      <div class="col-lg-6" style="text-align: right;">
+                        <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Edit">
+    
+                          <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                        </a>
+                        <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Cancel">
+    
+                          <i class="fa fa-ban" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                        </a>
+    
+                      </div>
+                    </div> 
+                  </div>  -->
+                                        </div>
+
+                                    </div>
+                                </ng-container>
+
+                                <div *ngIf="recentRequests && recentRequests.length == 0">
+                                    <img style="min-height:228px;" src="assets/Images/leaverequest.svg">
+                                </div>
+                                <div style="margin :0 auto;width: 90%;">
+                                    <div></div>
+                                    <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                                        <div class="tw-w-full tw-px-3">
+                                            <button type="submit" [disabled]="!DisabledPerFn() ? true : null " (click)="onClickSubmitPermission()" class="btn btn-primary" style="width:100%;border-radius: 25px;"> Submit Request
+                      </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-footer p-1 d-none">
+                    <div class=" form-group form-group-vertical col-xs-12 col-sm-12 mb-0 ">
+                        <button type="button" class="btn btn-primary mr-2 pull-right" (click)='onClickSubmitPermission()' style="display: inline;margin: 0 auto;"> Submit
+            </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="calenderPermissionList_popup" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_permission" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Permission Request List</b></small>
+                        <!-- <h3 class="modal-title subheader_h6" id="popup_release_AL"> New
+            </h3> -->
+                    </div>
+                    <div class="modal-close" style="top: 1 !important; right: 10px !important;" (click)="closePermissionRequestListPopup()">
+                        <span class="mdi mdi-close pull-left " style="margin-top: -5px !important;"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <button type="button" class="btn btn-primary mr-2 mb-2 float-right" style="display: inline;margin: 0 auto;" (click)="onClickPermission()"> New
+              Permission
+            </button>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+
+                                <ng-container *ngIf="_calenderPermisssionList!=null && _calenderPermisssionList.length > 0">
+                                    <!-- <label class="form-label col-md-12"> Recent Requests</label> -->
+
+                                    <div class="col-md-6 col-sm-12 col-xs-6 mb-2" *ngFor="let reqObj of _calenderPermisssionList  let i = index">
+
+                                        <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7 !important">
+                                            <div class="card-header" style="background-color: white;border: none;padding: 5px;">
+
+                                                <span class="badge badge-soft-danger" style="display: inline;"> {{reqObj.Date}}
+                        </span>
+                                                <span *ngIf="reqObj.Status==300" class="badge badge-soft-danger " style=" color:green">
+                          Approved
+                        </span>
+                                                <span *ngIf="reqObj.Status==200" class="badge badge-soft-danger " style=" color:red">
+                          Reject
+                        </span>
+                                                <span *ngIf="reqObj.Status==100" class="badge badge-soft-danger " style=" color:orange">
+                          Applied
+                        </span>
+
+                                            </div>
+                                            <div class="card-body" style="background-color: #f3f8ff;   padding:10px; padding-right: 6px !important;">
+                                                <div class="row align-items-center">
+                                                    <div class="col">
+
+                                                        <span style="font-size: 11px;">Time: {{reqObj.totalTime}}</span>
+                                                        <br />
+                                                        <span class="pull-left " style="font-size: 11px;">Start: {{reqObj.StartTime}}</span>
+
+                                                        <span class="pull-right" style="font-size: 11px;">End: {{reqObj.EndTime}} </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </ng-container>
+
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <div class="modal-footer p-1 d-none">
+                    <div class=" form-group form-group-vertical col-xs-12 col-sm-12 mb-0 ">
+                        <button type="button" class="btn btn-primary mr-2 pull-right" (click)='onClickSubmitPermission()' style="display: inline;margin: 0 auto;"> Submit
+            </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popup_WOW" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_WOW" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Week-Off / Holidy </b></small>
+                        <h3 class="modal-title subheader_h6" id="popup_release_AL"> New
+                        </h3>
+                    </div>
+                    <div class="modal-close" style="top: 1 !important; right: 10px !important;" (click)="closeWOWPopup()">
+                        <span class="mdi mdi-close pull-left " style="margin-top: 5px;"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                    <label class="form-label ">Date <span class="required">*</span></label>
+                                    <input class="form-control calendar " name="date" [(ngModel)]="_WOWdate" type="date" id="date" autocomplete="off" bsDatepicker placement="bottom" readonly type="text" placeholder="01-01-2021" (bsValueChange)="onChangeExpenseDate($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                        [maxDate]="_MaxDate" [minDate]="_MinDate">
+                                </div>
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-12 ">
+                                    <label class="form-label">Claim Type <span class="required">*</span></label>
+                                    <div class="row">
+                                        <div *ngFor="let item of WowClimeTypeArr" class="form-group form-group-vertical col-12 col-xs-12 col-sm-3" style="margin-top: 5px;">
+                                            <label class="form-label" for="{{item.id}}"> {{item.ClimeType_Name}}</label>
+                                            <div class="">
+                                                <label class="form-check">
+                          <input type="radio" class="form-check-input" id="{{item.id}}" style="transform: scale(1.2);"
+                            (change)="onChange_WOWChkFn($event,item)" [checked]="item.Clime_ModelVal == true"
+                            name="{{item.id}}">
+                        </label>
+                                                <!-- <label class="el-checkbox el-checkbox-red">
+                          <input type="checkbox" name="{{item.id}}" [checked]="item.Clime_ModelVal == true"
+                            (change)="onChange_WOWChkFn($event,item)" />
+                          <span class="el-checkbox-style"></span>
+                        </label> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                                    <label class="form-label ">Reason<span class="required">*</span></label>
+                                    <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="_WOWremarks" name="Remarks"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+
+                            <img *ngIf="LastHistoryReqArr != null && LastHistoryReqArr.length == 0" src="assets/Images/leaverequest.svg">
+                            <div class="row" *ngIf="LastHistoryReqArr != null &&  LastHistoryReqArr.length != 0">
+                                <ng-container>
+                                    <label class="form-label col-md-12"> Recent request(s) </label>
+                                    <div class="col-md-12 col-sm-12 col-xs-12 mb-2" *ngFor="let item of LastHistoryReqArr; let i = index">
+
+                                        <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7 !important">
+                                            <div class="card-body" style="padding:10px; padding-right: 6px !important;">
+                                                <div class="align-items-center">
+                                                    <div>
+                                                        <label>Date:</label>
+                                                        <span style="font-size: 11px;"> {{item.Date | date :'dd-MM-yyyy'}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <label>Claim Type:</label>
+                                                        <span style="font-size: 11px;"> {{item.RequestedClaimType == '200' ? 'Encash' :
+                              (item.RequestedClaimType == '300'
+                              ? 'Leave':(item.RequestedClaimType == '0' ?'None' : 'DecideLater') )}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <label>Reason: </label>
+                                                        <span style="font-size: 11px; ">{{item.EmployeeRemarks}} </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <!-- <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                  <h6 class="form-header ">Last 3 Request Histories</h6>
+                  <div *ngFor="let item of LastHistoryReqArr; let i = index" class="form-group row mx-0 my-1">
+                    <label class="form-label col-md-1 px-1">{{i+1}}.</label>
+                    <label class="form-label col-md-5 px-1">Claim Type :</label>
+                    <label class="form-label  col-md-6 px-1">{{item.Type == 200 ? 'Encash' : (item.Type == 300 ? 'Leave'
+                      :(item.Type == 0 ?'None' : 'DecideLater') )}}</label>
+                  </div>
+                </div> -->
+                            </div>
+
+                            <div style="position: absolute;bottom: -3px;width: 90%;">
+                                <div></div>
+                                <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                                    <div class="tw-w-full tw-px-3">
+                                        <button type="submit" (click)="onClickSubmitWOWFn()" class="btn btn-primary" [disabled]="!DisabledFn() ? true : null " style="width:100%;border-radius: 25px;"> Submit Request
+                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup_Od" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_Od" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>On Duty Request </b></small>
+                        <h3 class="modal-title subheader_h6" id="popup_release_AL"> New
+                        </h3>
+                    </div>
+                    <div class="modal-close" style="top: 1 !important; right: 10px !important;" (click)="closeOdPopup()">
+                        <span class="mdi mdi-close pull-left " style="margin-top: 5px;"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                    <label class="form-label ">From - To Date <span class="required">*</span></label>
+                                    <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="_dateRangeOd" (bsValueChange)="onChange_DateRangeOd($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                                    <i *ngIf="_dateRangeOd" (click)="_dateRangeOd = null" placeholder="Clear" style="position: absolute; right: 22px;transform: translate(-50%, -50%);top: 68%; cursor: pointer;color: #949494;" class="fa fa-times fa-1" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                                    <label class="form-label ">Reason<span class="required">*</span></label>
+                                    <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="_Odremarks" name="Remarks"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+                            <img *ngIf="OdLastHistoryReqArr.length == 0" src="assets/Images/leaverequest.svg">
+                            <div class="row" *ngIf="OdLastHistoryReqArr.length > 0">
+                                <ng-container>
+                                    <label class="form-label col-md-12"> Last 2 Request Histories</label>
+                                    <div class="col-md-12 col-sm-12 col-xs-12 mb-2" *ngFor="let item of OdLastHistoryReqArr; let i = index">
+
+                                        <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7 !important">
+                                            <div class="card-body" style="padding:10px; padding-right: 6px !important;">
+                                                <div class="align-items-center">
+                                                    <div>
+                                                        <label>From Date:</label>
+                                                        <span style="font-size: 11px;"> {{item.FromDate | date :'dd-MM-yyyy'}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <label>Till Date:</label>
+                                                        <span style="font-size: 11px;"> {{item.TillDate | date :'dd-MM-yyyy'}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <label>Reason: </label>
+                                                        <span style="font-size: 11px; ">{{item.EmployeeRemarks}} </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div style="position: absolute;bottom: -3px;width: 90%;">
+                                <div></div>
+                                <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                                    <div class="tw-w-full tw-px-3">
+                                        <button type="submit" (click)="onClickSubmitOdFn()" class="btn btn-primary" [disabled]="!DisabledOdFn() ? true : null " style="width:100%;border-radius: 25px;"> Submit
+                      Request
+                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup_Wfh" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_WOW" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Work From Home Request </b></small>
+                        <h3 class="modal-title subheader_h6" id="popup_release_AL"> New
+                        </h3>
+                    </div>
+                    <div class="modal-close" style="top: 1 !important; right: 10px !important;" (click)="closeWfhPopup()">
+                        <span class="mdi mdi-close pull-left " style="margin-top: 5px;"></span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                    <label class="form-label ">Date <span class="required">*</span></label>
+                                    <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="_dateRangeWfh" (bsValueChange)="onChange_DateRangeWfh($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                                    <i *ngIf="_dateRangeWfh" (click)="_dateRangeWfh = null" placeholder="Clear" style="position: absolute; right: 22px;transform: translate(-50%, -50%);top: 68%; cursor: pointer;color: #949494;" class="fa fa-times fa-1" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                                    <label class="form-label ">Reason<span class="required">*</span></label>
+                                    <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="Remarks" [(ngModel)]="_Wfhremarks" name="Remarks"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+                            <img *ngIf="WfhLastHistoryReqArr.length == 0" src="assets/Images/leaverequest.svg">
+                            <div class="row" *ngIf="WfhLastHistoryReqArr.length > 0">
+                                <ng-container>
+                                    <label class="form-label col-md-12"> Last 2 Request Histories</label>
+                                    <div class="col-md-12 col-sm-12 col-xs-12 mb-2" *ngFor="let item of WfhLastHistoryReqArr; let i = index">
+                                        <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7 !important">
+                                            <div class="card-body" style="padding:10px; padding-right: 6px !important;">
+                                                <div class="align-items-center">
+                                                    <div>
+                                                        <label>From Date:</label>
+                                                        <span style="font-size: 11px;"> {{item.FromDate | date :'dd-MM-yyyy'}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <label>Till Date:</label>
+                                                        <span style="font-size: 11px;"> {{item.TillDate | date :'dd-MM-yyyy'}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <label>Reason: </label>
+                                                        <span style="font-size: 11px; ">{{item.EmployeeRemarks}} </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div style="position: absolute;bottom: -3px;width: 90%;">
+                                <div></div>
+                                <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                                    <div class="tw-w-full tw-px-3">
+                                        <button type="submit" (click)="onClickSubmitWfhFn()" class="btn btn-primary" [disabled]="!DisabledWfhFn() ? true : null " style="width:100%;border-radius: 25px;"> Submit
+                      Request
+                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

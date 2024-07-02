@@ -1,0 +1,244 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="content m-b report-content" style="margin-top: -5px;" *ngIf="!spinner">
+      <div class="row" style="margin-bottom: 10px;margin-top: -15px;">
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+          <div class="text-left" style="margin-top: 5px;">
+            <h6 class="h6_c"> Shift Change Requests </h6>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+              <li class="list-inline-item" *ngIf="isEmployee">
+                <button type="button" class="btn btn-primary" (click)="createNewShiftChangeRequest()"
+                  matTooltip="Request for shift change">
+                  <i class="mdi mdi-stack-exchange m-r-xs"></i> Change Shift
+                </button>
+              </li>
+              <li class="list-inline-item" *ngIf="!isEmployee">
+                <button type="button" class="btn upgrade-btn" id="btn_qc_approve"
+                  [disabled]="selectedDataSet.length == 0" (click)="doApproveRejectRequests('Multiple', selectedDataSet, 'APPROVE')"> <i
+                    class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+                </button>
+              </li>
+              <li class="list-inline-item" *ngIf="!isEmployee">
+                <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                  [disabled]="selectedDataSet.length == 0" (click)="doApproveRejectRequests('Multiple', selectedDataSet, 'REJECT')"> <i
+                    class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                </button>
+              </li>
+              <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="doRefresh()">
+                  <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+       <!-- employee  table grid -->
+      <div class="row w-100" *ngIf="isEmployee">
+        <div class="col-lg-12">
+          <angular-slickgrid gridId="shiftRequestChangeGridId" [columnDefinitions]="columnDefinitionsForEmployee"
+            [gridOptions]="gridOptionsForEmployee" [dataset]="shiftChangeDataset"
+            (onAngularGridCreated)="onAngularGridCreatedForEmp($event)" gridWidth="100%">
+          </angular-slickgrid>
+        </div>
+      </div>
+       <!-- manager table grid -->
+      <div class="row w-100" >
+         <div class="col-lg-12" *ngIf="!isEmployee">
+           <angular-slickgrid gridId="shiftRequestApprovalGridId" [columnDefinitions]="columnDefinitions"
+             [gridOptions]="gridOptions" [dataset]="shiftChangeDataset" (onAngularGridCreated)="onAngularGridCreated($event)"
+             gridWidth="100%" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+             (sgOnSelectedRowsChanged)="onSelectAllItems($event.detail.eventData, $event.detail.args)">
+           </angular-slickgrid>
+         </div>
+       </div>
+    </div>
+  </div>
+</div>
+<!-- SHIFT CHANGE POPUP (NOT USED )-->
+<div id="shift_change_popup" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="shift_change_popup" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-8" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Shift Change Request</small>
+          </div>
+
+          <div class="modal-close" (click)="close_shift_change_popup()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row p-1">
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-xs-12 col-sm-12">
+                  <form [formGroup]="shiftChangeForm">
+                    <div class="form-row">
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label "> Shift Type <span class="required">*</span></label>
+                        <ng-select [items]="shiftList" placeholder="-- select an option --"
+                          formControlName="selectedShift" bindLabel="name" bindValue="id"
+                          (change)="onChangeShiftSelection($event)"
+                          [ngClass]="{ 'ng-invalid': submitted && g.selectedShift.errors }">
+                        </ng-select>
+                        <div *ngIf="submitted && g.selectedShift.invalid" class="help-block">
+                          <div *ngIf="g.selectedShift.errors.required">Shift is required
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label">Period From <span class="required"> *</span></label>
+                        <input type="text" class="form-control" bsDatepicker placement="bottom"
+                          [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                          name="PeriodFrom" formControlName="PeriodFrom" autocomplete="off" placeholder="01-01-2000"
+                          (bsValueChange)="onChangePeriodFromDate($event)" [minDate]="periodFromMinDate"
+                          [ngClass]="{ 'is-invalid': submitted && g.PeriodFrom.errors }" />
+
+                        <div *ngIf="submitted && g.PeriodFrom.invalid" class="help-block">
+                          <div *ngIf="g.PeriodFrom.errors.required">Period From is required</div>
+                        </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label">Period To<span class="required"> *</span></label>
+                        <input class="form-control" type="text" name="PeriodTo" [minDate]="periodToMinDate" bsDatepicker
+                          placement="top" (bsValueChange)="onChangePeriodToDate($event)"
+                          [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                          placeholder="01-01-2000" formControlName="PeriodTo"
+                          [ngClass]="{ 'is-invalid': submitted && g.PeriodTo.errors }" autocomplete="off" />
+                        <div *ngIf="submitted && g.PeriodTo.invalid" class="help-block">
+                          <div *ngIf="g.PeriodTo.errors.required">Period To is required</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row"> </div>
+                    <div class="form-row">
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                        <label class="form-label"> Comments </label>
+                        <textarea class="form-control" rows="3" spellcheck="false" id="ApplierRemarks"
+                          formControlName="ApplierRemarks" placeholder="Include comments for your approver"
+                          [ngClass]="{ 'is-invalid': submitted && g.ApplierRemarks.errors }">
+                        </textarea>
+                        <div *ngIf="submitted && g.ApplierRemarks.invalid" class="help-block">
+                          <div *ngIf="g.ApplierRemarks.errors.required">Comments is required</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row"> </div>
+                    <div class="form-row"> </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-block text-right">
+          <div class="form-group text-right">
+            <div class="text-right pull-right">
+              <button type="submit" class="btn btn-primary m-r-sm border-radius-20" (click)="saveShiftChangeRequest()">
+                <i class="mdi mdi-checkbox-multiple-marked-circle"></i> Submit Request
+              </button>
+              <button type="button" class="btn btn-danger m-r-sm border-radius-20" (click)="close_shift_change_popup()">
+                <i class="mdi mdi-cancel m-r-xs"></i> Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHIFT CHANGE REQUEST BY EMPLOYEE DRAWER -->
+<nz-drawer [nzVisible]="isDrawerVisible" nzTitle="Shift Change Request" [nzWidth]="700"
+  (nzOnClose)="close_shift_change_popup()">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12">
+      <form [formGroup]="shiftChangeForm">
+        <div class="form-row">
+          <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+            <label class="form-label "> Shift Type <span class="required">*</span></label>
+            <ng-select [items]="shiftList" class="mt-1" (change)="onChangeShiftSelection($event)" placeholder="Choose..." 
+              bindLabel="Name" bindValue="Id" formControlName="selectedShift" [multiple]="false">
+              <ng-template ng-label-tmp let-item="item">
+                <span>{{item.Name + ' (' + item.modifiedStartTime + ' - ' + item.modifiedEndTime + ')'}}</span>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                <span>{{item.Name + ' (' + item.modifiedStartTime + ' - ' + item.modifiedEndTime + ')'}}</span>
+              </ng-template>
+            </ng-select>
+            <div *ngIf="submitted && g.selectedShift.invalid" class="help-block">
+              <div *ngIf="g.selectedShift.errors.required">Shift is required
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <label class="form-label">Period From <span class="required"> *</span></label>
+            <input type="text" class="form-control" bsDatepicker placement="bottom"
+              [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" name="PeriodFrom"
+              formControlName="PeriodFrom" autocomplete="off" placeholder="01-12-1970" placement="bottom"
+              (bsValueChange)="onChangePeriodFromDate($event)" [minDate]="periodFromMinDate"
+              [ngClass]="{ 'is-invalid': submitted && g.PeriodFrom.errors }" />
+
+            <div *ngIf="submitted && g.PeriodFrom.invalid" class="help-block">
+              <div *ngIf="g.PeriodFrom.errors.required">Period From is required</div>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+            <label class="form-label">Period To<span class="required"> *</span></label>
+            <input class="form-control" type="text" name="PeriodTo" [minDate]="periodToMinDate" bsDatepicker
+              placement="top" (bsValueChange)="onChangePeriodToDate($event)" placement="bottom"
+              [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="12-12-1970"
+              formControlName="PeriodTo" [ngClass]="{ 'is-invalid': submitted && g.PeriodTo.errors }"
+              autocomplete="off" />
+            <div *ngIf="submitted && g.PeriodTo.invalid" class="help-block">
+              <div *ngIf="g.PeriodTo.errors.required">Period To is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row"> </div>
+        <div class="form-row">
+          <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+            <label class="form-label"> Comments </label>
+            <textarea class="form-control" rows="3" spellcheck="false" id="ApplierRemarks"
+              formControlName="ApplierRemarks" placeholder="Include comments for your approver"
+              [ngClass]="{ 'is-invalid': submitted && g.ApplierRemarks.errors }">
+            </textarea>
+            <div *ngIf="submitted && g.ApplierRemarks.invalid" class="help-block">
+              <div *ngIf="g.ApplierRemarks.errors.required">Comments is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row"> </div>
+        <div class="form-row"> </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6 col-6"></div>
+    <div class="col-lg-6 col-6">
+      <div class="pull-right left-margin-btn" style="margin-bottom: 1rem;">
+        <button class="btn btn-primary pull-right" type="button" (click)="saveShiftChangeRequest()">
+          <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</nz-drawer>

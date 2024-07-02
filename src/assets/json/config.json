@@ -1,0 +1,473 @@
+{
+
+  "SECURITY_BASE_URL": "https://dev.hfactor.app:8443/secnewtest/",
+  "API_BASE_URL": "http://localhost:44365/hrsuite.api/",
+  "OBJECTSTORAGE_BASE_URL": "https://dev.hfactor.app:8443/ostest/",
+  "Admin_BASE_URL": "https://dev.hfactor.app:8443/AdminApi/api/",
+  "FINANCE_BASE_URL": "http://164.52.210.141:8080/hrsuiteapi/",
+  "INTEGRATION_BASE_URL": "http://164.52.206.5:8080/integration/",
+  "SAML_BASE_URL": "https://dev.hfactor.app:8443/secnewtest/",
+  "REPORTS_BASE_URL": "https://dev.hfactor.app:8443/HRSuiteReportsAPI/",
+  "IMPORT_BASE_URL": "https://dev.hfactor.app:8443/importapi/",
+	"AuthKey" : "core", 
+"urlCode" : "sme", 
+  "BusinessType": 1,
+  "AllowableBusinessTypesForWebMenuItems": [
+    1,2
+  ],
+  "RequestType_isDisabled": true,
+  "GoogleAuth_Key": "924133704345-47q42un11qdd76f1iihpv5q09j1f7rrv.apps.googleusercontent.com",
+  "ExpectedDOJminDate": 0,
+  "ExpectedDOJmaxDate": 1000,
+  "ActualDOJminDate": 45,
+  "ActualDOJmaxDate": 30,
+  "ActualDOJminDate_withESIC": 7,
+  "DefaultCountryId_India": 100,
+  "CTCRuleSetName": "ProductRule",
+  "PayrollRuleSetName": "PayrollProductRule",
+  "PAYROLLINPUTS_LAYOUT_CODE": "payrollInputs",
+  "PROCESSEDOUTPUTS_LAYOUT_CODE": "processedOutputs",
+  "Payroll_SubmissionToQC": [
+    "PayrollCalculated"
+  ],
+  "CommonlyUsedItemsForInvestment": [
+    90,
+    93,
+    104
+  ],
+  "CommonlyUsedItemsForDeduction": [
+    2,
+    -100
+  ],
+  "AllowableTimecardStatusForProcess": [],
+  "HRA_DynamicProductId": 2,
+  "RollOverText": "ROLLOVER",
+  "Default_FinancialYearId": 2,
+  "IsAllowableStatusForReProcess": [
+    1000,
+    1249,
+    2349,
+    3000,
+    2000,
+    4249,
+    4500
+  ],
+  "IsAllowableStatusForEditTimeCard": [
+    1000,
+    1200,
+    1249,
+    2000,
+    2349,
+    3000,
+    4200,
+    4249,
+    1100
+  ],
+  "HousePropertyDetails_Static": [
+    {
+      "ProductCode": "HPD",
+      "ProductId": -100,
+      "ProductName": "HousePropertyDetails",
+      "b": [
+        {
+          "Code": "Sec24",
+          "Id": -102,
+          "IsThresholdLimitApplicable": true,
+          "Status": 1,
+          "TaxCodeTypeId": 2,
+          "ThresholdLimit": 0
+        }
+      ]
+    }
+  ],
+  "HideProductFromDeductionCategory": [
+    "INT_HL_FB",
+    "INT_HL_AH"
+  ],
+  "IsApplicableStatusForInitiatePayrun": [
+    2000
+  ],
+  "OnboardingMenuId": 4,
+  "OTPTimeLeftSec": 120,
+  "reCaptchaSiteKey": "6Le9yNMZAAAAANfGnQm8ReAKXdX5OXupRv5q3P0j",
+  "IsAllowableStatusForConfirmPayout": [
+    7000,
+    501
+  ],
+  "AadhaarDocumentTypeId": 3,
+  "PANDocumentTypeId": 21,
+  "BankDocumentTypeId": 13,
+  "BankDocumentCategoryId": 10,
+  "MarkFnFLWDminDate": 1,
+  "MarkFnfLWDmaxDate": 15,
+  "HRAMaximumAmountForValidation": 100000,
+  "YearRangeFromStaringYear": "2020-01-01",
+  "AutoRefreshSecondsInPayout": 300,
+  "IsConsoleLogRequired": true,
+  "PageTitleList": [
+    {
+      "Id": -1,
+      "Name": "Team Leave Request(s)"
+    }
+  ],
+  "HRPolicyFiles": [
+    {
+      "ClientId": 1988,
+      "ClientContractId": 434,
+      "Docs": [
+        "Employee Guide.pptx"
+      ]
+    }
+  ],
+  "EmployeeForms": [
+    "Form F Rule 6(1)  Nomination.pdf",
+    "Form-1-Declaration-Form.pdf",
+    "Form11 - Revised (PF).pdf",
+    "EPF - Form No. 2 (Nomination).pdf"
+  ],
+  "HRRoleCode": [
+    "PayrollOps",
+    "OpsMember"
+  ],
+  "IsEmpContractTermReductionAllowed": false,
+  "EncryptRequest": true,
+  "DecryptResponse": true,
+  "applogo": "appmainlogo.png",
+  "apptitle": "HRSuite",
+  "applogintitle": "Login -- Integrum",
+  "apphometitle": "CIEL CARE",
+  "AmountOfDifferentlyabled": 60,
+  "JotFormURL": "https://form.jotform.com/212361665805456",
+  "IsPennyDropCheckRequired": true,
+  "IsStaffingOpsPennyDropQcCheckRequried": false,
+  "IsClientDisableRequiredInEmploymentContract": true,
+  "IsReportingManagerDisableRequiredInEmploymentContract": false,
+  "IsProxyIndicationRequired": false,
+  "AttendanceUIPermissionText": [
+    {
+      "ClientId": 0,
+      "IsIcon": true,
+      "IconCSS": "fa fa-clock-o",
+      "Text": "PN"
+    }
+  ],
+  "officialEmailEditRole": {
+    "whoCannotEdit": "Employee"
+  },
+  "IsVendorOnboardingRequired": true,
+  "InsertLOPForNillCaseTermination": true,
+  "TimeOutForSearchDisable": 500,
+  "sec10NameForForm12BB": "Section 10 Exemption",
+  "IsInvestmentSubmissionValidationRequiredForNonESS": false,
+  "NoOfAttachmentsSendMail": [
+    {
+      "Idx": 0,
+      "documentFileName": ""
+    },
+    {
+      "Idx": 1,
+      "documentFileName": ""
+    }
+  ],
+  "DisplayCountsForRecentWOWHistory": 2,
+  "AllowedRoleForRegularizeEmployeessAttendance": [
+    "PayrollOPs"
+  ],
+  "HideMenuByClientId": [
+    {
+      "ClientId": 0,
+      "ClientContractId": 0,
+      "Roles": [
+        "Employee"
+      ],
+      "Menus": [
+        "/app/leaves/permission",
+        "/app/leaves/employeemyrequests",
+        "/app/expense/claims"
+      ]
+    }
+  ],
+  "NotificationPanelNotRequiredClientIds": [
+    1990,
+    1902
+  ],
+  "TaxSlipLogoForStaffing": [
+    {
+      "ClientId": 1924,
+      "LogoURL": "{\"logo\":\"mflogo.png\",\"minilogo\":\"mflogo.png\"}"
+    }
+  ],
+  "RequiredClientIdsForDownlaodCandidateInformationBtn": {
+    "ClientIds": [
+      1921
+    ],
+    "Roles": [
+      "PayrollOps",
+      "Recruiter"
+    ]
+  },
+  "NotRequiredAccordionForRecruiter": [
+    "isFamilydetails",
+    "isCandidateOtherdetails"
+  ],
+  "IsAllowToShowUploadBankFileBtnForRec": true,
+  "AmountOfNewJoineeDOJCheckForInvestmentSlot": 45,
+  "HousePropertiesChildProductCodes": [
+    "INT_HL_FB",
+    "INT_HL_AH",
+    "STAMPDUTYFEE"
+  ],
+  "NotAllowedInvestmentProducts": [
+    "INT_HL_FB",
+    "INT_HL_AH",
+    "STAMPDUTYFEE"
+  ],
+  "MedicalExpendituresProductCodes": [
+    "Sec80DD",
+    "Sec80DDB",
+    "Sec80D"
+  ],
+  "HYRE": {
+    "IsRequiredToShow": true,
+    "PermissibleRoles": [
+      "Recruiter",
+      "PayrollOps"
+    ],
+    "RedirectTo": "http://164.52.206.5:8080/hyre2/#/dashboard",
+    "HomePage": "http://164.52.206.5:8080/hrsuite/#/login"
+  },
+  "TimeDurationForGetNotificationCount": 3000000,
+  "MaximumExtendedDOJDays": 45,
+  "MinExtendedDOJDays": 45,
+  "MinDaysofNewRequestDOJWorkflow": 7,
+  "MaxDaysofNewRequestDOJWorkflow": 3,
+  "FirebaseServerKeys": {
+    "apiKey": "AIzaSyCANTNigXLBWPIyysy500LKfRIHfs5xNL4",
+    "authDomain": "pushnotifs-bcb35.firebaseapp.com",
+    "projectId": "pushnotifs-bcb35",
+    "storageBucket": "pushnotifs-bcb35.appspot.com",
+    "messagingSenderId": "913275641168",
+    "appId": "1:913275641168:web:a70bfc9b4f9df4d5f46055",
+    "measurementId": "G-RC1R4MGBXW"
+  },
+  "FirebaseSenderId": "891785994300",
+  "IsSimilartyCheckRequired": true,
+  "SimilartyPercentageForCandidateBankAccountName": 1,
+  "AllowedRolesToSaveEmployeeDetails": [
+    "Employee",
+    "OpsMember",
+    "PayrollOps",
+    "PayrollAdmin",
+    "QcMember",
+    "RegionalHR",
+    "CorporateHR"
+  ],
+  "IsUANVerificationRequired": false,
+  "IsPANVerificationRequired": false,  
+  "DefaultSBT": 2,
+  "IsAadhaarOnboardingRequired": false,
+  "ErrorMessageForMigrationTimeSlot": "The migration time has ended as of the actual day of joining (DOJ). To migrate the candidate, please submit a new DOJ request and try to migrate the candidate. Please click on 'Yes, Continue' to move ahead with the new DOJ Request.",
+  "ErrorMessageForMigrationTimeSlot1": "One or more candidate migration time ended. Please contact the support admin.",
+  "threshold": 2,
+  "MaxLimitOfImport": 10000,
+  "StipendProductId": 288,
+  "RequiredClientIdsForOnboardingAdditionalColumns": [
+    {
+      "ClientId": 1988,
+      "SettingValue": [
+        {
+          "ColumnName": "Department",
+          "MandatoryRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "DisplayRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "EntityTypes": [
+            "Candidate"
+           
+          ]
+        },
+        {
+          "ColumnName": "JobProfile",
+          "MandatoryRoleCodes": [
+          
+          ],
+          "DisplayRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "EntityTypes": [
+            "Candidate",
+            "Employee"
+          ]
+        },
+        {
+          "ColumnName": "SubEmploymentType",
+          "MandatoryRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "DisplayRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "EntityTypes": [
+            "Candidate",
+            "Employee"
+          ]
+        },
+        {
+          "ColumnName": "Category",
+          "MandatoryRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "DisplayRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "EntityTypes": [
+            "Candidate"           
+          ]
+        },
+        {
+          "ColumnName": "SubEmploymentCategory",
+          "MandatoryRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "DisplayRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "EntityTypes": [
+            "Candidate",
+            "Employee"
+          ]
+        },
+        {
+          "ColumnName": "Division",
+          "MandatoryRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "DisplayRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "EntityTypes": [
+            "Candidate"
+          ]
+        },
+        {
+          "ColumnName": "Level",
+          "MandatoryRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "DisplayRoleCodes": [
+            "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+          ],
+          "EntityTypes": [
+            "Candidate",
+            "Employee"
+          ]
+        },
+          {
+            "ColumnName": "CostCityCenter",
+            "MandatoryRoleCodes": [
+              "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+            ],
+            "DisplayRoleCodes": [
+              "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+            ],
+            "EntityTypes": [
+              "Candidate",
+              "Employee"
+            ]
+          },
+          {
+            "ColumnName": "EmploymentZone",
+            "MandatoryRoleCodes": [
+              "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+            ],
+            "DisplayRoleCodes": [
+              "PayrollOps", "RegionalHR", "CenterHR", "CorporateHR"
+            ],
+            "EntityTypes": [
+              "Candidate",
+              "Employee"
+            ]
+        }
+        
+      ]
+    }
+  ],
+  "ClientsNotAllowedToEditDOJInOfficialInformationTab" : [1988],
+  "ClientsNotAllowedToClickOnDayInAttendance" : [1988],
+  "ClientsNotAllowedToSubmitAttendanceFromESSLogin" : [1988],
+  "ClientsNotAllowedToViewAttendanceHoursInCalendar" : [1988],
+  "IsShiftChangeRequestsNotAllowedForEmployee" : [1988],
+  "RequiredClientIdsForSurveyQuestions" : [1988],
+  
+  "ShowNextCreditOnNewAssignLeave": false,
+  "EditNextCreditOnNewAssignLeave": false,
+  "ShowLapseCreditOnNewAssignLeave": false,
+  "EditLapseCreditOnNewAssignLeave": false,
+  "RequiredClientIdsToCheckMaxBalance" :[],
+  "AuthorizedRolesToAdjustApprovedAmount"  : ["PayrollAdmin"],
+
+  "ClientsNotAllowedToCheckCorrespondingPunchOutInRegularize" : [1988],
+  "ClientsNotRequiredDeleteForBiometricPunchesInRegularize": [1988],
+  "RolesToShowsManagerDashboard":["Manager", "HeadHR", "CorpHR","CenterHR"],
+  "InvestmentWarningMessage" : "Please provide all required information, including the amount, remarks, and necessary documents and details.",
+  "IsAllowToAddMultipleJourneyCounts" : false,
+  "NotRequiredInvestmentCards": ["INCM"],
+  "ACID" : 1988,
+  "ExemptionCardText" : "Use this provision to claim exemptions related to Section 10, like LTA.",
+  "NotRequiredClientIdsForAddEmployeeBtn" : [],
+  "RequiredRoleCodesToShowAddEmployeeBtn" : ["PayrollOps","RegionalHR", "CorporateHR"],
+  "IsNDCAddFormRequired": true,
+  "ConvertToEmployeeText" : "Confirm DOJ",
+  "RequiredToShowCustomFieldsOnESS" : false,
+  "DefaultBankReferenceCode"  : "HDFC",
+  "NotRequiredClientIdsForMigrationAdditionalColumns" : [1988],
+  "AllowToEditApprovedRecordsInMasterData": true,
+  "MaxDaysInPageLayoutDatePicker": 30,
+  "MessageForDataCorrection": ["Please review and submit your changes before - 04 Mar, 2024",
+  "Please note that you will be able to submit changes to an employee once only",
+  "Post your submission, Corporate HR will review the changes and either approve (or) reject",
+  "The actual data will be modified only after Corporate Hr's Approval"],
+  "ShowEmployeeLoginFormInLoginPage": false,
+  "RequiredToCallMandatesAPI" : false,
+  "DefaultNoticePeriodDays" : 60,
+  "IsRecalculateButtonRequiredOnEmployee" : false,
+  "IsAutoSalaryConfirmRequiredOnEmployee" : true,
+  "IsZeroBasedCalculationRequired" : true,
+  "EditableAnnualPayComponent" : ["Ann_Stat_Bonus", "Insurance", "Gratuity", "Var_Pay"],
+  "DisabledProductsComponentsList" : ["GrossEarn", "CTC"],
+  "ConsultantEmploymentTypeId" : 35,
+  "NotesForBulkUploadLeave": [
+    "Date format in the Date column should be 'DD-MM-YYYY'",
+    "If applying for a full day, please leave the 'fromsession' and 'tosession' columns empty",
+    "For the 'fromsession' field, only enter either 1 (for the first half) or 2 (for the second half)",
+    "For the 'tosession' field, only enter either 1 (for the first half) or 2 (for the second half)"
+  ],
+  "NotesForBulkUploadOnDuty": [
+    "Date format in the 'AppliedFrom' and 'AppliedTill' column should be 'DD-MM-YYYY'",
+    "If applying for a full day, please leave the 'fromsession' and 'tosession' columns empty",
+    "For the 'fromsession' field, only enter either 1 (for the first half) or 2 (for the second half)",
+    "For the 'tosession' field, only enter either 1 (for the first half) or 2 (for the second half)"
+  ],
+  "NotesForBulkUploadAttendance": [
+    "Please ensure the LogDate is in the 'DD-MM-YYYY' format",
+    "Please ensure the LogTime is in the 'hh:mm' format",
+    "The 'LogDate' and 'LogTime' fields represent punch date and time respectively"
+  ],
+  "DefaultRoundingFunctionForSalary" : "down",
+  "HiddenProductsComponentsList" : ["CTC"],
+  "ShowIsDependentForRelationShipTypeValues" : [1,2],
+  "displayNameForEmployeeStatus" : "Marked for Separation",
+  "NotAllowedColumnsToEdit": {
+    "RegionalHR": ["Designation"],
+    "CorporateHR": []
+  },
+  "OtherMandatoryDocumentTypeForEmployee" : ["PF Form 11","ESIC Form 1"],
+  "IsAllenClient": true,
+  "ResignationDisclaimerText" : "Disclaimer:  By submitting my resignation, I understand that I am starting the notice period as per my employment contract. However, this application is subject to management approval. The actual notice period will be decided by the management post discussion with me considering business requirements. The decision of management is final and binding on me in case of any dispute on this matter. I also understand that ACIPL may recover any dues like notice period shortfall or any such dues from my full and final settlement. ",
+  "ResignationConfirmationButtonText" : ["Yes", "No, Cancel", "Are you sure you want to submit your resignation? ", ""],
+  "AllowedToKeepPreviousResignDateForRejectionStatus" : true
+
+ 
+}

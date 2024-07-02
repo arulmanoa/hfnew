@@ -1,0 +1,68 @@
+<div style="display: block;" class="modal fade show animated fadeIn">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="padding: 2rem;">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <!-- <span style="font-size: 20px; color: black;font-weight: 600;"> {{defaultSearchInputs.ClientName}} |
+            {{defaultSearchInputs.ClientContractName}} </span>
+          <p> Basic details : Create profile by adding the candidate details and setting some Of the onboarding
+            preferences</p> -->
+
+          <!-- <div *ngFor="let question of surveyQuestions">
+            <div *ngIf="question.type === 'Choice'">
+              <p>{{ question.question }}</p>
+              <div *ngFor="let option of question.options">
+                <input type="radio" name="{{ question.id }}" [(ngModel)]="question.answer" [value]="option"> {{ option
+                }}
+              </div>
+            </div>
+            <div *ngIf="question.type === 'Text'">
+              <p>{{ question.question }}</p>
+              <textarea [(ngModel)]="question.answer" placeholder="Type your answer here"></textarea>
+            </div>
+            <div *ngIf="question.type === 'Scale'">
+              <p>{{ question.question }}</p>
+              <input type="range" [(ngModel)]="question.answer" min="1" max="10">
+              <span>{{ question.answer }}</span>
+            </div>
+          </div> -->
+
+          <div class="d-flex align-items-center" *ngIf="!termsAndConditions" style=" margin: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);">
+            <strong class="text-center"> &nbsp;&nbsp;&nbsp;</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+          </div>
+
+          <div *ngIf="termsAndConditions">
+            <h2>{{ termsAndConditions.GroupName }}</h2>
+            <p>{{ termsAndConditions.GroupDescripton }}</p>
+            <div *ngFor="let definition of termsAndConditions.Defintions">
+
+              <div *ngIf="definition.ResponseType === 1">
+                <label>{{ definition.QuestionDescription }}</label>
+                <input type="text" [(ngModel)]="definition.Answer" [required]="definition.IsMandatory"
+                  class="form-control" />
+              </div>
+              <div *ngIf="definition.ResponseType === 2" style="padding: 20px !important;">
+                <label class="form-check-label">
+                  <input type="checkbox" [(ngModel)]="definition.Answer" [required]="definition.IsMandatory"
+                    class="form-check-input" />
+                  {{ definition.QuestionDescription }}
+                </label>
+              </div>
+            </div>
+            <br />
+            <br />
+            <button class="btn btn-primary text-right" (click)="agree()">Agree and Continue </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

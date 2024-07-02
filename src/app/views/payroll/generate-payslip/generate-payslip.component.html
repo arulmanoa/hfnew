@@ -1,0 +1,228 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="content m-b report-content" *ngIf="!spinner">
+
+      <div class="row">
+        <div class="col-md-6 text-left">
+          <div class="headerbar">
+            <div>
+              <h2 class="header_title"> Generate Payslip </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <ul class="list-inline">
+            <li class="list-inline-item">
+
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col-md-3">
+          <label class="form-label" style="text-align: left;"> Generation Type </label>
+          <div class="pretty p-icon p-round" style="margin-bottom: 10px;">
+            <input type="radio" [checked]="selectedGenerationType =='1'" name="icon_solid" value="1"
+              (change)="onChange_GenerationType($event.target.value)" />
+            <div class="state p-success">
+              <i class="icon mdi mdi-check"></i>
+              <label>Generate Payslips by Uploading UTR</label>
+            </div>
+          </div>
+          <br>
+          <div class="pretty p-icon p-round">
+            <input type="radio" name="icon_solid" [checked]="selectedGenerationType =='2'" value="2"
+              (change)="onChange_GenerationType($event.target.value)" />
+            <div class="state p-success">
+              <i class="icon mdi mdi-check"></i>
+              <label>Generate Payslips without UTR</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-3 col-md-3 col-sm-3">
+          <label class="form-label" style="text-align: left;"> Pay Period </label>
+          <ng-select [items]="payperiodList" placeholder="-- Select an option --" bindLabel="Name" bindValue="Id"
+            [(ngModel)]="selectedPayPeriodId" [clearable]="false" (change)="onChange_payperiod($event)">
+          </ng-select>
+        </div>
+
+        <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-3 col-md-3 col-sm-3">
+          <label class="form-label" style="text-align: left;"> Generation Type </label>
+          <ng-select [items]="generationTypeList" placeholder="-- Select an option --" bindLabel="Name" bindValue="Id"
+            [(ngModel)]="selectedGenerationType" [clearable]="false" (change)="onChange_GenerationType($event)">
+          </ng-select>
+        </div> -->
+
+
+        <div class="col-md-6 text-right" *ngIf="selectedGenerationType == '1'" style="padding-top: 1.5rem;">
+          <button class="btn btn-blank" [disabled]="isUTRBtnShouldDisable" style="color: #337ab7;"
+            (click)="downloadTemplate()"> <i class="mdi mdi-cloud-download-outline"></i>
+            &nbsp;Download Template &nbsp; <span *ngIf="apiCallSpinner" class="spinner-border spinner-border-sm"
+              role="status" aria-hidden="true"></span> </button>
+          <button class="btn btn-blank" style="color: #fff;
+          background: #337ab7;" [disabled]="isUTRBtnShouldDisable"
+            (click)="onUpload_GeneratingPaySlipEmpUTR(); fileInput.click()"> <i
+              class="mdi mdi-cloud-upload-outline"></i>
+            &nbsp;Upload & Generate Payslips
+            <input #fileInput id="fileUpload" type="file" (change)="handleFileInput($event.target.files)"
+              style="display: none">
+          </button>
+        </div>
+
+        <!-- <div class="col-md-6 text-right" *ngIf="selectedGenerationType == '1'"
+          style="padding-top: 1.5rem;">
+          <button class="btn btn-blank" style="color: #fff;
+          background: #337ab7;" (click)="onConfirm_GeneratingPaySlipEmpUTR()"> <i
+              class="mdi mdi-cloud-print-outline"></i>
+            &nbsp;Confirm Generate
+          </button>
+        </div> -->
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-3" *ngIf="selectedGenerationType == '2'">
+          <label class="form-label">Payment Date </label>
+          <input class="form-control" onkeydown="return (event.keyCode!=13);" name="paymentDate" bsDatepicker
+            [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+            placeholder="01-01-2000" type="text" autocomplete="none|false|no" [ngModelOptions]="{standalone: true}"
+            [(ngModel)]="paymentDate" readonly>
+        </div>
+
+        <div class="col-md-3 text-right" *ngIf="selectedGenerationType == '2'" style="padding-top: 1.5rem;">
+          <button class="btn btn-blank" style="color: #fff;
+          background: #337ab7;" (click)="onConfirm_GeneratingPaySlipEmpWOUTR()"> <i
+              class="mdi mdi-cloud-print-outline"></i>
+            &nbsp; Generate Payslips</button>
+        </div>
+
+
+        <!-- <button type="button" class="btn btn-primary-custom">
+          <span><i class="mdi mdi-upload m-r-xs"></i>Upload Excel</span>
+          <input #fileInput id="fileUpload" type="file" (change)="handleFileInput($event.target.files)" 
+         >
+          </button>
+
+          <button type="button" class="btn btn-primary-custom" (click)="submit()">
+            submit
+            </button> -->
+
+      </div>
+
+      <div class="text-center ma-5" *ngIf="apiCallspinner_payperiod">
+        <button class="p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+      </div>
+      <br />
+
+      <div class="row" *ngIf="inEmployeesInitiateList.length > 0 && selectedPayPeriodId != null && !apiCallspinner_payperiod">
+        <div class="col-lg-12 text-right">
+          <button class="btn btn-blank" style="color: #337ab7;" (click)="onRefreshStatus()"> <i
+              class="mdi mdi-refresh"></i>
+            &nbsp;Refresh Status &nbsp;  </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12" *ngIf="inEmployeesInitiateList.length > 0">
+
+          <angular-slickgrid gridId="grid1" [columnDefinitions]="inEmployeesInitiateColumnDefinitions"
+            [gridOptions]="inEmployeesInitiateGridOptions" [dataset]="inEmployeesInitiateList"
+            (onAngularGridCreated)="inEmployeesInitiateGridReady($event)" gridWidth="100%"
+            (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+            (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+          </angular-slickgrid>
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<nz-drawer [nzVisible]="visible_slider_confirmGeneration" [nzWidth]="1040" nzIcon="user" [nzClosable]="false">
+
+  <div class="row" style="margin: -11px;">
+    <div class="col-md-6" style="padding: 3px;">
+      <h3 style="font-size: 16px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+        Confirm Payslip Generation With UTR </h3>
+      <p class="small" style="line-height: 16px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #b9b7b7;">Pay Period : {{selectedPayPeriodName}}</p>
+
+    </div>
+    <div class="col-md-6" style="padding: 3px;">
+
+    </div>
+  </div>
+
+  <br />
+  <div class="row">
+    <div class="col-lg-12 text-center"
+      *ngIf="beforeUploadDataset != null && beforeUploadDataset.length > 0 && beforeUploadDataset.length != TotalValidCounts">
+      <ngb-alert [dismissible]="false" type="warning">
+        <strong> Summary of the Payslip Generation </strong>
+        <p> There are <b> {{beforeUploadDataset.length}} </b> employees available to initiate the payslip form. </p>
+        <p> {{TotalValidCounts}} employee(s) out of <b>{{beforeUploadDataset.length}}</b> has a recognized valid status.
+          <b style="color: #da4040;">[Paid :({{InvalidPaidCounts}}/{{beforeUploadDataset.length}})],
+            [UTR :({{InvalidUTRCounts}}/{{beforeUploadDataset.length}})],
+            [Payment Date :({{InvalidPaymentDateCounts}}/{{beforeUploadDataset.length}})]</b>.
+          Fill out the necessary info and confirm it if you really want to continue the rest of the employee.
+        </p>
+      </ngb-alert>
+    </div>
+  </div>
+
+  <div class="row" style="margin-bottom: -10px;">
+    <div class="col-lg-12">
+      <angular-slickgrid *ngIf="beforeUploadColumnDefinition != null" gridId="grid2"
+        [columnDefinitions]="beforeUploadColumnDefinition" [gridOptions]="beforeUploadGridOptions"
+        [dataset]="beforeUploadDataset" gridWidth="100%"
+        (sgOnSelectedRowsChanged)="onbeforeUploadSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+        (onAngularGridCreated)="angularBeforeUploadGridReady($event)"
+        (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)">
+      </angular-slickgrid>
+    </div>
+  </div>
+
+
+  <div class="row"
+    style="position: absolute; bottom: 0px;width: 100%; background: #FFFFFF;box-shadow: 0px -3px 5px #f1f1f1; margin-left: -23px;padding: 0px;">
+    <div class="col-lg-6">
+
+    </div>
+    <div class="col-lg-6 text-right" style="margin-top: 25px;">
+      <div class="text-right">
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <button class="btn btn-link" type="button" style="text-decoration: none !important;"
+              (click)="close_slider_confirmGeneration()"> Cancel</button>
+          </li>
+          <li class="list-inline-item">
+            <button class="btn btn-blank" style="color: #fff;
+          background: #337ab7;" (click)="onConfirm_GeneratingPaySlipEmpUTR()"> <i
+                class="mdi mdi-cloud-print-outline"></i>
+              &nbsp;Confirm Generate
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</nz-drawer>

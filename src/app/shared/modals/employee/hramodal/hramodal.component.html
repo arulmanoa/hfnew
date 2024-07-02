@@ -1,0 +1,179 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg modal-dialog-centered animated fadeInDownBig">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>House Rent Allowance Details</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL">-</h6>
+        </div>
+        <div class="modal-close" (click)="closeModal()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+
+      <div class="modal-body">
+        <div class="flex-column">
+
+          <form [formGroup]="hraForm">
+
+            <div class="col-12 col-md-12 col-sm-12">
+              <div class="clearfix">
+                <div class="row">
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label"> Rental House Address </label>
+                    <textarea class="form-control" rows="2" spellcheck="false" id="Remarks"
+                      formControlName="RentalHouseAddress"
+                      [ngClass]="{ 'is-invalid': submitted && g.RentalHouseAddress.errors }"></textarea>
+                    <div *ngIf="submitted && g.RentalHouseAddress.invalid" class="help-block">
+                      <div *ngIf="g.RentalHouseAddress.errors.required">Rental House Address is required</div>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">Name of Landlord<span class="required"> *</span></label>
+                    <input class="form-control" type="text" name="NameofLandlord" placeholder=""
+                      formControlName="NameofLandlord"
+                      [ngClass]="{ 'is-invalid': submitted && g.NameofLandlord.errors }" autocomplete="off">
+                    <div *ngIf="submitted && g.NameofLandlord.invalid" class="help-block">
+                      <div *ngIf="g.NameofLandlord.errors.required">Name of Landlord is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">PAN of Landlord<span class="required"> *</span></label>
+                    <input class="form-control" type="text" name="PANofLandlord" placeholder=""
+                      formControlName="PANofLandlord" [ngClass]="{ 'is-invalid': submitted && g.PANofLandlord.errors }"
+                      autocomplete="off">
+                    <div *ngIf="submitted && g.PANofLandlord.invalid" class="help-block">
+                      <div *ngIf="g.PANofLandlord.errors.required">PAN of Landlord is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">Name of City<span class="required"> *</span></label>
+                  
+
+                      <select #s class="form-control" id="financialYear"  name="NameofCity" placeholder=""
+                      formControlName="NameofCity" [ngClass]="{ 'is-invalid': submitted && g.NameofCity.errors }"
+                      placeholder="Select an option">
+                        <option *ngFor="let city of CityList" [value]="city.Id"
+                          class="ng-star-inserted">{{city.Code}}</option>
+                   
+                  </select>
+
+                    <div *ngIf="submitted && g.NameofCity.invalid" class="help-block">
+                      <div *ngIf="g.NameofCity.errors.required">Name of City is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">Rent Amount Paid<span class="required"> *</span></label>
+                    <input class="form-control" type="text"  onkeypress="return /[0-9]/i.test(event.key)" name="RentAmountPaid" placeholder=""
+                      formControlName="RentAmountPaid"
+                      [ngClass]="{ 'is-invalid': submitted && g.RentAmountPaid.errors }" autocomplete="off">
+                    <div *ngIf="submitted && g.RentAmountPaid.invalid" class="help-block">
+                      <div *ngIf="g.RentAmountPaid.errors.required">Rent Amount Paid is required
+                      </div>
+                    </div>
+                  </div>
+               
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">Start Date<span class="required"> *</span></label>
+                    <input class="form-control" type="text" name="StartDate" bsDatepicker placement="top" readonly (bsValueChange)="onChangeStartDate($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="" formControlName="StartDate"
+                      [ngClass]="{ 'is-invalid': submitted && g.StartDate.errors }" autocomplete="off">
+                    <div *ngIf="submitted && g.StartDate.invalid" class="help-block">
+                      <div *ngIf="g.StartDate.errors.required">Start Date is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    <label class="form-label ">End Date<span class="required"> *</span></label>
+                      <input class="form-control" type="text" name="EndDate"  bsDatepicker placement="top" readonly [minDate]="EnddateminDate" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="" formControlName="EndDate"
+                        [ngClass]="{ 'is-invalid': submitted && g.EndDate.errors }" autocomplete="off">
+                    <div *ngIf="submitted && g.EndDate.invalid" class="help-block">
+                      <div *ngIf="g.EndDate.errors.required">End Date is required
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label"> Landlord Address </label>
+                    <textarea class="form-control" rows="2" spellcheck="false" id="Remarks"
+                      formControlName="LandlordAddress"
+                      [ngClass]="{ 'is-invalid': submitted && g.LandlordAddress.errors }"></textarea>
+                    <div *ngIf="submitted && g.LandlordAddress.invalid" class="help-block">
+                      <div *ngIf="g.LandlordAddress.errors.required">Landlord Address is required</div>
+                    </div>
+                  </div>
+
+                 
+
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6" *ngIf="!Mode">
+                    <label class="form-label">Upload Rent Receipt <span class="required"> *</span> <span
+                        class="help-text m-l-5">(Max file size 2MB)</span></label>
+                    <label class="upload control" style="width: 50%; float: left;" *ngIf="!FileName">
+                      <div class="upload-draggable is-primary">
+                        <section class="section">
+                          <div class="has-text-centered">
+                            <span class="icon is-large">
+                              <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                  style="color: #9ba7ca;"></i> Upload </span>
+                            </span>
+
+                          </div>
+                        </section>
+                      </div>
+                      <input type="file" accept="application/msword,  application/pdf, image/*"
+                        (change)="onFileUpload($event)" id="sTest-uploadFile-candidateAddResume">
+
+                    </label>
+                    <div *ngIf="g.ObjectStorageId.invalid || !FileName" class="help-block">
+                      <div>Attachment is required
+                      </div>
+                    </div>
+                    <p class="control" *ngIf="FileName">
+                      <span class="file-name">
+                        <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a ngbTooltip="Delete Photo"
+                            id="sTest-deleteFile-candidateAddResume"
+                            style="padding-left: 10px;font-size: 15px;cursor: pointer;    display: block   ;margin-top: -5px;"><i
+                              class="fa fa-trash-o"></i></a> </button>
+                        <a target="blank" class="ahref" style="padding: 2px;">
+                          {{FileName}}
+                        </a>
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+
+        <div class="pull-right m-r-sm">
+          <div>
+            <div>
+              <button class="btn  btn-default m-r-sm"  (click)="closeModal()" type="Submit" name="btnSubmit" id="btnSubmit">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+              </button>
+
+              <button class="btn btn-primary pull-right" type="button" (click)="savebutton()"> <i
+                  class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Save</button>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

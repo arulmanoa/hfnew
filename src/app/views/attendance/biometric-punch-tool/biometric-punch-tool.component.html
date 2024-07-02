@@ -1,0 +1,146 @@
+<div class="page-wrapper" style=" font-family: 'Roboto'!important;">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="row m-1" *ngIf="!spinner">
+      <div class="col-lg-12 text-right">
+          <div class="text-right">
+              <ul class="list-inline d-flex">
+                  <li class="list-inline-item d-flex mt-1">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" value="" id="deleteOldPunches" 
+                      (change)="onChangeDeletePunches($event)" [(ngModel)]="deleteOldPunches">
+                      <label class="form-check-label" for="deleteOldPunches">Delete Existing Punches</label>
+                    </div>
+                  </li>
+                  <li class="list-inline-item">
+                    <button type="button" class="btn btn-primary" (click)="onClickSubmitPunches()">
+                      Submit
+                    </button>
+                  </li>
+              </ul>
+          </div>
+      </div>
+    </div>
+    <div class="content m-b report-content py-5" style=" font-family: 'Roboto'!important;">
+      <form [formGroup]="punchToolForm">
+        <div class="form-row m-1">
+          <div class="form-group-vertical col-xs-12 col-lg-3 col-md-3">
+            <label class="form-label searchbar-label"> Employee Code<span class="required"> * </span></label>
+            <ng-select [items]="employeeList" #selectEmp [clearable]="false" placeholder="Choose..." [multiple]="false"
+              [virtualScroll]="true" formControlName="EmployeeCode" [searchable]="false" [loading]="loadEmpLoader"
+              bindLabel="LabelName" bindValue="Id" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()">
+              <ng-template ng-header-tmp>
+                <input placeholder="Search Employee" type="text" class="form-control"
+                  style="border: none;border-radius: 0px !important;background: white"
+                  (input)="selectEmp.filter($event.target.value)" />
+              </ng-template>
+            </ng-select>
+            <div *ngIf="g.EmployeeCode.errors " class="invalid-feedback">
+              <div *ngIf="g.EmployeeCode.errors.required ">Select atleast one employee</div>
+            </div>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-lg-6 col-md-6">
+            <label class="form-label">Date<span class="required"> * </span></label>
+            <input class="form-control" type="text" name="effectiveToDate" bsDatepicker placement="bottom"
+              (bsValueChange)="onChangeDate($event)" placeholder="DD-MM-YYYY" [minDate]="minDate" [maxDate]="maxDate"
+              [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+              formControlName="Date" autocomplete="off" readonly required />
+          </div>
+          <div class="form-group-vertical col-xs-12 col-lg-3 col-md-3">
+            <button class="pull-right btn btn-success mt-4" (click)="onClickShowPunches()">Show Existing Punches</button>
+          </div>
+        </div>
+        <div class="form-row m-1">
+          <!-- <div class="form-group-vertical col-xs-12 col-lg-6 col-md-6">
+            <label class="form-label">Work Location<span class="required"> * </span></label>
+            <ng-select #searchSelect [items]="locationData" placeholder="Choose Work Location" bindLabel="LocationName" bindValue="Id" 
+            formControlName="LocationId" [searchable]="false" [multiple]="false" [clearable]="false">
+              <ng-template ng-header-tmp>
+                <input placeholder="Search Work Location" type="text" class="form-control"
+                  style="border: none;border-radius: 0px !important;background: white"
+                  (input)="searchSelect.filter($event.target.value)" />
+              </ng-template>
+            </ng-select>
+          </div> -->
+          <div class="form-group-vertical col-xs-12 col-lg-3 col-md-3">
+            <label class="form-label">Device<span class="required"> * </span></label>
+            <ng-select #searchaSelect [items]="deviceData" placeholder="Choose Device" bindLabel="DeviceName" bindValue="DeviceId" 
+            formControlName="DeviceId" [searchable]="false" [multiple]="false" [clearable]="false">
+              <ng-template ng-header-tmp>
+                <input placeholder="Search Device" type="text" class="form-control"
+                  style="border: none;border-radius: 0px !important;background: white"
+                  (input)="searchaSelect.filter($event.target.value)" />
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-lg-3 col-md-3">
+            <label class="form-label">Hour<span class="required"> * </span></label>
+            <ng-select [items]="hours" bindLabel="Name" bindValue="Id" placeholder="Choose Hour"
+              formControlName="selectedHour" [clearable]="false">
+            </ng-select>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-lg-3 col-md-3">
+            <label class="form-label">Minute<span class="required"> * </span></label>
+            <ng-select [items]="minutes" bindLabel="Name" bindValue="Id" placeholder="Choose Minute"
+              formControlName="selectedMinute" [clearable]="false">
+            </ng-select>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-lg-3 col-md-3 text-right">
+            <button class="btn btn-success mt-4" type="submit" [disabled]="punchToolForm.invalid" (click)="onClickAdd()">
+              Add Punch
+            </button>
+            <button class="btn btn-default mt-4 mx-1" type="submit" [disabled]="addedPuncheDetails && addedPuncheDetails.length == 0" (click)="onClickingClearBtn()">
+              Clear
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="content m-b report-content" *ngIf="savedBiometricData.length == 0" style=" font-family: 'Roboto'!important;">
+      <div class="row m-0 p-0">
+        <div class="col-lg-12 col-sm-12 col-md-12">
+          <div class="col-md-6 pull-left"> 
+            <label class="form-label">Existing Punch Information </label>
+            <div class="card" style="min-height: 150px;">
+              <ol class="list-group">
+                <li *ngFor="let item of existingPuncheDetails">
+                  <span>{{item.id}}.&nbsp;</span>
+                  <span>{{item.time}}</span>
+                </li>
+              </ol>
+            </div>
+         </div>
+         <div class="col-md-6 pull-right">
+           <label class="form-label">New Punches Added</label>
+           <div class="card" style="min-height: 150px;">
+            <ol class="list-group">
+              <li *ngFor="let item of addedPuncheDetails; let i=index;">
+                <span>{{i + 1}}.&nbsp;</span>
+                <span>{{item.DisplayTime}}</span>
+              </li>
+            </ol>
+           </div>
+         </div>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content" *ngIf="showSuccessData" style=" font-family: 'Roboto'!important;">
+      <div class="row">
+        <div class="col-12">
+          <ul>
+            <li *ngFor="let item of savedBiometricData.FailedList">Failed Item: {{ item  | json }}</li>
+          </ul>
+          <p>Batch ID: {{ savedBiometricData.BatchId }}</p>
+          <p>Number of Records Saved: {{ savedBiometricData.NumberOfRecordsSaved }}</p>
+          <p>Number of Failed Records: {{ savedBiometricData.NumberOfFailedRecords }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

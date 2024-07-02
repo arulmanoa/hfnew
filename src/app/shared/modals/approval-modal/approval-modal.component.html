@@ -1,0 +1,255 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="">
+
+
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b>Client Supportive Documents</b></small>
+                        <h6 class="modal-title subheader_h6"> For Approvals </h6>
+                    </div>
+                    <div class="modal-close" (click)="confirmExit()" style="margin-top: 5px;"><span
+                            class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+
+
+                <div class="modal-body no-padder">
+
+                    <div id="overlay">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex-column">
+
+                        <div class="row" *ngIf="OnboardingMode == 2">
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                    <label class="form-label">Contract Code <span class="required">* </span>
+                                    </label>
+                                    <input class="form-control" type="text" spellcheck="false"
+                                        style="text-transform:uppercase" name="ContractCode" maxlength="100"
+                                        [(ngModel)]="ContractCode" placeholder="XYZ"
+                                        autocomplete="none|false|no">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <form [formGroup]="approvalForm">
+
+                            <div class="col-12 col-md-12 col-sm-12">
+                                <div class="clearfix">
+
+                                    <!-- <span class="help-text"> <span class="badge badge--inline badge--pill badge--danger badge--rounded">NOTE</span> CTC breakup will be based on the below mentioned fields. Changing any existing value of these fields would
+                                    void your calculated breakup, and hence you must re-calculate the breakup by clicking on 'Preview CTC' button </span>
+                                    <br> -->
+
+                                    <div class="row">
+
+                                        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                            <label class="form-label ">Approval For<span class="required">
+                                                    *</span></label>
+
+                                            <ng-select [items]="ApprovalForList" placeholder="-- select on option --"
+                                                formControlName="ApprovalFor"
+                                                [ngClass]="{ 'ng-touched': submitted && g.ApprovalFor.invalid }"
+                                                bindLabel="name" bindValue="id">
+                                            </ng-select>
+                                            <span class="form__length"
+                                                *ngIf="this.approvalForm.controls.ApprovalFor.value == '4'">
+                                                (Note : Choosing 'CandidateJoiningConfirmation' means, the flow for AL
+                                                will be initiated)</span>
+                                            <div *ngIf="submitted && g.ApprovalFor.invalid" class="help-block">
+                                                <div *ngIf="g.ApprovalFor.errors.required">Approval For is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                            <label class="form-label ">Approval Type <span class="required"> *</span>
+                                            </label>
+                                            <ng-select [items]="ApprovalTypeList" placeholder="-- select on option --"
+                                                formControlName="ApprovalType"
+                                                [ngClass]="{ 'ng-touched': submitted && g.ApprovalType.invalid }"
+                                                bindLabel="name" bindValue="id">
+                                            </ng-select>
+                                            <div *ngIf="submitted && g.ApprovalType.invalid" class="help-block">
+                                                <div *ngIf="g.ApprovalType.errors.required">Approval Type is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                                            <label class="form-label"> Remarks 
+                                              <span class="required" *ngIf="RoleCode == 'RegionalHR'"> *</span>
+                                            </label>
+                                            <textarea class="form-control" rows="3" spellcheck="false" id="Remarks"
+                                                formControlName="Remarks" pattern="[\x00-\x7F]+"
+                                                [ngClass]="{ 'is-invalid': submitted && g.Remarks.errors }"></textarea>
+                                            <div *ngIf="submitted && g.Remarks.invalid" class="help-block">
+                                                <div *ngIf="g.Remarks.errors.required">Remarks is required</div>
+                                            </div>
+                                            <div *ngIf="approvalForm.get('Remarks').errors && approvalForm.get('Remarks').touched"
+                                                class="help-block">
+
+                                                <span *ngIf="approvalForm.get('Remarks').errors.pattern"> Entered
+                                                    special characters are not allowed
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- #region BEFORE JSZIP -->
+                                        <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                                            <label class="form-label">Attachment <span class="required"> *</span> <span class="help-text m-l-5">(Max file size 2MB)</span></label>
+                                            <label class="upload control" style="width: 50%; float: left;" *ngIf="!FileName">
+                        <div class="upload-draggable is-primary">
+                          <section class="section">
+                            <div class="has-text-centered"> 
+                              <span class="icon is-large">
+                                <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                    style="color: #9ba7ca;"></i> Upload </span>
+                              </span>
+
+                            </div>
+                          </section>
+                        </div>
+                        <input type="file" accept=
+                        "application/msword,  application/pdf, image/*" (change)="onFileUpload($event)"
+                          id="sTest-uploadFile-candidateAddResume">
+
+                      </label>
+                                            <div *ngIf="submitted && g.ObjectStorageId.invalid || !FileName" class="help-block">
+                                                <div>Attachment is required
+                                                </div>
+                                            </div>
+
+
+
+                                            <p class="control" *ngIf="FileName">
+                                                <span class="file-name">
+                          <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a ngbTooltip="Delete Photo"
+                              id="sTest-deleteFile-candidateAddResume"
+                              style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                                       display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"
+                                ></i></a> </button>
+
+
+                          <a target="blank" class="ahref" style="padding: 2px;">
+                            {{FileName}}
+                          </a>
+
+                        </span>
+
+                                            </p>
+                                        </div> -->
+
+                                        <!-- #endregion -->
+
+                                        <!-- #region  AFTER JSZIP  -->
+                                        <div
+                                            class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                                            <label class="form-label">Attachment <span class="required"> *</span> <span
+                                                    class="help-text m-l-5">(Max file size 2MB)</span></label>
+                                            <label class="upload control"
+                                                style="width: 100%; float: left;z-index: 999;margin-bottom: 10px;">
+                                                <div class="upload-draggable is-primary">
+                                                    <section class="section">
+                                                        <div class="has-text-centered">
+                                                            <span class="icon is-large">
+                                                                <span style="padding-left: 10px;"> <i
+                                                                        class="mdi mdi-cloud-upload "
+                                                                        style="color: #9ba7ca;"></i> Upload </span>
+                                                            </span>
+
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                                <input type="file"
+                                                    accept="application/msword,  application/pdf, image/*"
+                                                    (change)="onAddingFile($event)"
+                                                    id="sTest-uploadFile-candidateAddResume"
+                                                    (click)="$event.target.value=null" multiple required>
+
+                                            </label>
+                                            <div *ngIf="submitted &&  !fileList[0]" class="help-block">
+                                                <div>Attachment is required
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center" style="width: 100%;"
+                                                *ngIf="firstTimeDocumentId && !fileList[0] && !isFileChange">
+                                                <strong class="text-right"> {{spinnerText}}...
+                                                    &nbsp;&nbsp;&nbsp;</strong>
+                                                <div class="spinner-border ml-auto" role="status" aria-hidden="true">
+                                                </div>
+                                            </div>
+                                            <p class="control" *ngFor="let file of fileList">
+                                                <span class="file-name">
+                                                    <button class="btn btn-danger c-btn" (click)="doDeleteFile(file)">
+                                                        <a ngbTooltip="Delete Photo"
+                                                            id="sTest-deleteFile-candidateAddResume"
+                                                            style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                                       display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                                                    </button>
+
+                                                    <a target="blank" class="ahref" style="padding: 2px;">
+                                                        {{file.name}}
+                                                    </a>
+
+                                                </span>
+
+                                            </p>
+                                        </div>
+
+
+                                        <!-- #endregion -->
+
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <div *ngIf="isLoading">
+                        <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i
+                                class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel</button>
+                        <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                            <div>
+                                <div>
+                                    <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                                        [disabled]="!disableBtn" (click)="onFileUpload()">
+                                        <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o"
+                                                    aria-hidden="true"></i> &nbsp;
+                                                Save </span></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex align-items-center" *ngIf="!isLoading">
+                        <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

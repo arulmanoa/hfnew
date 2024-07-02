@@ -1,0 +1,678 @@
+<div class="page-wrapper " style="margin-top: 5px;">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="content m-b report-content" style="margin-top: 10px;">
+
+      <!-- <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+      </div> -->
+      <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+          <button type="button" class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;"
+            (click)='onClickNewPermission()'> <i class="mdi mdi-plus"></i> New
+            Permission
+          </button>
+          <button type="button" class="btn btn-default mr-2 float-right" style="display: inline;margin: 0 auto;"
+            (click)="clickOnRefresh('R')">  <i class="mdi mdi-refresh"></i> Refresh
+          </button>
+          <button type="button" class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;"
+            (click)='clickOnSubmit()'> <i class="mdi mdi-checkbox-multiple-marked-outline"></i> Submit
+          </button>
+        </div>
+      </div>
+      <!-- <div class="row">
+
+        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+          <label class="form-label"> From - To Date </label>
+          <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="_dateRange"
+            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+        </div>
+
+
+      
+       
+          <div class=" form-group form-group-vertical col-xs-2 col-sm-2 mt-4">
+            <button type="button" class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;"
+              (click)="dateRangeSearch()"> Search
+              now
+            </button>
+        </div>
+      </div> -->
+      <div class="row " *ngIf="!spinner">
+        <div class="col-md-12">
+
+          <ngb-tabset (tabChange)="onTabChange($event)" [(activeId)]="activeTabName">
+            <div>
+              <ngb-tab id="pendingTab">
+                <ng-template ngbTabTitle><i class="fa fa-hourglass-end" aria-hidden="true"></i>&nbsp;&nbsp;Pending
+                </ng-template>
+                <ng-template ngbTabContent>
+                  <div class="table-responsive table-height " style="height:400px">
+                    <table class=" table-sticky table-bordered table " style="text-align: center;">
+                      <thead>
+                        <tr>
+                          <th>
+                            <input type="checkbox" [(ngModel)]="selectAll"
+                              (click)="selectAllPermissionRequests($event)" /> Select All
+                          </th>
+                          <th>
+                            Request For Date
+                          </th>
+                          <th>
+                            Requested On
+                          </th>
+                          <th>
+                            Start Time
+                          </th>
+                          <th>
+                            End Time
+                          </th>
+                          <th>
+                            Requested Time
+                          </th>
+                          <!-- <th>
+                            Employee Remarks
+                          </th> -->
+                          <th>
+                            Manager Remarks
+                          </th>
+                          <th>
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="tbl-scrollbody" *ngIf="pendingRequests && pendingRequests.length>0">
+                        <tr *ngFor="let pendingObj of pendingRequests">
+                          <td>
+                            <input type="checkbox" [(ngModel)]="pendingObj.isSelected"
+                              (click)="selectPermissionRecords(pendingObj,pendingObj.isSelected)"
+                              style="cursor: pointer;" />
+                          </td>
+                          <td>
+                            {{pendingObj.Date}}
+                          </td>
+                          <td>
+                            {{pendingObj.CreatedOn}}
+                          </td>
+                          <td>
+                            {{pendingObj.StartTime}}
+                          </td>
+                          <td>
+                            {{pendingObj.EndTime}}
+                          </td>
+                          <td>
+                            {{pendingObj.requestedTime}}
+                          </td>
+                          <!-- <td>
+                            {{pendingObj.EmployeeRemarks}}
+                          </td> -->
+
+                          <td>
+
+                            <span *ngIf="!pendingObj.ApproverRemarks" class="badge badge-soft-danger">
+                              ---
+                            </span>
+                            <span *ngIf="pendingObj.ApproverRemarks" class="badge badge-soft-danger">
+                              {{pendingObj.ApproverRemarks}}
+                            </span>
+                          </td>
+                          <td>
+                            <span *ngIf="pendingObj.Status==100" class="badge badge-soft-danger" style=" color:orange">
+                              Applied
+                            </span>
+                            <span *ngIf="pendingObj.Status==200" class="badge badge-soft-danger" style=" color:red">
+                              Reject
+                            </span>
+                            <span *ngIf="pendingObj.Status==300" class="badge badge-soft-danger" style=" color:green">
+                              Approved
+                            </span>
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                    <div *ngIf="pendingRequests && pendingRequests.length==0" style="text-align: center;">No records
+                      found</div>
+                  </div>
+                </ng-template>
+              </ngb-tab>
+
+              <ngb-tab id="approvedTab">
+                <ng-template ngbTabTitle><i class="fa fa-thumbs-up" aria-hidden="true"></i>&nbsp;&nbsp;Approved
+                </ng-template>
+                <ng-template ngbTabContent>
+                  <div class="table-responsive table-height " style="height:400px">
+                    <table class=" table-sticky table-bordered table " style="text-align: center;">
+                      <thead>
+                        <tr>
+                         
+                          <th>
+                            Request For Date
+                          </th>
+                          <th>
+                            Requested On
+                          </th>
+                          <th>
+                            Start Time
+                          </th>
+                          <th>
+                            End Time
+                          </th>
+                          <th>
+                            Requested Time
+                          </th>
+                          <!-- <th>
+                            Employee Remarks
+                          </th> -->
+                          <th>
+                            Manager Remarks
+                          </th>
+                          <th>
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="tbl-scrollbody" *ngIf="approvedRequests && approvedRequests.length>0">
+                        <tr *ngFor="let pendingObj of approvedRequests">
+                         
+                          <td>
+                            {{pendingObj.Date}}
+                          </td>
+                          <td>
+                            {{pendingObj.CreatedOn}}
+                          </td>
+                          <td>
+                            {{pendingObj.StartTime}}
+                          </td>
+                          <td>
+                            {{pendingObj.EndTime}}
+                          </td>
+                          <td>
+                            {{pendingObj.requestedTime}}
+                          </td>
+                          <!-- <td>
+                            {{pendingObj.EmployeeRemarks}}
+                          </td> -->
+
+                          <td>
+
+                            <span *ngIf="!pendingObj.ApproverRemarks" class="badge badge-soft-danger">
+                              ---
+                            </span>
+                            <span *ngIf="pendingObj.ApproverRemarks" class="badge badge-soft-danger">
+                              {{pendingObj.ApproverRemarks}}
+                            </span>
+                          </td>
+                          <td>
+                            <span *ngIf="pendingObj.Status==100" class="badge badge-soft-danger" style=" color:orange">
+                              Applied
+                            </span>
+                            <span *ngIf="pendingObj.Status==200" class="badge badge-soft-danger" style=" color:red">
+                              Reject
+                            </span>
+                            <span *ngIf="pendingObj.Status==300" class="badge badge-soft-danger" style=" color:green">
+                              Approved
+                            </span>
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                    <div *ngIf="approvedRequests && approvedRequests.length==0" style="text-align: center;">No records
+                      found</div>
+                  </div>
+                </ng-template>
+              </ngb-tab>
+            </div>
+            <ngb-tab id="historyTab">
+              <ng-template ngbTabTitle><i class="fa fa-history" aria-hidden="true"></i>&nbsp;&nbsp;History</ng-template>
+              <ng-template ngbTabContent>
+                <div class="row">
+
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                    <label class="form-label"> From - To Date </label>
+                    <div class="position-relative">
+                      <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker
+                        [(ngModel)]="_dateRange"
+                        [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                      <i *ngIf="_dateRange" (click)="_dateRange = null"
+                        style="position: absolute; right: 10px;transform: translate(-50%, -50%);top: 50%; cursor: pointer;"
+                        class="fa fa-times fa-1" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-2">
+                    <label class="form-label"> Status </label>
+                    <ng-select [items]="StatusArr" [(ngModel)]="StatusId" placeholder="Status" bindLabel="DisplayName"
+                      bindValue="DisplayId" style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                    </ng-select>
+                  </div>
+                  <div class=" form-group form-group-vertical col-xs-2 col-sm-2 mt-4">
+                    <button type="button" class="btn btn-primary mr-2 float-right"
+                      style="display: inline;margin: 0 auto;" (click)="dateRangeSearch('S')"> Search
+                      now
+                    </button>
+                  </div>
+                </div>
+                <div class="table-responsive table-height " style="height:300px">
+                  <table class=" table-sticky table-bordered table " style="text-align: center;">
+                    <thead>
+                      <tr>
+                        <th>
+                          Request For Date
+                        </th>
+                        <th>
+                          Requested On
+                        </th>
+                        <th>
+                          Start Time
+                        </th>
+                        <th>
+                          End Time
+                        </th>
+                        <th>
+                          Requested Time
+                        </th>
+                        <!-- <th>
+                          Employee Remarks
+                        </th> -->
+                        <th>
+                          Manager Remarks
+                        </th>
+                        <th>
+                          Status
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody *ngIf="historyRequests!=null && historyRequests.length>0">
+                      <tr *ngFor="let historyObj of historyRequests">
+
+                        <td>
+                          {{historyObj.Date}}
+                        </td>
+                        <td>
+                          {{historyObj.CreatedOn}}
+                        </td>
+                        <td>
+                          {{historyObj.StartTime}}
+                        </td>
+                        <td>
+                          {{historyObj.EndTime}}
+                        </td>
+                        <td>
+                          {{historyObj.requestedTime}}
+                        </td>
+
+                        <!-- <td>
+                          {{historyObj.EmployeeRemarks}}
+                        </td> -->
+                        <td>
+
+                          <span *ngIf="!historyObj.ApproverRemarks" class="badge badge-soft-danger">
+                            ---
+                          </span>
+                          <span *ngIf="historyObj.ApproverRemarks" class="badge badge-soft-danger">
+                            {{historyObj.ApproverRemarks}}
+                          </span>
+                        </td>
+                        <td>
+                          <span *ngIf="historyObj.Status==100" class="badge badge-soft-danger" style=" color:orange">
+                            Applied
+                          </span>
+                          <span *ngIf="historyObj.Status==200" class="badge badge-soft-danger" style=" color:red">
+                            Reject
+                          </span>
+                          <span *ngIf="historyObj.Status==300" class="badge badge-soft-danger" style=" color:green">
+                            Approved
+                          </span>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf="historyRequests!=null && historyRequests.length==0" style="text-align: center;">No records
+                    found</div>
+                </div>
+
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+        </div>
+      </div>
+
+      <!-- <div class="col-md-12 hidden-sm">
+        <ngb-tabset [justify]="permission">
+          <ngb-tab>
+            <ng-template ngbTabTitle><i class="fa fa-get-pocket" aria-hidden="true"></i>&nbsp;&nbsp;Pending
+            </ng-template>
+            <ng-template ngbTabContent>
+              <div class="row" style="width: 102%;">
+                <ng-container *ngIf="dummyPending.length > 0">
+                  <div class="col-md-4 col-sm-4 col-xs-6" *ngFor="let pendingObj of dummyPending  let i = index">
+
+                    <div class="card"
+                      style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7;">
+                      <div class="card-header" style="background-color: white;border: none;padding: 10px;">
+
+                        <span class="badge badge-soft-danger" style="display: inline;"> {{pendingObj.permission_type}}
+                        </span>
+
+                      </div>
+                      <div class="card-body" style="background-color: #f3f8ff;padding: 10px;">
+                        <div class="row align-items-center">
+                          <div class="col">
+                            <span style="font-size: 13px;font-weight: 600;">{{pendingObj.requestedfor}}</span> <br />
+                            <span style="font-size: 11px;">{{pendingObj.requestedOn}} </span>
+                          </div>
+                        </div>
+                      </div>
+                       <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <span style="font-size: 13px; color: #1890ff; font-weight: 600;">check</span>
+                          <br />
+                          <span style="font-size: 11px;" title="check first"> check second
+                          </span>
+                        </div>
+                        <div class="col-lg-6" style="text-align: right;">
+                          <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Edit">
+      
+                            <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                          </a>
+                          <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Cancel">
+      
+                            <i class="fa fa-ban" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                          </a>
+      
+                        </div>
+                      </div>
+      
+                    </div> 
+                    </div>
+
+                  </div>
+                </ng-container>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab>
+            <ng-template ngbTabTitle><i aria-hidden="true"></i>&nbsp;&nbsp;History</ng-template>
+            <ng-template ngbTabContent>
+              <div class="row" style="width: 102%;">
+                <ng-container *ngIf="dummyHistory.length > 0">
+                  <div class="col-md-4 col-sm-4 col-xs-6" *ngFor="let pendingObj of dummyHistory  let i = index">
+
+                    <div class="card"
+                      style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7;">
+                      <div class="card-header" style="background-color: white;border: none;padding: 10px;">
+
+                        <span class="badge badge-soft-danger" style="display: inline;"> {{pendingObj.permission_type}}
+                        </span>
+
+                      </div>
+                      <div class="card-body" style="background-color: #f3f8ff;padding: 10px;">
+                        <div class="row align-items-center">
+                          <div class="col">
+                            <span style="font-size: 13px;font-weight: 600;">{{pendingObj.requestedfor}}</span> <br />
+                            <span style="font-size: 11px;">{{pendingObj.requestedOn}} </span>
+                          </div>
+                        </div>
+                      </div>
+                       <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <span style="font-size: 13px; color: #1890ff; font-weight: 600;">check</span>
+                          <br />
+                          <span style="font-size: 11px;" title="check first"> check second
+                          </span>
+                        </div>
+                        <div class="col-lg-6" style="text-align: right;">
+                          <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Edit">
+      
+                            <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                          </a>
+                          <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Cancel">
+      
+                            <i class="fa fa-ban" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                          </a>
+      
+                        </div>
+                      </div>
+      
+                    </div> 
+                    </div>
+
+                  </div>
+                </ng-container>
+              </div>
+
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div> -->
+
+
+    </div>
+  </div>
+
+</div>
+<!-- 
+<div id="popup_permission" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_permission" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="modal-close" style="top: 0 !important; right: 10px !important;" (click)="closePermissionPopup()">
+            <span class="mdi mdi-close pull-left " style="margin-top: 5px;"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+          <div class="col-lg-8">
+          <div class="row">
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+              <label class="form-label ">Date <span class="required">*</span></label>
+              <input class="form-control calendar " name="date" [(ngModel)]="_date" type="date" id="date"
+                autocomplete="off" bsDatepicker placement="bottom" readonly type="text" placeholder="01-01-2021"
+                (bsValueChange)="onChangeExpenseDate($event)"
+                [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                [maxDate]="_MaxDate" [minDate]="_MinDate">
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6 "></div>
+           
+            <div class=" md-form form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Start Time <span class="required">*</span></label>
+              <input class="form-control timepicker" name="startTime" [(ngModel)]="_startTime" type="time"
+                id="startTime">
+           
+            </div>
+           
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">End Time <span class="required">*</span></label>
+              <input class="form-control timepicker " name="endTime" placeholder="00:00" [(ngModel)]="_endTime"
+                type="time" id="endTime" (blur)="onSearchChange($event.target.value)" required>
+            </div>
+
+
+          </div>
+          <div class="row">
+            <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+              <label class="form-label ">Reason</label>
+              <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                id="Remarks" [(ngModel)]="_remarks" name="Remarks"></textarea>
+            </div>
+          </div>
+        </div>
+          <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+
+            <img src="assets/Images/leaverequest.svg">
+
+            <div style="position: absolute;bottom: -3px;width: 90%;">
+              <div></div>
+              <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                <div class="tw-w-full tw-px-3">
+                  <button type="submit" (click)="onClickSubmitPermission()" class="btn btn-primary"
+                    style="width:100%;border-radius: 25px;"> Submit Request
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="modal-footer p-1 d-none">
+          <div class=" form-group form-group-vertical col-xs-12 col-sm-12 mb-0 ">
+            <button type="button" class="btn btn-primary mr-2 pull-right" (click)='onClickSubmitPermission()'
+              style="display: inline;margin: 0 auto;"> Submit
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div id="popup_permission" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_permission" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+
+
+      <div class="modal-content">
+        <div class="text-center ma-5" *ngIf="spinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>Permission Request</b></small>
+            <h3 class="modal-title subheader_h6" id="popup_release_AL"> New
+            </h3>
+          </div>
+          <div class="modal-close" style="top: 1 !important; right: 10px !important;" (click)="closePermissionPopup()">
+            <span class="mdi mdi-close pull-left " style="margin-top: 5px;"></span>
+          </div>
+        </div>
+        <div class="modal-body" style="overflow-x: hidden;">
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="row mx-0">
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                  <label class="form-label ">Date <span class="required">*</span></label>
+                  <input class="form-control calendar " name="date" [(ngModel)]="_date" type="date" id="date"
+                    autocomplete="off" bsDatepicker placement="bottom" readonly type="text" placeholder="01-01-2021"
+                    (bsValueChange)="onChangeExpenseDate($event)"
+                    [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                    [maxDate]="_MaxDate" [minDate]="_MinDate">
+                </div>
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                  <label *ngIf="this._submittedHours" class="form-label "> Total Hours</label>
+                  <h3 *ngIf="this._submittedHours">{{this._submittedHours}}</h3>
+                </div>
+                <div class=" md-form form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">Start Time <span class="required">*</span></label>
+                  <input class="form-control timepicker" name="startTime" [(ngModel)]="_startTime" type="time"
+                    id="startTime" (blur)="onSearchStartChange($event.target.value)" required>
+                  <!-- min="_minTime" -->
+                  <!-- (blur)="onSearchChange($event.target.value)" required -->
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                  <label class="form-label">End Time <span class="required">*</span></label>
+                  <input class="form-control timepicker " name="endTime" placeholder="00:00" [(ngModel)]="_endTime"
+                    type="time" id="endTime" (blur)="onSearchChange($event.target.value)" min="10:10" max="23:59"
+                    required>
+                </div>
+
+
+              </div>
+              <div class="row mx-0">
+                <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                  <label class="form-label ">Reason<span class="required">*</span></label>
+                  <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                    id="Remarks" [(ngModel)]="_remarks" name="Remarks"></textarea>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+              <div class="row mx-0">
+                <ng-container *ngIf="recentRequests && recentRequests.length > 0">
+                  <label class="form-label col-md-12"> Recent Requests</label>
+                  <div class="col-md-12 col-sm-12 col-xs-12 mb-2" *ngFor="let reqObj of recentRequests  let i = index">
+
+                    <div class="card"
+                      style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7 !important">
+                      <div class="card-header" style="background-color: white;border: none;padding: 5px;">
+
+                        <span class="badge badge-soft-danger" style="display: inline;"> {{reqObj.Date}}
+                        </span>
+                        <span *ngIf="reqObj.Status==300" class="badge badge-soft-danger" style=" color:green">
+                          Approved
+                        </span>
+                        <span *ngIf="reqObj.Status==200" class="badge badge-soft-danger" style=" color:red">
+                          Reject
+                        </span>
+                        <span *ngIf="reqObj.Status==100" class="badge badge-soft-danger" style=" color:orange">
+                          Applied
+                        </span>
+
+                      </div>
+                      <div class="card-body"
+                        style="background-color: #f3f8ff;padding:10px; padding-right: 6px !important;">
+                        <div class="row align-items-center">
+                          <div class="col">
+                            <span style="font-size: 11px;">Time: {{reqObj.totalTime}}</span>
+                            <br />
+                            <span class="pull-left" style="font-size: 11px; ">Start: {{reqObj.StartTime}}</span>
+
+                            <span class="pull-right" style="font-size: 11px;">End: {{reqObj.EndTime}} </span>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </ng-container>
+
+                <div *ngIf="recentRequests!=null && recentRequests.length == 0">
+                  <img style="min-height:228px;" src="assets/Images/leaverequest.svg">
+                </div>
+                <div style="margin :0 auto;width: 90%;">
+                  <div></div>
+                  <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                    <div class="tw-w-full tw-px-3">
+                      <button type="submit" (click)="onClickSubmitPermission()" class="btn btn-primary"
+                        style="width:100%;border-radius: 25px;"> Submit Request
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer p-1 d-none">
+          <div class=" form-group form-group-vertical col-xs-12 col-sm-12 mb-0 ">
+            <button type="button" class="btn btn-primary mr-2 pull-right" (click)='onClickSubmitPermission()'
+              style="display: inline;margin: 0 auto;"> Submit
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

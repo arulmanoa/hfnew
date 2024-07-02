@@ -1,0 +1,164 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b style="font-weight: 500 !important;">Regularize Leave</b></small>
+          <h6 class="modal-title subheader_h6" style="font-size: 10px;
+                  letter-spacing: 1px;
+                  text-transform: uppercase;"> Preview Log </h6>
+        </div>
+        <div class="modal-close" (click)="close()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+      <div class="modal-body no-padder">
+        <div class="d-flex align-items-center" *ngIf="isrendering_spinner">
+          <strong class="text-center"> Loading... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+        <div *ngIf="!isrendering_spinner">
+
+          <div class="row">
+            <div class="col-xs-12  col-sm-12  p-r-50">
+              <!-- <div class="row">
+                
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                    <label class="form-label ">Leave Type </label>
+                    <ng-select [items]="_entitlementList" placeholder="-- select an option --"
+                      formControlName="Entitlement" bindLabel="DisplayName" bindValue="EntitlementId"
+                      [clearable]="false" (change)="onChange_Entitlement($event)">
+                    </ng-select>
+                    <div *ngIf="submitted && g.Entitlement.invalid" class="help-block">
+                      <div *ngIf="g.Entitlement.errors.required">Leave Type is required
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+
+              <div class="row">
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label ">Applied From</label>
+                  <input class="form-control" type="text" name="AppliedFrom" [(ngModel)]="appliedFrom" bsDatepicker placement="bottom" readonly
+                    disabled [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                    placeholder="12-12-1970" autocomplete="off">
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                  <label class="form-label ">Applied Till </label>
+                  <input class="form-control" type="text" name="AppliedTill"  [(ngModel)]="appliedTill" bsDatepicker placement="bottom" readonly
+                    disabled [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                    placeholder="12-12-1970" autocomplete="off">
+                </div>
+
+                <div class="form-group form-group-vertical col-6 col-xs-6 col-lg-6 col-md-6 col-sm-6" *ngIf="!isHalfDayRepresentation">
+                  <label class="form-label" id='forMonthlyValue'>Do you want to specify
+                    half day? </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch" (change)="onChange_halfDay($event)"  [(ngModel)]="isHalfDay" value="yes">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-6 col-xs-6 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label" id='forMonthlyValue'>Do you want to change the leave type? </label>
+                  <div class="p-t-10">
+                    <label class="el-switch el-switch-green">
+                      <input type="checkbox" name="switch"  (change)="onChangeLeaveTypeCheck($event)"  [(ngModel)]="isNewLeaveType" value="yes">
+                      <span class="el-switch-style"></span>
+                    </label>
+                  </div>
+                </div>
+
+
+                <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;" *ngIf="isHalfDay">
+                  <label class="form-label"> First Half </label>
+                  <div class="">
+                    <label class="el-checkbox el-checkbox-red">
+                      <input type="checkbox" name="IsAppliedForFirstHalf"  [(ngModel)]="isFirstHalf" (change)="onChange_firstHalf($event)" />
+                      <span class="el-checkbox-style"></span>
+                    </label>
+
+                  </div>
+
+                </div>
+
+                <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;"  *ngIf="isHalfDay">
+                  <label class="form-label"> Second Half</label>
+                  <div class="">
+                    <label class="el-checkbox el-checkbox-red">
+                      <input type="checkbox" name="IsAppliedFromSecondHalf"  [(ngModel)]="isSecondHalf" (change)="onChange_secondHalf($event)"
+                       />
+                      <span class="el-checkbox-style"></span>
+                    </label>
+                  </div>
+
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="isNewLeaveType">
+                  <label class="form-label ">Leave Type </label>
+                  <ng-select [items]="_entitlementList" placeholder="-- select an option --"
+                    bindLabel="DisplayName" bindValue="EntitlementId" 
+                    [clearable]="false" (change)="onChange_Entitlement($event)">
+                  </ng-select>
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12"  *ngIf="selectedLeaveType != null && isNewLeaveType">
+                    <div *ngIf="!IsLossOfPay" class="help-block" style="color: black;
+                    font-size: 12px !important;
+                   
+                    margin-left: 10px !important;
+                    padding-left: 0px;
+                    font-weight: 600 !important;">
+                       Eligible Units : {{availableDays}}
+                  </div>
+                  </div>
+                  
+                </div>
+                <br/>
+                <br/>
+
+
+
+               
+
+                <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                  <label class="form-label"> Comments <span class="required"> *</span> </label>
+                  <textarea class="form-control" rows="3" spellcheck="false" id="ApplierRemarks" [(ngModel)]="comments"
+                    placeholder="a few comments"></textarea>
+
+                </div> -->
+
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+        <div>
+          <button class="btn btn-default pull-right" type="button" (click)="close()"> <i class="fa fa-ban"
+              aria-hidden="true"></i> &nbsp; Cancel</button>
+          <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+            <div>
+              <div>
+                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                  (click)="confirmChanges()">
+                  <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                      Confirm </span></div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

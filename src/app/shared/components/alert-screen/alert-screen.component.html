@@ -1,0 +1,23 @@
+<div class="content report-content animated fadeInDown content_alertScreen">
+  <!-- <div class="row" style="margin-bottom: 3rem;margin-top: -1rem;">
+    <div class="col-lg-12">
+      <div class="modal-close" tooltip="Close" (click)="onClose()" style="margin-top: 5px;"><span
+          class="mdi mdi-close pull-left" style="font-size: 20px;"></span>
+      </div>
+    </div>
+  </div> -->
+    <div class="row">
+      <div class="col-lg-12 padding-custom">
+        <h6> <i class="mdi mdi-lock"></i> An entry is required or has an invalid value. Please correct and try again</h6>
+        <!-- <ul>
+          <li *ngFor="let item of invalidItems">{{getLetterSpace(item)}}</li>
+       </ul> -->
+
+       <div class="chips__choice">
+        <div class="chip" *ngFor="let item of invalidItems">● {{getLetterSpace(item)}} </div>
+        </div>
+
+      </div>
+    </div>
+ 
+ </div>

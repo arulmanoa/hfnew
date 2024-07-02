@@ -1,0 +1,312 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-lg-6">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-6 text-right">
+                <div class="text-right">
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><button type="button" class="toolbar-button save"
+                                class="toolbar-button save" class="btn btn-primary"> <i class="fa fa-times-circle"></i>
+                                Discard Changes
+                            </button></li>
+                        <!-- <li class="list-inline-item"><button type="button" class="toolbar-button edit" class="btn btn-primary" (click)="goToListing()"> <i class="fa fa-arrow-left"></i> Back
+                            </button></li> -->
+                        <li class="list-inline-item"><button type="button" class="toolbar-button save"
+                                class="btn btn-primary" (click)="saveTemplate()"> <i class="fa fa-edit"></i> Save
+                            </button></li>
+
+                        <li class="list-inline-item">
+                            <button class="btn btn-sm btn-default" tooltip="Close" (click)="goToListing()"
+                                tooltip-placement="bottom" data-original-title="" title="">
+                                <i class="mdi mdi-close font-size-md"></i>
+                            </button>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="wrapper-lg cell" style="height:100%;">
+            <div id="overlay">
+                <div class="w-100 d-flex justify-content-center align-items-center">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <div class="content m-b report-content">
+
+                <div class="container" style="padding-left: 0px; padding-right: 0px; width:100%">
+                    <fieldset style="padding-left:22px;">
+                        <legend class="togvis">Metadata</legend>
+                        <div class="row">
+                            <div *ngIf="clientId=='3'" class="col-md-3" style="border-right-style: solid;
+                                border-right-width: thin;
+                                border-right-color: #e8e4e4;">
+                                <div class="row form-group holder">
+
+                                    <label for="implComp" class="inplbl">Company</label>
+                                    <select id="implComp" [value]="letterTemplate.ImplementationCompanyId"
+                                        (change)="onCompanyChange(selectElem.value)" #selectElem
+                                        class="form-control inpCtrl" style="width:95%">
+                                        <option value="0">All</option>
+                                        <option *ngFor="let implComp of implCompCodeList"
+                                            value={{implComp.ImplementationCompanyId}}>
+                                            {{implComp.Name}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="row form-group holder">
+
+                                    <label for="client" class="inplbl">Client</label>
+                                    <select id="client" [value]="letterTemplate.ClientId"
+                                        (change)="onClientChange(selectClnt.value)" #selectClnt
+                                        class="form-control inpCtrl" style="width:95%">
+                                        <option value="0">All</option>
+                                        <option *ngFor="let client of clientCodeList" value={{client.Id}}
+                                            [selected]="client.Id == letterTemplate.ClientId">
+                                            {{client.Name}}
+                                        </option>
+                                    </select>
+
+                                </div>
+                                <div class="row">
+                                    <label for="contract" class="inplbl">Contract</label>
+                                    <select id="contract" [value]="letterTemplate.ClientContractId"
+                                        (change)="onContractChange(selectContract.value)" #selectContract
+                                        class="form-control inpCtrl" style="width:95%">
+                                        <option value="0">All</option>
+                                        <option *ngFor="let contract of contractCodeList" value={{contract.Id}}
+                                            [selected]="contract.Id == letterTemplate.ClientContractId">
+                                            {{contract.Code}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row form-group holder">
+                                    <div class="col-md-4">
+                                        <!-- <div ngClass="clientId=='3'?col-md-3:col-md-4"> -->
+
+                                        <div>
+                                            <label for="templateCategory" class="inplbl">Category</label>
+                                            <input type="text" style="width:90%;height:50%" readonly="true"
+                                                class="form-control" placeholder="Choose Category" id="templateCategory"
+                                                name="templateCategory" [(ngModel)]="selectedCategory"
+                                                style="background-color: transparent" (click)="HideShow()">
+                                            <div *ngIf="flagDiv" class="dropdown " style="overflow-y:auto;height: 200px;">
+                                                <a href="javascript:void(0)" (click)="HideShow()"
+                                                    class="float-right">[X]</a>
+                                                    <div class="table-responsive ">
+                                                <table class="table table-bordered pointer  my-custom-scrollbar" style="    position: absolute;
+                                                margin-top: 19px;
+                                                 z-index: 1;
+                                                background: aliceblue;
+                                                min-width: 411px;
+                                                font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+                                                font-size: small;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Template Code</th>
+                                                            <th *ngIf="clientId=='3'">Company Id</th>
+                                                            <th *ngIf="clientId=='3'">Client Code</th>
+                                                            <th *ngIf="clientId=='3'">Contract Code</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let template of filteredCategoryList"
+                                                            (click)="selectCategory(template)" class="pointer">
+                                                            <td style="display:none;">{{template.Id}}</td>
+                                                            <td>{{template.Code}}</td>
+                                                            <td *ngIf="clientId=='3'">{{template.ImplementationCompanyId}}</td>
+                                                            <td *ngIf="clientId=='3'">{{template.ClientCode}}</td>
+                                                            <td *ngIf="clientId=='3'">{{template.ContractCode}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- <label for="templateCategory" class="inplbl">Category</label>
+                                        <select id="templateCategory" class="form-control inpCtrl"
+                                        style="width:95%">
+                                        <option value="0">Choose</option>
+                                     
+                                        </select> -->
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="type" class="inplbl">Type</label>
+                                        <select id="type" class="form-control inpCtrl"
+                                            (change)="onTypechange(type.value)" #type [value]="letterTemplate.Type">
+                                            <option value="0">Choose</option>
+                                            <option value="1">Email</option>
+                                            <option value="2">Letter</option>
+                                            <option value="3">SMS</option>
+                                            <!-- <option *ngFor="let client of clientCodeList" value={{client.Id}} [selected]="client.Id == ruleset.ClientId">
+                                                        {{client.Name}}
+                                                    </option> -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="code" class="inplbl">Code</label>
+                                        <input type="text" [(ngModel)]="letterTemplate.Code" id="code"
+                                            placeholder="Code" class="form-control inpCtrl" style="width:90%"
+                                            required />
+                                    </div>
+                                </div>
+                                <div class="row form-group holder">
+                                    <div class="col-md-4">
+                                        <div>
+                                            <label for="name" class="inplbl">Name</label>
+                                            <input type="text" [(ngModel)]="letterTemplate.Name" id="name"
+                                                placeholder="Name" class="form-control inpCtrl" style="width:90%"
+                                                required="true" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="validFrom" class="inplbl">Valid From</label>
+                                        <!-- <input type="text" id="validFrom" class="form-control inpCtrl" style="width:95%" required /> -->
+                                        <div class="input-group" style="    margin-top: 0px;">
+                                            <input class="form-control" placeholder="yyyy-mm-dd" readonly="true"
+                                                style="background-color: transparent;max-width: 86%;" name="dp"
+                                                [(ngModel)]="validFrom" ngbDatepicker #d="ngbDatepicker" />
+                                            <div class="input-group-append">
+                                                <button style="border-color:lightgray"
+                                                    class="btn btn-outline-secondary calendar  fa fa-calendar"
+                                                    (click)="d.toggle()" type="button"></button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="validTill" class="inplbl">Valid Till</label>
+                                        <div class="input-group" style="    margin-top: 0px;">
+                                            <input class="form-control" placeholder="yyyy-mm-dd" readonly="true"
+                                                style="background-color: transparent;max-width: 86%;" name="dpt"
+                                                [(ngModel)]="validTo" ngbDatepicker #dt="ngbDatepicker" />
+                                            <div class="input-group-append">
+                                                <button style="border-color:lightgray"
+                                                    class="btn btn-outline-secondary calendar  fa fa-calendar"
+                                                    (click)="dt.toggle()" type="button"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div>
+                                            <label for="desc" class="inplbl">Remarks</label>
+                                            <input type="text" [(ngModel)]="letterTemplate.Description" id="desc"
+                                                placeholder="Remarks" class="form-control inpCtrl" style="width:90%"
+                                                required="true" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="fileName" class="inplbl">Output File Name</label>
+                                        <input type="text" [(ngModel)]="letterTemplate.OuputFileName" id="fileName"
+                                            placeholder="Code" class="form-control inpCtrl" style="width:90%"
+                                            required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="fileExt" class="inplbl">Output File Extension</label>
+                                        <select id="selectFileExt" [value]="letterTemplate.OutputFileExtension" #ofe
+                                            class="form-control inpCtrl" (change)="onOFEChange(ofe.value)">
+                                            <option value="Choose">Choose</option>
+                                            <option value="Docx">Docx</option>
+                                            <option value="Pdf">Pdf</option>
+                                            <!-- <option *ngFor="let client of clientCodeList" value={{client.Id}} [selected]="client.Id == ruleset.ClientId">
+                                                {{client.Name}}
+                                            </option> -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </fieldset>
+                </div>
+                <div class="container" style="padding-left: 0px; padding-right: 0px; width:100%">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <fieldset>
+                                <legend>Dynamic Fields</legend>
+                                <div *ngIf="fields" style="    overflow-y: auto;
+                max-height: 27rem;" class="tab-content">
+                                    <ul>
+                                        <li class="dynField" *ngFor="let field of fields" draggable="true"
+                                            (dragstart)="drag($event)">
+
+                                            {{field.TagName}}
+                                            <!-- <button class="fieldbtns" style="margin: 4px;width: 92%;" type="button" (click)="fieldClick(field.TagName)">{{field.TagName}}</button> -->
+                                        </li>
+                                    </ul>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-9">
+                            <fieldset>
+                                <legend>Template</legend>
+                                <ul class="nav nav-tabs" style="float: right;width: 2rem;padding-right: 0px !important;
+                        margin-right: 0px !important;margin-left: 6px;" id="myTab" role="tablist">
+                                    <li class="nav-item" style="height: 70px;
+                        padding-top: 12px;text-align: center;" *ngIf="this.Typename == 1 || this.Typename == 2">
+                                        <a class="nav-link active" style="border-radius: 4px;" data-toggle="tab"
+                                            href="#header" role="tab" aria-controls="home">Header</a>
+                                    </li>
+                                    <li class="nav-item" style="height: 70px;
+                        padding-top: 12px;text-align: center;"
+                                        *ngIf="this.Typename == 1 || this.Typename == 2 || this.Typename == 3">
+                                        <a class="nav-link" style="border-radius: 4px;" data-toggle="tab" href="#body"
+                                            role="tab" aria-controls="profile">Body</a>
+                                    </li>
+                                    <li class="nav-item" style="height: 70px;
+                        padding-top: 12px;text-align: center;" *ngIf="this.Typename == 2">
+                                        <a class="nav-link" style="border-radius: 4px;" data-toggle="tab" href="#footer"
+                                            role="tab" aria-controls="messages">Footer</a>
+                                    </li>
+
+                                </ul>
+                                <!-- <angular-editor id="txtHeader" [config]="config" [placeholder]="'Enter text here...'"
+                    [(ngModel)]="headerValue" class="divheader"></angular-editor> -->
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="header"
+                                        style="margin-right: 22px; background-color: white" role="tabpanel">
+                                        <angular-editor id="txtHeader" [config]="config"
+                                            [placeholder]="'Enter text here...'" [(ngModel)]="headerValue">
+                                        </angular-editor>
+                                    </div>
+                                    <div class="tab-pane" id="body" style="margin-right: 22px; background-color: white"
+                                        role="tabpanel">
+                                        <angular-editor id="txtBody" [config]="config"
+                                            [placeholder]="'Enter text here...'" [(ngModel)]="bodyValue">
+                                        </angular-editor>
+                                    </div>
+                                    <div class="tab-pane" id="footer"
+                                        style="margin-right: 22px; background-color: white" role="tabpanel">
+                                        <angular-editor id="txtFooter" [config]="config"
+                                            [placeholder]="'Enter text here...'" [(ngModel)]="footerValue">
+                                        </angular-editor>
+                                    </div>
+
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

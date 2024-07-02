@@ -1,0 +1,3347 @@
+<div class="page-wrapper" style="margin-top: 0px;">
+  <div class="page-content ">
+    <app-loading-screen></app-loading-screen>
+    <!-- <div [ngStyle]="{'display': loadingSpinner?'flex':'none'}" id="overlay">
+      <div class="w-100 d-flex justify-content-center align-items-center">
+        <div class="spinner"></div>
+      </div>
+    </div> -->
+
+
+
+    <div class="row" style="margin-top: -10px;margin-bottom: -10px;" *ngIf="pageLayout  && !spinner">
+
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left" style="margin-top: 3px;">
+        <div class="text-left" style="margin-top: 5px;">
+          <ul class="list-inline">
+            <h1 class="vss-HubTitle">
+              <div class="vss-HubTitle--titleText">{{pageTitle}}</div>
+            </h1>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+
+
+            <!-- // THESE BUTTON ACTION ONLY FOR LEAVE REQUEST HISTORY PAGE, IT WILL CHANGE IN FUTURE -->
+            <li class="list-inline-item" *ngIf="code == 'leaveRequestHistory' || code == 'leaveRequests'">
+              <button type="button" class="btn upgrade-btn" id="btn_qc_approve"
+                style=" font-size: 12px;font-weight: 800 !important;" [disabled]="selectedItems.length == 0"
+                (click)="bulk_approve_reject(true)"> <i class="mdi mdi-checkbox-marked-circle  m-r-xs"
+                  style="font-size: 14px;"></i> Approve
+              </button>
+            </li>
+            <li class="list-inline-item" *ngIf="code == 'leaveRequestHistory' || code == 'leaveRequests'">
+              <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                style=" font-size: 12px;font-weight: 800 !important;" [disabled]="selectedItems.length == 0"
+                (click)="bulk_approve_reject(false)"> <i class="mdi mdi-close-circle  m-r-xs"
+                  style="font-size: 14px;"></i> Reject
+              </button>
+            </li>
+            <li class="list-inline-item"
+              *ngIf="code == 'leaveRequestHistory' || code == 'attendanceList' || code == 'leaveRequests' || code == 'savedEmployees'">
+              <button type="button" class="btn btn-default" style=" font-size: 12px;font-weight: 800 !important;"
+                (click)="do_Refresh()">
+                <i class="mdi mdi-refresh m-r-xs" style="font-size: 14px;"></i> Refresh
+              </button>
+            </li>
+
+
+            <!-- <li class="list-inline-item" *ngIf="code == 'payrollinputs_list' || code == 'payrollVerificationRequest'">
+              <button type="button" class="btn btn-primary" (click)="do_Refresh()" >
+                <i class="mdi mdi-refresh  m-r-xs"></i> Refresh
+              </button>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div>
+
+      <!-- <button class="btn btn-primary" (click)="routertest()"> router </button> -->
+
+      <div class="content m-b report-content animated fadeInDown" style="margin-top: 20px;margin-bottom: 10px;"
+        *ngIf="(searchPanel && searchObject !== undefined) &&  (code === 'SaleOrders' || code === 'payoutrequest')">
+        <!-- <label class="form-label searchbar-label">Search Criteria</label> -->
+        <span class="es-text" *ngIf="searchObject">
+          <span *ngIf="searchObject.ClientName != null">
+            <b>{{searchObject.ClientName}} </b> <span *ngIf="searchObject.ContractName != null"> &nbsp; |
+              &nbsp;
+              {{searchObject.ContractName}} </span> <span *ngIf="searchObject.PayPeriodName != null">
+              &nbsp; | &nbsp;
+              {{searchObject.PayPeriodName}} </span> <span *ngIf="searchObject.TeamName != null">&nbsp;
+
+              <span *ngIf="code != 'payoutrequest'"> | &nbsp;
+                {{searchObject.TeamName}} </span> </span>
+          </span>
+          <span *ngIf="searchObject.ClientName == null"> No record were found! Please try after sometimes.
+          </span>
+          <button class="btn btn-default btn-bold" style="margin-top: -5px;float: right; margin-left: 20px;"
+            (click)="openSearch()" tooltip="Custom filter" data-original-title="" title="">
+            <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i>
+          </button>
+          <span style="float: right;">
+            <i><b> {{dataset.length}} result(s) found </b></i>
+          </span>
+        </span>
+      </div>
+
+
+      <div *ngIf="!searchPanel && code != 'rollOver' && code != 'payoutApproval'">
+        <app-searchbar-view *ngIf="pageLayout" [BusinessType]="BusinessType"
+          [searchConfiguration]="pageLayout.SearchConfiguration" [isBtnDisabledRequired]="isBtnDisabledRequired"
+          (searchButtonClicked)="onClickingSearchButton($event)">
+        </app-searchbar-view>
+      </div>
+    </div>
+
+    <div style="margin-top: 10px;margin-bottom: -15px;" *ngIf="isCardBarViewRequired && !spinner">
+      <app-cardbar-view [cardConfiguration]="cardConfiguration"></app-cardbar-view>
+    </div>
+
+    <!-- <br> -->
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="content m-b report-content"
+      *ngIf="pageLayout  && !spinner && (code != 'getPunchInPunchOutReport' && code != 'attendanceBreakupDetailsForNextPeriod' && code != 'attendanceBreakupDetails' && code != 'MLReport' && code != 'MonthlyATReport' && code != 'taxComputationList' && code != 'paysheetList' && code != 'taxComputationDetailsbyMonthYear' && code != 'pfchallan' && code != 'taxComputationDetailsbyFiscalYear') && pageLayout.GridConfiguration.DefaultLayoutType != 2"
+      style="padding-bottom: 35px;margin-top: 20px;">
+
+
+      <div class="row" *ngIf="isDuplicateEntry">
+        <div class="col-lg-12 text-center">
+          <ngb-alert [dismissible]="false">
+            <strong>The list item could not be displayed or updated because duplicate values were found in
+              the list.
+              Please reach out to your Support Administrator. </strong>
+          </ngb-alert>
+        </div>
+      </div>
+
+      <div *ngIf="!isDuplicateEntry">
+        <div class="row" style="margin-bottom: 10px;">
+
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+            <div class="text-left">
+              <ul class="list-inline" style="width: 110%;">
+                <li class="list-inline-item" *ngIf="showDownloadExcelBtn && this.dataset && this.dataset.length > 0">
+                  <button type="button" class="btn btn-primary" (click)="do_common_download_excel()">
+                    <i class="mdi mdi-download  m-r-xs"></i> Download Excel
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="showDownloadPdfBtn && this.dataset && this.dataset.length > 0">
+                  <button type="button" class="btn btn-primary" (click)="do_common_download_pdf()">
+                    <i class="mdi mdi-download  m-r-xs"></i> Download PDF
+                  </button>
+                </li>
+
+                <li class="list-inline-item"
+                  *ngIf="code == 'CandidateDetailsReport' || code == 'ResignedReportITC' || code == 'TDSReportITC' ||
+                                code == 'LWFReportITC' || code == 'PTReportITC' || code == 'PFReportITC' || code == 'PaysheetITC' ||
+                                code == 'EmployeeDetailsITC' || code === 'NewJoineeReportITC' || code === 'ESICReportITC' || code === 'salaryCreditReportForITC'">
+                  <button type="button" class="btn btn-default" (click)="exportExcelForITC(code)">
+                    <i class="mdi mdi-download m-r-xs"></i> Export Excel
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="pageLayout.Code == 'employeelist'">
+                  <button type="button" class="btn btn-danger" id="btn_qc_reject" [disabled]="selectedItems.length == 0"
+                    (click)="markanemployeeasblacklisted()"> <i class="mdi mdi-close-circle  m-r-xs"></i> Mark as
+                    Blacklisted
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="pageLayout.Code == 'blacklistedReport'">
+                  <button type="button" class="btn btn-primary" id="btn_qc_reject"
+                    [disabled]="selectedItems.length == 0 || selectedItems.length > 1"
+                    (click)="markanemployeeaswhitelist()"> <i class="mdi mdi-close-circle  m-r-xs"></i>Remove Blacklist
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'employeelist'">
+                  <button type="button" class="btn btn-default" [disabled]="selectedItems.length == 0"
+                    (click)="do_MarkFandF()">
+                    <i class="mdi mdi-bookmark-check m-r-xs"></i> Initiate Separation
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'employeelist'">
+                  <button type="button" class="btn btn-default" [disabled]="selectedItems.length == 0"
+                    (click)="sendMail()"
+                    tooltip="By clicking this button, you will send an ESS login credentials to your employees">
+                    <i class="mdi mdi-email-check m-r-xs"></i> Send Ess Mail
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'employeelist'">
+                  <button type="button" class="btn btn-default" (click)="sendAnEmail(selectedItems)"
+                    tooltip="send an email">
+                    <i class="mdi mdi-email-check m-r-xs"></i> Send Mail
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'reporingEmployeeList'">
+                  <button type="button" class="btn btn-default" [disabled]="selectedItems.length == 0"
+                    (click)="ChangeShiftFn(selectedItems)" tooltip="Change Shift">
+                    <i class="mdi mdi-stack-exchange m-r-xs"></i> Change Shift
+                  </button>
+                </li>
+                <!-- <li class="list-inline-item" *ngIf="code == 'employeelist'">
+                    <button type="button" class="btn btn-default" [disabled]="selectedItems.length == 0"
+                      (click)="EmployeeBlockClickFn(selectedItems)" tooltip="Flag Employee">
+                      <i class="mdi mdi-block-helper m-r-xs"></i> Flag Employee
+                    </button>
+                  </li> -->
+                <li class="list-inline-item" *ngIf="code == 'NotificationHistory'">
+                  <button type="button" class="btn btn-default" (click)="resendNotificationMessage()">
+                    <i class="mdi mdi-email-check m-r-xs"></i> Re-Send
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'employeeMissingDoc'">
+                  <button type="button" class="btn btn-default" [disabled]="selectedItems.length == 0"
+                    (click)="sendMissdDocAnEmail(selectedItems)" tooltip="send an email">
+                    <i class="mdi mdi-email-check m-r-xs"></i> Send Mail
+                  </button>
+                </li>
+
+                <li class="list-inline-item"
+                  *ngIf="code == 'payrollVerificationRequest' || code == 'pvr_verified_revise'">
+                  <button [disabled]="selectedItems.length == 0" type="button" class="btn btn-default"
+                    (click)="downloadPIS_paysheet()">
+                    <i class="mdi mdi-download  m-r-xs"></i> Download PIS & Paysheet
+                  </button>
+                </li>
+                <!-- <li class="list-inline-item" *ngIf="code == 'payrollVerificationRequest'"><button type="button" class="btn btn-primary"
+                (click)="do_initiate_order()">
+                <i class="mdi mdi-checkbox-multiple-marked-outline  m-r-xs"></i> Approve
+              </button></li>
+            <li class="list-inline-item" *ngIf="code == 'payrollVerificationRequest'"><button type="button" class="btn btn-danger"
+                (click)="do_initiate_order()">
+                <i class="mdi mdi-cancel  m-r-xs"></i> Reject
+              </button></li> -->
+
+
+                <li class="list-inline-item" *ngIf="code == 'Invoices' || code == 'invoices'">
+                  <button type="button" class="btn btn-default" (click)="CancelInv()">
+                    <i class="mdi mdi-cancel  m-r-xs"></i> Cancel Invoice(s)
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'Invoices'">
+                  <button type="button" class="btn btn-default" disabled (click)="download_invoice()">
+                    <i class="mdi mdi-folder-download  m-r-xs"></i> Download Invoice
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'Invoices' || code == 'invoices'">
+                  <button type="button" class="btn btn-default" disabled (click)="sendInvoice_Client()">
+                    <i class="mdi mdi-telegram  m-r-xs"></i> Send Invoice to Client
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'payoutApprovals' || code == 'payoutApproval'">
+                  <button type="button" class="btn btn-default" [disabled]="selectedItems.length != 1"
+                    (click)="do_approveorhold_payout('Approve')">
+                    <i class="mdi mdi-spellcheck  m-r-xs"></i> Approve Batch
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'payoutrequest' && BusinessType  != '3'">
+                  <button type="button" class="btn btn-default" [disabled]="selectedItems.length != 1"
+                    (click)="do_approveorhold_payout('Approve')">
+                    <i class="mdi mdi-spellcheck  m-r-xs"></i> Approve Batch
+                  </button>
+                </li>
+
+                <li class="list-inline-item"
+                  *ngIf="code == 'payoutrequest' || code == 'payoutApprovals' || code == 'payoutApproval'">
+                  <button type="button" class="btn btn-default" [disabled]="selectedItems.length != 1"
+                    (click)="do_approveorhold_payout('Hold')">
+                    <i class="mdi mdi-gesture-double-tap  m-r-xs"></i> Hold Batch
+                  </button>
+                </li>
+
+
+                <li class="list-inline-item" *ngIf="code == 'SaleOrders'">
+                  <button type="button" class="btn btn-default" [disabled]="selectedItems.length == 0"
+                    (click)="download_billingsheet_modal()">
+                    <i class="mdi mdi-cloud-download  m-r-xs"></i> Download Billing Sheet
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'SaleOrders'"><button [disabled]="selectedItems.length == 0"
+                    type="button" class="btn btn-default-danger" (click)="do_Approve_SaleOrder('Reject')">
+                    <i class="mdi mdi-tag-remove  m-r-xs"></i> Reject Sale Order
+                  </button></li>
+
+                <li class="list-inline-item" *ngIf="code == 'migrationlist'">
+                  <button *ngIf="selectedItems.length == 1" type="button"
+                    [disabled]="selectedItems[0].IsReadytoVoid == 0" class="btn btn-default btn-sm m-r-sm btn-danger"
+                    (click)="cancelOfferInMigration(selectedItems)"><i class="mdi mdi-tag-remove m-r-xs"></i> Cancel
+                    Offer
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'migrationlist'">
+                  <button *ngIf="selectedItems.length > 0" type="button" class="btn btn-default btn-sm m-r-sm"
+                    [disabled]="selectedItems[0].IsReadyForAL == 0" (click)="releaseAL(selectedItems,'M')"><i
+                      class="mdi mdi-comment-account-outline m-r-xs"></i> Release AL
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'migrationlist'">
+                  <button *ngIf="selectedItems.length == 1" type="button" class="btn btn-default btn-sm m-r-sm"
+                    [disabled]="!selectedItems[0].IsReadytoMakeanOffer"
+                    (click)="makeAnOfferInMigrationList(selectedItems)"><i class="mdi mdi-new-box m-r-xs"></i> Make an
+                    Offer
+                  </button>
+                </li>
+
+                <!-- <li class="list-inline-item" *ngIf="code == 'migrationlist' && BusinessType == '3'">
+                    <button *ngIf="selectedItems.length == 1" type="button" 
+                        class="btn btn-default btn-sm m-r-sm" 
+                        [disabled]="selectedItems[0].ProcessstatusId != '9800'" 
+                        (click)="doExtendingDOJ(selectedItems)"><i class="mdi mdi-focus-field m-r-xs"></i> Request New DOJ
+                    </button>
+                  </li> -->
+
+                <li class="list-inline-item" *ngIf="code == 'migrationlist'">
+                  <button *ngIf="selectedItems.length == 1 && selectedItems[0].Status == 'Ready to Migrate'"
+                    type="button" class="btn btn-default btn-sm m-r-sm"
+                    (click)="previewLetterForMigration(selectedItems[0])">
+                    <i class="mdi mdi-eye  m-r-xs"></i> Preview AL
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'CancelOfferList' || code == 'transitionHistory'">
+                  <button class="btn btn-default btn-sm m-r-sm " *ngIf="selectedItems.length == 1" [disabled]="selectedItems[0].IsReadyForRegenerate == 0 || 
+                        selectedItems[0].OfferedStatus == 'Voided'" (click)="ReGenerateAL(selectedItems)">
+                    <i class="mdi mdi-recycle m-r-xs" style="font-size: 14px !important;"></i>
+                    Re-Generate AL
+                  </button>
+                </li>
+
+
+                <li class="list-inline-item" *ngIf="code == 'CancelOfferList' || code == 'transitionHistory'">
+                  <button *ngIf="selectedItems.length == 1" type="button" class="btn btn-default btn-sm m-r-sm"
+                    [disabled]="selectedItems[0].IsPayrolled == 1 || selectedItems[0].OfferedStatus == 'Voided'"
+                    (click)="updateCandidateOfferDetailAsNotJoined(selectedItems)"><i
+                      class="mdi mdi-comment-account-outline m-r-xs"></i>
+                    Candidate Not Joined
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'CancelOfferList' || code == 'transitionHistory'">
+                  <button *ngIf="selectedItems.length == 1" type="button" class="btn btn-default btn-sm m-r-sm"
+                    [disabled]="!selectedItems[0].IsMakeanOffer" (click)="revise_offer(selectedItems)"><i
+                      class="mdi mdi-new-box m-r-xs"></i>
+                    Make a new offer
+                  </button>
+                </li>
+
+                <!-- <li class="list-inline-item"
+                                    *ngIf="code == 'CancelOfferList' || code == 'transitionHistory'">
+                                    <button *ngIf="selectedItems.length == 1" type="button"
+                                        class="btn btn-default btn-sm m-r-sm" (click)="revise_offer(selectedItems)"><i
+                                            class="mdi mdi-new-box m-r-xs"></i> Re-Onboard
+                                    </button>
+                                </li> -->
+
+
+                <!-- <li class="list-inline-item" *ngIf="code == 'SaleOrders'">
+                <button type="button" class="btn btn-default"  disabled
+                  (click)="Re-generateSO()">
+                  <i class="mdi mdi-redo-variant  m-r-xs"></i> Re-generate SO
+                </button>
+              </li> -->
+                <!-- <li class="list-inline-item" *ngIf="code == 'SaleOrders'">
+                <button type="button" class="btn btn-default" 
+                  [disabled]="selectedItems.length == 0" (click)="MergeSO()">
+                  <i class="mdi mdi-source-pull m-r-xs"></i> Merge SO
+                </button>
+              </li> -->
+                <!-- <li class="list-inline-item" *ngIf="code == 'SaleOrders'">
+                <button type="button" class="btn btn-default"  disabled (click)="CancelSO()">
+                  <i class="mdi mdi-cancel m-r-xs"></i> Cancel SO
+                </button>
+              </li> -->
+
+                <li class="list-inline-item" *ngIf="code == 'saleorders'"><button type="button" class="btn btn-default"
+                    (click)="do_approve_pvr()">
+                    <i class="mdi mdi-tag-remove  m-r-xs"></i> Remove from Sale Order
+                  </button></li>
+
+                <li class="list-inline-item" *ngIf="code == 'saleorders'"><button type="button" class="btn btn-default"
+                    (click)="do_approve_pvr()">
+                    <i class="mdi mdi-checkbox-multiple-marked-circle-outline  m-r-xs"></i> Confirm
+                    Sale Order
+                  </button></li>
+                <li class="list-inline-item"
+                  *ngIf="selectedItems.length > 0 && code == 'payrollinputs_list' || code == 'processedOutput' || code == 'initiate_sale_orders'">
+                  <button type="button" class="btn btn-primary-custom" (click)="do_initiate_Sale_order()">
+                    <i class="mdi mdi-tag-plus  m-r-xs"></i> Initiate Sale Order
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="selectedItems.length > 0 && code == 'payrollinputs_list'"><button
+                    type="button" class="btn btn-primary-custom" (click)="importData_popup()">
+                    <i class="mdi mdi-content-duplicate  m-r-xs"></i> Import PIS
+                  </button></li>
+
+                <li class="list-inline-item" *ngIf="selectedItems.length > 0 && code == 'payrollinputs_list'"><button
+                    type="button" class="btn btn-primary-custom" (click)="do_generate_PIS()">
+                    <i class="mdi mdi-account-multiple-plus  m-r-xs"></i> Generate PIS
+                  </button></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+
+            <div class="text-right">
+              <ul class="list-inline">
+
+                <!-- <li class="list-inline-item" *ngIf="code == 'Invoices' || code == 'invoices'"><button type="button"
+                  class="btn btn-primary" (click)="do_previewInvoice()"
+                  [disabled]="(selectedItems.length == 0 || selectedItems.length > 1)">
+                  <i class="mdi mdi-eye  m-r-xs"></i> Preview Invoice
+                </button></li> -->
+
+                <!-- <li class="list-inline-item" *ngIf="code == 'Invoices'"><button type="button" class="btn btn-primary"
+                  (click)="do_viewback_sheet()">
+                  <i class="mdi mdi-television-guide  m-r-xs"></i> View Back Sheet
+                </button></li> -->
+
+                <li class="list-inline-item" *ngIf="code == 'FBPSubmissionList'">
+                  <button type="button" class="btn btn-default" [disabled]="selectedItems.length != 1"
+                    (click)="viewFBPSubmissionForApprovalRejection()">
+                    <i class="mdi mdi-eye m-r-xs" style="font-size: 14px !important;"></i>
+                    View
+                  </button>
+                </li>
+                <!-- FBP SUBMISSION SLOT ACTIONS -->
+                <li class="list-inline-item" *ngIf="code == 'fbpSlot'">
+                  <button type="button" class="btn btn-default" (click)="addNewFBPSubmissionSlot()">
+                    <i class="mdi mdi-account-remove m-r-xs" style="font-size: 14px !important;"></i>
+                    Add New Slot
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'fbpSlot'">
+                  <button *ngIf="selectedItems.length == 1" type="button" class="btn btn-primary btn-sm m-r-sm"
+                    [disabled]="selectedItems[0].Status != 'Active'" (click)="editFBPSubmissionSlot()">
+                    <i class="mdi mdi-eye m-r-xs"></i> Edit Slot
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'fbpSlot'">
+                  <button *ngIf="selectedItems.length == 1" type="button" (click)="inactiveOrDeleteFBPSubmissionSlot()"
+                    class="btn btn-danger btn-sm m-r-sm"
+                    [disabled]="selectedItems[0].ClientName == 'ALL' || selectedItems[0].ClientContractName == 'ALL'
+                                || selectedItems[0].TeamName == 'ALL' || selectedItems[0].EmployeeName == 'ALL' || selectedItems[0].Status != 'Active'">
+                    <i class="fa fa-trash-o"></i> Delete Slot
+                  </button>
+                </li>
+                <!-- INVESTMENT SUBMISSION ACTIONS -->
+                <li class="list-inline-item" *ngIf="code == 'InvesmentSlot'">
+                  <button type="button" class="btn btn-default" (click)="addNewInvestmentSubmissionSlot()">
+                    <i class="mdi mdi-account-remove m-r-xs" style="font-size: 14px !important;"></i>
+                    Add New Slot
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'InvesmentSlot'">
+                  <button *ngIf="selectedItems.length == 1" type="button" class="btn btn-primary btn-sm m-r-sm"
+                    (click)="editInvestmentSubmissionSlot()">
+                    <i class="mdi mdi-eye m-r-xs"></i> Edit Slot
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'InvesmentSlot'">
+                  <button *ngIf="selectedItems.length == 1" type="button"
+                    (click)="inactiveOrDeleteInvestmentSubmissionSlot()" class="btn btn-danger btn-sm m-r-sm"
+                    [disabled]="selectedItems[0].ClientName == 'ALL' || selectedItems[0].ClientContractName == 'ALL'
+                                || selectedItems[0].TeamName == 'ALL' || selectedItems[0].EmployeeName == 'ALL'">
+                    <i class="fa fa-trash-o"></i> Delete Slot
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'getJoiningKits'">
+                  <button type="button" class="btn btn-primary" [disabled]="selectedItems.length != 1"
+                    (click)="showOnlineJoiningKitForAnEmployee()">
+                    <i class="mdi mdi-eye m-r-xs"></i> View Kit
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'teamAttendanceList'"><button
+                    [disabled]="selectedItems.length != 1" type="button" class="btn btn-primary"
+                    (click)="do_view_attendance_request()">
+                    <i class="mdi mdi-file-eye-outline  m-r-xs"></i> View Attendance
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'leaveRequestList'"><button
+                    [disabled]="selectedItems.length != 1" type="button" class="btn btn-primary"
+                    (click)="do_view_leave_request()">
+                    <i class="mdi mdi-file-eye-outline  m-r-xs"></i> View Leave
+                  </button></li>
+
+                <li class="list-inline-item" *ngIf="code == 'payoutrequest' && BusinessType != '3'">
+                  <button [disabled]="selectedItems.length != 1" type="button" class="btn btn-primary"
+                    (click)="do_generate_file()">
+                    <i class="mdi mdi-telegram  m-r-xs"></i> Generate Bank File
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'payoutrequest' && BusinessType != '3'">
+                  <button [disabled]="selectedItems.length != 1" type="button" class="btn btn-primary"
+                    (click)="do_download_cheque_file()">
+                    <i class="mdi mdi-download  m-r-xs"></i> Download Excel
+                  </button>
+                </li>
+
+                <li class="list-inline-item"
+                  *ngIf="BusinessType == 3 &&  (code == 'payoutrequest' || code == 'payoutApprovals' || code == 'payoutApproval' || code == 'payoutApprove')">
+                  <button [disabled]="selectedItems.length != 1" type="button" class="btn btn-primary"
+                    (click)="do_view_request()">
+                    <i class="mdi mdi-information-outline  m-r-xs"></i> View Request
+                  </button>
+                </li>
+
+
+                <li class="list-inline-item" *ngIf="code == 'SaleOrders'"><button [disabled]="selectedItems.length == 0"
+                    type="button" class="btn btn-primary" (click)="do_Approve_SaleOrder('Approve')">
+                    <i class="mdi mdi-spellcheck  m-r-xs"></i> Approve Sale Order
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'SaleOrders'"><button [disabled]="disbaleButtonAfterClicked"
+                    type="button" class="btn btn-primary" (click)="do_Create_Invoice()">
+                    <i class="fa fa-envelope-open-o  m-r-xs"></i> Create Invoice
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'SaleOrders'"><button [disabled]="disbaleButtonAfterClicked"
+                    type="button" class="btn btn-primary" (click)="do_initiate_Payout()">
+                    <i class="fa fa fa-inr  m-r-xs"></i> Initiate Payout
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'rejectedPayout'"><button
+                    [disabled]="disbaleButtonAfterClicked" type="button" class="btn btn-primary"
+                    (click)="do_initiate_Payout()">
+                    <i class="fa fa fa-inr  m-r-xs"></i> Re Initiate Payout
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'generatePIS_Employee' || code == 'processedOutput' ">
+                  <button type="button" class="btn btn-primary" (click)="chooseEmployee()">
+                    <i class="mdi mdi-bookmark-plus  m-r-xs"></i>Mark F&F
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'generatePIS_Employee'"><button type="button"
+                    class="btn btn-primary" (click)="chooseEmployee()">
+                    <i class="mdi mdi-play  m-r-xs"></i>Process
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'generatePIS_Employee'"><button type="button"
+                    class="btn btn-primary" (click)="chooseEmployee()">
+                    <i class="mdi mdi-account-plus  m-r-xs"></i>Generate PIS
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'generatePIS_Employee'"><button type="button"
+                    class="btn btn-primary" (click)="importData_popup()">
+                    <i class="mdi mdi-import  m-r-xs"></i> Import Data
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'generatePIS_Employee'"><button type="button"
+                    class="btn btn-primary" (click)="chooseEmployee()">
+                    <i class="mdi mdi-checkbox-multiple-marked-circle  m-r-xs"></i> Submit
+                  </button></li>
+
+                <li class="list-inline-item" *ngIf="code == 'processedOutput'"><button type="button"
+                    class="btn btn-primary" (click)="chooseEmployee()">
+                    <i class="mdi mdi-checkbox-multiple-marked-circle  m-r-xs"></i> Submit to QC
+                  </button></li>
+
+
+
+                <li class="list-inline-item" *ngIf="code == 'pvr_verified_revise'"><button
+                    [disabled]="selectedItems.length == 0" type="button" class="btn btn-danger"
+                    (click)="do_approve_reject_pvr('reject')">
+                    <i class="mdi mdi-cancel  m-r-xs"></i> Reject &nbsp;
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'pvr_verified_revise'"><button
+                    [disabled]="selectedItems.length == 0" type="button" class="btn upgrade-btn"
+                    (click)="do_approve_reject_pvr('approve')">
+                    <i class="mdi mdi-checkbox-multiple-marked-circle-outline  m-r-xs"></i> Approve
+                    &nbsp;
+                  </button></li>
+                <li class="list-inline-item" *ngIf="code == 'pvr_verified_revise'">
+
+                  <button type="button" class="btn btn-default btn-bold" tooltip="Close" (click)="do_cancel_pvr()">
+                    <i class="mdi mdi-close-outline  m-r-xs"></i>
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'rollOverList' || code == 'rollOver'">
+                  <button [disabled]="selectedItems.length == 0" type="button" class="btn btn-default-danger"
+                    (click)="do_rolloverlog()">
+                    <i class="mdi mdi-debug-step-over m-r-xs"></i>Roll Over &nbsp;
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'entitlement'"><button type="button" class="btn btn-primary"
+                    (click)="createNewEntitlement()">
+                    <i class="mdi mdi-checkbox-multiple-marked-circle  m-r-xs"></i> Create New
+                  </button></li>
+
+
+                <li class="list-inline-item" *ngIf="code == 'employeeentitlement'"><button type="button"
+                    class="btn btn-primary" (click)="createNewEmpEntitlement()">
+                    <i class="mdi mdi-checkbox-multiple-marked-circle  m-r-xs"></i> Create New
+                  </button></li>
+
+                <li class="list-inline-item" *ngIf="code == 'attendanceConfigurationList'"><button type="button"
+                    class="btn btn-primary" (click)="createNewAttendanceConfiguration()">
+                    <i class="mdi mdi-checkbox-multiple-marked-circle  m-r-xs"></i> Create New
+                  </button></li>
+
+                <li class="list-inline-item"
+                  *ngIf="code == 'client' || code == 'users' || code == 'payrollinputs_list' || code == 'SaleOrders' || code == 'payrollVerificationRequest' || code == 'payoutApprovals' || code == 'payoutApprove' || code == 'rollOverList' || code=='rollOver' || code == 'payoutApproval' || code == 'exitRequest'">
+                  <button type="button" class="btn btn-primary" (click)="do_Refresh()">
+                    <i class="mdi mdi-refresh m-r-xs"></i> Refresh
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'exitRequest'">
+                  <button class="btn btn-danger btn-bold" (click)="revokeFnF()" tooltip-placement="bottom"
+                    tooltip="Revoke Separation" data-original-title="" title="">
+                    <i class="mdi mdi-cancel font-size-md"></i> Revoke Separation
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'exitRequest'">
+                  <button type="button" class="btn btn-default btn-icon-text" (click)="getResignationHistory()">
+                    <i class="mdi mdi-history m-r-xs"></i> <span> Resignation History </span>
+                  </button>
+                </li>
+
+               
+
+                <li class="list-inline-item" *ngIf="code == 'employeelist'">
+                  <button class="btn btn-default" (click)="separateEmployee()">
+                    <i class="mdi mdi-account-remove m-r-xs" style="font-size: 14px !important;"></i> Separate Employee
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'employeelist' || code == 'employeeInvestment'">
+                  <button class="btn btn-default" (click)="doTaxCalculator()">
+                    <i class="mdi mdi-calculator m-r-xs" style="font-size: 14px !important;"></i>
+                    Tax Calculator
+                  </button>
+                </li>
+
+                <li class="list-inline-item"
+                  *ngIf="(code == 'employeelist' || code == 'savedEmployees') && BusinessType  != '3' && !NotRequiredClientIdsForAddEmployeeBtn.includes($clientId) && RequiredRoleCodesToShowAddEmployeeBtn.includes(RoleCode)">
+                  <button class="btn btn-primary" (click)="addNewEmployee()">
+                    <i class="mdi mdi-account-multiple-plus m-r-xs" style="font-size: 14px !important;"></i> Add
+                    Employee
+                  </button>
+                </li>
+
+                <!-- <li class="list-inline-item" *ngIf="code == 'offerRequests'">
+                  <button type="button" class="btn upgrade-btn" id="btn_qc_approve"  [disabled]="selectedItems.length == 0 || selectedItems.length > 1"
+                    (click)="approveOrRejectOfferRequest(true)"> <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+                    Approve
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'offerRequests'">
+                  <button type="button" class="btn btn-danger" id="btn_qc_reject"  [disabled]="selectedItems.length == 0 || selectedItems.length > 1"
+                    (click)="approveOrRejectOfferRequest(false)"> <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+                    Reject
+                  </button>
+                </li> -->
+
+                <li class="list-inline-item" *ngIf="code == 'offerRequests'">
+                  <button class="btn btn-primary" (click)="viewOfferRequests()"
+                    [disabled]="selectedItems.length == 0 || selectedItems.length > 1">
+                    <i class="mdi mdi-account-multiple-plus m-r-xs" style="font-size: 14px !important;"></i> View Offer
+                    Request
+                  </button>
+                </li>
+
+
+
+
+                <li class="list-inline-item" *ngIf="code == 'leaveBalanceHistory'">
+                  <button class="btn btn-primary" (click)="addNewEmployeeEntlt()">
+                    <i class="mdi mdi-file-document-outline m-r-xs" style="font-size: 14px !important;"></i> Assign
+                    Leave
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'leaveBalanceHistory'">
+                  <button class="btn btn-primary" (click)="viewLeaveBalanceHistory()">
+                    <i class="mdi mdi-clipboard-text-play m-r-xs" style="font-size: 14px !important;"></i> View History
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'leaveBalanceHistory'">
+                  <button class="btn btn-primary" (click)="editLeaveBalance()">
+                    <i class="mdi mdi-pencil-outline m-r-xs" style="font-size: 14px !important;"></i> Edit
+                  </button>
+                </li>
+
+                <!-- <li class="list-inline-item" *ngIf="code == 'leaveRequestReport'">
+                  <button class="btn btn-primary" (click)="reviseLeaveRequest()">
+                    <i class="mdi mdi-pencil-outline m-r-xs" style="font-size: 14px !important;"></i> Revise Approval
+                  </button>
+                </li> -->
+
+
+                <li class="list-inline-item" *ngIf="code == 'uncomfirmedemployees'">
+                  <button class="btn btn-primary" (click)="confirmEmployeeDates()">
+                    <i class="mdi mdi-check-all m-r-xs" style="font-size: 14px !important;"></i>
+                    Confirm Date
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'client'">
+                  <button class="btn btn-primary" (click)="doaddNewClient(null)">
+                    <i class="mdi mdi-account-multiple-plus m-r-xs" style="font-size: 14px !important;"></i> Add Client
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'clientContract'">
+                  <button class="btn btn-primary" (click)="addNewClientContract()">
+                    <i class="mdi mdi-file-plus m-r-xs" style="font-size: 14px !important;"></i> Add
+                    Client Contract
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="pageLayout.Code == 'Teams'">
+                  <button class="btn btn-primary" (click)="addNewTeam(null)">
+                    <i class="mdi mdi-account-multiple-plus m-r-xs" style="font-size: 14px !important;"></i> Add Team
+                  </button>
+                </li>
+
+
+
+                <li class="list-inline-item" *ngIf="pageLayout.Code == 'CostCodes'">
+                  <button class="btn btn-primary" (click)="addNewCostCode(null)">
+                    <i class="mdi mdi-file-document-outline m-r-xs" style="font-size: 14px !important;"></i> Add
+                    CostCode
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="pageLayout.Code == 'attendanceList'">
+                  <button type="button" class="btn upgrade-btn" id="btn_qc_approve"
+                    [disabled]="selectedItems.length == 0" (click)="bulk_approve_attendance_reject(true)"> <i
+                      class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+                    Approve
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="pageLayout.Code == 'attendanceList'">
+                  <button type="button" class="btn btn-danger" id="btn_qc_reject" [disabled]="selectedItems.length == 0"
+                    (click)="bulk_approve_attendance_reject(false)"> <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                  </button>
+                </li>
+
+
+                <li class="list-inline-item" *ngIf="code == 'attendanceList'"><button
+                    [disabled]="selectedItems.length != 1" type="button" class="btn btn-primary"
+                    (click)="viewAttendanceBreakupRequest()">
+                    <i class="mdi mdi-file-eye-outline  m-r-xs"></i> View Attendance
+                  </button></li>
+
+                <li class="list-inline-item" *ngIf="code == 'attendanceList'"><button
+                    [disabled]="selectedItems.length != 1" type="button" class="btn btn-primary"
+                    (click)="viewAttendanceBreakupRequest()">
+                    <i class="mdi mdi-file-eye-outline  m-r-xs"></i> View Attendance
+                  </button></li>
+
+                <li class="list-inline-item" *ngIf="pageLayout.Code == 'ALDownloads' || pageLayout.Code == 'downloadPayslip' ||
+                    pageLayout.Code == 'downloadpayslipCSS' ">
+                  <button class="btn btn-default" (click)="downloadFiles()">
+                    <i class="mdi mdi-download m-r-xs" style="font-size: 14px !important;"></i>
+                    Download
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'reporingEmployeeList'"><button
+                    [disabled]="selectedItems.length != 1" type="button" class="btn btn-primary"
+                    (click)="viewWeekOffConfig()">
+                    <i class="mdi mdi-calendar-remove-outline  m-r-xs"></i> Week off
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'users'">
+                  <button type="button" class="btn btn-primary" (click)="do_add_users()">
+                    <i class="mdi mdi-account-multiple-plus  m-r-xs"></i> Add User
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'ManagerMapping'">
+                  <button type="button" class="btn btn-primary" [disabled]="selectedItems.length == 0"
+                    (click)="updateManagerMapping(selectedItems)">
+                    <i class="mdi mdi-account-convert-outline m-r-xs"></i> Update Manager
+                  </button>
+                </li>
+                <!-- <li class="list-inline-item" *ngIf="code === 'GetWeekOffDetails' || code === 'GetShiftDetails'">
+                  <button type="button" class="btn btn-primary" (click)="downloadShiftWeekOffUploadTemplate(code)">
+                    <i class="mdi mdi-download  m-r-xs"></i> Download Template
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code === 'GetWeekOffDetails' || code === 'GetShiftDetails'">
+                  <button type="button" class="btn btn-primary" (click)="doShiftWeekOffBulkUpload(code)">
+                    <i class="mdi mdi-upload m-r-xs"></i> Bulk Upload
+                  </button>
+                </li> -->
+
+                <li class="list-inline-item" *ngIf="code == 'GetEmployeeShiftDetailForManager'">
+                  <button type="button" class="btn btn-primary" (click)="add_shift_weekoff_from_manager_login('Shift')">
+                    Map Shift</button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'GetEmployeeWeekOffDetailsForManager'">
+                  <button type="button" class="btn btn-primary"
+                    (click)="add_shift_weekoff_from_manager_login('Week Off')">
+                    Map Week Off</button>
+                </li>
+                <li class="list-inline-item"
+                  *ngIf="code == 'GetEmployeeShiftDetailForManager' || code == 'GetEmployeeWeekOffDetailsForManager' || code === 'GetWeekOffDetails' || code === 'GetShiftDetails'">
+                  <button type="button" class="btn btn-primary" (click)="downloadShiftWeekOffUploadTemplate(code)">
+                    <i class="mdi mdi-download  m-r-xs"></i> Download Template
+                  </button>
+                </li>
+                <li class="list-inline-item"
+                  *ngIf="code == 'GetEmployeeShiftDetailForManager' || code == 'GetEmployeeWeekOffDetailsForManager' || code === 'GetWeekOffDetails' || code === 'GetShiftDetails'">
+                  <button type="button" class="btn btn-primary" (click)="doShiftWeekOffBulkUpload(code)">
+                    <i class="mdi mdi-upload m-r-xs"></i> Bulk Upload
+                  </button>
+                </li>
+
+                <li class="list-inline-item" *ngIf="code == 'attendanceDetailedRegularizationRequestsForManager'">
+                  <button type="button" class="btn btn-danger" [disabled]="selectedItems.length == 0"
+                    (click)="approveRejectRegularizationDetailedType('Reject')"
+                    style="font-size: 14px;font-weight: 500;line-height: 16px;text-align: center;">
+                    Reject
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'attendanceDetailedRegularizationRequestsForManager'">
+                  <button type="button" class="btn btn-success" [disabled]="selectedItems.length == 0"
+                    (click)="approveRejectRegularizationDetailedType('Approve')" style="color: #fff !important;
+                                        background-color: #42C178 !important;border-color: #42C178 !important;font-family: Roboto;
+                                        font-size: 14px;font-weight: 500;line-height: 16px;text-align: center;">
+                    Approve
+                  </button>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+
+        <button class="btn btn-primary" style="MARGIN-TOP: -5REM;"
+          *ngIf="pageLayout.GridConfiguration.IsGroupingEnabled && code != 'rollOverList'"
+          (click)="clearGrouping()">Clear
+          Grouping</button>
+
+        <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinition" [gridOptions]="gridOptions"
+          [dataset]="dataset" gridWidth="100%"
+          (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+          (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+          (onAngularGridCreated)="angularGridReady($event)">
+        </angular-slickgrid>
+
+        <!-- Row to show Count -->
+        <div class="row" style="margin-top: -10px;" *ngIf="!spinner && pageLayout != null">
+          <div class="col-lg-6">
+
+          </div>
+          <div class="col-lg-6" style="text-align: right;">
+            <label> <b> Total Record(s) : <b> {{dataset?.length}}</b>
+                &nbsp; &nbsp; &nbsp; Selected Record(s) : <b> {{selectedItems?.length}}</b></b></label>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 40px;" *ngIf="pageLayout  && !spinner">
+
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+            <div class="text-left">
+              <ul class="list-inline">
+                <li class="list-inline-item" *ngIf="code == 'saleorders' || code == 'initiate_sale_orders'">
+                  <button type="button" class="btn btn-default">
+                    <i class="mdi mdi-ungroup m-r-xs"></i> View Grouping Rules
+                  </button>
+                </li>
+                <li class="list-inline-item" *ngIf="code == 'saleorders'">
+                  <button type="button" class="btn btn-default" (click)="download_billingsheet_modal()">
+                    <i class="mdi mdi-folder-download  m-r-xs"></i> Download Billing sheet
+                  </button>
+                </li>
+
+
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+            <div class="text-right">
+              <ul class="list-inline">
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+</div>
+
+<div id="popup_displayResult" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_displayResult"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left">Result</h6>
+            <div class="modal-close" (click)="modal_dismiss_displayResult()"><span
+                class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12  col-sm-12  p-r-50">
+              <div class="job-box ">
+                <div class="inbox-message">
+                  <ul>
+                    <li *ngFor="let i of revokeFnfCoprHRresponseList" style="width: 100% !important;">
+                      <a href="javascript:;">
+                        <div class="message-avatar">
+                          <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                        </div>
+                        <div class="message-body">
+                          <div class="message-body-heading">
+                            <h5>{{i.EmployeeName}} - <b *ngIf="i.Status" style="color: green;">Success</b>
+                              <b style="color: red;" *ngIf="!i.Status">Failed</b>
+                            </h5>
+                          </div>
+                          <p>{{i.ErrorMessage}}</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left left-margin-btn">
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_chooseCategory" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_chooseCategory" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+
+          <div>
+            <!-- <small class="header-pretitle"><b>Mark F&F (Employee) </b></small> -->
+            <h6 class="modal-title subheader_h6" id="popup_release_AL">Initiate Seperation for <span
+                style="text-transform: capitalize;">{{ selectedItems != undefined && selectedItems.length > 0 ?
+                selectedItems[0].EmployeeName : '' }}</span></h6>
+          </div>
+
+          <div class="modal-close" (click)="modal_dismiss2()"><span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12  col-sm-12  p-r-50">
+              <div class="job-box ">
+                <div class="inbox-message">
+                  <ul>
+                    <li *ngFor="let i of processedEMP" style="width: 100% !important;">
+
+                      <div class="media">
+                        <div class="media-left vertical-align-middle">
+                          <div class="setup-icon-section">
+                            <svg version="1.1" x="0" y="0" viewBox="0 0 512 512" xml:space="preserve"
+                              class="icon setup-icon vertical-align-middle"
+                              style="width: 22px;display: block;margin: 0 auto;margin-top: 11px;">
+                              <path fill="#0a609eeb"
+                                d="M509.8 452.9V490c0 11.6-9.4 21.1-21.1 21.1l-465.5.8c-5.6 0-11-2.2-14.9-6.2-4-4-6.2-9.3-6.2-14.9v-37.9c0-44.9 17.4-87.1 49-119 31.6-31.9 73.7-49.7 118.5-50.1H339c45.5-.5 88.3 16.9 120.7 48.9 32.3 32 50.1 74.7 50.1 120.2z">
+                              </path>
+                              <path fill="#DEEFFF"
+                                d="M255.8 428.8c-11.7 0-21.1-9.5-21.1-21.1V283.8h42.2v123.9c0 11.7-9.5 21.1-21.1 21.1z">
+                              </path>
+                              <path fill="#0a609eeb"
+                                d="M375.7 119.5c0 65.9-53.8 119.4-120 119.4-66.1 0-120-53.6-120-119.4S189.6.1 255.8.1c66.1 0 119.9 53.6 119.9 119.4z">
+                              </path>
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="media-body">
+                          <div class="pull-left">
+                            <h5 class="step-header col-md-12" style="font-weight: 500;">
+                              <span style="text-transform: capitalize;">{{i.EmployeeName}}</span> <b
+                                *ngIf="i.PayRunId > 0" class="link" (click)="linkForPayrun(i)">
+                                &nbsp; PayRun# {{i.PayRunId}} <i class="fa fa-external-link" aria-hidden="true"></i></b>
+                            </h5>
+                            <p class="col-md-12 setup-step-description font-small" *ngIf="i.ErrorMessage">
+                              {{i.ErrorMessage}}
+                            </p>
+                            <p class="col-md-12 setup-step-description font-small" *ngIf="!i.ErrorMessage">
+                              This employee marked as contract seperation
+                            </p>
+                          </div>
+                        </div>
+                        <div class="media-right vertical-align-middle link-to-details">
+                          <span class="text-pending font-semibold" *ngIf="i.ErrorMessage">
+                            <!-- <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"
+                              class="org-setup-status-icon pending">
+                              <rect class="legend-rect" y="2" width="100" height="100" rx="50" fill="inherit"
+                                stroke="inherit" transform="translate(0 90)"></rect>
+                            </svg> -->
+                            Failed
+                          </span>
+                          <span class="text-success font-semibold" *ngIf="!i.ErrorMessage">
+                            <!-- <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"
+                              class="org-setup-status-icon completed">
+                              <rect class="legend-rect" y="2" width="100" height="100" rx="50" fill="inherit"
+                                stroke="inherit" transform="translate(0 90)"></rect>
+                            </svg> -->
+                            Success
+                          </span>
+                        </div>
+                      </div>
+
+
+                      <!-- <a href="javascript:;">
+                      <div class="message-avatar">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                      </div>
+                      <div class="message-body">
+                        <div class="message-body-heading">
+                          <h5>{{i.EmployeeName}} - <b *ngIf="!i.ErrorMessage">Success</b>
+                            <b style="color: red;" *ngIf="i.IsPushedToQueue">Failed</b> </h5>
+                        </div>
+                        <div class="media-right vertical-align-middle link-to-details">
+                          <span class="text-success font-semibold">
+                          </span>
+                      </div>
+                        <p>{{i.ErrorMessage}}</p>
+                      </div>
+                    </a> -->
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left left-margin-btn">
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="popup_contractSeparation" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_contractSeparation" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <!-- <small class="header-pretitle"><b> Mark F&F </b></small> -->
+            <h6 class="modal-title subheader_h6" id="popup_release_AL">Initiate Separation for <span
+                style="text-transform: capitalize;">{{ selectedItems != undefined && selectedItems.length > 0 ?
+                selectedItems[0].EmployeeName : ''}}</span> </h6>
+          </div>
+
+          <div class="modal-close" (click)="modal_dismiss_contractSeparation()"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12  col-sm-12  p-r-50">
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                <label class="form-label"> Resignation Date <span class="required">*</span></label>
+                <input type="text" placeholder="Resignation Date" class="form-control"
+                  [(ngModel)]="markFnf_ResignationDate" bsDatepicker placement="bottom" readonly
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                <label class="form-label"> LWD <span class="required">*</span></label>
+                <input type="text" placeholder="Last Working Date" class="form-control"
+                  [(ngModel)]="markFnf_LastWorkingDate" bsDatepicker placement="bottom" readonly
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                <label class="form-label"> Reason <span class="required">*</span></label>
+                <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                  id="remarks" [(ngModel)]="markfnf_Reason"></textarea>
+              </div>
+              <div class="form-group form-group-vertical ml-3">
+                <label class="form-label">Upload Attachment <span class="help-text m-l-5">(Max
+                    file size 2MB)</span></label>
+                <label class="upload control w-25 float-left">
+                  <div class="upload-draggable is-primary">
+                    <section class="section">
+                      <div class="has-text-centered">
+                        <span class="icon is-large">
+                          <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                              style="color: #9ba7ca;"></i> Upload</span>
+                        </span>
+                      </div>
+                    </section>
+                  </div>
+                  <app-file-uploader (filesUploaded)="onAddAttachment($event)"
+                    [ALLOWED_FILE_TYPES]="'image/*, application/pdf'" [MAX_FILE_SIZE_MB]="2"
+                    [multiple]="false"></app-file-uploader>
+                </label>
+                <!-- {{ ndcData.attachment.name }} -->
+                <p class="control pt-2" *ngIf="markfnf_AttachmentInfo.documentName && !showUploadSpin">
+                  <span class="file-name">
+                    <button class="btn btn-danger c-btn" (click)="doDeleteAttachment()">
+                      <a ngbTooltip="Delete Attachment"
+                        style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block;margin-top: -5px;">
+                        <i class="fa fa-trash-o"></i>
+                      </a>
+                    </button>
+                    <a target="blank" class="ahref" style="padding: 2px;font-size: 10px;">
+                      {{markfnf_AttachmentInfo.documentName}}
+                    </a>
+                  </span>
+                </p>
+                <span *ngIf="showUploadSpin" class="spinner-border spinner-border-sm primary-color ml-2 mt-3"
+                  role="status" aria-hidden="true"></span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-right right-margin-btn">
+            <div class="text-right">
+              <ul class="list-inline">
+                <li class="list-inline-item"> <button class="btn btn-default" type="button"
+                    (click)="modal_dismiss_contractSeparation()">
+                    <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                    Cancel</button>
+                </li>
+                <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit"
+                    id="btnSubmit" (click)="confirmMarkFnF()">
+                    <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                        Confirm
+                      </span></div>
+                  </button></li>
+
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<nz-drawer [nzVisible]="invoiceSliderVisible" [nzWidth]="840" nzTitle="Invoice Transaction"
+  (nzOnClose)="close_invoiceSliderVisible()">
+  <nz-descriptions [nzColumn]="2" *ngIf="_InvoiceSliderJson">
+    <nz-descriptions-item nzTitle="Invoices Number" [nzSpan]="0.5"><b>{{_InvoiceSliderJson.InvNo}}</b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Company Branch Name" [nzSpan]="0.5">
+      <b>{{_InvoiceSliderJson.CompanyBranchName}}</b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Company GSTN" [nzSpan]="0.5">
+      <b>{{_InvoiceSliderJson.CompanyGSTN}}</b>
+    </nz-descriptions-item>
+    <!-- <nz-descriptions-item nzTitle="Billing Contact Details" [nzSpan]="1"> -->
+    <!-- <b>{{_InvoiceSliderJson.BillToAddressDetails.Address1}}</b> -->
+    <!-- </nz-descriptions-item> -->
+    <!-- <nz-descriptions-item nzTitle="Shipping Contact Details" [nzSpan]="1"> -->
+    <!-- <b>{{_InvoiceSliderJson.ShipToAddressDetails.Address1}}</b> -->
+    <!-- </nz-descriptions-item> -->
+
+
+  </nz-descriptions>
+  <nz-divider></nz-divider>
+  <div *ngIf="_InvoiceSliderJson">
+    <!-- <nz-divider></nz-divider> -->
+    <nz-table nzSize="small" [nzData]="_InvoiceSliderJson.BillingTransactions" [nzTemplateMode]="false"
+      [nzShowPagination]=false>
+      <thead>
+        <tr>
+          <th>Employee Name</th>
+          <th>Billable Amt.</th>
+          <th>Service Fee</th>
+          <th>Service Tax</th>
+          <th>Total Bill Amt.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of _InvoiceSliderJson.BillingTransactions">
+          <td>{{data.EmployeeName}}</td>
+          <td style="text-align: right !important;">{{data.BillableAmount | number : '1.2-2'}}</td>
+          <td style="text-align: right !important;">{{data.TotalMarkup | number : '1.2-2'}}</td>
+          <td style="text-align: right !important;">{{data.TotalTax | number : '1.2-2'}}</td>
+          <td style="text-align: right !important;">{{data.TotalBillAmount | number : '1.2-2'}}</td>
+
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <nz-descriptions [nzColumn]="2" *ngIf="_InvoiceSliderJson" style="padding-top: 45px;">
+
+    <nz-descriptions-item nzTitle="Billable Amount" [nzSpan]="1"><b>
+        ₹ {{_InvoiceSliderJson.BillableAmount | number : '1.2-2'}} </b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Service Tax" [nzSpan]="1"><b>
+        ₹ {{_InvoiceSliderJson.TotalServiceTax | number : '1.2-2'}} </b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Service Fee" [nzSpan]="1"><b>
+        ₹ {{_InvoiceSliderJson.TotalMarkup | number : '1.2-2'}} </b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Total Billable Amount" [nzSpan]="1"><b>
+        ₹ {{_InvoiceSliderJson.TotalBillAmount | number : '1.2-2'}} </b>
+    </nz-descriptions-item>
+  </nz-descriptions>
+
+
+</nz-drawer>
+
+
+<div id="popup_preview_download_docs" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="popup_preview_download_docs" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+
+        <div class="content">
+
+          <section>
+            <div class="row" style="height: 50px; margin-top: -25px;">
+              <div class="col-lg-12 pull-right">
+                <div class="modal-close" (click)="closeModal_invoice_docs()"><span
+                    class="mdi mdi-close pull-left"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+
+                <table class="table table-bordered table-container">
+                  <thead>
+                    <tr class="document_table_tr">
+                      <th scope="col" style="width:15%;font-weight: 500;">Document Name
+                      </th>
+                      <th scope="col" style="width:20%;font-weight: 500;">
+                        Document type </th>
+                      <th scope="col" style="width:10%;font-weight: 500;">Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of LstinvoiceDocs; let i = index">
+                      <td class="document_table_docName">
+                        {{item.FileName}}
+                      </td>
+                      <td class="document_table_docName">
+                        {{item.TemplateType}}
+                      </td>
+                      <td class="document_table_docName text-center">
+                        <app-filedownload [documentId]="item.ObjectStorageId">
+                        </app-filedownload>
+                      </td>
+                    </tr>
+
+
+
+                  </tbody>
+
+                </table>
+                <b *ngIf="LstinvoiceDocs.length == 0" class="text-center padding"> No records found!</b>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="popup_fnfType" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_fnfType"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="popup_fnfType"> Choose FnF Type</h6>
+            <div class="modal-close" (click)="modal_dismiss()"><span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body" style="min-height: 15rem;">
+          <div class="col-12 col-md-12 col-sm-12">
+            <div class="radio-tile-group">
+              <div class="input-container">
+
+                <input class="c-card" type="radio" [(ngModel)]="isResignation" class="radio-button" [value]="true"
+                  [checked]="isResignation" tabindex="0">
+
+                <div class="radio-tile">
+
+                  <div class="card-state-icon"></div>
+
+                  <label>
+
+                    <div class="image">
+                      <div class="icon walk-icon">
+                        <i class="mdi mdi-account-remove"
+                          style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                      </div>
+                    </div>
+
+                    <label class="radio-tile-label">Resign</label>
+
+                  </label>
+
+                </div>
+              </div>
+              <div class="input-container">
+
+                <input class="c-card" type="radio" [(ngModel)]="isResignation" class="radio-button" [value]="false"
+                  [checked]="isTermination" tabindex="0">
+
+                <div class="radio-tile">
+
+                  <div class="card-state-icon"></div>
+
+                  <label>
+
+                    <div class="image">
+                      <div class="icon walk-icon">
+                        <i class="mdi mdi-account-remove"
+                          style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                      </div>
+                    </div>
+
+                    <label class="radio-tile-label">Separate</label>
+
+                  </label>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+        </div>
+        <div class="modal-footer" style="padding: 0px;">
+          <button type="button" class="btn upgrade-btn" id="btn_onboarding_submit" (click)="proceed()"
+            style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> PROCEED
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="popup_email" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_email" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Send An Email</small>
+          </div>
+          <div class="modal-close" (click)="closeEmailPopup()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body" style="overflow: auto !important;">
+          <div class="row">
+            <div class="col-lg-12">
+              <form [formGroup]="RevisionForm">
+                <div class="form-group form-group-vertical col-xs-12 col-lg-12 col-md-12 col-sm-12"
+                  style="margin-left: -16px !important">
+                  <label class="form-label">CC E-mail's <i class="mdi mdi-information-outline" placement="right"
+                      style="cursor: pointer;"
+                      ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, separated by comma or space."></i><span
+                      class="help-text m-l-5"> ( Please separate email ids using comma ) </span>
+                  </label>
+                  <div class="editor-tag" (click)="focusTagInput()">
+                    <span class="tag-item" *ngFor="let tag of ccmailtags">
+                      {{tag}}
+                      <span class="remove-tag" (click)="removeTag(tag)">×</span>
+                    </span>
+                    <input class="form-control" class="input-tag input_border"
+                      pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" type="text"
+                      name="emailList" formControlName="emailList"
+                      [ngClass]="{'is-invalid': submitted && g.emailList.errors }" placeholder="example@domain.com"
+                      autocomplete="none|false|no" style="width: 100%;" #tagInput (keyup)="onKeyUp($event)"
+                      (change)="onchangeCC($event)">
+                  </div>
+                  <div *ngIf="submitted && g.emailList.errors" class="invalid-feedback">
+                    <div *ngIf="g.emailList.errors.required">CC E-mail is required
+                    </div>
+                  </div>
+                  <div class="help-block" *ngIf="CCemailMismatch">Please type your e-mail address in
+                    the format example@domain.com
+                  </div>
+                </div>
+                <!-- <div class="row">
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                    <label class="form-label ">CC Mail Id's <span class="required">*</span></label>
+                    <input type="text" placeholder="CC Mail Id's" />
+                  </div>
+                </div> -->
+                <div class="row">
+                  <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label ">Subject<span class="required">*</span></label>
+                    <input type="text" class="form-control" placeholder="subject" formControlName="subject"
+                      [ngClass]="{ 'is-invalid': submitted && g.subject.invalid }" autocomplte="off">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label ">Body <span class="required">*</span>
+                      <ul style="padding-left: 15px;list-style: disc;">
+                        <li><small>("Dear < EmployeeName>," will be added automatically to the
+                              body)</small></li>
+                        <li *ngIf="code == 'employeeMissingDoc'"> <small>(PAN, UAN,BANK, NOMINEE
+                            And AADHAR Details will be added automatically to the
+                            body)</small></li>
+                      </ul>
+                    </label>
+                    <div class="tab-pane" id="body" role="tabpanel">
+                      <angular-editor id="txtBody" [config]="config" [placeholder]="'Enter text here...'"
+                        formControlName="bodyValue">
+                      </angular-editor>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-4 col-md-6 col-sm-6"
+                    *ngFor="let item of noOfAttachments">
+                    <div class="">
+                      <label class="form-label">Attachment <span class="help-text m-l-5">(Max
+                          file size 2 MB)</span></label>
+                      <label class="upload control" style="float: left;margin-right: 3px;"
+                        *ngIf="!item.documentFileName">
+                        <div class="upload-draggable is-primary">
+                          <section class="section" style="padding: 0.1rem 1.9rem !important">
+                            <div class="has-text-centered">
+                              <span class="icon is-large">
+                                <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                    style="color: #9ba7ca;"></i> Upload </span>
+                              </span>
+                            </div>
+                          </section>
+                        </div>
+                        <input type="file" accept="application/msword,  application/pdf, image/*"
+                          (change)="onFileUpload($event,item)" id="sTest-uploadFile-candidateAddResume">
+                      </label>
+                      <!-- <div *ngIf="submitted && !documentFileName" class="help-block">
+                      Attachment is required
+                    </div> -->
+                      <p class="control" *ngIf="item.documentFileName">
+                        <span class="file-name">
+                          <button class="btn btn-danger c-btn" (click)="doDeleteFile(item)"><a ngbTooltip="Delete Photo"
+                              id="sTest-deleteFile-candidateAddResume"
+                              style="padding-left:10px;font-size:15px;cursor:pointer;display:block;margin-top:-5px;">
+                              <i class="fa fa-trash-o"></i></a> </button>
+                          <a target="blank" class="ahref" style="padding: 2px;">
+                            {{item.documentFileName}}
+                          </a>
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="form-group tw-mb-0" style="margin-top: 10px;width: 22%;margin-left: 77%;">
+              <div *ngIf="isLoading" class="tw-w-full tw-px-3">
+                <button type="submit" (click)="onClickSendMailFn()" [disabled]="submtMailBtnEnable()"
+                  class="btn btn-primary" style="width:100%;border-radius: 25px;"> Send Mail
+                </button>
+              </div>
+              <div class="d-flex align-items-center" *ngIf="!isLoading">
+                <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+              </div>
+            </div>
+            <!-- <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+                            <img src="assets/Images/leaverequest.svg">
+                            <div style="position: absolute;bottom: -3px;width: 90%;">
+                                <div></div>
+                                <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                                    <div *ngIf="isLoading" class="tw-w-full tw-px-3">
+                                        <button type="submit" (click)="onClickSendMailFn()" [disabled]="submtMailBtnEnable()" class="btn btn-primary" style="width:100%;border-radius: 25px;"> Send Mail
+                                        </button>
+                                    </div>
+                                    <div class="d-flex align-items-center" *ngIf="!isLoading">
+                                        <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_Block_Employee" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_Block_Employee" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Flag Employee</small>
+          </div>
+          <div class="modal-close" (click)="closeBlockPopup()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <form [formGroup]="RevisionForm">
+                <div class="row">
+                  <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label ">Select<span class="required">*</span></label>
+                    <ng-select [multiple]="true" [closeOnSelect]="false" [searchable]="false" [items]="lstBlockItems"
+                      formControlName="BlockedReasonId" placeholder="select an option" bindLabel="Name" bindValue="Id">
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label ">Remarks<span class="required">*</span></label>
+                    <textarea class="form-control" rows="3" placeholder="Type your remarks..." spellcheck="false"
+                      id="remarks" formControlName="BlockEdRemarks"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="form-group tw-mb-0" style="margin-top: 10px;width: 22%;margin-left: 77%;">
+              <div class="tw-w-full tw-px-3">
+                <button type="submit" (click)="onClickBlockFn()" class="btn btn-primary"
+                  style="width:100%;border-radius: 25px;"> Submit
+                </button>
+                <!-- <input type="button" value="submit" (click)="onClickBlockFn()" class="btn btn-primary" style="width:100%;border-radius: 25px;"> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="popup_previewLetter" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_previewLetter" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- <div class="modal-body"> -->
+        <div class="wrapper">
+          <h6 class="h6-c"> Appointment Letter
+
+            <a class="icon btn-icon pull-right m-l-n-xxxl chrome-back-btn m-t-n-sm" data-dismiss="modal"
+              (click)="modal_dismiss()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+          </h6>
+          <!-- <p>Resize me in your browser or pull me up in different size screen to see the magic of the <a href="https://benmarshall.me/resize-videos-proportionally-intrinsic-ratios/">intrinsic ratio technique</a>.</p> -->
+          <div class="iframe-container" *ngIf="iframeContent == null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <img src="assets/Images/clientlogo/{{clientminiLogoLink}}" class="imgc">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+
+          <div class="iframe-container" *ngIf="iframeContent != null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+            <iframe [src]="iframeContent" frameborder="0" scrolling="no"></iframe>
+          </div>
+        </div>
+        <!-- </div> -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_modal_release_AL" class="modal fixed-left fade" tabindex="-1" role="dialog"
+  aria-labelledby="popup_release_AL" aria-hidden="true">
+  <div style="display: block;" class="modal fixed-left fade show">
+    <div class="modal-dialog modal-md modal-dialog modal-dialog-aside animated animate__fadeInRight"
+      style="max-width: 700px !important">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="col-xs-11">
+            <h6 class="modal-title" id="popup_release_AL">Appointment Letter (Release)</h6>
+          </div>
+
+        </div>
+        <div class="modal-body" style="overflow-y: scroll !important;">
+          <div id="overlay">
+            <div class="w-100 d-flex justify-content-center align-items-center">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <br>
+          <div *ngFor="let item of selectedmigrationRecords; let i = index" class="row">
+            <div class="col-lg-12">
+
+
+              <div class="media al-list w-100">
+                <div class="media-body align-self-center">
+                  <h4 class="font-14 m-0">
+                    <b>{{item.CandidateName | uppercase}}</b>
+                    [ {{item.ClientName}} ]
+                  </h4>
+                  <small class="text-muted">{{item.PrimaryEmail}} - {{item.PrimaryMobile}} </small>
+                  <small *ngIf="ReleaseAlType == 'M'" class="text-muted">- Actual DOJ :
+                    {{item.ActualDateOfJoining | date:'dd-MM-yyyy'}} - Designation :
+                    {{item.Designation}}
+                  </small>
+                </div>
+
+                <span class="badge badge-success" style="width: 15%;" *ngIf="item.Status == 1">
+                  Success
+                </span>
+                <span class="badge badge-danger" style="width: 15%;" *ngIf="item.Status == 0 || item.Status == 2">
+                  Failed
+                </span>
+              </div>
+              <div class="row">
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+                  <label class="form-label">CC E-mail's <i class="mdi mdi-information-outline" placement="right"
+                      style="cursor: pointer;"
+                      ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, seperated by comma or space."></i>
+                    <span class="help-text m-l-5">(Please separate email ids using comma)</span>
+                  </label>
+
+                  <div class="editor-tag">
+                    <span class="tag-item" *ngFor="let tag of item.ccmailtags; let i = index">
+                      {{tag}}
+                      <span class="remove-tag" (click)="removeCCTag(tag, item)">×</span>
+                    </span>
+                    <input class="input-tag input_border"
+                      pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" id="{{item.Id}}"
+                      type="text" placeholder="example@domain.com" autocomplete="none|false|no"
+                      (keyup)="onKeyUpInCCMail($event,item, $event)" (change)="onchangeCCMail($event, item)">
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="row" *ngIf="ReleaseAlType == 'S' && DoesSupportiveDocsRequired">
+                <div class="col-lg-12 text-center">
+                  <ngb-alert [dismissible]="false">
+                    <strong>This Request will be sent to quality check team for review. (For the DOJ
+                      changes)</strong>
+                  </ngb-alert>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="ReleaseAlType == 'S'">
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Designation <span class="required">*</span> </label>
+                  <input class="form-control" type="text" name="Designation" [(ngModel)]="item.Designation"
+                    placeholder="Designation">
+                </div>
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Actual DOJ <span class="required">*</span> </label>
+                  <div>
+                    <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom" disabled
+                      [bsConfig]="{  dateInputFormat:'YYYY-MM-DD', containerClass:'theme-default' }"
+                      placeholder="12-12-1970" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                      autocomplete="off" [(ngModel)]="item.ActualDateOfJoining" [maxDate]="MaxDate" [minDate]="MinDate">
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label"> New DOJ <span class="help-text m-l-5">(YYYY-MM-DD)</span>
+                    <span class="required">*</span> </label>
+                  <div>
+                    <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom"
+                      [bsConfig]="{  dateInputFormat:'YYYY-MM-DD', containerClass:'theme-default' }"
+                      placeholder="2023-12-12" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                      autocomplete="off" [(ngModel)]="item.ProposedDOJ                                            "
+                      [maxDate]="MaxDate" [minDate]="MinDate" (ngModelChange)="doChangeExtendedDOJ($event)">
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Department <span class="required">*</span> </label>
+                  <input class="form-control" type="text" name="Department" [(ngModel)]="item.Department"
+                    placeholder="Department">
+                </div>
+
+                <div *ngIf="item.TenureType == 1"
+                  class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">End Date <span class="required">*</span></label>
+                  <div>
+                    <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom"
+                      [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }"
+                      placeholder="12-12-1970" [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                      autocomplete="off" [(ngModel)]="item.EndDate" [minDate]="EndDateMinDate">
+                  </div>
+                </div>
+
+                <div *ngIf="item.TenureType == 2"
+                  class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Tenure Month <small>(Enter > 0)</small><span
+                      class="required">*</span></label>
+                  <input class="form-control" type="text" name="tenureMonth" maxlength="2"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" [(ngModel)]="item.TenureInterval"
+                    [ngClass]="{'is-invalid': submitted && g.tenureMonth.errors }" placeholder="12"
+                    autocomplete="none|false|no">
+                </div>
+
+                <div
+                  [ngClass]="item.TenureType == 0 ? 'form-group form-group-vertical col-xs-6  col-sm-6 paddinglefttenunill' : 'form-group form-group-vertical col-xs-6  col-sm-6 paddinglefttenuyes'">
+                  <label class="form-label">Team <span class="required">*</span> </label>
+                  <div>
+                    <ng-select [items]="TeamListForReleaseAL" placeholder="-- select on option --"
+                      (change)="onChangeTeamForReleaseAL($event)" [(ngModel)]="item.TeamId" bindLabel="code"
+                      bindValue="Id" style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                  <label class="form-label">Effective Pay Period <span class="required">*</span>
+                  </label>
+                  <div>
+                    <ng-select [items]="EffectivePayPeriodListForReleaseAL" placeholder="-- select on option --"
+                      [(ngModel)]="item.EffectivePayPeriodId" bindLabel="PayCyclePeriodName" bindValue="Id"
+                      style="border-radius: 3px 0px 0px 3px !important;width: 100% !important"
+                      (change)="onChangePP($event)">
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label" style="padding-bottom: 5px;">Remarks
+                    <span class="required" *ngIf="DoesSupportiveDocsRequired">*</span></label>
+                  <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="item.SalaryRemarks"
+                    id="SalaryRemarks"></textarea>
+                </div>
+
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12"
+                  *ngIf="DoesSupportiveDocsRequired">
+                  <label class="form-label"> Supportive Attachment(s) <span class="required">*</span>
+                  </label>
+                  <div class="file-drop-area">
+                    <span class="choose-file-button">Choose files</span>
+                    <span class="file-message">or drag and drop files here</span>
+                    <input class="file-input" type="file" accept="application/msword,  application/pdf, image/*"
+                      (change)="onAddingFile($event)" id="sTest-uploadFile-candidateAddResume"
+                      (click)="$event.target.value=null" multiple required>
+                  </div>
+                  <div *ngIf="submitted &&  !fileList[0]" class="help-block">
+                    <div>Supportive Attachment is required
+                    </div>
+                  </div>
+
+
+                  <div class="card tab-item" *ngFor="let file of fileList"
+                    style="border: 1px solid #ece9e9 !important;/* margin: 8px; *//* box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; */margin-top: .3em!important;border-radius: 0px;">
+                    <div class="row">
+                      <div class="col-2 col-xs-2 col-lg-2 col-md-2 col-sm-2"><i class="mdi mdi-file-document-outline"
+                          style="
+                                  display: block;
+                                  position: relative;
+                                  color: #09518f;
+                                  font-size: 28px;
+                                  top: 3px;
+                                  text-align: center;
+                                  "></i></div>
+                      <div class="col-8 col-xs-8 col-lg-8 col-md-8 col-sm-8"
+                        style="text-align: left;vertical-align: center;top: 8px;">
+                        <h6 style="font-size: 12px;"> {{file.name}} </h6>
+                        <h6 style="font-size: 10px;">.</h6>
+                      </div>
+                      <div class="col-2 col-xs-2 col-lg-2 col-md-2 col-sm-2">
+                        <div title="Delete" matTooltip="Delete" style="cursor: pointer;"
+                          (click)="doDeleteFile_RequestDOJ(file)"><i class="mdi mdi-trash-can-outline"
+                            style="display: block;top: 10px;position: relative;/* color: #0d395f; */font-size: 18px;"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+
+              </div>
+              <!-- <div class="row" *ngIf="ReleaseAlType == 'S'"> -->
+
+              <!-- <div class="form-group form-group-vertical col-xs-3  col-sm-3"
+                                style="padding: 0px;margin-left: 20px;width: 194px;">
+                                <label class="form-label">Salary Remarks</label>
+                                <div class="input-group" style="margin-top: 0px !important;width: 212%;">
+                                    <textarea class="form-control" rows="2" spellcheck="false" style="height: 37px;"
+                                        [(ngModel)]="item.SalaryRemarks" id="SalaryRemarks"></textarea>
+                                </div>
+                            </div> -->
+
+              <!-- </div> -->
+              <!-- <div class="row" *ngIf="ReleaseAlType == 'S'">
+                            <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                <label class="form-label" style="padding-bottom: 5px;">Salary Remarks </label>
+                                <textarea class="form-control" rows="3" spellcheck="false"
+                                    [(ngModel)]="item.SalaryRemarks" id="SalaryRemarks"></textarea>
+                            </div>
+                        </div> -->
+              <p style="text-align: center;color: #1ecab8;font-style: italic;" class="help-text"
+                *ngIf="item.Message && item.Status == 1">( {{item.Message}} ) </p>
+              <p style="text-align: center;color: #f1646c;font-style: italic;" class="help-text"
+                *ngIf="item.Message && item.Status == 0 || item.Status == 2">( {{item.Message}} ) </p>
+
+              <!-- <hr style="width: 100%;"> -->
+            </div>
+          </div>
+
+
+          <div *ngIf="ReleaseAlType == 'M' && !isSuccessMigration"
+            class="form-group form-group-vertical col-xs-12  col-sm-12">
+            <label class="form-label" style="padding-bottom: 5px;"> Remarks <span class="required">
+                *</span></label>
+            <textarea class="form-control" rows="3" spellcheck="false" [(ngModel)]="ALRemarks"
+              id="ALRemarks"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top: 0px solid #dee2e6;">
+          <div *ngIf="!isSuccessMigration">
+            <div class="pull-right">
+              <button *ngIf="ReleaseAlType == 'M'" class="btn btn-primary" (click)="confirmALRelease()">
+                <i class="mdi mdi-clipboard-check" style="cursor:pointer"></i> Confirm</button> &nbsp;
+              <button class="btn btn-default pull-right" type="button" (click)="modal_dismiss_Release_AL()"> <i
+                  class="fa fa-ban" aria-hidden="true"></i>
+                &nbsp; Cancel</button> &nbsp;
+              <button *ngIf="ReleaseAlType == 'S'" class="btn btn-primary"
+                [disabled]="savechangesdisFn(selectedmigrationRecords[0])"
+                (click)="confirmALReleaseSingle(selectedmigrationRecords)"> <i class="mdi mdi-clipboard-check"
+                  style="cursor:pointer"></i> &nbsp; Save
+                Changes</button>&nbsp;
+
+            </div>
+          </div>
+
+          <div *ngIf="isSuccessMigration">
+            <div class="pull-right">
+
+              <button class="btn btn-primary" (click)="Continue()"> <i class="mdi mdi-checkbox-multiple-marked-circle"
+                  style="cursor:pointer"></i> Ok,
+                Continue</button> &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nz-drawer [nzVisible]="visible_PamentStatusSlider" [nzWidth]="840" nzIcon="user" nzTitle="Employee(s) - Payment Status"
+  (nzOnClose)="close_PamentStatusSlider()">
+
+  <!-- <div class="text">
+  <h1>
+    		<span class="words-wrapper">
+        <b class="is-visible">Initiated...</b>
+        <b>Contacting Payment Gateway...</b>
+        <b>Payment Initiated...</b>
+        <b>Success</b>
+		    </span>
+      </h1>
+</div> -->
+
+  <div class="d-flex align-items-center" *ngIf="isPaymentStatus_spinner">
+    <strong class="text-right"> Collecting... &nbsp;&nbsp;&nbsp;</strong>
+    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+  </div>
+  <div *ngIf="!isPaymentStatus_spinner">
+    <div class="headerbar-right">
+      <div class="media" style="width: 50% !important;">
+        <div class="media-body">
+          <label>Client Name</label>
+          <h6>{{LstEmployeeForPayout.ClientName}}</h6>
+        </div>
+      </div>
+      <!-- <div class="media" style="width: 50% !important;"> -->
+      <!-- <div class="media-body">
+            <label>Pay Period</label>
+            <h6>{{LstEmployeeForPayout.PayPeriodName}}</h6>
+          </div>
+        </div> -->
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <br />
+        <br />
+        <div
+          *ngIf="LstEmployeeForPayout.LstPayoutInformationDetails != null && LstEmployeeForPayout.LstPayoutInformationDetails.length > 0">
+          <nz-table nzSize="small" [nzData]="LstEmployeeForPayout.LstPayoutInformationDetails" [nzTemplateMode]="false"
+            [nzShowPagination]=false>
+            <thead>
+              <tr>
+                <th>Emp. Name</th>
+                <th>Mobile No.</th>
+                <th>Acc No.</th>
+                <th>Net Pay</th>
+                <!-- <th>PayOut Bank</th> -->
+                <th>Status</th>
+                <th>Action</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let data of LstEmployeeForPayout.LstPayoutInformationDetails">
+                <tr *ngIf="data.Status != 401">
+                  <td>{{data.EmployeeName}}</td>
+                  <td>{{data.MobileNumber}}</td>
+                  <td>{{data.AccountNumber}}</td>
+                  <td style="text-align: right !important;">{{data.NetPay | number : '1.2-2'}}</td>
+                  <!-- <td>{{data.CompanyBankName}}</td> -->
+                  <td>{{getPayoutDetailsName(data.Status)}}</td>
+                  <td style="width: 17%;padding: 5px !important;" class="text-center">
+                    <button (click)="checkPaymentStatus(LstEmployeeForPayout, data)" type="button"
+                      *ngIf="data.Status > '7500' && data.Status < '7849'"
+                      class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                      style="font-size: 10px;color: #40a9ff;border-color: #40a9ff;"><span><i class="fa fa-refresh"
+                          aria-hidden="true" style="padding-right: 5px;"></i>Check Status</span></button>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </nz-table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</nz-drawer>
+
+
+
+<div id="popup_reonboarding" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_reonboarding"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-xs modal-dialog-centered" style="max-width: 800px !important;">
+      <div class="modal-content">
+
+        <div class="row" style="padding: 16px;padding-bottom: 0px;">
+          <div class="col-lg-8">
+            <small class="header-pretitle hed"><b>Make a new Offer</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL">{{defaultSearchInputs.ClientName}} |
+              {{defaultSearchInputs.ClientContractName}}
+            </h6>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" data-dismiss="modal" (click)="modaldismiss3()" style="margin-top: 5px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+          <br />
+
+
+          <div class="row" *ngIf="selectedmigrationRecords?.length > 0">
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <h6 class="small lable_name">Employee Name - Code</h6>
+              <h6 class="label_value">{{selectedmigrationRecords[0].EmployeeName}} -
+                {{selectedmigrationRecords[0].EmployeeCode}} </h6>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <h6 class="small lable_name">Work Location</h6>
+              <h6 class="label_value">{{selectedmigrationRecords[0].LocationName}}</h6>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <h6 class="small lable_name">NAPS Start Date</h6>
+              <h6 class="label_value">{{selectedmigrationRecords[0].DOJ}}</h6>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <h6 class="small lable_name">NAPS End Date</h6>
+              <h6 class="label_value">{{selectedmigrationRecords[0].ContractEndDate}}</h6>
+            </div>
+
+
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Client Name <span class="required">*</span>
+              </label>
+              <ng-select [items]="LstClient" [(ngModel)]="defaultSearchInputs.ClientId"
+                placeholder="-- Select Client --" bindLabel="Name" bindValue="Id"
+                (change)="onChangeClient($event,'DOM')">
+              </ng-select>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Client Contract Name <span class="required">*</span>
+              </label>
+              <ng-select [items]="LstClientContract" [(ngModel)]="defaultSearchInputs.ClientContractId"
+                placeholder="-- Select Client Contract --" bindLabel="Name" bindValue="Id"
+                (change)="onChangeClientContract($event,'DOM')">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="hasFailedInput" style="padding-left: 17px;">
+            <div class="col-lg-12 text-center">
+              <ngb-alert [dismissible]="false">
+                <strong>{{failedAlertMessage}}</strong>
+              </ngb-alert>
+            </div>
+          </div>
+
+          <br />
+          <br />
+
+          <div class="row">
+            <div class="col-md-12 text-right">
+              <button class="btn btn-primary" (click)="doConfirmReOnboard()"
+                style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                  class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Confirm &nbsp; &nbsp;
+              </button>
+            </div>
+          </div>
+
+          <!-- <p class="secondary-text m-b-lg"><a (click)="download_template()" href="javascript:;"
+                            style="color: #1f62ff;cursor: pointer;">Click
+                            here</a> to download a sample file </p> -->
+
+          <!-- <div class="row">
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                            <label class="form-label">Team </label>
+                            <ng-select [items]="LstTeam" placeholder="select an option" [(ngModel)]="teamId"
+                                bindLabel="Name" bindValue="Id" (change)="OnChangeTeam($event)">
+                            </ng-select>
+                        </div>
+                    </div>
+
+
+                  -->
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BULK UPLOAD ALLEN -->
+<div id="popup_bulkUpload" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_bulkUpload"
+  aria-hidden="true">
+  <div class="d-block modal fade show">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="row" style="padding: 16px;padding-bottom: 0px;">
+          <div class="col-lg-8">
+            <small class="header-pretitle hed"><b>Bulk Upload</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_bulkUpload"></h6>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" data-dismiss="modal" (click)="modalDismissBulkUpload()" style="margin-top: 5px;">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+        <div class="text-center ma-5" *ngIf="modalSpinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+        <div class="modal-body" *ngIf="!modalSpinner">
+          <div class="row m-2">
+            <button type="button" class="btn btn-primary-custom" (click)="onFileInputChange(); fileInput.click()">
+              <span><i class="mdi mdi-upload m-r-xs"></i>Upload Excel</span>
+              <input #fileInput id="fileUpload" type="file" class="d-none"
+                (change)="handleFileInput($event.target.files)">
+            </button>
+            <span class="m-2">{{file != undefined && file != null ? file.name : ''}}</span>
+          </div>
+          <div class="row m-1" *ngIf="shiftWeekOffBulkImportData && shiftWeekOffBulkImportData.length > 0">
+            <div class="d-block table table-responsive table-height" style="height: 300px;">
+              <table class="table-bordered">
+                <thead class="fixed-header">
+                  <tr>
+                    <th>Employee Code</th>
+                    <th *ngIf="code == 'GetWeekOffDetails' || code == 'GetEmployeeWeekOffDetailsForManager'"> WeekOff
+                    </th>
+                    <th *ngIf="code == 'GetShiftDetails' || code == 'GetEmployeeShiftDetailForManager'"> Shift Code
+                    </th>
+                    <th>Effective From </th>
+                    <th>Effective To </th>
+                    <th>Error Message</th>
+                  </tr>
+                </thead>
+                <tbody class="scrollable-body">
+                  <tr *ngFor="let item of shiftWeekOffBulkImportData">
+                    <td>{{ item['EmployeeCode'] }}</td>
+                    <td *ngIf="code == 'GetWeekOffDetails' || code == 'GetEmployeeWeekOffDetailsForManager'">
+                      {{item['Day_Name']}}</td>
+                    <td *ngIf="code == 'GetShiftDetails' || code == 'GetEmployeeShiftDetailForManager'">{{
+                      item['ShiftCode'] }}</td>
+                    <td>{{ item['EffectiveFrom'] }}</td>
+                    <td>{{ item['EffectiveTo'] }}</td>
+                    <td style="color: red">{{ item['ErrorMessage'] }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row"
+            *ngIf="uploadedErrorMessage != '' && shiftWeekOffBulkImportData && shiftWeekOffBulkImportData.length === 0">
+            <div class="col-lg-12 text-center">
+              <ngb-alert [dismissible]="false">
+                <strong>{{uploadedErrorMessage}}</strong>
+              </ngb-alert>
+            </div>
+          </div>
+          <br />
+        </div>
+        <div class="modal-footer" *ngIf="!modalSpinner">
+
+          <button class="btn btn-default" type="button" (click)="modalDismissBulkUpload()">
+            <i class="fa fa-ban" aria-hidden="true"></i>&nbsp;Cancel
+          </button>
+
+          <button class="btn btn-primary" (click)="doConfirmBulkUpload()" [disabled]="bulkUploadHasError || 
+                        (shiftWeekOffBulkImportData && shiftWeekOffBulkImportData.length == 0)">
+            <i class="mdi mdi-file-excel"></i>&nbsp;Confirm
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="modal_dateofconfirmation" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="modal_dateofconfirmation" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-xs modal-dialog-centered" style="max-width: 800px !important;">
+      <div class="modal-content">
+
+        <div class="row" style="padding: 16px;padding-bottom: 0px;">
+          <div class="col-lg-8">
+            <small class="header-pretitle hed"><b>Confirm Employment</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> Overview
+            </h6>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" data-dismiss="modal" (click)="dismiss()" style="margin-top: 5px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+
+
+          <div class="row" *ngIf="selectedItems?.length > 0 && failedUnConfirmedEmployees.length == 0">
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+              <h6 class="small lable_name" style="font-size: 93%;">No Of Employee(s) </h6>
+              <span style="font-size: 13px;"> {{selectedItems.length}} </span>
+
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <h6 class="small lable_name" style="font-size: 93%;">Choose a Date</h6>
+              <input class="form-control" type="text" id="dateOfConfirmation" name="DateOfConfirmation" bsDatepicker
+                placement="bottom" readonly
+                [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="12-12-2023"
+                autocomplete="off">
+
+            </div>
+
+          </div>
+
+          <div class="row" *ngIf="failedUnConfirmedEmployees.length > 0">
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <h6 class="small lable_name" style="font-size: 93%;">No Of Employee(s) </h6>
+              <span style="font-size: 13px;"> {{selectedItems.length}} </span>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <h6 class="small lable_name" style="font-size: 93%;">No Of Failed Employee(s) </h6>
+              <span style="font-size: 13px;"> {{failedUnConfirmedEmployees.length}} </span>
+            </div>
+
+            <div class="col-lg-12">
+              <div class="card" style="padding: 10px;" *ngFor="let j of failedUnConfirmedEmployees">
+                <div class="row">
+                  <div class="col-md-12" style="padding-left: 30px;">
+                    <h6 class="city" style="font-weight: 700;letter-spacing: 1px;margin-bottom: 0px !important;">
+                      <span class="badge badge-soft-danger" style="display: inline;">
+                        Failed </span>
+                    </h6>
+                    <span class="description" style="font-size: 12px; font-weight: 600;letter-spacing: 1px;">
+                      Employee Code: {{j.Code}} </span>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                      <label class="form-label">Employee name <span class="required"></span></label>
+                      <p class="date">{{j.Name}}</p>
+
+                    </div>
+
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12" *ngIf="j.Error">
+                      <label class="form-label">Error Message <span class="required"></span></label>
+                      <p class="date" style="font-size: 13px; color: rgb(25, 19, 19);" title={{j.Error}}>{{j.Error}}</p>
+
+                    </div>
+
+                  </div>
+
+                  <hr>
+
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+
+
+          <br />
+          <br />
+
+          <div class="row">
+            <div class="col-md-12 text-right">
+              <button class="btn btn-primary" *ngIf="failedUnConfirmedEmployees.length == 0" (click)="doConfirmDate()"
+                style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                  class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Confirm &nbsp; &nbsp;
+              </button>
+
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal_blacklistedemployee" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="modal_blacklistedemployee" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-xs modal-dialog-centered" style="max-width: 800px !important;">
+      <div class="modal-content">
+
+        <div class="row" style="padding: 16px;padding-bottom: 0px;">
+          <div class="col-lg-8">
+            <small class="header-pretitle hed"><b>Employee(s) Status</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> ---
+            </h6>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" data-dismiss="modal" (click)="dismiss_blacklistedemployee()"
+              style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card" style="padding: 10px;" *ngFor="let j of failedBlacklistedEmployees">
+                <div class="row">
+                  <div class="col-md-12" style="padding-left: 30px;">
+                    <h6 class="city" style="font-weight: 700;letter-spacing: 1px;margin-bottom: 0px !important;"
+                      *ngIf="j.ErrorMessage != ''">
+                      <span class="badge badge-soft-danger" style="display: inline;">
+                        Failed </span>
+                    </h6>
+
+                    <h6 class="city" style="font-weight: 700;letter-spacing: 1px;margin-bottom: 0px !important;"
+                      *ngIf="j.ErrorMessage == ''">
+                      <span class="badge badge-soft-success" style="display: inline;">
+                        Success </span>
+                    </h6>
+                    <span class="description" style="font-size: 12px; font-weight: 600;letter-spacing: 1px;">
+                      Employee Code: {{j.Code}} </span>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                      <label class="form-label">Employee Name <span class="required"></span></label>
+                      <p class="date">{{j.Name}}</p>
+                    </div>
+
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                      <label class="form-label"> Error Message <span class="required"></span></label>
+                      <p class="date" style="font-size: 13px; color: rgb(25, 19, 19);">{{j.ErrorMessage}}</p>
+
+                    </div>
+
+                  </div>
+
+                  <hr>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<nz-drawer [nzVisible]="showOfferRequestsSlider" [nzWidth]="700" nzTitle="Offer Details"
+  (nzOnClose)="closeOfferRequestsSlider()">
+
+  <div class="d-flex align-items-center" *ngIf="isrendering_spinner" style=" margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);">
+    <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+  </div>
+
+  <ng-container *ngIf="showOfferRequestsSlider && !isrendering_spinner && selectedItems && selectedItems.length > 0">
+    <div class="row">
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;">Candidate Name </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].CandidateName}} </span>
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;"> Gender </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].Gender}} </span>
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;"> Designation </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].Designation}} </span>
+      </div>
+
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;"> Date of Joining </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].ExpectedDOJ | date :'dd-MM-yyyy' }} </span>
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;"> Location </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].JoiningLocation}} </span>
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;">Requested On </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].RequestedOn | date}} </span>
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;">Requested By </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].RequestedBy}} </span>
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;">Reporting Manager </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].ReportingManager}} </span>
+      </div>
+
+      <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;"> Email </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].Email}} </span>
+      </div> -->
+
+      <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;"> Mobile Number </h6>
+        <span style="font-size: 13px;font-weight: 600;"> +91 {{selectedItems[0].MobileNumber}} </span>
+      </div> -->
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;"> Employment Type </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].EmploymentType}} </span>
+      </div>
+
+      <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;"> Status</h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].StatusDescription}} </span>
+      </div> -->
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;"> Salary (annually) </h6>
+        <span style="font-size: 13px;font-weight: 600;cursor: pointer; text-decoration: underline;">
+          {{OfferData.AnnualSalary | currency:'INR'}}
+        </span>
+      </div>
+
+
+    </div>
+
+    <div class="row" style="padding-top:2rem">
+      <div class="col-lg-12">
+        <div class="">
+          <h2 style="font-size:14px">Salary Breakup Summary
+
+          </h2>
+
+
+          <table class="table table-bordered" style="font-size:12px" *ngIf="OfferData">
+            <thead>
+              <tr>
+                <th>Pay Components</th>
+                <th>Monthly</th>
+                <th>Annually</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rate of OfferData.LstRateSet">
+                <td
+                  [ngStyle]="{'font-weight': rate.ProductTypeCode =='Earning' || rate.ProductTypeCode =='Deductions' || rate.ProductTypeCode =='Total' ? '600' : '400' }">
+                  {{ rate.DisplayName }}</td>
+                <td
+                  [ngStyle]="{'font-weight': rate.ProductTypeCode =='Earning' || rate.ProductTypeCode =='Deductions' || rate.ProductTypeCode =='Total' ? '600' : '400' }">
+                  {{ rate.Value }}</td>
+                <td
+                  [ngStyle]="{'font-weight': rate.ProductTypeCode =='Earning' || rate.ProductTypeCode =='Deductions' || rate.ProductTypeCode =='Total' ? '600' : '400' }">
+                  {{ rate.Value * 12 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="row"
+      style="position: absolute; bottom: 0px;width: 100%; background: #FFFFFF;box-shadow: 0px -3px 5px #f1f1f1; margin-left: -23px;padding: 5px;">
+      <div class="col-lg-8 text-left">
+        <button class="btn  btn-primary" type="Submit" name="btnSubmit" id="btnSubmit" (click)="downloadLetter()">
+          Preview Letter
+        </button>
+        &nbsp;
+        <button type="button" class="btn upgrade-btn" id="btn_qc_approve"
+          [disabled]="selectedItems.length == 0 || selectedItems.length > 1"
+          (click)="approveOrRejectOfferRequest(true)"> <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+          Approve
+        </button> &nbsp;
+
+        <button type="button" class="btn btn-danger" id="btn_qc_reject"
+          [disabled]="selectedItems.length == 0 || selectedItems.length > 1"
+          (click)="approveOrRejectOfferRequest(false)"> <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+          Reject
+        </button>
+
+      </div>
+      <div class="col-lg-4 text-right">
+        <div class="text-right">
+
+          <button class="btn btn-link" type="button" style="text-decoration: none !important;"
+            (click)="closeOfferRequestsSlider()"> Close</button>
+        </div>
+        <!-- </div> -->
+      </div>
+    </div>
+  </ng-container>
+
+</nz-drawer>
+
+<nz-drawer [nzVisible]="showNewEntitlementSlider" [nzWidth]="640" nzTitle="Assign Leave"
+  (nzOnClose)="closeNewEntitlementSlider()">
+
+  <form #myForm="ngForm">
+    <div class="row">
+      <ng-container *ngIf="formData.empId > 0 && formData.empId != null">
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+          <h6 class="small lable_name" style="font-size: 93%;">Employee Name </h6>
+          <span style="font-size: 13px;font-weight: 600;"> {{formData.empName}} </span>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+          <h6 class="small lable_name" style="font-size: 93%;"> Gender </h6>
+          <span style="font-size: 13px;font-weight: 600;"> {{formData.empGender}} </span>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+          <h6 class="small lable_name" style="font-size: 93%;"> Marital Status </h6>
+          <span style="font-size: 13px;font-weight: 600;"> {{formData.empMaritalStatus}} </span>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+          <h6 class="small lable_name" style="font-size: 93%;"> Date of Joining </h6>
+          <span style="font-size: 13px;font-weight: 600;"> {{formData.DOJ}} </span>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+          <h6 class="small lable_name" style="font-size: 93%;"> Employment Type </h6>
+          <span style="font-size: 13px;font-weight: 600;"> {{formData.EmploymentType}} </span>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+          <h6 class="small lable_name" style="font-size: 93%;"> ESIC applicable </h6>
+          <div class="p-t-10">
+            <label class="el-switch el-switch-green">
+              <input type="checkbox" value="yes" disabled [(ngModel)]="formData.IsEsicApplicable"
+                [ngModelOptions]="{standalone: true}" />
+              <span class="el-switch-style"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+          *ngIf="employeeApplicableEntitlement.length > 0">
+          <h6 class="small lable_name" style="font-size: 93%;">Max Balance </h6>
+          <span style="font-size: 13px;font-weight: 600;"> {{formData.MaxBalance}} </span>
+        </div>
+      </ng-container>
+
+      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+        <label class="form-label">Employee Code <span class="required">*</span> </label>
+        <input class="form-control" [disabled]="(formData.empId != null && formData.empId > 0)" type="text"
+          [(ngModel)]="formData.entltEmpCode" id="empCode" name="empCode" [ngModelOptions]="{standalone: true}"
+          placeholder="35002">
+        <!-- <div *ngIf="myForm.controls.entltEmpCode.invalid && (myForm.controls.entltEmpCode.dirty || myForm.submitted)">
+          <div *ngIf="myForm.controls.entltEmpCode.errors.required">Employee Code is required.</div>
+        </div> -->
+      </div>
+
+      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6" style="text-align: right;
+    margin-top: 20px;"
+        *ngIf="(formData.empId == null || formData.empId == 0) && employeeApplicableEntitlement.length == 0">
+        <button class="btn btn-primary" (click)="getEmployeeCodeDetails(myForm)"
+          style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+            class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Get data &nbsp; &nbsp;
+        </button>
+      </div>
+
+      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12" *ngIf="formData.empId > 0 && formData.empId != null && 
+        employeeApplicableEntitlement.length === 0">
+        <ngb-alert [dismissible]="false">
+          <p class="mb-0" style="text-align: center;font-size: 13px;font-weight: 600;">There are no unassigned leaves
+            for this employee.</p>
+          <p class="small lable_name" style="font-size: 93%;">(If you want to edit the balance or activate any leave,
+            please do so from the "Leave Balance" page)</p>
+        </ngb-alert>
+      </div>
+
+      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+        *ngIf="employeeApplicableEntitlement.length > 0">
+        <label class="form-label">Leave Type <span class="required">*</span> </label>
+        <ng-select [items]="employeeApplicableEntitlement" placeholder="-- select an option --"
+          [(ngModel)]="formData.entitId" [ngModelOptions]="{standalone: true}" bindLabel="Description" bindValue="Id"
+          (change)="onChangeEmpEntitlements($event)">
+        </ng-select>
+      </div>
+
+      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+        *ngIf="employeeApplicableEntitlement.length > 0">
+        <label class="form-label">New Balance (Available/Eligible) <span class="required">*</span> </label>
+        <input class="form-control" onkeypress="return /^[0-9]+$/i.test(event.key)" type="text" name="Designation"
+          [(ngModel)]="formData.units" placeholder="0" [ngModelOptions]="{standalone: true}">
+      </div>
+
+      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+        *ngIf="showCreditRequiredForAssignLeave && entitlmentDefinition && entitlmentDefinition.IsCreditRequired">
+        <label class="form-label">Next Credit Date<span class="required">*</span> </label>
+        <input class="form-control" type="text" name="AdditionalDateInput" bsDatepicker placement="bottom"
+          [disabled]="!editCreditRequiredForAssignLeave"
+          [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="12-12-1970"
+          [ngModelOptions]="{standalone: true}" [(ngModel)]="formData.NextCreditDate" autocomplete="off">
+      </div>
+
+      <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+        *ngIf="showLapseRequiredForAssignLeave && entitlmentDefinition && entitlmentDefinition.IsLapseRequired">
+        <label class="form-label">Next Lapse Date<span class="required">*</span> </label>
+        <input class="form-control" type="text" name="AdditionalDateInput" bsDatepicker placement="bottom"
+          [disabled]="!editLapseRequiredForAssignLeave"
+          [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="12-12-1970"
+          [ngModelOptions]="{standalone: true}" [(ngModel)]="formData.NextLapseDate" autocomplete="off">
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12 col-sm-12" *ngIf="employeeApplicableEntitlement.length > 0">
+        <label class="form-label"> Remarks <span class="required">*</span></label>
+        <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="remarks"
+          [ngModelOptions]="{standalone: true}" [(ngModel)]="formData.Remarks"></textarea>
+      </div>
+
+
+    </div>
+  </form>
+  <!-- <div class="modal-footer" > -->
+  <div class="row" *ngIf="employeeApplicableEntitlement.length > 0">
+    <div class="col-lg-6">
+
+    </div>
+    <div class="col-lg-6 text-right">
+      <div class="text-right">
+        <button class="btn  btn-primary" type="Submit" [disabled]="formData.empId == 0" name="btnSubmit" id="btnSubmit"
+          (click)="saveEntitlement()"> Save
+        </button>
+      </div>
+      <!-- </div> -->
+    </div>
+
+    <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+      *ngIf="showCreditRequiredForAssignLeave && entitlmentDefinition && entitlmentDefinition.IsCreditRequired">
+      <label class="form-label">Next Credit Date<span class="required">*</span> </label>
+      <input class="form-control" type="text" name="AdditionalDateInput" bsDatepicker placement="bottom"
+        [disabled]="!editCreditRequiredForAssignLeave"
+        [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="12-12-1970"
+        [ngModelOptions]="{standalone: true}" [(ngModel)]="formData.NextCreditDate" autocomplete="off">
+    </div>
+
+    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+      *ngIf="showLapseRequiredForAssignLeave && entitlmentDefinition && entitlmentDefinition.IsLapseRequired">
+      <label class="form-label">Next Lapse Date<span class="required">*</span> </label>
+      <input class="form-control" type="text" name="AdditionalDateInput" bsDatepicker placement="bottom"
+        [disabled]="!editLapseRequiredForAssignLeave"
+        [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }" placeholder="12-12-1970"
+        [ngModelOptions]="{standalone: true}" [(ngModel)]="formData.NextLapseDate" autocomplete="off">
+    </div>
+
+    <div class="form-group form-group-vertical col-xs-12 col-sm-12" *ngIf="employeeApplicableEntitlement.length > 0">
+      <label class="form-label"> Remarks <span class="required">*</span></label>
+      <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="remarks"
+        [ngModelOptions]="{standalone: true}" [(ngModel)]="formData.Remarks"></textarea>
+    </div> -->
+  </div>
+
+
+
+
+</nz-drawer>
+
+<nz-drawer [nzVisible]="showEditLeaevBalanceSlider" [nzWidth]="640" nzTitle="Leave Balance"
+  (nzOnClose)="closeEditLeaevBalanceSlider()">
+
+  <ng-container *ngIf="selectedItems?.length > 0 && selectedItems.length == 1">
+    <nz-descriptions [nzColumn]="2" style="padding-left: 0px;padding-bottom: 16px;" *ngFor="let i of selectedItems">
+      <nz-descriptions-item nzTitle="Employee Code | Name" [nzSpan]="2"><b>
+          {{i.EmployeeCode}} | {{i.EmployeeName}} </b>
+      </nz-descriptions-item>
+
+      <nz-descriptions-item nzTitle="Employment Type Name" [nzSpan]="2"><b>
+          {{i.EmploymentTypeName }} </b>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Leave Type" [nzSpan]="1"><b>
+          {{i.DisplayName}} </b>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Eligible Units" [nzSpan]="1"><b>
+          {{i.EligibleUnits}} </b>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Available Units" [nzSpan]="1"><b>
+          {{i.AvailableUnits}} </b>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Center" [nzSpan]="1"><b>
+          {{i.WorkLocation}} </b>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="City" [nzSpan]="1"><b>
+          {{i.CityName}} </b>
+      </nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Max Balance" [nzSpan]="1"><b>
+          {{i.MaxBalance}} </b>
+      </nz-descriptions-item>
+    </nz-descriptions>
+
+    <nz-divider></nz-divider>
+  </ng-container>
+
+  <div class="row" *ngIf="selectedItems?.length > 0 && failedUnConfirmedEmployees.length == 0">
+
+    <ng-container *ngIf="selectedItems.length > 1">
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+        <h6 class="small lable_name" style="font-size: 93%;">No Of Employee(s) </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems.length}} </span>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;">Leave Type </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].DisplayName}} </span>
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+        <h6 class="small lable_name" style="font-size: 93%;">Max Balance </h6>
+        <span style="font-size: 13px;font-weight: 600;"> {{selectedItems[0].MaxBalance}} </span>
+      </div>
+
+    </ng-container>
+
+    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12">
+      <label class="form-label">Status </label>
+      <div class="p-t-10">
+        <label class="el-switch el-switch-green">
+          <input type="checkbox" value="yes" [(ngModel)]="leaveTypeStatus" />
+          <span class="el-switch-style"></span>
+        </label>
+      </div>
+
+    </div>
+
+
+    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+      <label class="form-label">New Available Balance <span class="required">*</span> </label>
+      <input class="form-control" type="text" onkeypress="return /^[0-9]+$/i.test(event.key)" name="Designation"
+        [(ngModel)]="newAvailableBalance" placeholder="0">
+    </div>
+    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+      <label class="form-label">New Eligible Balance <span class="required">*</span> </label>
+      <input class="form-control" onkeypress="return /^[0-9]+$/i.test(event.key)" type="text" name="Designation"
+        [(ngModel)]="newEligibleBalance" placeholder="0">
+    </div>
+
+
+    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+      <label class="form-label"> Remarks <span class="required">*</span></label>
+      <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false" id="remarks"
+        [(ngModel)]="leaveBalanceRemarks"></textarea>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-right">
+      <button class="btn btn-primary" (click)="doConfirmLeaveBalance()"
+        style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+          class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Confirm &nbsp; &nbsp;
+      </button>
+    </div>
+  </div>
+
+</nz-drawer>
+
+<nz-drawer [nzVisible]="showLeaevBalanceHistory" [nzWidth]="1200" nzTitle="Leave Balance History"
+  (nzOnClose)="closeLeaevBalanceHistory()">
+
+  <h5 style="font-size: 16px; font-weight: bold;" *ngIf="selectedItems.length>0">Leave Type :
+    {{selectedItems[0].DisplayName}}</h5>
+  <h5 style="font-size: 16px; font-weight: bold;" *ngIf="selectedItems.length>0">Emp. Code - Name :
+    {{selectedItems[0].EmployeeCode}} - {{selectedItems[0].EmployeeName}}</h5>
+  <div *ngIf="leaveBalanceHistoryData && leaveBalanceHistoryData.ProcessLog.length > 0">
+    <h6 style="margin-bottom: 0px;
+    margin-top: 25px;">Process Log</h6>
+    <br />
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th style="font-weight: bold; font-size: 12px;">Process Type</th>
+            <th style="font-weight: bold; font-size: 12px;">Log Date</th>
+            <th style="font-weight: bold; font-size: 12px;">Old Available Balance</th>
+            <th style="font-weight: bold; font-size: 12px;">Available Units Affected</th>
+            <th style="font-weight: bold; font-size: 12px;">New Available Balance</th>
+            <th style="font-weight: bold; font-size: 12px;">Old Eligible Balance</th>
+            <th style="font-weight: bold; font-size: 12px;">Eligible Units Affected</th>
+            <th style="font-weight: bold; font-size: 12px;">New Eligible Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of leaveBalanceHistoryData.ProcessLog">
+            <td>{{ i.ProcessType }}</td>
+            <td>{{ i.LogDate | date }}</td>
+            <td>{{ i.OldAvailableBalance }}</td>
+            <td>{{ i.AvailableUnitsAffected }}</td>
+            <td>{{ i.NewAvailableBalance }}</td>
+            <td>{{ i.OldEligibleBalance }}</td>
+            <td>{{ i.EligibleUnitsAffected }}</td>
+            <td>{{ i.NewEligibleBalance }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="leaveBalanceHistoryData && leaveBalanceHistoryData.UtilizationLog.length > 0">
+    <h6 style="margin-bottom: 0px;
+    margin-top: 25px;;">Utilization Log</h6>
+    <br />
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th style="font-weight: bold; font-size: 12px;">Applied From</th>
+            <th style="font-weight: bold; font-size: 12px;">Applied Till</th>
+            <th style="font-weight: bold; font-size: 12px;">Day(s)</th>
+            <th style="font-weight: bold; font-size: 12px;">Applied On</th>
+            <th style="font-weight: bold; font-size: 12px;">Validated On</th>
+            <th style="font-weight: bold; font-size: 12px;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of leaveBalanceHistoryData.UtilizationLog">
+            <td>{{ i.AppliedFrom | date }}</td>
+            <td>{{ i.AppliedTill | date }}</td>
+            <td>{{ i.DayCount }}</td>
+            <td>{{ i.AppliedOn | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td>{{ i.ValidatedOn | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td> <span>{{ statusLabels[i.Status] }}</span>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+</nz-drawer>
+
+
+<nz-drawer [nzVisible]="showBlacklistedHistory" [nzWidth]="850" nzTitle="Blacklisted History"
+  (nzOnClose)="closeBlacklistedHistory()">
+
+  <h5 style="font-size: 16px; font-weight: bold;" *ngIf="selectedItems.length>0">Name :
+    {{selectedItems[0].EntityName}}</h5>
+  <h5 style="font-size: 16px; font-weight: bold;" *ngIf="selectedItems.length>0">Blacklisted On - By :
+    {{selectedItems[0].BlacklistedBy}} - {{selectedItems[0].BlackListedOn | date : 'dd MMM yyyy HH:mm' }}</h5>
+  <div *ngIf="BlacklistingHistory && BlacklistingHistory.length > 0">
+
+    <br />
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th style="font-weight: bold; font-size: 12px;">Attribute Name</th>
+            <th style="font-weight: bold; font-size: 12px;">Attribute Value</th>
+            <th style="font-weight: bold; font-size: 12px;">Reasons For Blacklisting</th>
+            <th style="font-weight: bold; font-size: 12px;">Blacklist Remarks</th>
+            <th style="font-weight: bold; font-size: 12px;">Blacklisted On</th>
+            <th style="font-weight: bold; font-size: 12px;">Blacklisted By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of BlacklistingHistory">
+            <td style="font-size: 12px;">{{ i.AttributeName }}</td>
+            <td style="font-size: 12px;">{{ i.AttributeValue }}</td>
+            <td style="font-size: 12px;">{{ i.ReasonsForBlacklisting }}</td>
+            <td style="font-size: 12px;">{{ i.BlacklistRemarks }}</td>
+            <td style="font-size: 12px;">{{ i.TransactionDate | date : 'dd MMM yyyy HH:mm' }}</td>
+            <td style="font-size: 12px;">{{ i.MarkedBy }}</td>
+
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</nz-drawer>
+
+
+<!-- <div style="display: block;" id="modal_employeepreview_aside_left" class="modal fixed-left fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside" role="document"> -->
+<div id="modal_employeepreview_aside_left" class="modal fixed-left fade" tabindex="-1" role="dialog"
+  aria-labelledby="modal_employeepreview_aside_left" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-sm modal-dialog-aside" style="max-width: 750px !important;">
+
+      <div class="modal-content" *ngIf="employeeProfile">
+
+        <div class="row" style="padding: 15px;">
+          <div class="col-lg-8">
+
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> Employee Profile
+            </h6>
+            <small class="header-pretitle hed"><b> Submitted On : {{employeeProfile.SubmittedOn}} </b></small>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" data-dismiss="modal" (click)="dismiss_employeepreview()" style="margin-top: -5px;">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-body"
+          style="margin-top: -15px;max-height: calc(110vh - 143px) !important;overflow: auto !important;">
+
+          <div class="row" style="margin: 12px;">
+            <div class="col-lg-12">
+              <div class="row employee-profile-container"
+                style="background: #EFF4FF; padding: 15px;border-radius: 5px;">
+                <div class="col-lg-1">
+                  <img class="imgcenter" src="assets/Images/employeeprofile.png">
+                </div>
+                <div class="col-lg-7 text-left">
+                  <p class="hed" style="margin-bottom: 0px;color: black;"><b>{{employeeProfile.EmployeeName ?
+                      employeeProfile.EmployeeName : '-' }}</b></p>
+                  <small class="hed"><b>DOJ: <span class="doj">{{employeeProfile.DOJ ? employeeProfile.DOJ :
+                        '-'}}</span> | Designation: <span class="designation">{{employeeProfile.Designation ?
+                        employeeProfile.Designation : '-' }}</span></b></small>
+                </div>
+                <div class="col-lg-4" style="margin-top: 8px; text-align: right;">
+                  <button class="btn btn-blank edit-button" (click)="editEmployeeDetails()"
+                    *ngIf="employeeProfile.IsAllowToEdit">
+                    <i class="mdi mdi-account-edit"></i> &nbsp;Edit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="employeeProfile" style="padding: 15px;">
+            <div class="form-group form-group-vertical col-md-12">
+              <span class="" style="color: #337AB7;font-weight: 600;
+            ">Personal Information</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Designation</label>
+              <span class="resignation-text-bold">{{employeeProfile.Designation ? employeeProfile.Designation : '-' }}
+              </span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Employment Start Date</label>
+              <span class="resignation-text-bold">{{employeeProfile.DOJ ? employeeProfile.DOJ : '-'}}
+              </span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Mobile Number</label>
+              <span class="resignation-text-bold"> +91 {{employeeProfile.PrimaryMobile ? employeeProfile.PrimaryMobile :
+                '-'}}</span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Email</label>
+              <span class="resignation-text-bold">{{employeeProfile.PrimaryEmail ? employeeProfile.PrimaryEmail :
+                '-'}}</span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Date of Brith</label>
+              <span class="resignation-text-bold">{{employeeProfile.DOB ? employeeProfile.DOB : '-'}}</span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Father’s Name</label>
+              <span class="resignation-text-bold">{{employeeProfile.RelationshipName ? employeeProfile.RelationshipName
+                :
+                '-'}}</span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Blood Group</label>
+              <span class="resignation-text-bold">{{employeeProfile.BloodGroup ? bloodGroup[employeeProfile.BloodGroup]
+                : '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">MaritalStatus</label>
+              <span class="resignation-text-bold">{{employeeProfile.MaritalStatus ?
+                maritalStatus[employeeProfile.MaritalStatus] : '-'}}</span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Aadhaar Number</label>
+              <span class="resignation-text-bold">{{employeeProfile.Aadhaar ? employeeProfile.Aadhaar : '-'}}</span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">PAN No</label>
+              <span class="resignation-text-bold">{{employeeProfile.PAN ? employeeProfile.PAN : '-'}}</span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">UAN No.</label>
+              <span class="resignation-text-bold">{{employeeProfile.UAN ? employeeProfile.UAN : '-'}}</span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">ESIC No.</label>
+              <span class="resignation-text-bold">{{employeeProfile.ESIC ? employeeProfile.ESIC : '-'}}</span>
+            </div>
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Is Differently Abled?</label>
+              <span class="resignation-text-bold">{{employeeProfile.IsDifferentlyabled ? 'Yes' : 'No'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-12">
+              <span class="" style="color: #337AB7;font-weight: 600;
+            ">Official Information</span>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Joining Location (Center / City)</label>
+              <span class="resignation-text-bold">{{employeeProfile.CityName ? employeeProfile.CityName :
+                '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Reporting Location (Campus)</label>
+              <span class="resignation-text-bold">{{employeeProfile.WorkLocation ? employeeProfile.WorkLocation :
+                '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6" *ngIf="IsNewEmployeeRequest">
+              <label class="form-label resignation-label">Annual Salary</label>
+              <span class="resignation-text-bold">{{employeeProfile.AnnualSalary ? employeeProfile.AnnualSalary :
+                '-'}}</span>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Reporting Manager</label>
+              <span class="resignation-text-bold">{{employeeProfile.managername ? employeeProfile.managername :
+                '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Department</label>
+              <span class="resignation-text-bold">{{employeeProfile.Department ? employeeProfile.Department :
+                '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Sub Employment Type</label>
+              <span class="resignation-text-bold">{{employeeProfile.SubEmploymentType ?
+                employeeProfile.SubEmploymentType : '-'}}</span>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Category</label>
+              <span class="resignation-text-bold">{{employeeProfile.Category ? employeeProfile.Category : '-'}}</span>
+            </div>
+
+            <div class="form-group form-group-vertical col-md-6">
+              <label class="form-label resignation-label">Division</label>
+              <span class="resignation-text-bold">{{employeeProfile.Division ? employeeProfile.Division : '-'}}</span>
+            </div>
+
+            <ng-container *ngIf="employeeProfileCandidateDocuments && employeeProfileCandidateDocuments.length > 0">
+              <div class="form-group form-group-vertical col-md-12">
+                <span class="" style="color: #337AB7;font-weight: 600;
+            ">Document Information</span>
+              </div>
+
+
+
+              <div class="form-group form-group-vertical col-md-12">
+                <div class="row">
+                  <div class="col-lg-4">
+                    <label class="form-label resignation-label"> Document Name</label>
+                  </div>
+                  <div class="col-lg-3">
+                    <label class="form-label resignation-label"> Document Number</label>
+                  </div>
+                  <div class="col-lg-4">
+                    <label class="form-label resignation-label">Attachment</label>
+                  </div>
+                  <div class="col-lg-1">
+                  </div>
+                </div>
+                <div class="card cardshadowcustom" *ngFor="let i of employeeProfileCandidateDocuments">
+                  <div class="row">
+
+                    <div class="col-lg-4">
+
+                      <span class="resignation-text-bold">{{getDocumentTypeName(i.DocumentTypeId)}}
+                      </span>
+
+                    </div>
+                    <div class="col-lg-3">
+                      <span class="resignation-text-bold">{{i.DocumentNumber}}
+                      </span>
+                    </div>
+                    <div class="col-lg-4"> <span class="resignation-text-bold">{{i.FileName}}
+                      </span>
+
+                    </div>
+
+                    <div class="col-lg-1">
+                      <span (click)="viewAttachments(i, 'Family')"
+                        style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="view attachment"
+                        title="view attachment">
+                        <i class="mdi mdi-file-document-outline"
+                          style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </ng-container>
+
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="row" style="width: 103%;">
+            <div class="col-lg-6">
+              <button class="btn btn-blank" (click)="previewSalaryBreakup()" style="color:  #146BA2 !important;font-weight: 600 !important;
+            font-size: 12px;" *ngIf="IsNewEmployeeRequest"> <i class="mdi mdi-cash"></i> &nbsp;Preview Salary Breakup
+              </button>
+            </div>
+            <div class="col-lg-6 text-right">
+              <div class="text-right">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <button class="btn upgrade-btn" type="button" (click)="doApproveReject(true)"
+                      style="font-weight: 600 !important;">
+                      <i class="mdi mdi-account-check"></i> &nbsp; Approve </button>
+                  </li>
+                  <li class="list-inline-item">
+                    <button class="btn btn-danger" type="Submit" name="btnSubmit" id="btnSubmit"
+                      (click)="doApproveReject(false)" style="font-weight: 600 !important;"> <i
+                        class="mdi mdi-account-remove"></i> &nbsp; Reject
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<div id="documentviewer2" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="documentviewer2" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="box-shadow: #00000096 1px 14px 15px !important;">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left; width: 100%;"><b
+                style="float: left;">Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview</h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="close_documentviewer2()" style="margin-top: -22px;">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+            <div style="margin-top: -8px;float: right;margin-right: 33px">
+              <app-filedownload [documentId]="contentmodalDocumentId">
+              </app-filedownload>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+          <div class="iframe-container" *ngIf="contentmodalurl == null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <div class="iframe-container" *ngIf="contentmodalurl != null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+            <iframe [src]="contentmodalurl" frameborder="0" scrolling="yes" style="width: 100%;height: 100%;"
+              width="100%" height="600px"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="documentviewer" cdkDrag class="modal fade grabbable" cdkDragRootElement="grabbable" tabindex="-1" role="dialog"
+  aria-labelledby="documentviewer" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 1030px;">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-md-8">
+          <small class="header-pretitle" style="float: left; width: 100%;"><b style="float: left;">Documents</b></small>
+          <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview</h6>
+        </div>
+        <div class="col-md-4" style="top: 13px;">
+          <div class="modal-close" (click)="close_documentviewer3()" style="margin-top: -22px;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+          <div style="margin-top: -8px;float: right;margin-right: 33px">
+            <app-filedownload [documentId]="contentmodalDocumentId">
+            </app-filedownload>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body" style="overflow: auto !important;">
+
+        <div class="iframe-container" *ngIf="docList?.length == 0"
+          style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+          <span>
+            <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+              &nbsp; Please wait...</i>
+            <span class="sr-only">Please wait...</span>
+          </span>
+        </div>
+        <ng-container *ngIf="docList?.length > 0">
+          <div class="iframe-container" *ngFor="let item of docList"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;margin-bottom: 10px">
+            <iframe [src]="item.ImageURL" frameborder="0" scrolling="yes" width="100%" height="600px"></iframe>
+            <div><span style="top: 0 !important;
+                        left: 0px !important;
+                        position: absolute !important;
+                        z-index: 5;
+                        height: 25px !important;
+                        vertical-align: top;
+                        opacity: inherit;
+                        bottom: unset !important;
+                        right: unset !important;
+                        background: #c9c9c7;
+                        width: 30%;
+                        padding-left: 5px;
+                        opacity: 0.9;">{{item.name}} </span></div>
+
+
+          </div>
+        </ng-container>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div id="modal_employeepreview_breakup" class="modal fixed-left fade" tabindex="-1" role="dialog"
+  aria-labelledby="modal_employeepreview_breakup" aria-hidden="true" #mybreakupModal>
+  <div style="display: block;" class="modal fade show animate fadeInRight">
+    <div class="modal-dialog modal-sm modal-dialog-aside" style="max-width: 750px !important;">
+      <div class="modal-content" *ngIf="employeeProfile">
+
+        <div class="row" style="padding: 15px;">
+          <div class="col-lg-8">
+
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> Salary Breakup Summary
+            </h6>
+            <small class="header-pretitle hed"><b> Annual Salary : {{employeeProfile.AnnualSalary | currency:'INR'}}
+              </b></small>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" data-dismiss="modal" (click)="mybreakupModal.style.display='none'"
+              style="margin-top: -5px;">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body"
+          style="margin-top: -15px;max-height: calc(110vh - 143px) !important;overflow: auto !important;">
+          <div class="row" style="padding-top:2rem">
+            <div class="col-lg-12">
+              <div class="">
+
+                <table class="table table-bordered" style="font-size:12px" *ngIf="OfferData">
+                  <thead>
+                    <tr>
+                      <th>Pay Components</th>
+                      <th>Monthly</th>
+                      <th>Annually</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let rate of OfferData">
+                      <ng-container *ngIf="rate.Value > 0 && (rate.ProductCode.toUpperCase() != 'NETPAY' && rate.ProductCode.toUpperCase() != 'PFWAGES')">
+                        <td
+                          [ngStyle]="{'font-weight': rate.ProductTypeCode =='Earning' || rate.ProductTypeCode =='Deductions' || rate.ProductTypeCode =='Total' ? '600' : '400' }"
+                          style="font-size:14px">
+                          {{ rate.DisplayName }}</td>
+                        <td
+                          [ngStyle]="{'font-weight': rate.ProductTypeCode =='Earning' || rate.ProductTypeCode =='Deductions' || rate.ProductTypeCode =='Total' ? '600' : '400' }"
+                          style="text-align: right;font-size:14px">
+                          <div *ngIf="(rate.ProductCode.toUpperCase() != 'CTC')">
+                            {{ doCheckEditableAnnualPayComponent(rate) ? 0 : rate.Value }}
+                          </div>
+
+                        </td>
+
+
+
+                        <td
+                          [ngStyle]="{'font-weight': rate.ProductTypeCode =='Earning' || rate.ProductTypeCode =='Deductions' || rate.ProductTypeCode =='Total' ? '600' : '400' }"
+                          style="text-align: right;font-size:14px">
+                          {{ doCheckEditableAnnualPayComponent(rate) ? rate.Value : rate.Value * 12 }}
+                        </td>
+
+
+
+                      </ng-container>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

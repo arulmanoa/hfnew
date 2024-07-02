@@ -1,0 +1,612 @@
+<style>
+    .readonly {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    .editable {
+        pointer-events: auto;
+    }
+</style>
+
+<div class="page-wrapper" style="padding-left: 15px !important;padding-top: 0px !important;">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+        <div class="row" [ngClass]="AddDeductionType == 'Update Deduction' ? 'readonly' : 'editable'">
+            <!-- <div class="custom-checkbox" style="padding-left: 2%;">
+                <input type="checkbox" class="custom-control-input" id="isaddress" [(ngModel)]="CheckBoxisChecked"
+                    [checked]="CheckBoxisChecked" (change)="onChangeCheckBox(CheckBoxisChecked)">
+                <label class="custom-control-label" style="padding-top: 2px !important;" for="isaddress">
+                    Create Deduction Against Paid Amount
+                </label>
+            </div> -->
+            <div class="form-check mr-2">
+                <input type="radio" class="form-check-input" id="checkBoxChecked" name="dedOption" value="checkBoxIsChecked" (change)="onChangeCheckBox(true)" checked>
+                <label class="form-check-label titleLabel" for="checkBoxChecked">Within System</label>
+            </div>
+            <div class="form-check mr-2">
+                <input type="radio" class="form-check-input" id="checkBoxNotChecked" name="dedOption" value="checkBoxIsNotChecked" (change)="onChangeCheckBox(false)">
+                <label class="form-check-label titleLabel" for="checkBoxNotChecked">Outside System</label>
+            </div>
+        </div>
+        <form name="employeeDedForm" #employeeDedForm="ngForm" novalidate>
+            <!-- PAYMENT DETAILS -->
+            <div class="col-12 col-md-12 col-sm-12">
+                <div class="row d-block">
+                    <div class="row" [ngClass]="AddDeductionType == 'Update Deduction' ? 'readonly ' : 'editable'">
+                        <div class=" col-xs-12 col-sm-12 p-0" *ngIf="CheckBoxisChecked">
+                            <nz-card [nzBordered]="false" nzTitle="Payment Details">
+                                <div class="hori-timeline" dir="ltr">
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-6 col-sm-3">
+                                            <label class="form-label ">Payment Type<span
+                                                    class="required">*</span></label>
+                                            <ng-select [items]="paymentSourceTypeList" id="PaymentType"
+                                                name="PaymentType" placeholder="-- select an option --" bindLabel="Name"
+                                                bindValue="Id" [(ngModel)]="employeeDeduction.PaymentType"
+                                                #PaymentType="ngModel"
+                                                [ngClass]="{'is-invalid': !PaymentType?.valid && (PaymentType?.dirty || employeeDedForm.submitted) }"
+                                                required>
+                                            </ng-select>
+                                            <div *ngIf="!PaymentType?.valid && (PaymentType?.dirty || employeeDedForm.submitted)"
+                                                class="inv-feedback">
+                                                Payment Type is required
+                                            </div>
+
+
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-6 col-sm-3">
+                                            <label class="form-label ">Pay Amount<span class="required">*</span></label>
+                                            <!-- [ngClass]="{ 'is-invalid': PaymentAmount.errors }" -->
+                                            <input class="form-control" type="text" maxlength="10"
+                                                onkeypress="return /^[0-9]+$/i.test(event.key)" id="PaymentAmount"
+                                                name="PaymentAmount" placeholder="50000"
+                                                [ngClass]="{'is-invalid': !PaymentAmount?.valid && (PaymentAmount?.dirty  || employeeDedForm.submitted) }"
+                                                autocomplete="none|false|no" #PaymentAmount="ngModel"
+                                                [(ngModel)]="employeeDeduction.PaymentAmount">
+                                            <!-- <div *ngIf="!PaymentAmount?.valid && (PaymentAmount?.dirty  || employeeDedForm.submitted)"
+                                                class="inv-feedback">
+                                                Pay Amount is required
+                                            </div> -->
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-6 col-sm-3">
+                                            <label class="form-label ">Payment Date<span
+                                                    class="required">*</span></label>
+                                            <!-- [ngClass]="{'is-invalid': PaymentDate.errors }" -->
+                                            <input type="text" class="form-control" id="PaymentDate" name="PaymentDate"
+                                                bsDatepicker placement="bottom"
+                                                (bsValueChange)="onChangepaymentDate($event)"
+                                                [ngClass]="{'is-invalid': !PaymentDate?.valid && (PaymentDate?.dirty || employeeDedForm.submitted) }"
+                                                [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+                                                placeholder="12-12-1990" autocomplte="off" #PaymentDate="ngModel"
+                                                [(ngModel)]="paymentDate" />
+                                            <!-- <div *ngIf="!PaymentDate?.valid && (PaymentDate?.dirty || employeeDedForm.submitted)"
+                                                class="inv-feedback">Payment Date is required
+                                            </div> -->
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-6 col-sm-3">
+                                            <label class="form-label ">Payperiod<span class="required">*</span></label>
+                                            <ng-select [items]="payperiodList" id="PayPeriod" name="PayPeriod"
+                                                placeholder="-- select an option --" bindLabel="PayCyclePeriodName"
+                                                bindValue="Id" #PayPeriod="ngModel"
+                                                [(ngModel)]="employeeDeduction.PayPeriodId"
+                                                [ngClass]="{'is-invalid': !PayPeriod?.valid && (PayPeriod?.dirty || employeeDedForm.submitted) }">
+                                            </ng-select>
+
+                                            <!-- <div *ngIf="!PayPeriod?.valid && (PayPeriod?.dirty || employeeDedForm.submitted)"
+                                                class="inv-feedback">
+                                                PayPeriod is required
+                                            </div> -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </nz-card>
+                        </div>
+                        <!-- <div class=" col-xs-12  col-sm-6"><h5 style="text-decoration: underline;">Payment Details</h5></div> --> 
+                    </div>
+                     <!-- DEDUCTION DETAILS -->
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 p-0">
+                            <nz-card [nzBordered]="false" nzTitle="Deduction Details">
+                                <div class="hori-timeline" dir="ltr">
+                                    <div class="row" [ngClass]="AddDeductionType == 'Update Deduction' ? 'readonly ' : 'editable'">
+                                        <div class="form-group form-group-vertical col-xs-6 col-sm-4">
+                                            <label class="form-label text-bold">
+                                                Starting
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row" [ngClass]="AddDeductionType == 'Update Deduction' ? 'readonly ' : 'editable'">
+                                        <div class="form-group form-group-vertical col-xs-6  col-sm-4 ">
+                                            <label class="form-label ">Deduction Product<span
+                                                    class="required">*</span></label>
+                                            <ng-select [items]="deductionProductList" id="deductionType"
+                                                name="deductionType" placeholder="-- select an option --"
+                                                bindLabel="Name" bindValue="Id"
+                                                [(ngModel)]="employeeDeduction.DeductionProductId"
+                                                #deductionType="ngModel"
+                                                [ngClass]="{'is-invalid': !deductionType?.valid && (deductionType?.dirty || employeeDedForm.submitted) }"
+                                                required>
+                                            </ng-select>
+                                            <div *ngIf="!deductionType?.valid && (deductionType?.dirty || employeeDedForm.submitted)"
+                                                class="inv-feedback">
+                                                Deduction Product is required
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-6 col-sm-4" [ngClass]="{'d-none': employeeDeduction.DeductionType == 5}">
+                                            <label class="form-label ">
+                                                Start Period <span class="required">*</span>
+                                            </label>
+                                            <ng-select [items]="payperiodList" id="CalSPayPeriod" name="CalSPayPeriod"
+                                                placeholder="-- select an option --" bindLabel="PayCyclePeriodName"
+                                                bindValue="Id" #CalSPayPeriod="ngModel"
+                                                [(ngModel)]="employeeDeduction.StartPeriodId"
+                                                (change)="StartPayperiodClickFn()"
+                                                [ngClass]="{'is-invalid': !CalSPayPeriod?.valid && (CalSPayPeriod?.dirty || employeeDedForm.submitted) }"
+                                                required>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="row" [ngClass]="AddDeductionType == 'Update Deduction' ? 'readonly ' : 'editable'">
+                                        <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                            <label class="form-label text-bold">
+                                                Ending
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row" [ngClass]="AddDeductionType == 'Update Deduction' ? 'readonly ' : 'editable'">
+                                       
+                                        <div class="form-group form-group-vertical col-xs-6 col-sm-4">
+                                            <label class="form-label ">Deduction Type <span
+                                                    class="required">*</span></label>
+                                            <ng-select [items]="endStatusList" id="EndStatus" name="EndStatus"
+                                                placeholder="-- select an option --" bindLabel="Label"
+                                                [(ngModel)]="employeeDeduction.EndStatus" bindValue="Id"
+                                                #EndStatus="ngModel" (change)="onChangeEndingStatus($event)"
+                                                [ngClass]="{'is-invalid': !EndStatus?.valid && (EndStatus?.dirty || employeeDedForm.submitted) }"
+                                                required>
+                                            </ng-select>
+                                            <div *ngIf="!EndStatus?.valid && (EndStatus?.dirty || employeeDedForm.submitted)"
+                                                class="inv-feedback">
+                                                Deduction Type is required
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-6  col-sm-4">
+                                            <label class="form-label ">{{TotalDeductionAmountLabel}}<span
+                                                    class="required">*</span></label>
+                                            <input class="form-control" type="text" maxlength="10"
+                                                onkeypress="return /^[0-9]+$/i.test(event.key)"
+                                                id="TotalDeductionAmount" name="TotalDeductionAmount"
+                                                placeholder="50000" width="30" autocomplete="none|false|no"
+                                                #TotalDeductionAmount="ngModel"
+                                                [(ngModel)]="employeeDeduction.TotalDeductionAmount"
+                                                (keyup)="deductionAmountChangeFn()"
+                                                [ngClass]="{'is-invalid': !TotalDeductionAmount?.valid && (TotalDeductionAmount?.dirty || employeeDedForm.submitted) }"
+                                                required />
+                                            <div *ngIf="!TotalDeductionAmount?.valid && (TotalDeductionAmount?.dirty || employeeDedForm.submitted)"
+                                                class="inv-feedback">
+                                               {{TotalDeductionAmountLabel}} is required
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <!-- <div class="row" [ngClass]="AddDeductionType == 'Update Deduction' ? 'readonly ' : 'editable'">
+                                        <div class="form-group form-group-vertical col-xs-6  col-sm-4"
+                                            *ngIf="employeeDeduction.EndStatus != 2">
+                                            <label class="form-label ">Deduction Schedule<span
+                                                    class="required">*</span></label>
+                                            <ng-select [items]="deductionTypeList" id="DeductionType"
+                                                name="DeductionType" placeholder="-- select an option --"
+                                                bindLabel="Name" bindValue="Id"
+                                                [(ngModel)]="employeeDeduction.DeductionType" #DeductionType="ngModel"
+                                                (change)="onChangeDeduction($event)"
+                                                [ngClass]="{'is-invalid': !DeductionType?.valid && (DeductionType?.dirty || employeeDedForm.submitted) }"
+                                                required>
+                                            </ng-select>
+                                            <div *ngIf="!DeductionType?.valid && (DeductionType?.dirty || employeeDedForm.submitted)"
+                                                class="inv-feedback">
+                                                Deduction Schedule is required
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <div class="row" [ngClass]="AddDeductionType == 'Update Deduction' ? 'readonly ' : 'editable'">
+                                        <div class="form-group form-group-vertical col-xs-6  col-sm-4"
+                                            *ngIf="schedule_CalendarBased ||employeeDeduction.EndStatusName == 'NOOFOCCURRENCES'">
+                                            <label class="form-label ">No Of Occurrences<span
+                                                    class="required">*</span></label>
+                                            <input class="form-control" type="number" maxlength="10"
+                                                onkeypress="return /^[0-9]+$/i.test(event.key)" id="NoOfOccurrences"
+                                                name="NoOfOccurrences" placeholder="5" width="30"
+                                                autocomplete="none|false|no" #NoOfOccurrences="ngModel"
+                                                [(ngModel)]="employeeDeduction.NoOfOccurrences"
+                                                (change)="noOfOccurenceschngFn()"
+                                                [ngClass]="{'is-invalid': !NoOfOccurrences?.valid && (NoOfOccurrences?.dirty || employeeDedForm.submitted) }"
+                                                required />
+                                            <div *ngIf="!NoOfOccurrences?.valid && (NoOfOccurrences?.dirty || employeeDedForm.submitted)"
+                                                class="inv-feedback">
+                                                No Of Occurrences is required
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group form-group-vertical col-xs-6  col-sm-4"
+                                            *ngIf="DeductionAmount_CardVisible">
+                                            <label class="form-label">Fixed Deduction
+                                                Amount<span class="required">*</span></label>
+                                            <input class="form-control" type="text" maxlength="10"
+                                                onkeypress="return /^[0-9]+$/i.test(event.key)" id="NoOfOccurrences"
+                                                name="NoOfOccurrences" placeholder="50000" width="30"
+                                                autocomplete="none|false|no" #NoOfOccurrences="ngModel"
+                                                [(ngModel)]="employeeDeduction.AfterDeductionAmount" />
+                                        </div>
+                                        <div *ngIf="EndStatusPeriod_CardVisible || employeeDeduction.EndStatusName == 'ENDINGPERIOD'"
+                                            class="form-group form-group-vertical col-xs-6 col-sm-4">
+                                            <label class="form-label ">End Period<span class="required">*</span></label>
+                                            <ng-select [items]="EndpayperiodList" id="CalEPayPeriod"
+                                                name="CalEPayPeriod" placeholder="-- select an option --"
+                                                bindLabel="PayCyclePeriodName" bindValue="Id" #CalEPayPeriod="ngModel"
+                                                [(ngModel)]="employeeDeduction.EndPayPeriodId" (change)="onEndPeriodChange()"
+                                                [ngClass]="{'is-invalid': !CalEPayPeriod?.valid && (CalEPayPeriod?.dirty || employeeDedForm.submitted) }"
+                                                required>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <!-- SUSPEND TYPE DEFINITION -->
+                                    <div class="row">
+                                        <div class="form-group form-group-vertical col-xs-6 col-sm-12">
+                                            <label class="form-label">
+                                                Suspend Type (If salary goes down)
+                                            </label>
+                                        </div>
+                                        <div class="form-group form-group-vertical d-flex col-xs-6 col-sm-12">
+                                            <div class="form-check mr-2">
+                                                <input type="radio" class="form-check-input" id="radio1" name="optradio" value="4" [(ngModel)]="radioSelectedForSuspendType"
+                                                (change)="changeSuspendTypeDefinition(4)" checked>
+                                                <label class="form-check-label suspendLabel" for="radio1">Manual</label>
+                                            </div>
+                                            <div class="form-check mr-2">
+                                                <input type="radio" class="form-check-input" id="radio2" name="optradio" value="2" [(ngModel)]="radioSelectedForSuspendType"
+                                                (change)="changeSuspendTypeDefinition(2)">
+                                                <label class="form-check-label suspendLabel" for="radio2">Adjust in next month</label>
+                                            </div>
+                                            <div class="form-check mr-2">
+                                                <input type="radio" class="form-check-input" id="radio3" name="optradio" value="3" [(ngModel)]="radioSelectedForSuspendType"
+                                                (change)="changeSuspendTypeDefinition(3)">
+                                                <label class="form-check-label suspendLabel" for="radio3">Add new installment</label>
+                                            </div>
+                                            <div class="form-check mr-2">
+                                                <input type="radio" class="form-check-input" id="radio4" name="optradio" value="1" [(ngModel)]="radioSelectedForSuspendType"
+                                                (change)="changeSuspendTypeDefinition(1)">
+                                                <label class="form-check-label suspendLabel" for="radio4">Suspend Permanently</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- UPDATE SUSPEND TYPE BUTTON -->
+                                    <div class="col-xs-12  col-sm-12 pull-right">
+                                        <button class="btn btn-primary" style="float: right !important;"
+                                            type="Submit" name="btnUpdateSuspendType" *ngIf="showUpdateSuspendTypeBtn" id="btnUpdateSuspendType"
+                                            (click)="updateSuspendTypeValue(employeeDedForm)">
+                                            Update Suspend Type
+                                        </button>
+                                    </div>
+                                    <!-- GENERATE BUTTON -->
+                                    <div class="col-xs-12  col-sm-12 pull-right">
+                                        <button class="btn btn-primary" style="float: right !important;"
+                                            type="Submit" name="btnGenerate" id="btnGenerateId" *ngIf="generateButtonVisible"
+                                            (click)="generateEmployeeScheduleDetails(employeeDedForm)">
+                                            Generate
+                                        </button>
+                                    </div>
+                                </div>
+                            </nz-card>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="text-center ma-5" *ngIf="spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                            aria-hidden="true"></span>
+                        Please wait...
+                    </button>
+                </div>
+            </div>
+            <br />
+            <!-- DEDUCTION TABLE -->
+            <div class="col-md-12 col-sm-12 col-12 deductionCalendarDiv" *ngIf="this.employeeDeduction.EndStatus != 0">
+                <div class="deductionCalendarTitle">Deduction Calendar Details</div>
+                <span style="display: none;">deduction type selected: {{this.employeeDeduction.EndStatus}}</span>
+                <div style="margin-left: -3%;">
+
+                    <div class="col-md-12 col-sm-12 col-12">
+                        <!-- <angular-slickgrid [gridId]="gridEmployeeDeduction" [columnDefinitions]="columnDefinitions"
+                        [gridOptions]="gridOptions" [dataset]="lstEmployeeScheduleDetails" gridWidth="100%"
+                        (onAngularGridCreated)="angularGridReady($event)">
+                        </angular-slickgrid> -->
+
+                        <!-- <angular-slickgrid [gridId]="gridEmployeeDeduction" [columnDefinitions]="columnDefinitions"
+                            [gridOptions]="gridOptions" [dataset]="lstEmployeeScheduleDetails" gridWidth="100%"
+                            (onAngularGridCreated)="angularGridReady($event)">
+                        </angular-slickgrid> -->
+                        <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                            <div class="table-responsive table-height">
+                                <table class="table table-sticky table-bordered tble-row-height mb-0 deduction-table">
+                                    <thead class="tbl-freezhead deduction-table-header">
+                                        <tr>
+                                            <!-- <th style="background: #f3f3f3;width:20px;">
+                                                Idx
+                                            </th> -->
+                                            <!-- <th style="background: #f3f3f3; width: 30px;">
+                                                <input #checkAllPer1 type="checkbox" id="checkAllPer1" [checked]="CheckdVal"
+                                                (change)="onSelecteDeduction('M',lstEmployeeScheduleDetails,checkAllPer1.checked,'')"
+                                                style="border-width: thin;width:15px;vertical-align: text-bottom;" /> 
+                                            </th>-->
+                                            <th>
+                                                Period Name
+                                            </th>
+                                            <th>
+                                                Opening Balance Amount (INR)
+                                            </th>
+                                            <th>
+                                                Installment Amount (INR)
+                                            </th>
+                                            <th>
+                                                Closing Balance
+                                            </th>
+                                            <th>
+                                                Deducted?
+                                            </th>
+                                            <th>
+                                                Suspended?
+                                            </th>
+                                            <th>
+                                                Carry Forwarded?
+                                            </th>
+                                            <th>
+                                                &nbsp;
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="tbl-scrollbody deduction-table-body">
+                                        <tr *ngFor="let obj of lstEmployeeScheduleDetails let i = index">
+                                            <!-- <td style="padding-top: 8px !important;width: 20px;">
+                                            {{i+1}}
+                                            </td> -->
+                                            <!-- <td style="padding-top: 8px !important;width: 30px;">
+                                                <input #checkAll2 type="checkbox" id="checkAll2"
+                                                    [checked]="obj.Select_Val==true" [disabled]="obj.IsDeducted && obj.IsSuspended && !obj.IsCarryForwarded 
+                                                    && obj.DeductionPeriodId < employeeDetails.EmploymentContracts[0].OpenPayPeriodId"
+                                                    (change)="onSelecteDeduction('S',lstEmployeeScheduleDetails,checkAll2.checked,obj)"
+                                                    style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                                            </td> -->
+                                            <td *ngIf="!obj.IsSettlementDeduction">
+                                                {{obj.DeductionPeriodName}}
+                                            </td>
+                                            <td *ngIf="obj.DeductionPeriodName == null && obj.IsSettlementDeduction">
+                                                On Settlement
+                                            </td>
+                                            <td>
+                                                <span> {{obj.OpeningBalanceAmount}}</span>
+                                            </td>
+                                            <td style="padding-top: 0.3rem !important; padding-bottom: 0.3rem !important;;text-align:center;">
+                                                <input class="form-control" type="text" maxlength="10"
+                                                    [disabled]="obj.IsSuspended || obj.IsDeducted"
+                                                    style="border: 1px solid #ECECEC !important;font-size: 12px !important;padding-left: 8%;padding-right: 0px;"
+                                                    onkeypress="return /^[0-9]+$/i.test(event.key)" id="{{i}}"
+                                                    name="{{i}}_name" placeholder="1000"
+                                                    [(ngModel)]="obj.InstallmentAmount"
+                                                    title="Type here"  autocomplete="none|false|no" 
+                                                    (keyup)="onClickSubmitUpdateInstalmentAmnt(obj, i,$event) && $event.stopPropagation()">
+                                                <!-- {{obj.InstallmentAmount}} -->
+                                            </td>
+                                            <td>
+                                                <span> {{obj.ClosingBalance}}</span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{obj.IsDeducted == true ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span> 
+                                                    {{obj.IsSuspended == true ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{obj.IsCarryForwarded == true ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td style="padding-top: 10px !important;width: 13%;">
+                                                <div *ngIf="!hideSuspendRescheduleBtns">
+                                                    <button class="btn iconBtn" ngbTooltip="Suspend Permanently"
+                                                        (click)="permanentlySuspendDeduction(obj)"
+                                                        [disabled]="(obj.IsDeducted || obj.IsSuspended) || obj.IsCarryForwarded ||
+                                                        (obj.OpeningBalanceAmount == 0 || obj.InstallmentAmount == 0) ||
+                                                        (!obj.IsSettlementDeduction && obj.DeductionPeriodId < employeeDetails.EmploymentContracts[0].OpenPayPeriodId)">
+                                                        <i class="material-icons">event_busy</i>
+                                                    </button>
+                                                    <button class="btn iconBtn" ngbTooltip="Reschedule"
+                                                        (click)="suspendEmployeeDeduction(obj)"
+                                                        [disabled]="(obj.IsDeducted || obj.IsSuspended) || (obj.OpeningBalanceAmount == 0 || obj.InstallmentAmount == 0)
+                                                     || (!obj.IsSettlementDeduction && obj.DeductionPeriodId < employeeDetails.EmploymentContracts[0].OpenPayPeriodId)">
+                                                         <i class="material-icons ">event_repeat</i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- SUSPEND DETAILS POPUP -->
+            <nz-card *ngIf="Suspension_CardVisible" style="height:200px;" [nzBordered]="false"
+                nzTitle="Suspend Details">
+                <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label ">Suspension Type<span class="required">*</span></label>
+                        <ng-select [items]="suspensionTypeList" id="SuspensionType" name="SuspensionType"
+                            placeholder="-- select an option --" bindLabel="Name" bindValue="Id"
+                            #SuspensionType="ngModel" [(ngModel)]="employeeDeduction.SuspensionType"
+                            (change)="onChangeSuspension($event)">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="row" *ngIf="suspended_CardVisible">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label ">Start Period<span class="required">*</span></label>
+                        <ng-select [items]="payperiodList" id="SuspensionFromPeriod" name="SuspensionFromPeriod"
+                            placeholder="-- select an option --" bindLabel="PayCyclePeriodName" bindValue="Id"
+                            #SuspensionFromPeriod="ngModel" [(ngModel)]="employeeDeduction.SuspensionFromPeriodId">
+                        </ng-select>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label ">Start Period<span class="required">*</span></label>
+                        <ng-select [items]="payperiodList" id="SuspensionToPeriod" name="SuspensionToPeriod"
+                            placeholder="-- select an option --" bindLabel="PayCyclePeriodName" bindValue="Id"
+                            #SuspensionToPeriod="ngModel" [(ngModel)]="employeeDeduction.SuspensionToPeriodId">
+                        </ng-select>
+                    </div>
+                </div>
+            </nz-card>
+        </form>
+        <br />
+        <!-- SAVE DEDUCTION BUTTON -->
+        <div class="row" style="width: 98.5%;">
+            <div class="col-lg-12">
+                <div class="text-right">
+                    <ul class="list-inline">
+                        <li class="list-inline-item" *ngIf="this.employeeDeduction.EndStatus != 0">
+                            <button [disabled]="disableConfirmDetailsBtn || (CheckBoxisChecked &&
+                                (employeeDeduction.TotalDeductionAmount > employeeDeduction.PaymentAmount))" 
+                                class="btn  btn-primary " type="button" name="btnSubmit" 
+                                id="btnSubmit" (click)=addDeduction(employeeDedForm)>
+                                <div class="pos-rlt sm-btn-component" > 
+                                    <span> <i class="fa fa-hdd-o" aria-hidden="true"></i>
+                                        &nbsp; Save and Close 
+                                    </span>
+                                </div>
+                            </button>
+                            <span class="d-none">{{ employeeDeduction.TotalDeductionAmount > this.employeeDeduction.PaymentAmount }} </span>
+                        </li>
+                        <!-- only used when no end date is selected -->
+                        <li *ngIf="this.employeeDeduction.EndStatus == 0 && AddDeductionType != 'Update Deduction'">
+                            <button [disabled]="disableConfirmDetailsBtn || (CheckBoxisChecked &&
+                                (employeeDeduction.TotalDeductionAmount > employeeDeduction.PaymentAmount))" 
+                                class="btn  btn-primary " type="button" name="btnSubmit" 
+                                id="btnSubmit" (click)=addDeductionForNoEndDateDeductionType(employeeDedForm)>
+                                <div class="pos-rlt sm-btn-component" > 
+                                    <span> <i class="fa fa-hdd-o" aria-hidden="true"></i>
+                                        &nbsp; Save and Close 
+                                    </span>
+                                </div>
+                            </button>
+                            <span class="d-none">{{ employeeDeduction.TotalDeductionAmount > this.employeeDeduction.PaymentAmount }} </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="d-flex align-items-center" *ngIf="!isLoading">
+    <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+</div>
+ <!-- SUSPEND DETAILS POPUP -->
+<div id="suspendpop" class="modal fade animated fadeIn" tabindex="1" role="dialog" data-backdrop="static"
+    data-keyboard="false" aria-labelledby="suspendpop" aria-hidden="true" style="background-color: rgb(0 0 0 / 60%);">
+    <div style="display: block;" class="modal fade show animated fadeIn">
+        <div class="modal-dialog text-center">
+            <div class="modal-content mat-elevation-z8" style="width: 25vw; height: 40vh; top: 25vh;
+                border: 1px #9d828270 solid !important;border-radius: 4px;">
+                <div class="modal-header" style="border-bottom: 1px solid #CFCFCF; background: #fff!important; margin: 0.9rem">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle suspend-popup-title">Suspend</small>
+                    </div>
+                    <div class="modal-close" (click)="cancellSuspendPopup()" style="top: 7px !important; font-size: 1.5em;">
+                        <span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+                <div class="modal-body w-100">
+                    <div class="row text-center">
+                        <div class="col-lg-12">
+                            <div class=" form-group form-group-vertical col-xs-12 col-sm-12"
+                                style="margin-bottom: 2rem !important;">
+                                <label class="form-label">Suspend Type<span class="required">*</span></label>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-12">
+                                        <ng-select [items]="suspensionTypeList" id="SuspensionTypeIdModel" 
+                                            name="SuspensionTypeListModel" placeholder="Choose..." 
+                                            bindLabel="Label_Name" bindValue="Id" (change)="onChange_Suspend($event)">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label text-bold" for="nextPeriod_Label" 
+                                        *ngIf="(SuspendTypeId == 2)">{{showNextPeriodName}}</label>
+                                    </div>
+                                    <!-- <div *ngFor="let obj of suspensionTypeList let i = index"
+                                        class="form-group form-group-vertical col-12 col-xs-12 col-sm-6"
+                                        style="margin-top: 10px;">
+                                        <div class="">
+                                            <label class="form-check mr-1">
+                                                <input type="radio" class="form-check-input" id="id_{{obj.Id}}"
+                                                    style="transform: scale(1.2);"
+                                                    (change)="onChange_Suspend($event,obj)" name="suspend">
+                                            </label>
+                                        </div>
+                                        <label class="form-label ml-4" for="id_{{obj.Id}}"> {{obj.Label_Name}}</label>
+                                        <label class="form-label text-bold" for="nextPeriod_{{obj.Id}}" 
+                                        *ngIf="(obj.Id == 2 && SuspendTypeId == 2)">{{showNextPeriodName}}</label>
+                                    </div> -->
+                                    <!-- <div class="row" *ngIf="SuspendTypeId == 3">
+                                        <div class="form-group form-group-vertical col-xs-6  col-sm-6"
+                                            style="margin-top: 15px !important;">
+                                            <label class="form-label ">From Period<span class="required">*</span></label>
+                                            <ng-select [items]="startPeriodList" id="CalSPayPeriod" name="CalSPayPeriod"
+                                                placeholder="-- select an option --" bindLabel="PayCyclePeriodName"
+                                                (change)="onStartPeriodListChange($event)"
+                                                bindValue="Id" [(ngModel)]="SusStartPeriodId">
+                                            </ng-select>
+                                        </div>
+                                        <div class="form-group form-group-vertical col-xs-6 col-sm-6"
+                                            style="margin-top: 15px !important;">
+                                            <label class="form-label ">Till Period<span class="required">*</span></label>
+                                            <ng-select [items]="endPeriodList" id="CalEPayPeriod" name="CalEPayPeriod"
+                                                placeholder="-- select an option --" bindLabel="PayCyclePeriodName"
+                                                bindValue="Id" [(ngModel)]="SusEndPayPeriodId">
+                                            </ng-select>
+                                        </div>
+                                    </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: 1px !important;">
+                    <div class="col-lg-12" style="margin-top: -16px;">
+                        <div>
+                            <div></div>
+                            <div class="form-group tw-mb-0">
+                                <div class="tw-w-full tw-px-3">
+                                    <button class="btn btn-primary" type="submit" name="btnSuspendSubmit" id="btnSuspendSubmit"
+                                    (click)="onClickSubmitSuspendFn()" style="border-radius: 4px;" 
+                                    [disabled]="(SuspendTypeId == 2 && showNextPeriodName == '') || SuspendTypeId == undefined">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

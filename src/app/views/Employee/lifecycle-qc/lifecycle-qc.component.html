@@ -1,0 +1,1040 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="">
+
+            <app-loading-screen></app-loading-screen>
+
+            <!-- spinner -->
+            <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                role="status" aria-hidden="true"></span>
+            Please wait...
+        </button>
+            </div>
+
+            <div class="row m-t-b-10" id="navbar" *ngIf="!spinner">
+
+                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <h1 class=" ">ELC Request </h1>
+                        </li>
+                    </ul>
+                </div>
+                <!-- buttons -->
+                <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                    <div class="text-right">
+                        <ul class="list-inline">
+
+
+
+                            <li class="list-inline-item">
+                                <button type="button" class="btn upgrade-btn" id="btn_qc_approve" (click)="updateQcELCTransaction(true)"> <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+                </button>
+                            </li>
+                            <li class="list-inline-item">
+                                <button type="button" class="btn btn-danger" id="btn_qc_reject" (click)="updateQcELCTransaction(false)">
+                  <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Reject
+                </button>
+                            </li>
+
+                            <li class="list-inline-item">
+                                <button class="btn btn-sm btn-default" type="button" (click)="confirmExit()" tooltip="Close" tooltip-placement="bottom">
+                  <i class="mdi mdi-close font-size-md"></i>
+                </button>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <br>
+
+
+            <div class="content m-b report-content" *ngIf="!spinner">
+
+                <div id="overlay">
+                    <div class="w-100 d-flex justify-content-center align-items-center">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- top employee row -->
+                <div style="margin-top:1em;" class="row">
+
+                    <!-- show only for payrollOps -->
+                    <div class="col-md-6" *ngIf="BusinessType == 3">
+                        <div class="form-group">
+                            <small class="form-text text-muted">Client Name </small>
+                            <label class="qcsummarylabel form-text text-muted">
+                {{employeeObject?.ClientName}}
+              </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <small>Employee </small>
+                                    <label class="qcsummarylabel form-text text-muted">
+                    {{employeeObject?.EmployeeCode + ' | ' + employeeObject?.EmployeeName}}</label>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 text-right">
+                                <div class="form-group">
+                                    <!-- <button class="btn btn-default btn-sm " (click)="onClickingViewProofButton()">
+                    <i class="mdi mdi-file-check m-r-xs"></i>
+                    View Proofs
+                  </button> -->
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+
+                <div class="row">
+
+                    <!-- <div class="col-sm-12">
+                        <div class="qccard">
+                            <div class="qccontainer">
+                                <span class="qcheader">Approvals</span>
+
+
+                                <div class="row" *ngIf="clientApprovalTbl == undefined || clientApprovalTbl == null || clientApprovalTbl.length === 0">
+                                    <div class="col-12" style="text-align: center;">
+                                        No Proofs are added.
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="clientApprovalTbl?.length> 0">
+                                    <div class="col-12">
+                                        <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                                            <table class="table table-bordered table-container">
+                                                <thead>
+                                                    <tr class="document_table_tr">
+                                                        <th scope="col" style="width:20%;font-weight: 500 !important;">Approval For</th>
+                                                        <th scope="col" style="width:15%;font-weight: 500;">Approval Type</th>
+                                                        <th scope="col" class="fitToContent" style="width:15%;font-weight: 500;">View</th>
+                                                        <th scope="col" class="fitToContent" style="width: 10%;font-weight: 500;">Status </th>
+                                                        <th scope="col" style="width:10%;font-weight: 500;">Remarks</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container *ngFor="let item of clientApprovalTbl; let i = index">
+                                                        <tr *ngIf="item.UIStatus !== 0">
+
+
+                                                            <td class="document_table_docName">
+                                                                <span *ngIf="item.DocumentApprovalFor == 3">Min. Wages Non-Adherence</span>
+                                                                <span *ngIf="item.DocumentApprovalFor == 5">Others</span>
+                                                                <span *ngIf="item.DocumentApprovalFor == 6">ELC</span>
+                                                            </td>
+                                                            <td class="document_table_docName">
+                                                                <span *ngIf="item.DocumentApprovalType == 1">Internal</span>
+                                                                <span *ngIf="item.DocumentApprovalType == 2">External</span>
+                                                            </td>
+                                                            <td class="table_header document_table_docNo">
+                                                                <a href="JavaScript:;" *ngIf="item.DocumentName" (click)="openmodalpopupdocument(item)" class="btn subheader__btn-primary btn-icon mr-2">
+                                                                    <i class="fa fa-pencil-square-o font-16"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td class="document_table_docName">
+                                                                <span class="badge badge-warning" *ngIf="item.Status == 1">Pending</span>
+                                                                <span class="badge badge-danger" *ngIf="item.Status == 2">Rejected</span>
+                                                                <span class="badge badge-success" *ngIf="item.Status == 4">Approved</span>
+                                                            </td>
+                                                            <td class="document_table_docName">
+                                                                {{item.Remarks}}
+                                                            </td>
+
+
+
+         
+
+
+                                                             <td class="table_header document_table_docNo">
+                                      <a href="JavaScript:;" *ngIf="item.DocumentName" (click)="editApprovalFile(item,i)" class="btn subheader__btn-primary btn-icon mr-2">
+                                          <i class="mdi mdi-eye font-16"></i>
+                                      </a>[class.disabled]="isGuid(item.Id) == false ? true : null"
+                                  </td>  -->
+
+
+
+                                                      <!--   </tr>
+                                                    </ng-container>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- Designation -->
+                    <div class="col-sm-12" *ngIf="employeeObject?.ELCTransactionType == 4 ||
+                                                employeeObject?.ELCTransactionType == 6 || 
+                                                employeeObject?.ELCTransactionType == 7 || 
+                                                employeeObject?.ELCTransactionType == 9 ">
+                        <div class="qccard">
+                            <div class="qccontainer">
+                                <span class="qcheader">Designation Revision</span>
+                                <div style="margin-top:1em;" class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <p class="form-text text-muted">Previous </p>
+                                            <table class="qcTable table table-bordered table-condensed ">
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Category
+                                                        </td>
+                                                        <td>
+                                                         {{Label_OldCategory}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Designation
+                                                        </td>
+                                                        <td>
+                                                            {{employmentContract?.Designation}}
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Department
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldDepartment}}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Division
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldDivision}}
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Level
+                                                        </td>
+                                                        <td>
+                                                           {{Label_OldLevel}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Job Profile / Role
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldJobProfile}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Sub EmployementType
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldSubEmploymentType}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Reporting Manager
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldReportingManager}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <p class="form-text text-muted">New </p>
+                                            <table class="qcTable table table-bordered table-condensed ">
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Category
+                                                        </td>
+                                                        <td>
+                                                         {{Label_NewCategory}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Designation
+                                                        </td>
+                                                        <td>
+                                                            {{employeeObject?.Designation}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Department
+                                                        </td>
+                                                        <td>
+                                                         {{Label_NewDepartment}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Division
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewDivision}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Level
+                                                        </td>
+                                                        <td>
+                                                           {{Label_NewLevel}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Job Profile / Role
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewJobProfile}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Sub EmployementType
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewSubEmploymentType}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Reporting Manager
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewReportingManager}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Effective from date
+                                                        </td>
+                                                        <td>
+                                                            {{employeeObject?.EffectiveDate | date}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Effective pay period
+                                                        </td>
+                                                        <td>
+                                                            {{employeeObject?.EffectivePayPeriod}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                    <!-- Location Revision -->
+                    <div class="col-sm-12" *ngIf="employeeObject?.ELCTransactionType == 3 || 
+                                                employeeObject?.ELCTransactionType == 5 || 
+                                                employeeObject?.ELCTransactionType == 7 || 
+                                                employeeObject?.ELCTransactionType == 9 ">
+                        <div class="qccard">
+                            <div class="qccontainer">
+                                <span class="qcheader">Location Change</span>
+                                <div style="margin-top:1em;" class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <p class="form-text text-muted">Previous </p>
+                                            <table class="qcTable table table-bordered table-condensed ">
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Joining Location (Center / City)
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldCity}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Reporting Location (Campus)
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldCampus}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Industry
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldIndustryName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Cost City Center
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldCostCityCenter}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="!isAllenDigital">
+                                                        <td class="centerAlign">
+                                                            Skill Category
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldSkillCategoryName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Zone
+                                                        </td>
+                                                        <td>
+                                                            {{Label_OldZone}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <p class="form-text text-muted">New </p>
+                                            <table class="qcTable table table-bordered table-condensed ">
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Joining Location (Center / City)
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewCity}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Reporting Location (Campus)
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewCampus}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Industry
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewIndustryName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Cost city Center
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewCostCityCenter}}
+                                                        </td>
+                                                    </tr>
+                                                   
+                                                    <tr *ngIf="!isAllenDigital">
+                                                        <td class="centerAlign">
+                                                            Skill category
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewSkillCategoryName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Zone
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewZone}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Effective from date
+                                                        </td>
+                                                        <td>
+                                                            {{employeeObject?.EffectiveDate | date}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Effective pay period
+                                                        </td>
+                                                        <td>
+                                                            {{employeeObject?.EffectivePayPeriod}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                <!-- commenting out the code as it is not required for re designation and re-location trasnfer for allen -->
+                                <!-- <div class="row">
+                                    <div class="col-6">
+                                        <button class="btn btn-default btn-sm " (click)="onClickingPreviewCTCButton('old')">
+                      <i class="mdi mdi-file-check m-r-xs"></i>
+                      Preview Old CTC
+                    </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-default btn-sm pull-right" (click)="onClickingPreviewCTCButton('new')">
+                      <i class="mdi mdi-file-check m-r-xs"></i>
+                      Preview New CTC
+                    </button>
+                                    </div>
+                                </div> -->
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                    <!-- Salary Revision -->
+                    <div class="col-sm-12" *ngIf="employeeObject?.ELCTransactionType == 2 || 
+                                              employeeObject?.ELCTransactionType == 5 || 
+                                              employeeObject?.ELCTransactionType == 6 || 
+                                              employeeObject?.ELCTransactionType == 9 ">
+
+
+                        <div class="qccard">
+                            <div class="qccontainer">
+                                <span class="qcheader">Salary Revision</span>
+
+                                <div style="margin-top:1em;" class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <p class="form-text text-muted">Previous </p>
+                                            <table class="qcTable table table-bordered table-condensed ">
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Salary
+                                                        </td>
+                                                        <td>
+                                                            {{active_elcObj?.EmployeeRatesets != undefined && active_elcObj?.EmployeeRatesets != null && active_elcObj?.EmployeeRatesets.length > 0 ? active_elcObj?.EmployeeRatesets[0].AnnualSalary : ''}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <p class="form-text text-muted">New </p>
+                                            <table class="qcTable table table-bordered table-condensed ">
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Salary
+                                                        </td>
+                                                        <td>
+                                                            {{elcObj?.EmployeeRatesets != undefined ? elcObj?.EmployeeRatesets[0].AnnualSalary : ''}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Salary type
+                                                        </td>
+                                                        <td>
+                                                            {{salaryType}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Pay group
+                                                        </td>
+                                                        <td>
+                                                            {{employeeObject?.PayGroupName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Effective from date
+                                                        </td>
+                                                        <td>
+                                                            {{elcObj?.EffectiveDate | date}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Effective pay period
+                                                        </td>
+                                                        <td>
+                                                            {{employeeObject?.EffectivePayPeriod}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Industry
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewIndustryName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Skill category
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewSkillCategoryName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Zone
+                                                        </td>
+                                                        <td>
+                                                            {{Label_NewZone}}
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button class="btn btn-default btn-sm " (click)="onClickingPreviewCTCButton('old')">
+                      <i class="mdi mdi-file-check m-r-xs"></i>
+                      Preview Old CTC
+                    </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-default btn-sm pull-right" (click)="onClickingPreviewCTCButton('new')">
+                      <i class="mdi mdi-file-check m-r-xs"></i>
+                      Preview New CTC
+                    </button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                    <!-- Contract Extension -->
+                    <div class="col-sm-12" *ngIf="employeeObject?.ELCTransactionType == 8 || 
+            employeeObject?.ELCTransactionType == 10 || 
+            employeeObject?.ELCTransactionType == 11 ||
+            employeeObject?.ELCTransactionType == 12 ||
+            employeeObject?.ELCTransactionType == 13 ||
+            employeeObject?.ELCTransactionType == 14 || 
+            employeeObject?.ELCTransactionType == 15 || 
+            employeeObject?.ELCTransactionType == 17 ">
+
+                        <div class="qccard">
+                            <div class="qccontainer">
+                                <span class="qcheader">Contract Extension</span>
+                                <div style="margin-top:1em;" class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <p class="form-text text-muted">Previous </p>
+                                            <table class="qcTable table table-bordered table-condensed ">
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Contract End Date
+                                                        </td>
+                                                        <td>
+                                                            {{employmentContract?.EndDate | date }}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <p class="form-text text-muted">New </p>
+                                            <table class="qcTable table table-bordered table-condensed ">
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="centerAlign">
+                                                            Contract End Date
+                                                        </td>
+                                                        <td>
+                                                            {{elcObj?.ContractEndDate | date }}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Remarks  -->
+                    <div class="col-sm-12">
+
+
+                        <div class="qccard">
+                            <div class="qccontainer">
+                                <span class="qcheader"> Overall Remarks
+
+
+                </span>
+
+
+                                <textarea style="margin-top: 1rem; margin-bottom:1rem;" class="form-control" rows="5" spellcheck="true" name="OverallRemarks" [(ngModel)]="remarks" placeholder="Overall Remarks" autocomplete="off">
+                                        </textarea>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Salary Breakup modal  -->
+<div id="popup_salary_breakup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_salary_breakup" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11">
+                        <h6 class="modal-title pull-left" id="popup_salary_breakup"> View Salary Breakup</h6>
+                        <div class="modal-close" (click)="modal_dismiss_Current_SalaryBreakup()"><span class="mdi mdi-close pull-left"></span></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive table-height " style="height:400px">
+                                <table class="table-sticky table table-bordered table-th-td" style="text-align:center !important">
+
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 40%;background: aliceblue;  text-align: left!important">Product Code</th>
+                                            <!-- <th scope="col" style="width: 20%;text-align: center">Is Overidable</th>                                     -->
+                                            <th scope="col" style="width: 20%;background: aliceblue;text-align: center">Monthly</th>
+                                            <th scope="col" style="width: 20%;background: aliceblue;text-align: center">Annually</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let item of modalRateset?.RatesetProducts; let i = index" [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                                            <td class="table-td-center">
+                                                <span class="productName_span"> {{item.DisplayName}} </span>
+                                            </td>
+                                            <td class="txt-align document_table_validFrom table-td-center">
+                                                <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value.toFixed(2)}}
+                        </label>
+                                                <!-- <input type="number" max="" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value.toFixed(2)}}"
+                          class="form-control"> -->
+                                            </td>
+
+                                            <td class="txt-align document_table_validFrom table-td-center">
+                                                <label class="text-right" style="padding: 15px;
+                        font-size: 14px;">
+                          {{item.Value * 12 | number : '1.2-2'}}
+                        </label>
+                                                <!-- <input type="text" style="text-align:right" maxlength="12"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value * 12}}"
+                          class="form-control"> -->
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Client Approval Table modal -->
+<div id="popup_client_approval" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_client_approval" aria-hidden="true">
+    <div style="display: block;" class="modal fade show">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11">
+                        <h6 class="modal-title pull-left" id="popup_salary_breakup">Client Approval</h6>
+                        <div class="modal-close" (click)="modal_dismiss_client_approval()"><span class="mdi mdi-close pull-left"></span></div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row m-b">
+                        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12">
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                            <div class="text-right">
+                                <!-- <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <button prevent-double-submit type="button" class="btn upgrade-btn"
+                        (click)="addAttachment()"> <i class="mdi mdi-plus m-r-xs"></i> Add
+                        Attachment
+                    </button>
+                  </li>
+                </ul> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="clientApprovalTbl == undefined || clientApprovalTbl == null || clientApprovalTbl.length === 0">
+                        <div class="col-12" style="text-align: center;">
+                            No Proofs are added.
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="clientApprovalTbl?.length> 0">
+                        <div class="col-12">
+                            <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+                                <table class="table table-bordered table-container">
+                                    <thead>
+                                        <tr class="document_table_tr">
+                                            <th scope="col" style="width:20%;font-weight: 500 !important;">
+                                                Approval For</th>
+                                            <th scope="col" style="width:15%;font-weight: 500;">Approval Type
+                                            </th>
+                                            <th scope="col" style="width:15%;font-weight: 500;">Document Name
+                                            </th>
+                                            <th scope="col" style="width:20%;font-weight: 500;">
+                                                Remarks </th>
+                                            <!-- <th scope="col" style="width:10%;font-weight: 500;">Status
+                          </th> -->
+                                            <!-- <th scope="col" style="width:10%;font-weight: 500;">
+                              File(Attachment)</th> -->
+                                            <th scope="col" style="width:10%;font-weight: 500;">Actions</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let item of clientApprovalTbl; let i = index">
+                                            <tr *ngIf="item.UIStatus !== 0">
+
+
+                                                <td class="document_table_docName">
+                                                    <span *ngIf="item.DocumentApprovalFor == 3">Min. Wages Non-Adherence</span>
+                                                    <span *ngIf="item.DocumentApprovalFor == 5">Others</span>
+                                                    <span *ngIf="item.DocumentApprovalFor == 6">ELC</span>
+                                                </td>
+                                                <td class="document_table_docName">
+                                                    <span *ngIf="item.DocumentApprovalType == 1">Internal</span>
+                                                    <span *ngIf="item.DocumentApprovalType == 2">External</span>
+                                                </td>
+                                                <td class="document_table_docName">
+                                                    {{item.DocumentName}}
+                                                </td>
+                                                <td class="document_table_docName">
+                                                    {{item.Remarks}}
+                                                </td>
+
+                                                <!-- <td class="document_table_docName">
+                              <span class="badge badge-warning"
+                                  *ngIf="item.Status == 1">Pending</span>
+                              <span class="badge badge-danger"
+                                  *ngIf="item.Status == 2">Rejected</span>
+                              <span class="badge badge-success"
+                                  *ngIf="item.Status == 4">Approved</span>
+
+                          </td> -->
+                                                <!-- <td class="table_header document_table_docNo">
+                              <a href="JavaScript:;" *ngIf="item.DocumentName" (click)="editApprovalFile(item,i)" class="btn subheader__btn-primary btn-icon mr-2">
+                                  <i class="mdi mdi-eye font-16"></i>
+                              </a>[class.disabled]="isGuid(item.Id) == false ? true : null"
+                          </td> -->
+                                                <td class="table_header document_table_docNo">
+                                                    <a href="JavaScript:;" *ngIf="item.DocumentName" (click)="viewProof(item)" class="btn subheader__btn-primary btn-icon mr-2">
+                                                        <i class="fa fa-pencil-square-o font-16"></i>
+                                                    </a>
+                                                </td>
+
+
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer" style="padding: 0px;">
+          <button type="button"  class="btn upgrade-btn" id="btn_onboarding_submit"
+            (click)="submitForVerification()" style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> Submit
+          </button>
+  
+        </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modaldocumentviewer" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modaldocumentviewer" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div class="col-md-8">
+                    <h4 class="modal-title" id="modaldocumentviewer">{{currentModalHeading}} - {{ApprovalStatusEnumValues[currentModalItem?.Status]}}
+                    </h4>
+                    <div class="form-group">
+                        <small class="form-text text-muted">
+                          {{currentModalDetailsFormat}}
+                      </small>
+                        <label class="form-text text-muted">
+                          {{currentModalItem?.DocumentName}}
+                      </label>
+                    </div>
+                </div>
+                <div class="col-md-4" style="top: 13px;">
+                    <a class="icon btn-icon pull-right m-l-n-xxxl chrome-back-btn m-t-n-sm" data-dismiss="modal" (click)="model_dismiss_viewDocument()"><i class="mdi mdi-close font-size-md icon-close"></i></a>
+
+                    <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                        <app-filedownload [documentId]="currentModalItem?.ObjectStorageId">
+                        </app-filedownload>
+                    </div>
+
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearUrl()"><span aria-hidden="true">&times;</span></button> -->
+                </div>
+
+
+
+            </div>
+            <div class="modal-body">
+
+                <div class="iframe-container" *ngIf="contentmodalurl == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                    <img src="assets/Images/Ciel.png">
+                    <span>
+                      <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                          &nbsp; Please wait...</i>
+                      <span class="sr-only">Please wait...</span>
+                    </span>
+                </div>
+
+                <div class="iframe-container" *ngIf="contentmodalurl != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+                    <iframe [src]="contentmodalurl" frameborder="0" scrolling="yes"></iframe>
+                    <img style="top: 0 !important;
+                  right: 0px !important;
+                  position: absolute !important;
+                  z-index: 9;
+                  height: 55px !important;
+                  vertical-align: top;
+                  opacity: inherit;
+                  bottom: unset !important;
+                  left: unset !important;" src="../../../../assets/Images/cielhr.png">
+                </div>
+            </div>
+            <!-- </div> -->
+
+
+
+
+            <div class="modal-footer">
+                <div class="col-md-9">
+                    <div *ngIf="currentModalItem" class="form-group">
+                        <small class="form-text text-muted">Remarks</small>
+                        <div>
+                            <textarea rows="2" style="width: 100%; border-radius: 3px;" [(ngModel)]="currentModalItem.Remarks"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3" style="padding-left:0px;padding-right:0px;">
+                    <button class="btn btn-default btn-sm" (click)="validateDocument(true)">
+                      <i class="mdi mdi-checkbox-marked-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+                      Approve</button> &nbsp;
+                    <button class="btn btn-default btn-sm" (click)="validateDocument(false)">
+                      <i class="mdi mdi-close-circle  m-r-xs" style="margin-top:3rem;margin-right:6px;"></i>
+                      Reject&nbsp;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

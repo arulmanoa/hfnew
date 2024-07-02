@@ -1,0 +1,98 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="content m-b report-content p-0" style="box-shadow: none !important;background: transparent;"
+      *ngIf="!spinner">
+      <div class="row">
+        <div class="col-12">
+          <app-searchbar-view [searchConfiguration]="searchElementConfiguration"
+            (searchButtonClicked)="onSearchBtnClickedEvent($event)">
+          </app-searchbar-view>
+        </div>
+        <div class="content m-3 report-content" style="width: 100%;"
+          *ngIf="!refreshing_table_spinner && gapReportData.length > 0">
+          <div class="row m-2">
+            <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+              <ul class="list-inline">
+                <li class="list-inline-item" *ngIf="!noData">
+                  <button type="button" class="btn btn-primary-custom" (click)="export()" style="margin-bottom: 3px">
+                    <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right"></div>
+          </div>
+
+          <div class="row w-100 m-1">
+            <div class="mx-auto text-center ma-5" *ngIf="refreshing_table_spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+
+            <div class="mx-auto text-center ma-5" *ngIf="noData">
+              <span>No records found !</span>
+            </div>
+
+            <div class="col-md-12" *ngIf="!refreshing_table_spinner && !noData">
+              <table class="table table-bordered font-13" #allBranchTableToXlsx>
+                <thead>
+                  <tr>
+                    <th class="text-bold text-center" *ngFor="let header of gapReport_header">{{ header }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of gapReport_actualData">
+                    <td class="text-center font-13" *ngFor="let header of gapReport_header">{{ row[header] }}</td>
+                  </tr>
+                  <!-- <tr>
+                    <td colspan="6"></td>
+                    <td class="text-center">{{totalPlannedDS}} </td>
+                    <td class="text-center">{{totalActiveHeadCount}}</td>
+                    <td class="text-center">{{totalOpenPosition}}</td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+            <!-- WEEK SPECIFIC TABLE -->
+            <div class="col-md-12" *ngIf="!refreshing_table_spinner && !noData && showSpecificBranchTable">
+              <table class="table table-bordered font-13" #customTableToXlsx>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <ng-container *ngFor="let item of gapReportData">
+                      <th class="text-bold text-center"> Week {{ item.WeekNr }}</th>
+                    </ng-container>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let key of gapReport_header">
+                    <tr>
+                      <td class="text-bold text-left">{{ key }}</td>
+                      <ng-container *ngFor="let item of gapReport_actualData">
+                        <td class="text-center font-13">{{ item[key] }}</td>
+                      </ng-container>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <br />
+          <div class="row"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

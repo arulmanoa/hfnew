@@ -1,0 +1,641 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" 
+    [fullScreen]="true">
+    <p style="color: #0a609eeb"> Loading... </p>
+  </ngx-spinner>
+  <div id="timeshhetDetailedViewId" class="modal-dialog modal-xl modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height: calc(110vh - 103px) !important;
+      overflow-x: hidden !important;font-family: Roboto;">
+        <div class="w-100">
+          <div class="">
+            <div class="d-flex align-items-center m-0" *ngIf="spinner"
+              style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+              <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+            <!-- SUBMITTED DETAILED VIEW -->
+            <div id="empSubmittedView" class="detailView" *ngIf="!spinner && isSubmitted && modeType === 'SUBMIT'">
+              <div class="row">
+                <!-- HEADER DETAILS -->
+                <div class="col-lg-12" style="padding-top: 1rem;padding-left: 2rem;">
+                  <h3 class="modal_header">Timesheet</h3>
+                  <div class="row">
+                    <div class="col-md-6 mt-3 mt-2">
+                      <button class="p-0 btn btn-back" ngbPopover="Close" triggers="mouseenter:mouseleave" 
+                        (click)="closeModal()"><span class="mdi mdi-arrow-left"></span> &nbsp;&nbsp;
+                        Submitted Records / {{ formattedDateRange }}
+                      </button>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-10 mt-3 d-flex">
+                          <div class="text-header-bold">{{formattedDateRange}}</div> <span class="dot"></span>
+                          <div class="text-header-label">
+                            <span>Total working hours - </span>
+                            <span class="text-header-bold">{{detailedData[0].TotalHours}}</span>
+                          </div>
+                          <!-- <div class="text-header-label">
+                            <label>Overtime</label>
+                          </div> -->
+                        </div>
+                        <div class="col-md-1 d-grid text-right">
+                          <span class="text-label">Submitted on</span>
+                          <span class="text-label-bold">{{detailedData[0].SubmittedOn | date: "dd MMM yyyy" }}</span>
+                        </div>
+                        <div class="col-md-1 d-grid" *ngIf="detailedData[0].Status === 2">
+                          <span class="text-label">Status</span>
+                          <button class="btn pending-status">
+                            Pending
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" *ngIf="detailedData[0].Status !== 2">
+                    <div class="col-md-7">
+                      <div class="d-grid mr-5">
+                        <label class="text-label">Status</label>
+                        <span class="text-label-bold" 
+                        [ngClass]="{'rejected-status' : detailedData[0].Status == 4, 'approved-status' : detailedData[0].Status == 3 }">
+                        {{ detailedData[0].StatusName }}
+                        </span>
+                      </div>
+                      <div class="d-grid mr-5">
+                        <label class="text-label">{{ detailedData[0].Status == 3 ? 'Approved By' : 'Rejected By'}}</label>
+                        <span class="text-label-bold">{{detailedData[0].ApprovedRejectedByName}}</span>
+                      </div>
+                      <div class="d-grid mr-1">
+                        <label class="text-label">{{ detailedData[0].Status == 3 ? 'Approved On' : 'Rejected On'}}</label>
+                        <span class="text-label-bold">{{detailedData[0].ApprovedRejectedOn | date: "dd MMM yyyy" }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="d-grid">
+                        <label class="text-label">{{ detailedData[0].Status == 3 ? 'Approval Remarks' : 'Rejection Remarks'}} </label>
+                        <span class="normal-text">{{detailedData[0].ApproverRemarks == 'null' ? '' : detailedData[0].ApproverRemarks}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <hr *ngIf="detailedData[0].Status !== 2" />
+                </div>
+              </div>
+              <!-- TABLE -->
+              <div class="row m-2" *ngIf="!spinner">
+                <div class="table w-100 table-height" style="height: 400px;">
+                  <table class="table-grouped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Project</th>
+                        <th>Activity</th>
+                        <th>Start & End Time</th>
+                        <th>Break Hours (Mins)</th>
+                        <th>Working Hours</th>
+                        <th>Notes</th>
+                        <th *ngIf="detailedData[0].Status !== 2">Status</th>
+                        <!-- <th>Total Hours</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container class="grouped-table-content" *ngFor="let group of groupedData; let i = index">
+                        <tr [ngClass]="{ 'even-row': i % 2 !== 0 }">
+                          <td [attr.rowspan]="group.items.length + 1">
+                            <div class="display-inline-grid text-center">
+                              <p class="text-bold mb-0 p-0" [ngClass]="{ 'mt-4': i % 2 !== 0 }">{{formatDateToDay(group.date)}}</p>
+                              <p class="text-bold text-container">{{formatDate(group.date)}}</p>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr *ngFor="let item of group.items" [ngClass]="{ 'even-row': i % 2 !== 0 }">
+                          <td>{{ item.ProjectName }}</td>
+                          <td>{{ item.ActivityName }}</td>
+                          <td>{{ item.StartTime }} - {{item.EndTime}}</td>
+                          <td>{{ item.BreakTime }}</td>
+                          <td>{{ item.WorkingHours }}</td>
+                          <td>
+                            <button *ngIf="item.EmployeeRemarks" id="notes-Popover-{{i}}" type="button" 
+                              class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;"
+                              [ngbPopover]="item.EmployeeRemarks" popoverTitle="Notes" triggers="mouseenter:mouseleave"
+                              container="body" placement="left" popoverClass="custom-popover-class">
+                            </button>
+                          </td>
+                          <td *ngIf="detailedData[0].Status !== 2">
+                            <!-- <div *ngIf="item.Status === 2">
+                              <button class="btn pending-status"> Pending </button>
+                            </div> -->
+                            <!-- popover template for showing approval/rejection remarks -->
+                            <ng-template #popContent>
+                              <div class="d-block pb-3">
+                                <div class="m-0 p-0 popover-header">
+                                {{ item.Status === 4 ? 'Rejected On' : 'Approved On' }}
+                                </div>
+                                <div class="m-0 p-0 popover-body text-bold">
+                                  {{item.ApprovedRejectedOn | date: "dd MMM yyyy"}}
+                                </div>
+                              </div>
+                              <div class="d-block">
+                                <div class="m-0 p-0 popover-header">
+                                  {{item.Status === 4 ? 'Rejection Remarks' : 'Approval Remarks' }}
+                                </div>
+                                <div class="m-0 p-0 popover-body">
+                                  {{item.ApproverRemarks == 'null' ? '' : item.ApproverRemarks}}
+                                </div>
+                              </div>
+                            </ng-template>
+                           
+                            <div *ngIf="item.ApproverRemarks && item.Status !== 2" id="remarks-Popover-{{i}}" 
+                                [ngbPopover]="popContent" triggers="mouseenter:mouseleave"
+                                container="body" popoverClass="custom-popover-class" placement="left">
+                                <button class="btn" [class.rejected-status]="item.Status === 4" 
+                                  [class.approved-status]="item.Status === 3">
+                                  {{item.Status === 4 ? 'Rejected' : 'Approved' }}
+                                </button>
+                                <span  class="cursor-pointer m-1 mdi mdi-comment-text-outline" 
+                                [class.approved-status]="item.Status === 3"
+                                  [class.rejected-status]="item.Status === 4">
+                                </span>
+                            </div>
+                            <div *ngIf="!item.ApproverRemarks && item.Status !== 2">
+                                <button class="btn" [class.rejected-status]="item.Status === 4" 
+                                  [class.approved-status]="item.Status === 3">
+                                  {{item.Status === 4 ? 'Rejected' : 'Approved' }}
+                                </button>
+                            </div>
+                          </td>
+                          <!-- <td *ngFor="let hour of detailedData.slice(0,1)" colspan="1">
+                            <span >{{ hour.TotalHours }}</span>
+                          </td> -->
+                        </tr>
+                        
+                      </ng-container>
+                    </tbody>
+                  </table>          
+                </div>
+              </div>
+              <!-- SUBMISSION REMARKS & SUPPORTING DOCS -->
+              <div class="row m-2">
+                <div class="pl-0 col-md-12 d-flex">
+                  <div class="pl-0 col-md-5">
+                    <div class="d-grid mr-2">
+                      <span class="text-label">Submission Remarks</span>
+                      <span class="text-label" style="color: #1C1E24;">{{detailedData[0].EmployeeRemarks}}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <div class="d-grid ml-2">
+                      <label class="text-label">Support Document</label>
+                      <div *ngIf="detailedData[0].TimesheetDocument && detailedData[0].TimesheetDocument.length > 0">
+                        <button class="btn btn-default btn-sm m-r-sm" (click)="viewDocs(detailedData[0].TimesheetDocument[0])"
+                          style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" > 
+                          View Document
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- FOOTER -->
+              <div class="row" *ngIf="detailedData[0].Status === 2">
+                <div class="col-md-12 text-right modal-fixed-custom-footer mb-2">
+                  <button class="btn btn-danger btn-cancel-fill" type="button" (click)="cancelSubmittedTimesheet()">
+                      &nbsp;&nbsp;Cancel Timesheet &nbsp;&nbsp; 
+                  </button>
+                </div>
+              </div>
+              <div class="row" *ngIf="detailedData[0].Status === 4">
+                <div class="col-md-12 text-right modal-fixed-custom-footer mb-2">
+                  <!-- <button class="btn btn-link color-grey mt-3" type="button" style="text-decoration: none;"
+                  (click)="deleteRejectedTimeSheet()">
+                    &nbsp;&nbsp;Delete&nbsp;&nbsp; 
+                  </button> -->
+                  <button class="btn btn-primary btn-blue-fill" (click)="updatedRejectedTimeSheet()"> 
+                    <i class="mdi mdi-shape-square-rounded-plus"></i>
+                    &nbsp;&nbsp;Edit&nbsp;&nbsp;
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- SAVED DETAILED VIEW -->
+            <div id="empSavedView" class="detailView" *ngIf="!spinner && isSaved && modeType === 'SAVE'">
+              <div class="row">
+                <!-- HEADER DETAILS -->
+                <div class="col-lg-12" style="padding-top: 1rem;padding-left: 2rem;">
+                  <h3 class="modal_header">Timesheet</h3>
+                  <div class="row">
+                    <div class="col-md-6 mt-3 mt-2">
+                      <button class="p-0 btn btn-back" ngbPopover="Close" triggers="mouseenter:mouseleave" 
+                        (click)="closeModal()"><span class="mdi mdi-arrow-left"></span> &nbsp;&nbsp;
+                        Saved Records / {{formattedDateRange}}
+                      </button>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="mt-3 w-100">
+                        <app-timesheet-entries-by-employee #employeeEntries [detailsData]="detailedData[0]"></app-timesheet-entries-by-employee>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- FOOTER -->
+              <div class="row">
+                <div class="col-md-12 text-right modal-fixed-custom-footer m-2">
+                  <button class="btn btn-link btn-outline" type="button" (click)="updateSavedTimeSheet()">
+                    &nbsp;&nbsp;Save&nbsp;&nbsp; 
+                  </button>
+                  <button class="btn btn-primary btn-blue-fill" (click)="submitSavedTimeSheet()"> 
+                    &nbsp; &nbsp;Submit For Approval&nbsp; &nbsp;
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- MANAGER APPROVAL/REJECT  -->
+            <div id="managerApprovalView" class="detailView mt-2" *ngIf="!spinner && modeType === 'APPROVAL'">
+              <div class="row">
+                <!-- HEADER DETAILS -->
+                <div class="col-lg-12">
+                  <div class="row">
+                    <div class="col-md-10 text-left">
+                      <h3 class="modal_header_view">Timesheet ({{ formattedDateRange }})</h3>
+                    </div>
+                    <div class="col-md-2 text-right">
+                      <button type="button" class="btn" (click)="closeModal()">
+                        <i class="mdi mdi-close icon-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="row align-items-center">
+                        <div class="header col-md-8">
+                          <div class="kt-header__topbar-user pull-left">
+                            <a class="nav-link waves-effect waves-light nav-user" href="javascript:;" role="button" aria-haspopup="false" aria-expanded="false">
+                               <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">
+                                {{getShortName(detailedData[0].EmployeeName) | uppercase}} 
+                              </span>
+                            </a>
+                          </div>
+                          <div class="empNameLabel">{{ detailedData[0].EmployeeName }}</div>
+                          <div class="empCodeLabel">{{ detailedData[0].EmployeeCode }}</div >
+                          <div class="clearfix"></div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="row">
+                            <div class="col-md-6 d-grid">
+                              <span class="text-label">Total Working Hours</span>
+                              <span class="text-label-bold">{{ detailedData[0].TotalHours }}</span>
+                            </div>
+                            <div class="col-md-6 d-grid">
+                              <span class="text-label">Submitted on</span>
+                              <span class="text-label-bold">{{ detailedData[0].SubmittedOn | date: "dd MMM yyyy" }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row" *ngIf="detailedData[0].Status === 5">
+                    <div class="col-md-7">
+                      <div class="d-grid mr-5">
+                        <label class="text-label">Status</label>
+                        <span class="text-label-bold pending-status">
+                        {{ detailedData[0].StatusName }}
+                        </span>
+                      </div>
+                      <div class="d-grid mr-5">
+                        <label class="text-label">Rejected By</label>
+                        <span class="text-label-bold">{{detailedData[0].ApprovedRejectedByName}}</span>
+                      </div>
+                      <div class="d-grid mr-1">
+                        <label class="text-label">Rejected On</label>
+                        <span class="text-label-bold">{{detailedData[0].ApprovedRejectedOn | date: "dd MMM yyyy" }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="d-grid">
+                        <label class="text-label">Rejection Remarks</label>
+                        <span class="normal-text">{{detailedData[0].ApproverRemarks}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="detailedData[0].Status === 5" ><hr /></div>
+                </div>
+              </div>
+              <!-- TABLE -->
+              <div class="row m-2" *ngIf="!spinner">
+                <div class="table w-100 table-height" style="height: 400px;">
+                  <table class="table-grouped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Project</th>
+                        <th>Activity</th>
+                        <th>Start & End Time</th>
+                        <th>Break Hours (Mins)</th>
+                        <th>Working Hours</th>
+                        <th>Notes</th>
+                        <th>Status & Remarks</th>
+                        <!-- <th>Total Hours</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container class="grouped-table-content" *ngFor="let group of groupedData; let i = index">
+                        <tr>
+                          <td [attr.rowspan]="group.items.length + 1">
+                            <div class="display-inline-grid text-center">
+                              <p class="text-bold mb-0 p-0" [ngClass]="{ 'mt-4': i % 2 !== 0 }">{{ group.date | date: "EEE" }}</p>
+                              <p class="text-bold text-container">{{ group.date | date: "dd MMM yyyy" }}</p>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr *ngFor="let item of group.items">
+                          <td>{{ item.ProjectName }}</td>
+                          <td>{{ item.ActivityName }}</td>
+                          <td>{{ item.StartTime }} - {{item.EndTime}}</td>
+                          <td>{{ item.BreakTime }}</td>
+                          <td>{{ item.WorkingHours }}</td>
+                          <td>
+                            <button *ngIf="item.EmployeeRemarks" id="notes-Popover-{{i}}" type="button" 
+                              class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;"
+                              [ngbPopover]="item.EmployeeRemarks" popoverTitle="Notes" triggers="mouseenter:mouseleave"
+                              container="body" placement="left" popoverClass="custom-popover-class">
+                            </button>
+                          </td>
+                          <td>
+                            <div class="col-8 mb-2">
+                              <ng-select [items]="statusDropdown" class="mt-1" placeholder="Choose..." 
+                                bindLabel="name" bindValue="id" [(ngModel)]="item.Status" [multiple]="false"
+                                [class.rejected]="item.Status === 4" [class.approved]="item.Status === 3"
+                                [clearable]="false">
+                              </ng-select>
+                            </div>
+                            <div class="mt-1">
+                              <textarea id="approverRemarks" rows="3" maxlength="500" [(ngModel)]="item.ApproverRemarks"
+                                required="true" class="form-control w-100" autocomplete="off" placeholder="Remarks"
+                                style="border:0 !important;">
+                              </textarea>
+                            </div>
+                          </td>
+                          <!-- <td *ngFor="let hour of detailedData.slice(0,1)" colspan="1">
+                            <span >{{ hour.TotalHours }}</span>
+                          </td> -->
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>          
+                </div>
+              </div>
+              <!-- SUBMISSION REMARKS & SUPPORTING DOCS -->
+              <div class="row m-2">
+                <div class="pl-0 col-md-12 d-flex">
+                  <div class="pl-0 col-md-5">
+                    <div class="d-grid mr-2">
+                      <span class="text-label">Submission Remarks</span>
+                      <span class="text-label" style="color: #1C1E24;">{{detailedData[0].EmployeeRemarks}}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <div class="d-grid ml-2">
+                      <label class="text-label">Support Document</label>
+                      <div *ngIf="detailedData[0].TimesheetDocument && detailedData[0].TimesheetDocument.length > 0">
+                        <button class="btn btn-default btn-sm m-r-sm" (click)="viewDocs(detailedData[0].TimesheetDocument[0])"
+                          style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" > 
+                          View Document
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- FOOTER -->
+              <div class="row" >
+                <div class="col-md-12 text-right modal-fixed-custom-footer">
+                  <button class="btn btn-link color-grey mt-3" type="button" style="text-decoration: none;"
+                  (click)="closeModal()">
+                    &nbsp;&nbsp;Cancel&nbsp;&nbsp; 
+                  </button>
+                  <button class="btn btn-primary btn-blue-fill" (click)="submitMgrApproval()"> 
+                    <i class="mdi mdi-shape-square-rounded-plus"></i>
+                    &nbsp;&nbsp;Submit&nbsp;&nbsp;
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- MANAGER DETAILED VIEW -->
+            <div id="managerDetailedView" class="detailView mt-2" *ngIf="!spinner && modeType === 'MANAGER_VIEW'">
+              <div class="row">
+                <!-- HEADER DETAILS -->
+                <div class="col-lg-12">
+                  <div class="row">
+                    <div class="col-md-10 text-left">
+                      <h3 class="modal_header_view">Timesheet ({{ formattedDateRange }})</h3>
+                    </div>
+                    <div class="col-md-2 text-right">
+                      <button type="button" class="btn" (click)="closeModal()">
+                        <i class="mdi mdi-close icon-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="row align-items-center">
+                        <div class="header col-md-8">
+                          <div class="kt-header__topbar-user pull-left">
+                            <a class="nav-link waves-effect waves-light nav-user" href="javascript:;" role="button" aria-haspopup="false" aria-expanded="false">
+                               <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">
+                                {{getShortName(detailedData[0].EmployeeName) | uppercase}} 
+                              </span>
+                            </a>
+                          </div>
+                          <div class="empNameLabel">{{ detailedData[0].EmployeeName }}</div>
+                          <div class="empCodeLabel">{{ detailedData[0].EmployeeCode }}</div >
+                          <div class="clearfix"></div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="row">
+                            <div class="col-md-6 d-grid">
+                              <span class="text-label">Total Working Hours</span>
+                              <span class="text-label-bold">{{ detailedData[0].TotalHours }}</span>
+                            </div>
+                            <div class="col-md-6 d-grid">
+                              <span class="text-label">Submitted on</span>
+                              <span class="text-label-bold">{{ detailedData[0].SubmittedOn | date: "dd MMM yyyy" }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+              </div>
+              <!-- TABLE -->
+              <div class="row m-2" *ngIf="!spinner">
+                <div class="table w-100 table-height" style="height: 400px;">
+                  <table class="table-grouped table-bordered">
+                    <thead>
+                      <tr>
+                        <th class="text-center">Date</th>
+                        <th>Project</th>
+                        <th>Activity</th>
+                        <th class="text-center">Start & End Time</th>
+                        <th class="text-center">Break Hours (Mins)</th>
+                        <th class="text-center">Working Hours</th>
+                        <th class="text-center">Notes</th>
+                        <th class="text-center">
+                          {{ detailedData[0].Status == 3 ? 'Approval Remarks' : 'Rejection Remarks'}}
+                        </th>
+                        <!-- <th>Total Hours</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container class="grouped-table-content" *ngFor="let group of groupedData; let i = index">
+                        <tr [ngClass]="{ 'even-row': i % 2 !== 0 }">
+                          <td [attr.rowspan]="group.items.length + 1" class="text-center">
+                            <div class="display-inline-grid text-center">
+                              <p class="text-bold mb-0 p-0" [ngClass]="{ 'mt-4': i % 2 !== 0 }">{{ group.date | date: "EEE" }}</p>
+                              <p class="text-bold text-container">{{ group.date | date: "dd MMM yyyy" }}</p>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr *ngFor="let item of group.items" [ngClass]="{ 'even-row': i % 2 !== 0 }">
+                          <td>{{ item.ProjectName }}</td>
+                          <td>{{ item.ActivityName }}</td>
+                          <td class="text-center">{{ item.StartTime }} - {{item.EndTime}}</td>
+                          <td class="text-center">{{ item.BreakTime }}</td>
+                          <td class="text-center">{{ item.WorkingHours }}</td>
+                          <td class="text-center">
+                            <button *ngIf="item.EmployeeRemarks" id="notes-Popover-{{i}}" type="button" 
+                              class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;"
+                              [ngbPopover]="item.EmployeeRemarks" popoverTitle="Notes" triggers="mouseenter:mouseleave"
+                              container="body" placement="left" popoverClass="custom-popover-class">
+                            </button>
+                          </td>
+                          <td class="text-center">
+                            <ng-template #popContent>
+                              <div class="d-block pb-3">
+                                <div class="m-0 p-0 popover-header">
+                                {{ item.Status === 4 ? 'Rejected On' : 'Approved On' }}
+                                </div>
+                                <div class="m-0 p-0 popover-body text-bold">
+                                  {{item.ApprovedRejectedOn | date: "dd MMM yyyy"}}
+                                </div>
+                              </div>
+                              <div class="d-block">
+                                <div class="m-0 p-0 popover-header">
+                                  {{item.Status === 4 ? 'Rejection Remarks' : 'Approval Remarks' }}
+                                </div>
+                                <div class="m-0 p-0 popover-body">
+                                  {{item.ApproverRemarks == 'null' ? '' : item.ApproverRemarks}}
+                                </div>
+                              </div>
+                            </ng-template>
+                           
+                            <div *ngIf="item.ApproverRemarks && item.Status !== 2" id="remarks-Popover-{{i}}" 
+                                [ngbPopover]="popContent" triggers="mouseenter:mouseleave"
+                                container="body" popoverClass="custom-popover-class" placement="left">
+                                <button class="btn" [class.rejected-status]="item.Status === 4" 
+                                  [class.approved-status]="item.Status === 3">
+                                  {{item.Status === 4 ? 'Rejected' : 'Approved' }}
+                                </button>
+                                <span  class="cursor-pointer m-1 mdi mdi-comment-text-outline" 
+                                [class.approved-status]="item.Status === 3"
+                                  [class.rejected-status]="item.Status === 4">
+                                </span>
+                            </div>
+                            <div *ngIf="!item.ApproverRemarks && item.Status !== 2">
+                              <button class="btn" [class.rejected-status]="item.Status === 4" 
+                                [class.approved-status]="item.Status === 3">
+                                {{item.Status === 4 ? 'Rejected' : 'Approved' }}
+                              </button>
+                          </div>
+                          </td>
+                          <!-- <td *ngFor="let hour of detailedData.slice(0,1)" colspan="1">
+                            <span >{{ hour.TotalHours }}</span>
+                          </td> -->
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>          
+                </div>
+              </div>
+              <!-- SUBMISSION REMARKS & SUPPORTING DOCS -->
+              <div class="row m-2">
+                <div class="pl-0 col-md-12 d-flex">
+                  <div class="pl-0 col-md-5">
+                    <div class="d-grid mr-2">
+                      <span class="text-label">Submission Remarks</span>
+                      <span class="text-label" style="color: #1C1E24;">{{detailedData[0].EmployeeRemarks}}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <div class="d-grid ml-2">
+                      <label class="text-label">Support Document</label>
+                      <div *ngIf="detailedData[0].TimesheetDocument && detailedData[0].TimesheetDocument.length > 0">
+                        <button class="btn btn-default btn-sm m-r-sm" (click)="viewDocs(detailedData[0].TimesheetDocument[0])"
+                          style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;" > 
+                          View Document
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="popup_viewDocs" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="popup_viewDocs" aria-hidden="true">
+    <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header" style="padding: 15px !important;">
+
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <!-- <small class="header-pretitle"><b> {{employeeDetails.FirstName}} ~ {{employeeDetails.Code}} </b></small>
+                        <h6 class="modal-title subheader_h6" id="popup_release_AL">
+                            {{employeeDetails.EmploymentContracts[0].StartDate | date:'dd-MM-yyyy'}} | {{employeeDetails.EmploymentContracts[0].Designation}}
+                        </h6> -->
+                    </div>
+
+                    <div class="modal-close" (click)="modal_dismiss()" style="margin-top: -1%"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="iframe-container" *ngIf="documentURL == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                        <!-- <img src="assets/Images/Ciel.png" style="opacity: .5;"> -->
+                        <!-- <img src="assets/Images/clientlogo/{{clientminiLogoLink}}" style="opacity: .5;"> -->
+                        <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+                        </span>
+                    </div>
+                    <div class="iframe-container" *ngIf="documentURL != null" 
+                    style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+                        <iframe [src]="documentURL" frameborder="0" scrolling="yes" style="height: inherit;width: 100%;"></iframe>
+                    </div>
+                </div>
+                <div class="modal-footer" > 
+          <div>
+            <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+              (click)="modal_dismiss()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Close </span></div>
+            </button>
+
+          </div>
+
+        </div>
+
+            </div>
+        </div>
+    </div>
+</div>

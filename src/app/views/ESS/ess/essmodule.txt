@@ -1,0 +1,76 @@
+import { Injector, APP_INITIALIZER, NgModule, CUSTOM_ELEMENTS_SCHEMA, ErrorHandler } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerModule } from 'ngx-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NZ_I18N, en_US } from "ng-zorro-antd";
+import { NgZorroAntdModule, NZ_ICONS, NzSelectModule } from "ng-zorro-antd";
+import { IconDefinition } from "@ant-design/icons-angular";
+import * as AllIcons from "@ant-design/icons-angular/icons";
+
+import { EssComponent } from './ess.component';
+import { ProfileComponent } from './profile/profile.component';
+import { MybankComponent } from './mybank/mybank.component';
+import { MycommunicationsComponent } from './mycommunications/mycommunications.component';
+import { OfficialInformationComponent } from './official-information/official-information.component';
+import { NomineeInformationComponent } from './nominee-information/nominee-information.component';
+import { MyinvestmentComponent } from './myinvestment/myinvestment.component';
+import { PreviousEmploymentComponent } from './previous-employment/previous-employment.component';
+import { MydocumentsComponent } from './mydocuments/mydocuments.component';
+import { MypaymentsComponent } from './mypayments/mypayments.component';
+import { LoadingScreenComponent1 } from '../loading-screen1/loading-screen1.component';
+import { LoadingScreenService1 } from '../loading-screen1/loading-screen1.service';
+import { NgxSpinnerModule } from "ngx-spinner";
+import { MyeducationComponent } from './myeducation/myeducation.component';
+import { MyexperienceComponent } from './myexperience/myexperience.component';
+import { SalaryDetailsComponent } from './salary-details/salary-details.component';
+import { EmployeeDeductionsComponent } from './employee-deductions/employee-deductions.component';
+
+const antDesignIcons = AllIcons as { 
+  [key: string]: IconDefinition;
+};
+const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
+  key => antDesignIcons[key]
+);
+
+@NgModule({
+  declarations: [
+    //EssComponent,
+    // ProfileComponent,
+    // MybankComponent,
+    // MycommunicationsComponent,
+    // OfficialInformationComponent,
+    // NomineeInformationComponent,
+    // MyinvestmentComponent,
+    // PreviousEmploymentComponent,
+    // MydocumentsComponent,
+    // MypaymentsComponent,
+    // LoadingScreenComponent1,
+    // MyeducationComponent,
+    // MyexperienceComponent,
+    // SalaryDetailsComponent,
+    // EmployeeDeductionsComponent 
+   ],
+  imports: [
+    CommonModule, BrowserModule, NgbModule, ReactiveFormsModule, FormsModule,
+    BsDatepickerModule.forRoot(), NgSelectModule, DatepickerModule.forRoot(),
+    NgZorroAntdModule.forRoot(), NgxSpinnerModule,
+  ],
+  exports: [
+    NgZorroAntdModule
+  ],
+  providers: [
+  
+    LoadingScreenService1,
+    // TimeMaskDirective,
+    { provide: NZ_I18N, useValue: en_US }, { provide: NZ_ICONS, useValue: icons }
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
+
+})
+export class EssModule { }

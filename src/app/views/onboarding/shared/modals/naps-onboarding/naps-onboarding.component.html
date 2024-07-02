@@ -1,0 +1,1532 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content">
+      <div class="modal-body"
+        style="max-height: calc(110vh - 103px) !important;overflow-x: hidden !important;margin-top: -16px;">
+
+
+        <div class="row stickyhead">
+          <div class="col-md-12">
+            <h3 class="moudle_name" style="font-weight: 600; text-transform: uppercase;padding-bottom: 5px;
+            color: black;">NAPS Onboarding    <span class="subheader__desc help-text" *ngIf="IsAadhaarKYC">
+              | <img src="assets/Images/bookmark.png" style="width: 18px;display: inline-block;"> <span
+                  style="color: black !important;
+              font-weight: 600 !important;"> Aadhaar-Verified </span> </span></h3>
+            <span style="font-size: 12px;font-weight: 600;">{{defaultSearchInputs.ClientName}} |
+              {{defaultSearchInputs.ClientContractName}}</span>
+          </div>
+        </div>
+        <br />
+        <!-- <hr /> -->
+
+        <br />
+
+
+        <div class="d-flex align-items-center" *ngIf="spinner" style=" margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);">
+          <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+
+        <div>
+          <div class="alert alert-light alert-elevate" *ngIf="!spinner && rejectedLst?.length > 0 && ApprovalStatus">
+            <div class="alert-text">
+              <h6 class="card-title">Rejection Overview (Qc Remarks :{{ApprovalRemarks}}) </h6>
+              <span class="help-text">
+                 <!-- <span class="badge badge--inline badge--pill badge--danger badge--rounded">NOTE
+                  </span> -->
+                   Looks
+                like one of the documents does not meet the validation criteria. Please check! </span>
+              <br>
+              <hr>
+              <ul class="list-style" *ngIf="rejectedLst?.length> 0">
+                <li *ngFor="let rejected of rejectedLst">
+                  <div *ngIf="rejected.Accordion == 'Document_Details'">
+                    {{rejected.DocumentTypeName}}
+                    Document Details : {{rejected.Remarks}}
+                  </div>
+                  <div *ngIf="rejected.Accordion == 'Client_Approvals'">
+                    {{rejected.DocumentTypeName}}
+                    Contract Letters  : {{rejected.Remarks}}
+                  </div>
+                  <div *ngIf="rejected.Accordion == 'Bank_Details'">
+                    {{rejected.DocumentTypeName}}
+                    Bank : {{rejected.Remarks}}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+        <form [formGroup]="napsForm" *ngIf="!spinner">
+
+          <div class="row"
+            style="background: #f3f8fd;padding-top: 10px;">
+            <div class="col-lg-12">
+              <span style="font-size: 18px; color: black;font-weight: 600;"> Basic details <i style="cursor: pointer;"
+                  (click)="showAccordian(1)" class="mdi mdi-pencil"></i> </span>
+              <p style="font-size: 12px;padding-bottom: 15px !important;"> Create your profile by adding your personal details and setting some of the onboarding process</p>
+            </div>
+          </div>
+
+          <br />
+
+
+          <div class="row" *ngIf="index == 1">
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label"> Name <span class="required">*</span>
+                <span class="help-text m-l-5">(as per Aadhaar Card)</span>
+              </label>
+              <input class="form-control" type="text" spellcheck="false" name="FirstName" maxlength="100" #FirstName
+                formControlName="FirstName" [ngClass]="{ 'is-invalid': submitted && g.FirstName.errors }" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                placeholder="A**** *****O" autocomplete="none|false|no">
+              <div *ngIf="submitted && g.FirstName.invalid" class="help-block">
+                <div *ngIf="g.FirstName.errors.required">Candidate Name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Apprentice Code <span class="required">*</span>
+              </label>
+              <input class="form-control" type="text" spellcheck="false" style="text-transform:uppercase"
+                name="ApprenticeCode" maxlength="100" #ApprenticeCode formControlName="ApprenticeCode"
+                [ngClass]="{ 'is-invalid': submitted && g.ApprenticeCode.errors }" placeholder="XYZ"
+                autocomplete="none|false|no">
+              <div *ngIf="submitted && g.ApprenticeCode.invalid" class="help-block">
+                <div *ngIf="g.ApprenticeCode.errors.required">Apprentice Code is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Date of Birth <span class="required"> * </span> <i
+                  class="mdi mdi-information-outline" placement="right" style="cursor: pointer;"
+                  ngbTooltip="Please Specify as per aadhaar, if DOB not available in aadhaar, Please specify as per PAN card."></i>
+                <span class="help-text m-l-5">(Please specify as per Aadhaar - DD-MM-YYYY)</span> </label>
+              <input type="text" class="form-control" bsDatepicker placement="bottom"  [minDate]="minDate" [maxDate]="maxDate"
+                (bsValueChange)="onChangeDOB($event)" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+          containerClass:'theme-default' }" name="DOB" formControlName="DOB"
+                [ngClass]="{'is-invalid': submitted && g.DOB.errors }" placeholder="12-12-1990"
+                autocomplete="none|false|no">
+              <div *ngIf="submitted && g.DOB.errors" class="invalid-feedback">
+                <div *ngIf="g.DOB.errors.required">DOB is required
+                </div>
+              </div>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Aadhaar Number <span class="required">*</span>
+              </label>
+              <input type="number" onkeypress="return /^[0-9]+$/i.test(event.key)" class="form-control"
+                name="AadhaarNumber" formControlName="AadhaarNumber"
+                [ngClass]="{'is-invalid': submitted && g.AadhaarNumber.errors }" placeholder="XXXX XXXX XX12"
+                autocomplete="none|false|no" minlength="12" maxlength="12"
+                (input)="doCheckAadhaarMaxlength($event, napsForm.get('AadhaarNumber'))">
+              <div *ngIf="submitted && g.AadhaarNumber.errors" class="invalid-feedback">
+                <div *ngIf="g.AadhaarNumber.errors.required">Aadhaar Number is required
+                </div>
+              </div>
+              <div *ngIf="napsForm.get('AadhaarNumber').errors && napsForm.get('AadhaarNumber').touched"
+                class="help-block">
+                <span *ngIf="napsForm.get('AadhaarNumber').errors.pattern">
+                  Please match the requested format (Ex: 2XXX XXXX 1111)
+                </span>
+              </div>
+
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Gender <span class="required">*</span></label>
+              <ng-select [items]="LstGender" placeholder="-- select Gender --" formControlName="Gender"
+                [ngClass]="{'ng-touched': submitted && g.Gender.invalid }" bindLabel="name" bindValue="id">
+              </ng-select>
+              <div *ngIf="submitted && g.Gender.invalid" class="help-block">
+                <div *ngIf="g.Gender.errors.required">Gender is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Email <span class="required">*</span></label>
+              <input class="form-control" type="PrimaryEmail" name="PrimaryEmail"
+                pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                formControlName="PrimaryEmail" [ngClass]="{'is-invalid': submitted && g.PrimaryEmail.errors}"
+                placeholder="example@domain.com" autocomplete="none|false|no">
+
+              <div *ngIf="napsForm.get('PrimaryEmail').errors && napsForm.get('PrimaryEmail').touched "
+                class="help-block">
+                <div *ngIf="g.PrimaryEmail.errors">E-Mail is required
+                </div>
+                <span *ngIf="napsForm.get('PrimaryEmail').errors.pattern"> Please enter
+                  valid email (pattern mismatch)
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Mobile No. <span class="required">*</span></label>
+              <div class="input-group" style="margin-top: 0px;">
+                <div class="input-group-prepend">
+                  <button disabled tabindex="-1" class="btn btn-outline-secondary dropdown-toggle"
+                    style="color: #fff; width: 90px;background-color: #6c757d;border-color: #6c757d;" type="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">+ 91</button>
+                  <div class="dropdown-menu" style="height: 200px;overflow-y: auto; border-radius: 0px;">
+                    <a class="dropdown-item" (click)="theFunction(item)"
+                      *ngFor="let item of LstcountryCode">{{item.name}}</a>
+                  </div>
+                </div>
+                <input class="form-control" minlength="10"
+                  style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;" type="text"
+                  onkeypress="return /^[0-9]+$/i.test(event.key)" name="MobileNumber" formControlName="MobileNumber"
+                  [ngClass]="{'is-invalid': submitted && g.MobileNumber.errors }" placeholder="9876543210"
+                  autocomplete="none|false|no"
+                  (input)="mobileNumberLengthRestrict($event, napsForm.get('MobileNumber'))" numbersOnly>
+              </div>
+              <div *ngIf="napsForm.get('MobileNumber').errors && napsForm.get('MobileNumber').touched "
+                class="help-block">
+                <div *ngIf="g.MobileNumber.errors">Mobile no is required
+                </div>
+                <span *ngIf="napsForm.get('MobileNumber').errors.minlength"> Mobile No
+                  should be minimum 10 characters
+                </span>
+
+              </div>
+
+            </div>
+
+            <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+              <label class="form-label"> PAN No </label>
+
+              <input class="form-control" type="text"
+                pattern="^[a-zA-Z]{3}[pPcCHhaAbBgGlLfFTtjJ]{1}[a-zA-Z]{1}[0-9]{4}[a-zA-Z]{1}?$" maxlength="10"
+                name="PANNumber" formControlName="PANNumber" placeholder="ABCPD1234E" autocomplete="none|false|no"
+                style="text-transform: uppercase;">
+              <div *ngIf="submitted && g.PANNumber.errors" class="invalid-feedback">
+                <div *ngIf="g.PANNumber.errors.required">PAN no is required
+                </div>
+              </div>
+              <div *ngIf="submitted && napsForm.get('PANNumber').errors && napsForm.get('PANNumber').touched"
+                class="help-block">
+                <span *ngIf="napsForm.get('PANNumber').errors.pattern">
+                  Please match the requested format. (Ex: ABCPD1234E)
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Father's Name <span class="help-text m-l-5">(Please specify as per
+                  Aadhaar)</span>
+                <span class="form__length"> {{ FathersName.value?.length }}/100</span>
+              </label>
+              <input class="form-control" spellcheck="false" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                pattern="[\x00-\x7F]+" name="FathersName" maxlength="100" #FathersName formControlName="FathersName"
+                [ngClass]="{     'is-invalid': submitted && g.FathersName.errors }" placeholder="Father's Name"
+                autocomplete="none|false|no">
+              <div *ngIf="submitted && g.FathersName.errors" class="invalid-feedback">
+                <div *ngIf="g.FathersName.errors.required">Father's Name is required
+                </div>
+              </div>
+              <div *ngIf="napsForm.get('FathersName').errors && napsForm.get('FathersName').touched" class="help-block">
+                <span *ngIf="napsForm.get('FathersName').errors.pattern"> Entered
+                  special characters are not allowed
+                </span>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row"
+            style="background: #f3f8fd;padding-top: 10px;">
+            <div class="col-lg-12">
+              <span style="font-size: 18px; color: black;font-weight: 600;"> Communication details <i
+                  style="cursor: pointer;" (click)="showAccordian(2)" class="mdi mdi-pencil"></i> </span>
+              <p style="font-size: 12px;padding-bottom: 15px !important;">Create your profile by adding your communication details and setting some of the onboarding process
+              </p>
+            </div>
+          </div>
+          <br />
+
+          <div class="row" *ngIf="index == 2">
+
+            <div class="d-flex align-items-center" *ngIf="apispinner"
+              style=" margin: 0;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+              <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+
+            <div class="col-xs-12  col-sm-6" style="margin-top: 40px;" *ngIf="!apispinner">
+
+              <div class="form-group form-group-vertical col-xs-12"
+                *ngIf="this.napsForm.controls.presentAddressdetails">
+                <label class="form-label">Present Address Line 1
+                 
+                  <span class="form__length">
+                    {{ presentAddressdetails.value?.length }}/100</span>
+                </label>
+                <input class="form-control" name="presentAddressdetails" #presentAddressdetails maxlength="100"
+                  pattern="[\x00-\x7F]+" formControlName="presentAddressdetails"
+                  [ngClass]="{'is-invalid': submitted && g.presentAddressdetails.errors }"
+                  placeholder="Flat/Building/Door No" spellcheck="off">
+                <div *ngIf="submitted && g.presentAddressdetails.errors" class="invalid-feedback">
+                  <div *ngIf="g.presentAddressdetails.errors.required">Present Address
+                    details is required
+                  </div>
+                </div>
+                <div
+                  *ngIf="napsForm.get('presentAddressdetails').errors && napsForm.get('presentAddressdetails').touched"
+                  class="help-block">
+
+                  <span *ngIf="napsForm.get('presentAddressdetails').errors.pattern">
+                    Entered special characters are not allowed
+                  </span>
+                </div>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12"
+                *ngIf="this.napsForm.controls.presentAddressdetails1">
+                <label class="form-label">Present Address Line 2 </label>
+                <input class="form-control" name="presentAddressdetails1" formControlName="presentAddressdetails1"
+                  pattern="[\x00-\x7F]+" placeholder="Street/Area/Locality" spellcheck="off">
+                <div
+                  *ngIf="napsForm.get('presentAddressdetails1').errors && napsForm.get('presentAddressdetails1').touched"
+                  class="help-block">
+
+                  <span *ngIf="napsForm.get('presentAddressdetails1').errors.pattern">
+                    Entered special characters are not allowed
+                  </span>
+                </div>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12"
+                *ngIf="this.napsForm.controls.presentAddressdetails2">
+                <label class="form-label">Present Address Line 3 </label>
+                <input class="form-control" rows="5" cols="40" name="presentAddressdetails2"
+                  formControlName="presentAddressdetails2" pattern="[\x00-\x7F]+" placeholder="City/Town"
+                  spellcheck="off">
+                <div
+                  *ngIf="napsForm.get('presentAddressdetails2').errors && napsForm.get('presentAddressdetails2').touched"
+                  class="help-block">
+
+                  <span *ngIf="napsForm.get('presentAddressdetails2').errors.pattern">
+                    Entered special characters are not allowed
+                  </span>
+                </div>
+              </div>
+
+
+
+              <div class="row">
+                <div class="col-12 col-md-6">
+                  <div class="form-group form-group-vertical col-xs-12"
+                    *ngIf="this.napsForm.controls.presentCountryName">
+                    <label class="form-label">Country Name </label>
+                    <ng-select [items]="CountryList" (change)="onChangeCountry($event, 'Present')"
+                      placeholder="-- select an option --" formControlName="presentCountryName"
+                      [ngClass]="{'ng-touched': submitted && g.presentCountryName.errors }" bindLabel="Name"
+                      bindValue="Id">
+                    </ng-select>
+                    <div *ngIf="submitted && g.presentCountryName.invalid" class="help-block">
+                      <div *ngIf="g.presentCountryName.errors.required">Country is
+                        required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group form-group-vertical col-xs-12" *ngIf="this.napsForm.controls.presentStateName">
+                    <label class="form-label">State Name </label>
+                    <ng-select [items]="StateList" placeholder="-- select on option --"
+                      formControlName="presentStateName"
+                      [ngClass]="{'ng-touched': submitted && g.presentStateName.errors }" bindLabel="Name"
+                      bindValue="Id">
+                    </ng-select>
+                    <div *ngIf="submitted && g.presentStateName.invalid" class="help-block">
+                      <div *ngIf="g.presentStateName.errors.required">State Name
+                        is required
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+
+              </div>
+
+
+
+              <div class="row">
+                <div class="col-12 col-md-6">
+                  <div class="form-group form-group-vertical col-xs-12" *ngIf="this.napsForm.controls.presentCity">
+                    <label class="form-label">City
+                     
+
+                    </label>
+                    <input class="form-control" type="text" name="presentCity" formControlName="presentCity"
+                      pattern="[\x00-\x7F]+" [ngClass]="{'is-invalid': submitted && g.presentCity.errors }"
+                      placeholder="Bangalore" autocomplete="none|false|no">
+                    <div *ngIf="submitted && g.presentCity.errors" class="invalid-feedback">
+                      <div *ngIf="g.presentCity.errors.required">City is required
+                      </div>
+                      <div *ngIf="napsForm.get('presentCity').errors && napsForm.get('presentCity').touched"
+                        class="help-block">
+
+                        <span *ngIf="napsForm.get('presentCity').errors.pattern">
+                          Entered special characters are not allowed
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group form-group-vertical col-xs-12" *ngIf="this.napsForm.controls.presentPincode">
+                    <label class="form-label">Pincode
+                     
+                      <span class="form__length">
+                        {{ presentPincode.value?.length }}/6</span>
+                    </label>
+                    <input class="form-control" type="text" minlength="6"
+                      onkeypress="return /^[0-9]+$/i.test(event.key)" name="presentPincode" #presentPincode
+                      maxlength="6" formControlName="presentPincode"
+                      [ngClass]="{'is-invalid': submitted && g.presentPincode.errors }" placeholder="560001"
+                      autocomplete="none|false|no">
+
+                    <div *ngIf="submitted && g.presentPincode.invalid" class="help-block">
+                      <div *ngIf="g.presentPincode.errors.required">Pincode is
+                        required
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+
+
+            <div class="col-xs-12  col-sm-6" *ngIf="!apispinner">
+
+              <div class="col-xs-12  col-sm-6">
+                <div class="row" style="margin-bottom: 19px;">
+                  <div class="col-xs-12">
+                    <div class="pretty p-svg p-curve">
+                      <input type="checkbox" value="yes" #isSameAddress id="isSameAddress"
+                        (change)="onSameAddressPresentChanged(isSameAddress.checked)" />
+                      <div class="state p-success">
+                        <svg class="svg svg-icon" viewBox="0 0 20 20">
+                          <path
+                            d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                            style="stroke: white;fill:white;"></path>
+                        </svg>
+                        <label>Permanent Address is same as Present
+                          Address</label>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12"
+                *ngIf="this.napsForm.controls.permanentAddressdetails">
+                <label class="form-label">Permanent Address Line 1 
+                  <span class="form__length">
+                    {{ permanentAddressdetails.value?.length }}/100</span></label>
+                <input class="form-control" name="permanentAddressdetails" formControlName="permanentAddressdetails"
+                  #permanentAddressdetails maxlength="100" pattern="[\x00-\x7F]+"
+                  [ngClass]="{'is-invalid': submitted && g.permanentAddressdetails.errors }"
+                  placeholder="Flat/Building/Door No" spellcheck="off">
+                <div *ngIf="submitted && g.permanentAddressdetails.errors" class="invalid-feedback">
+                  <div *ngIf="g.permanentAddressdetails.errors.required">Permanent Address details is required
+                  </div>
+                </div>
+                <div
+                  *ngIf="napsForm.get('permanentAddressdetails').errors && napsForm.get('permanentAddressdetails').touched"
+                  class="help-block">
+                  <span *ngIf="napsForm.get('permanentAddressdetails').errors.pattern">
+                    Entered special characters are not allowed
+                  </span>
+                </div>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12"
+                *ngIf="this.napsForm.controls.permanentAddressdetails1">
+                <label class="form-label">Permanent Address Line 2 </label>
+                <input class="form-control" name="permanentAddressdetails1" formControlName="permanentAddressdetails1"
+                  placeholder="Street/Area/Locality" pattern="[\x00-\x7F]+" spellcheck="off">
+                <div
+                  *ngIf="napsForm.get('permanentAddressdetails1').errors && napsForm.get('permanentAddressdetails1').touched"
+                  class="help-block">
+
+                  <span *ngIf="napsForm.get('permanentAddressdetails1').errors.pattern">
+                    Entered special characters are not allowed
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12"
+                *ngIf="this.napsForm.controls.permanentAddressdetails2">
+                <label class="form-label">Permanent Address Line 3 </label>
+                <input class="form-control" rows="5" cols="40" name="permanentAddressdetails2"
+                  formControlName="permanentAddressdetails2" pattern="[\x00-\x7F]+" placeholder="City/Town"
+                  spellcheck="off">
+                <div
+                  *ngIf="napsForm.get('permanentAddressdetails2').errors && napsForm.get('permanentAddressdetails2').touched"
+                  class="help-block">
+
+                  <span *ngIf="napsForm.get('permanentAddressdetails2').errors.pattern">
+                    Entered special characters are not allowed
+                  </span>
+                </div>
+              </div>
+
+
+
+              <div class="row">
+                <div class="col-12 col-md-6">
+                  <div class="form-group form-group-vertical col-xs-12"
+                    *ngIf="this.napsForm.controls.permanentCountryName">
+                    <label class="form-label">Country Name </label>
+
+                    <ng-select [items]="CountryList" (change)="onChangeCountry1($event, 'Permanent')"
+                      placeholder="-- select an option --" formControlName="permanentCountryName"
+                      [ngClass]="{'ng-touched': submitted && g.permanentCountryName.errors }" bindLabel="Name"
+                      bindValue="Id">
+                    </ng-select>
+                    <div *ngIf="submitted && g.permanentCountryName.invalid" class="help-block">
+                      <div *ngIf="g.permanentCountryName.errors.required">Country
+                        is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group form-group-vertical col-xs-12"
+                    *ngIf="this.napsForm.controls.permanentStateName">
+                    <label class="form-label">State Name </label>
+                    <ng-select [items]="StateList1" placeholder="-- select on option --"
+                      formControlName="permanentStateName"
+                      [ngClass]="{'ng-touched': submitted && g.permanentStateName.errors }" bindLabel="Name"
+                      bindValue="Id">
+                    </ng-select>
+                    <div *ngIf="submitted && g.permanentStateName.invalid" class="help-block">
+                      <div *ngIf="g.permanentStateName.errors.required">State Name
+                        is required
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+
+              </div>
+
+
+
+              <div class="row">
+                <div class="col-12 col-md-6">
+
+                  <div class="form-group form-group-vertical col-xs-12" *ngIf="this.napsForm.controls.presentCity">
+                    <label class="form-label">City 
+
+                    </label>
+                    <input class="form-control" type="text" name="permanentCity" formControlName="permanentCity"
+                      pattern="[\x00-\x7F]+" [ngClass]="{'is-invalid': submitted && g.permanentCity.errors }"
+                      placeholder="Bangalore" autocomplete="none|false|no">
+                    <div *ngIf="submitted && g.permanentCity.errors" class="invalid-feedback">
+                      <div *ngIf="g.permanentCity.errors.required">City is
+                        required
+                      </div>
+                    </div>
+                    <div *ngIf="napsForm.get('permanentCity').errors && napsForm.get('permanentCity').touched"
+                      class="help-block">
+
+                      <span *ngIf="napsForm.get('permanentCity').errors.pattern">
+                        Entered special characters are not allowed
+                      </span>
+                    </div>
+
+                  </div>
+
+
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-group form-group-vertical col-xs-12" *ngIf="this.napsForm.controls.permanentPincode">
+                    <label class="form-label">Pincode 
+                      <span class="form__length">
+                        {{ permanentPincode.value?.length }}/6</span>
+                    </label>
+                    <input class="form-control" type="text" minlength="6"
+                      onkeypress="return /^[0-9]+$/i.test(event.key)" maxlength="6" #permanentPincode
+                      name="permanentPincode" formControlName="permanentPincode"
+                      [ngClass]="{'is-invalid': submitted && g.permanentPincode.errors }" placeholder="560001"
+                      autocomplete="none|false|no">
+                    <!-- <div *ngIf="napsForm.get('permanentPincode').errors || napsForm.get('permanentPincode').touched" class="help-block">
+                              <div *ngIf="g.permanentPincode.errors.required">Pincode is required
+                              </div>
+                              <span *ngIf="napsForm.get('permanentPincode').errors.minlength">
+                                      Pincode should be minimum 6 characters
+                                  </span>
+                          </div> -->
+
+                    <div *ngIf="submitted && g.permanentPincode.invalid" class="help-block">
+                      <div *ngIf="g.permanentPincode.errors.required">Pincode is
+                        required
+                      </div>
+                    </div>
+
+
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="row"
+            style="background: #f3f8fd;padding-top: 10px;">
+            <div class="col-lg-12">
+              <span style="font-size: 18px; color: black;font-weight: 600;"> Offer details <i style="cursor: pointer;"
+                  (click)="showAccordian(3)" class="mdi mdi-pencil"></i> </span>
+              <p style="font-size: 12px;padding-bottom: 15px !important;"> Create your profile by adding your offer details and setting some of the onboarding process</p>
+            </div>
+          </div>
+          <br />
+
+          <div class="row" *ngIf="index == 3">
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Contract Code <span class="required">* </span>
+              </label>
+              <input class="form-control" type="text" spellcheck="false" style="text-transform:uppercase"
+                name="ContractCode" maxlength="100" #ContractCode formControlName="ContractCode"
+                [ngClass]="{ 'is-invalid': submitted && g.ContractCode.errors }" placeholder="XYZ"
+                autocomplete="none|false|no">
+              <div *ngIf="submitted && g.ContractCode.errors" class="invalid-feedback">
+                <div *ngIf="g.ContractCode.errors.required">Contract Code is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Work Location <span class="required">*</span></label>
+              <ng-select [items]="LstClientLocation" placeholder="-- select Work Location --"
+                formControlName="WorkLocation" [ngClass]="{'ng-touched': submitted && g.WorkLocation.invalid }"
+                bindLabel="LocationName" bindValue="Id" (change)="onChangeWorkLocation($event)">
+              </ng-select>
+              <div *ngIf="submitted && g.WorkLocation.invalid" class="help-block">
+                <div *ngIf="g.WorkLocation.errors.required">Work Location is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Team <span class="required">*</span></label>
+              <ng-select [items]="LstTeam" placeholder="-- select Team --" formControlName="Team"
+                [ngClass]="{'ng-touched': submitted && g.Team.invalid }" bindLabel="Name" bindValue="Id"
+                (change)="onChangeTeam($event ,'DOM')">
+              </ng-select>
+              <div *ngIf="submitted && g.Team.invalid" class="help-block">
+                <div *ngIf="g.Team.errors.required">Team is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Insurance Plan</label>
+              <ng-select [items]="LstInsurance" placeholder="-- select Insurance --" formControlName="Insurance"
+                [ngClass]="{'ng-touched': submitted && g.Insurance.invalid }" bindLabel="Name" bindValue="Id"
+                (change)="onChangeInsurancePlan($event)">
+              </ng-select>
+              <div *ngIf="submitted && g.Insurance.invalid" class="help-block">
+                <div *ngIf="g.Insurance.errors.required">Insurance Plan is required
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Oncost - Insurance Amt 
+              </label>
+              <input class="form-control" type="number" name="OnCostInsuranceAmount"
+                onkeypress="return /^[0-9]+$/i.test(event.key)" formControlName="OnCostInsuranceAmount"
+                [ngClass]="{'is-invalid': submitted && g.OnCostInsuranceAmount.errors }" placeholder="456"
+                autocomplete="none|false|no"
+                (change)="onFocus_OfferAccordion(this.napsForm.controls.OnCostInsuranceAmount.value, 'OnCostInsuranceAmount')">
+              <div *ngIf="submitted && g.OnCostInsuranceAmount.errors" class="invalid-feedback">
+                <div *ngIf="g.OnCostInsuranceAmount.errors.required">OnCost Insurance
+                  Amount is required
+                </div>
+              </div>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Fixed Deduction - Insurance Amt
+              </label>
+              <input class="form-control" type="number" name="FixedDeductionAmount"
+                onkeypress="return /^[0-9]+$/i.test(event.key)" formControlName="FixedDeductionAmount"
+                [ngClass]="{'is-invalid': submitted && g.FixedDeductionAmount.errors }" placeholder="456"
+                autocomplete="none|false|no"
+                (change)="onFocus_OfferAccordion(this.napsForm.controls.FixedDeductionAmount.value, 'FixedDeductionAmount')">
+              <div *ngIf="submitted && g.FixedDeductionAmount.errors" class="invalid-feedback">
+                <div *ngIf="g.FixedDeductionAmount.errors.required">Fixed Deduction
+                  Amount for insurance is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">GMC 
+              </label>
+              <input class="form-control" type="number" name="Gmc" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                formControlName="Gmc" [ngClass]="{'is-invalid': submitted && g.Gmc.errors }" placeholder="150000"
+                autocomplete="none|false|no">
+              <div *ngIf="submitted && g.Gmc.errors" class="invalid-feedback">
+                <div *ngIf="g.Gmc.errors.required">GMC Amount is required
+                </div>
+              </div>
+
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">GPA 
+              </label>
+              <input class="form-control" type="number" name="Gpa" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                formControlName="Gpa" [ngClass]="{'is-invalid': submitted && g.Gpa.errors }" placeholder="300000"
+                autocomplete="none|false|no">
+              <div *ngIf="submitted && g.Gpa.errors" class="invalid-feedback">
+                <div *ngIf="g.Gpa.errors.required">GPA Amount is required
+                </div>
+              </div>
+
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Stipend<span class="required">{{getRequired('Stipend')}}</span>
+                <span class="help-text m-l-5">(per month)</span>
+              </label>
+              <input class="form-control" type="number" maxlength="10" onkeypress="return /^[0-9]+$/i.test(event.key)"
+                name="Stipend" formControlName="Stipend" [ngClass]="{'is-invalid': submitted && g.Stipend.errors }"
+                (keyup)="onChangeAnnaulSalary($event.target.value)" placeholder="500000" autocomplete="none|false|no"
+                (change)="onFocus_OfferAccordion()">
+              <div *ngIf="submitted && g.Stipend.errors" class="invalid-feedback">
+                <div *ngIf="g.Stipend.errors.required">Stipend is required
+                </div>
+              </div>
+              <div *ngIf="SalaryFormat == 0" class="help-block">
+                <div> Stipend should be greater than zero
+                </div>
+              </div>
+            </div>
+
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Start Date <span class="required">{{getRequired('StartDate')}}</span>
+                <span class="help-text m-l-5">(as per naps portal)</span>
+              </label>
+              <input type="text" onkeydown="return (event.keyCode!=13);" class="form-control"
+                (ngModelChange)="onChangeDOJ($event)" bsDatepicker placement="top"
+                [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                name="StartDate" formControlName="StartDate"
+                [ngClass]="{'is-invalid': submitted && g.StartDate.errors }" placeholder="12-12-2020"
+                autocomplete="none|false|no" readonly>
+              <div *ngIf="submitted && g.StartDate.errors" class="invalid-feedback">
+                <div *ngIf="g.StartDate.errors.required">Start Date is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">End Date <span class="required">{{getRequired('EndDate')}}</span>
+                <span class="help-text m-l-5">(as per naps portal)</span>
+              </label>
+              <input type="text" onkeydown="return (event.keyCode!=13);" class="form-control"
+                (ngModelChange)="onChangeDOJ1($event)" bsDatepicker placement="top" [minDate]="EndDateMinDate"
+                [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                name="EndDate" formControlName="EndDate" [ngClass]="{'is-invalid': submitted && g.EndDate.errors }"
+                placeholder="12-12-2020" autocomplete="none|false|no" readonly>
+              <div *ngIf="submitted && g.EndDate.errors" class="invalid-feedback">
+                <div *ngIf="g.EndDate.errors.required">End Date is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Pay Period <span class="required">{{getRequired('PayPeriod')}}</span></label>
+              <ng-select [items]="LstPayPeriod" placeholder="-- select an option --" bindValue="Id"
+                bindLabel="PayCyclePeriodName" formControlName="PayPeriod"
+                [ngClass]="{'ng-touched': submitted && g.PayPeriod.errors }">
+              </ng-select>
+              <div *ngIf="submitted && g.PayPeriod.invalid" class="help-block">
+                <div *ngIf="g.PayPeriod.errors.required">Pay Structure is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Business Cost Code<span class="required">{{getRequired('CostCodeId')}}</span></label>
+              <ng-select [items]="CostCodeList" placeholder="-- select an option --" bindValue="Id"
+                bindLabel="CostCodeName" formControlName="CostCodeId"
+                [ngClass]="{'ng-touched': submitted && g.CostCodeId.errors }">
+              </ng-select>
+              <div *ngIf="submitted && g.CostCodeId.invalid" class="help-block">
+                <div *ngIf="g.CostCodeId.errors.required">Cost Code is required
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="row"
+            style="background: #f3f8fd;padding-top: 10px;">
+            <div class="col-lg-12">
+              <span style="font-size: 18px; color: black;font-weight: 600;"> Document details <i
+                  style="cursor: pointer;" (click)="showAccordian(4)" class="mdi mdi-pencil"></i> </span>
+              <p style="font-size: 12px;padding-bottom: 15px !important;"> Create your profile by adding your document details and setting some of the onboarding process</p>
+            </div>
+          </div>
+          <br />
+
+          <div class="row" *ngIf="index == 4">
+            <div class="col-lg-12">
+              <div class="text-center ma-5" *ngIf="documentTbl.length == 0">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+            </div>
+            <br />
+
+            <div class="col-lg-12">
+              <ng-container *ngIf="documentTbl?.length > 0">
+
+                <div class="row" *ngIf='!isMobileResolution'
+                  style="margin-top: 1rem;padding-left: 5px;padding-right: 15px;">
+                  <div class="col-md-4">
+                    <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                      Document Name</p>
+                  </div>
+                  <div class="col-md-2">
+                    <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                      Document No.
+                    </p>
+                  </div>
+                  <div class="col-md-2">
+                    <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                      Category Type</p>
+                  </div>
+                  <div class="col-md-2">
+                    <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                      Status </p>
+                  </div>
+                  <div class="col-md-2">
+                  </div>
+                </div>
+
+
+                <div class="card tab-item card-cus" *ngFor="let item of documentTbl; let i = index"
+                  id="{{item.DocumentName}}_border">
+                  <div class="card-header card-head-cus" *ngIf="isMobileResolution">
+
+                    <div class="row">
+                      <div class="text-left col-md-4">
+                        <h6 class="h6-content tab-item__subheading" style="font-size: 14px;
+                      font-weight: 600;color: white;">{{item.DocumentName}} <span class="help-text-c"
+                            *ngIf="item.IsMandatory == 'True'">
+                            *</span> </h6>
+                        <small *ngIf="item.IsKYCVerified" class="small-content tab-item__subheading">Aadhaar
+                          verified automatically (e-KYC) <i class="mdi mdi-information-outline" placement="right"
+                            style="cursor: pointer;"
+                            ngbTooltip="To see the Aadhaar card, please enter the first four characters of candidates name and year of birth as a password."></i>
+
+                        </small>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="card-body" style="padding: 10px;">
+                    <div class="row">
+
+                      <div class="text-left col-md-4" *ngIf="!isMobileResolution">
+                        <h6 class="h6-content tab-item__subheading" style="font-size: 14px;font-weight: 600;">
+                          {{item.DocumentName}} <span class="help-text-c" *ngIf="item.IsMandatory == 'True'"> *</span>
+                        </h6>
+                        <small *ngIf="item.IsKYCVerified" class="small-content tab-item__subheading">Aadhaar
+                          verified automatically (e-KYC) <i class="mdi mdi-information-outline" placement="right"
+                            style="cursor: pointer;"
+                            ngbTooltip="To see the Aadhaar card, please enter the first four characters of candidates name and year of birth as a password."></i>
+                        </small>
+                      </div>
+
+                      <div class="col-md-2">
+                        <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                          class="tab-item__subheading" *ngIf="item.DocumentNumber != null && item.DocumentNumber != ''">
+                          {{item.DocumentNumber}}
+                        </p>
+                        <p style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);opacity: .2;"
+                          class="tab-item__subheading" *ngIf="item.DocumentNumber == null || item.DocumentNumber == ''">
+                          ####
+                        </p>
+                      </div>
+
+                      <div class="col-md-2">
+                        <label *ngIf="item.CategoryType == null"> --- </label>
+                        <label *ngIf="item.FileName == null && item.CategoryType != null"> --- </label>
+                        <label *ngIf="item.FileName != null && item.CategoryType != null">
+                          <small class="tab-item__subheading"
+                            style="font-weight: 500;font-size: 12px;line-height: 14px;transform: translatey(35%);"
+                            *ngFor="let i of item.CategoryType">
+                            <label *ngIf="i.isChecked" class="font-12">
+                              {{i.Code}},
+                            </label>
+                          </small>
+                        </label>
+                      </div>
+
+                      <div class="col-md-2">
+                        <p *ngIf="item.Status != null"
+                          style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);">
+                          <span class="badge badge-warning1" *ngIf="item.Status == 0">
+                            Pending </span>
+                          <span class="badge badge-danger1" *ngIf="item.Status == 2">
+                            Rejected </span>
+                          <span class="badge badge-success1" *ngIf="item.Status == 1">
+                            Approved </span>
+                        </p>
+
+                        <label *ngIf="item.Status == null"> --- </label>
+                      </div>
+
+                      <div class="col-md-2 text-right">
+
+                        <button *ngIf="item.FileName == null" class="btn btn-default btn-sm m-r-sm "
+                          style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                          (click)="document_file_upload(item)"><i class="fa fa-upload m-r-xs"></i> Upload </button>
+
+                        <div *ngIf="!item.IsKYCVerified && item.FileName != null && item.Status != 1" (click)="document_file_edit(item)"
+                          style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Edit">
+                          <i class="mdi mdi-pencil-outline"
+                            style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                        </div>
+
+                        <div *ngIf="!item.IsKYCVerified && item.FileName != null  && item.Status != 1" (click)="document_file_delete(item)"
+                          style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Edit">
+                          <i class="mdi mdi-trash-can-outline"
+                            style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                        </div>
+
+                        <div *ngIf="item.FileName != null && checkIsZipFile(item, 'Documents') == true"
+                          (click)="getFileList(item, 'DocumentDetails')"
+                          style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Edit">
+                          <i class="mdi mdi-file-document-outline"
+                            style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                        </div>
+
+                        <div *ngIf="item.FileName != null && checkIsZipFile(item, 'Documents') == false"
+                          (click)="document_file_view_old(item,'Document')"
+                          style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Edit">
+                          <i class="mdi mdi-file-document-outline"
+                            style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                        </div>
+
+                        <a *ngIf="item.FileName != null && checkIsZipFile(item, 'Documents') == true"
+                          style="cursor: pointer;display: inline-block;padding-right: 5px;" download="download.zip"
+                          [href]="zipFileUrl"> <i class="mdi mdi-download"
+                            style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                        </a>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+          <ng-container>
+            <div class="row"
+              style="background: #f3f8fd;padding-top: 10px;">
+              <div class="col-lg-12">
+                <span style="font-size: 18px; color: black;font-weight: 600;"> Bank details <i style="cursor: pointer;"
+                    (click)="showAccordian(5)" class="mdi mdi-pencil"></i> </span>
+                <p style="font-size: 12px;padding-bottom: 15px !important;"> Create your profile by adding your bank details and setting some of the onboarding process</p>
+              </div>
+            </div>
+            <br />
+            <div class="row" *ngIf="index == 5">
+              <div class="col-lg-12">
+
+                <div class="row" style="margin-top: 2rem;margin-bottom: 10px;" *ngIf="LstBank.length == 0">
+                  <div class="col-md-12 text-center">
+                    <span style="font-weight: 600;
+                color: #000;">No records found </span>
+                  </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 20px;" *ngIf="LstBank.length == 0">
+                  <div class="col-md-12 text-center">
+                    <button class="btn btn-primary" (click)="addBank(undefined, 'NormalMode')"
+                      style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                        class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; New Bank &nbsp; &nbsp;
+                    </button>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf='!isMobileResolution && LstBank.length > 0'
+                  style="margin-top: 1rem;padding-left: 5px;padding-right: 15px;">
+                  <div class="col-md-2">
+                    <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                      Bank Name</p>
+                  </div>
+                  <div class="col-md-2">
+                    <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                      Account No.
+                    </p>
+                  </div>
+                  <div class="col-md-2">
+                    <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                      IFSC Code</p>
+                  </div>
+                  <div class="col-md-2">
+                    <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                      Allocation</p>
+                  </div>
+                  <div class="col-md-2">
+                    <p style="font-weight: 600;font-size: 12px;line-height: 14px;color: #000;">
+                      Status </p>
+                  </div>
+                  <div class="col-md-2">
+                  </div>
+                </div>
+
+
+                <div class="card tab-item" style="border: 1px solid #ece9e9 !important;
+              box-shadow: 0px 3px 3px 2px #d5dadf59;margin: 3px;" *ngFor="let item of LstBank; let i = index">
+                  <div class="card-body" style="padding: 10px;">
+                    <div class="row">
+                      <div class="text-left col-md-2">
+                        <h6 class="h6-content tab-item__subheading" style="font-size: 13px;
+                       font-weight: 600;margin-top: 5px;"> <b *ngIf="isMobileResolution"> Bank
+                            Name : </b> {{item.bankFullName}}
+                        </h6>
+                      </div>
+
+                      <div class="text-left col-md-2">
+                        <h6 class="h6-content tab-item__subheading" style="font-size: 13px;
+                       font-weight: 400;margin-top: 5px;"><b *ngIf="isMobileResolution"> Account
+                            No. : </b> {{item.accountNumber}}
+                        </h6>
+                      </div>
+
+                      <div class="text-left col-md-2">
+                        <h6 class="h6-content tab-item__subheading" style="font-size: 13px;
+                       font-weight: 400;"> <b *ngIf="isMobileResolution"> IFSC : </b>
+                          {{item.bankBranchId}}
+                        </h6>
+                      </div>
+                      <div class="text-left col-md-2">
+                        <h6 class="h6-content tab-item__subheading" style="font-size: 13px;
+                       font-weight: 400;"><b *ngIf="isMobileResolution"> Allocation : </b>
+                          {{item.allocation}}
+                        </h6>
+                      </div>
+
+                      <div class="col-md-2">
+                        <p
+                          style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);">
+                          <span class="badge badge-warning1" *ngIf="item.DocumentStatus =='Pending'">
+                            Pending </span>
+                          <span class="badge badge-danger1" *ngIf="item.DocumentStatus == 'Rejected'">
+                            Rejected </span>
+                          <span class="badge badge-success1" *ngIf="item.DocumentStatus == 'Approved'">
+                            Approved </span>
+                        </p>
+
+
+
+
+                      </div>
+
+                      <div class="col-md-2 text-right">
+                        <div (click)="addBank(item, null)"
+                          style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Edit">
+                          <i class="mdi mdi-pencil-outline" title="Edit"
+                            style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                        </div>
+
+                        <div (click)="removeSelectedRow(item,'Bank')"
+                          style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Delete">
+                          <i class="mdi mdi-trash-can-outline" title="Delete"
+                            style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                        </div>
+
+                        <div (click)="viewBankfile(item)"
+                          style="cursor: pointer;display: inline-block;padding-right: 5px;" matTooltip="Preview">
+                          <i class="mdi mdi-file-image-outline" title="Preview"
+                            style="display: block; top: -3px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                        </div>
+
+
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+                <br />
+
+              </div>
+            </div>
+
+          </ng-container>
+
+          <div class="row"
+            style="background: #f3f8fd;padding-top: 10px;">
+            <div class="col-lg-12">
+              <span style="font-size: 18px; color: black;font-weight: 600;"> Contract Letter <i style="cursor: pointer;"
+                  (click)="showAccordian(6)" class="mdi mdi-pencil"></i> </span>
+              <p style="font-size: 12px;padding-bottom: 15px !important;"> Create your profile by adding your contract document details and setting some of the onboarding process</p>
+            </div>
+          </div>
+          <br />
+
+          <div class="row" *ngIf="index == 6">
+            <div class="col-lg-12">
+
+              <div class="row" style="margin-top: 2rem;margin-bottom: 10px;" *ngIf="clientApprovalTbl.length == 0">
+                <div class="col-md-12 text-center">
+                  <span style="font-weight: 600;
+                color: #000;">No records found </span>
+                </div>
+              </div>
+
+              <div class="row" style="margin-bottom: 20px;">
+                <div class="col-md-12 text-center">
+                  <button class="btn btn-primary" (click)="addAttachment()"
+                    style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                      class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Add Attachment &nbsp; &nbsp;
+                  </button>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="clientApprovalTbl?.length> 0">
+                <div class="col-12">
+
+                  <table class="table table-bordered table-container">
+                    <thead>
+                      <tr class="document_table_tr">
+                        <th scope="col" style="width:15%;font-weight: 500 !important;">
+                          Approval For</th>
+                        <th scope="col" style="width:15%;font-weight: 500;">Approval
+                          Type
+                        </th>
+                        <th scope="col" style="width:15%;font-weight: 500;">Document
+                          Name
+                        </th>
+                        <th scope="col" style="width:20%;font-weight: 500;">
+                          Remarks </th>
+                        <th scope="col" style="width:10%;font-weight: 500;">Status
+                        </th>
+                        <th scope="col" style="width:15%;font-weight: 500;">Actions</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of clientApprovalTbl; let i = index">
+
+                        <td class="document_table_docName">
+                          {{item.ApprovalForName}}
+                        </td>
+                        <td class="document_table_docName">
+                          {{item.ApprovalTypeName}}
+                        </td>
+                        <td class="document_table_docName">
+                          <div class="text-ellipsis" matTooltip="{{item.DocumentName}}">{{item.DocumentName}}
+                          </div>
+                        </td>
+                        <td class="document_table_docName">
+                          {{item.Remarks}}
+                        </td>
+
+                        <td class="document_table_docName">
+                          <span class="badge badge-warning" *ngIf="item.Status == 0">Pending</span>
+                          <span class="badge badge-danger" *ngIf="item.Status == 2">Rejected</span>
+                          <span class="badge badge-success" *ngIf="item.Status == 1">Approved</span>
+
+                        </td>
+
+                        <td class="table_header document_table_docNo">
+                          <a href="JavaScript:;" style="display: inline-block;" *ngIf="item.DocumentName"
+                            (click)="editApprovalFile(item,i)" matTooltip="Edit"
+                            class="btn subheader__btn-primary btn-icon mr-2"
+                            [class.disabled]="item.Status == 1 ? true : null">
+                            <i class="fa fa-pencil-square-o font-16"></i>
+                          </a>
+                          <a href="JavaScript:;" style="display: inline-block;" *ngIf="item.DocumentName"
+                            (click)="deleteApprovalFile(item)" matTooltip="Delete"
+                            class="btn subheader__btn-primary btn-icon mr-2"
+                            [class.disabled]="item.Status == 1 ? true : null">
+                            <i class="fa fa-trash-o font-16"></i>
+                          </a>
+                          <a href="JavaScript:;" style="display: inline-block;"
+                            *ngIf="item.DocumentName && checkIsZipFile(item, 'ClientApproval') == true"
+                            matTooltip="View Document" (click)="getFileList(item, 'ClientApproval')"
+                            class="btn subheader__btn-primary btn-icon mr-2">
+                            <i class="fa fa-file-image-o font-16"></i>
+                          </a>
+
+                          <a href="JavaScript:;" style="display: inline-block;"
+                            *ngIf="item.DocumentName && checkIsZipFile(item, 'ClientApproval') == false"
+                            matTooltip="View Document" (click)="viewApprovalFile(item)"
+                            class="btn subheader__btn-primary btn-icon mr-2">
+                            <i class="fa fa-file-image-o font-16"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+
+                  <!-- #region JSZip  -->
+                  <!-- JSZIP -->
+
+
+                  <ng-template #popContent_previewdocument>
+                    <div class="row" *ngIf="docList.length == 0">
+                      <strong style="margin-left: 20px;" class="text-center">
+                        Loading...&nbsp;</strong>
+                      <div style="margin-right: 45px;" class="spinner-border ml-auto" role="status" aria-hidden="true">
+                      </div>
+                    </div>
+                    <div class="row" *ngFor="let i of docList" style="padding-bottom: 5px;">
+                      <div class="col-lg-6">
+                        {{i.name}}
+                      </div>
+                      <div class="col-lg-6 text-right">
+                        <button class="btn btn-default btn-sm m-r-sm " (click)="document_file_view(i, 'Documents')"
+                          style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;">
+                          <i class="fa fa-eye m-r-xs"></i> View </button>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <ng-template #popTitle_previewdocument> Preview Document(s)</ng-template>
+
+                  <!-- JSZIP -->
+                  <!-- #endregion -->
+
+
+
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+        </form>
+
+
+
+        <div class="row">
+          <div class="col-md-12 text-right footer_">
+            <button class="btn btn-default" type="button" *ngIf="index == 3"
+              style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;float: left;"
+              (click)="viewSalaryBreakup()">
+              <i class="mdi mdi-file-check m-r-xs"></i> &nbsp; View Salary Breakup &nbsp; &nbsp; </button>
+
+            <button class="btn btn-link" type="button"
+              style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="doCancel('Modal Closed')">
+              &nbsp; &nbsp; Cancel &nbsp; &nbsp; </button>
+            <button class="btn btn-primary" (click)="doContinue('Save')"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i> <i class="mdi mdi-content-save  m-r-xs"></i>
+              &nbsp; Save &nbsp; &nbsp;
+            </button>
+
+            <button class="btn btn-primary" (click)="doContinue('Submit')"
+              style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                class="mdi mdi-shape-square-rounded-plus"></i> <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+              &nbsp; Submit &nbsp; &nbsp;
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 
+aadhaar (2) - add - validate - 
+
+basic details (5 - client must) - info - validate - ok -  -->
+
+
+
+
+<div id="popup_viewDocs" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_viewDocs" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                Candidate Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+            </h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="modal_dismiss4()" style="margin-top: -15px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+
+            <!-- #region Old code before JSZip  -->
+            <!-- <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                        <app-filedownload [documentId]="documentURLId">
+                        </app-filedownload>
+                    </div> -->
+            <!-- #endregion -->
+
+            <!-- #region New code after Jszip  -->
+            <!-- JSZIP -->
+            <a style="float: right;margin-right: 45px;margin-top: -3px;"
+              class="btn btn-label-success btn-upper btn-sm btn-bold btn-custom_preview m-r-xs"
+              [download]="downLoadFileName" [href]="documentURL">Download</a>
+            <!-- JSZIP -->
+
+            <!-- #endregion -->
+          </div>
+          <!-- <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+<small class="header-pretitle"><b> Candidate Documents</b></small>
+<h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+</h6>
+</div>
+
+<div class="modal-close" *ngIf="!shouldRendering" (click)="modal_dismiss4()" style="margin-top: 5px;"><span
+  class="mdi mdi-close pull-left"></span>
+</div> -->
+        </div>
+
+
+        <div class="modal-body">
+          <div class="iframe-container" *ngIf="documentURL == null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <img src="assets/Images/clientlogo/{{clientminiLogoLink}}" style="opacity: .5;">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <div class="iframe-container" *ngIf="documentURL != null"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+            <iframe [src]="documentURL" frameborder="0" scrolling="yes" style="width: 100%;height: 100%;"></iframe>
+            <img style="top: 0 !important;
+    right: 0px !important;
+    position: absolute !important;
+    z-index: 9;
+    height: 55px !important;
+    vertical-align: top;
+    opacity: inherit;
+    bottom: unset !important;
+    left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientLogoLink}}">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="documentviewer" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_viewDocs" aria-hidden="true">
+  <div style="display: block;" class="modal fade show ">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-md-8">
+            <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+                Documents</b></small>
+            <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+            </h6>
+          </div>
+          <div class="col-md-4" style="top: 13px;">
+            <div class="modal-close" (click)="close_documentviewer()" style="margin-top: -15px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+            <!-- #region Old code before JSZip  -->
+            <div style="float: right;margin-right: 45px;margin-top: -3px;">
+              <app-filedownload [documentId]="documentURLId">
+              </app-filedownload>
+            </div>
+            <!-- #endregion -->
+
+            <!-- #region New code after Jszip  -->
+            <!-- JSZIP -->
+            <!-- <a style="float: right;margin-right: 45px;margin-top: -3px;" class="btn btn-label-success btn-upper btn-sm btn-bold btn-custom_preview m-r-xs" [download]="downLoadFileName" [href]="documentURL">Download</a> -->
+            <!-- JSZIP -->
+
+            <!-- #endregion -->
+          </div>
+
+        </div>
+
+
+        <div class="modal-body" style="overflow: auto !important;">
+
+          <div class="iframe-container" *ngIf="docList?.length == 0"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+            <img src="assets/Images/clientlogo/{{clientminiLogoLink}}">
+            <span>
+              <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                &nbsp; Please wait...</i>
+              <span class="sr-only">Please wait...</span>
+            </span>
+          </div>
+          <ng-container *ngIf="docList?.length > 0">
+            <div class="iframe-container" *ngFor="let item of docList"
+              style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;margin-bottom: 10px">
+              <iframe [src]="item.ImageURL" frameborder="0" scrolling="yes"></iframe>
+              <div><span style="top: 0 !important;
+                                left: 0px !important;
+                                position: absolute !important;
+                                z-index: 5;
+                                height: 25px !important;
+                                vertical-align: top;
+                                opacity: inherit;
+                                bottom: unset !important;
+                                right: unset !important;
+                                background: #c9c9c7;
+                                width: 45%;
+                                padding-left: 5px;
+                                opacity: 0.9;">{{item.name}} </span></div>
+
+              <img style="top: 0 !important;
+                        right: 0px !important;
+                        position: absolute !important;
+                        z-index: 9;
+                        height: 55px !important;
+                        vertical-align: top;
+                        opacity: inherit;
+                        bottom: unset !important;
+                        left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientLogoLink}}">
+
+            </div>
+          </ng-container>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="documentviewer2" cdkDrag class="modal fade grabbable" cdkDragRootElement="grabbable" tabindex="-1"
+  role="dialog" aria-labelledby="documentviewer2" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="box-shadow: #00000096 1px 14px 15px !important;">
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-md-8">
+          <small class="header-pretitle" style="float: left;width: 100%;"><b style="float: left;">
+              Documents</b></small>
+          <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview
+          </h6>
+        </div>
+        <div class="col-md-4" style="top: 13px;">
+          <div class="modal-close" (click)="close_documentviewer2()" style="margin-top: -15px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+          <!-- #region Old code before JSZip  -->
+          <!-- <div style="float: right;margin-right: 45px;margin-top: -3px;">
+                        <app-filedownload [documentId]="documentURLId">
+                        </app-filedownload>
+                    </div> -->
+          <!-- #endregion -->
+
+          <!-- #region New code after Jszip  -->
+          <!-- JSZIP -->
+          <app-filedownload [documentId]="documentURLId">
+          </app-filedownload>
+          <!-- JSZIP -->
+
+          <!-- #endregion -->
+        </div>
+
+      </div>
+
+      <div class="modal-body" style="overflow: auto !important;">
+
+        <div class="iframe-container" *ngIf="docList?.length == 0"
+          style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+          <img src="assets/Images/clientlogo/{{clientminiLogoLink}}">
+          <span>
+            <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+              &nbsp; Please wait...</i>
+            <span class="sr-only">Please wait...</span>
+          </span>
+        </div>
+        <ng-container *ngIf="docList?.length > 0">
+          <div class="iframe-container" *ngFor="let item of docList"
+            style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;margin-bottom: 10px">
+            <iframe [src]="item.ImageURL" frameborder="0" scrolling="yes"></iframe>
+            <div><span style="top: 0 !important;
+                            left: 0px !important;
+                            position: absolute !important;
+                            z-index: 5;
+                            height: 25px !important;
+                            vertical-align: top;
+                            opacity: inherit;
+                            bottom: unset !important;
+                            right: unset !important;
+                            background: #c9c9c7;
+                            width: 30%;
+                            padding-left: 5px;
+                            opacity: 0.9;">{{item.name}} </span></div>
+
+            <img style="top: 0 !important;
+                    right: 0px !important;
+                    position: absolute !important;
+                    z-index: 9;
+                    height: 55px !important;
+                    vertical-align: top;
+                    opacity: inherit;
+                    bottom: unset !important;
+                    left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientLogoLink}}">
+
+          </div>
+        </ng-container>
+
+
+
+
+      </div>
+
+
+    </div>
+  </div>
+</div>

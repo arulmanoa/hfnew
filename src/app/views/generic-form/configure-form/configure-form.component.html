@@ -1,0 +1,159 @@
+<div class="page-wrapper">
+  <div class="page-content ">
+
+    <div *ngIf="!formLayout">
+      <input placeholder="Enter Code"  [(ngModel)]="code">
+      <button class="btn btn-primary edit" (click)="onClickingEditButton()">Edit</button>
+      <button class="btn btn-primary new" (click)="onClickingAddNewButton()">New</button>
+    </div>
+
+    <div *ngIf="formLayout">
+      <div class="row " style="text-align: right;">
+        <div class="col-12">
+          <div class="pull-right">
+           <button class="btn btn-primary" (click)="onClickingSubmitButton()" style="margin-right: 10px;">Submit</button>
+           <button class="btn btn-sm btn-default" tooltip="Cancel" (click)="onClickingCancelButton()" tooltip-placement="bottom">
+            <i class="mdi mdi-close font-size-md"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <br>
+    </div>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="content m-b report-content" *ngIf="formLayout && !spinner">
+      
+      <div class="row">
+        <span class="col-11" style="text-align: right;">
+          <label class="form-label" >Status: </label>
+        </span>
+
+        <span class="col-1">
+          <label class="el-switch el-switch-green">
+            <input type="checkbox"  [(ngModel)]="formLayout.Status"/>
+            <span class="el-switch-style" ></span>
+          </label>
+        </span>
+      </div>
+
+      <div class="row">
+
+        <span class="col">
+          <label for="code" class="form-label" > Code : </label>  
+          <input id="code" class="form-control" type="text" [(ngModel)]="formLayout.Code">
+        </span>
+  
+        <span class="col">
+          <label for="description" class="form-label" > Description : </label>  
+          <input id="description" class="form-control" type="text" [(ngModel)]="formLayout.Description">
+        </span>
+  
+        <span class="col">
+          <label for="Company-Id" class="form-label" > Company ID : </label>  
+          <input id="Company-Id" class="form-control" type="number" [(ngModel)]="formLayout.CompanyId">
+        </span>
+        
+        <span class="col">
+          <label for="Client-Id" class="form-label" > Client ID : </label>  
+          <input id="Client-Id" class="form-control" type="number" [(ngModel)]="formLayout.ClientId">
+        </span>
+        
+      </div>
+      
+      <hr>
+      
+      
+      <div class="row">
+        <div class="col-12" style="text-align: center;">
+          <button *ngIf="!formLayout.DataSourceTree " class="btn btn-primary upgrade-btn m-b"  
+          (click)="onClickingAddParentButton()" >Add Parent</button>
+        </div>
+      </div>
+      
+
+      <div *ngIf="formLayout.DataSourceTree" class="m-b">
+          <ng-template [ngTemplateOutlet]="dataSourceTreeNodeTempRef"
+                  [ngTemplateOutletContext]="{ $implicit : formLayout.DataSourceTree}">
+          </ng-template>
+      </div>
+      
+      
+    </div>
+  </div>
+</div>
+
+
+<ng-template #dataSourceTreeNodeTempRef let-node>
+  <ngb-accordion [id]="node.DataSource.Name" class="panel">
+    <ngb-panel [id]="node.DataSource.Name" class="panel" [title]="node.DataSource.Name">
+      <!-- <ng-template ngbPanelHeader let-opened="opened">
+        <div class="d-flex align-items-center justify-content-between">
+          <h5 class="m-0"> <button ngbPanelToggle class="btn btn-link p-0">{{node.DataSource.Name}}</button></h5>
+          <button  class="btn btn-link p-0">Delete</button>
+        </div>
+      </ng-template> -->
+      <ng-template ngbPanelContent>
+        <div class="row">
+          <div class="col">
+            <label class="form-label">Relation With Parent :</label>
+            <p *ngIf="node.RelationWithParent === 0" >One to One</p>
+            <p *ngIf="node.RelationWithParent === 1" >One to Many</p>
+            <p *ngIf="node.RelationWithParent === 2" >None</p>
+
+            <label class="form-label">Parent:</label>
+            <p *ngIf="!node.IsParent">{{node.Parent}}</p>
+            <p *ngIf="node.IsParent">No Parent</p>
+
+
+            <label class="form-label">Children:</label>
+            <div class="row">
+              <p *ngFor="let child of node.Children" class="col-auto" type="button">{{child.DataSource.Name}} | </p>
+              <p *ngIf="node.Children.length === 0" class="col">None</p>
+            </div>
+
+          </div>
+          <div class="col">
+            <div class="row">
+              <button class="btn upgrade-btn m-b" (click)="onClickingAddChildButton(node)">Add Child</button>
+            </div>
+            <div class="row">
+              <button class="btn upgrade-btn m-b" 
+              [disabled]="node.RelationWithParent === 0 || (node.RelationWithParent === 2 && !node.IsParent)"
+              (click)="onClickingConfigureInputsButton(node)">Configure Form</button>
+            </div>
+            <div class="row" *ngIf = "node.RelationWithParent === 1">
+              <button class="btn upgrade-btn m-b" 
+              (click)="onClickingConfigureGridButton(node)">
+                Configure Grid
+              </button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="row">
+              <button class="btn btn-primary m-b" (click)="onClickingEditNodeButton(node)">Edit</button>
+            </div>
+            <div class="row">
+              <button class="btn btn-primary btn-danger m-b" (click)="onClickingDeleteNodeButton(node)">Delete</button>
+            </div>
+          </div>
+
+        </div>
+        
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+  <div *ngIf="node.Children.length > 0">
+    <div *ngFor="let child of node.Children">
+      <ng-template [ngTemplateOutlet]="dataSourceTreeNodeTempRef"
+      [ngTemplateOutletContext]="{ $implicit : child}">
+      </ng-template>
+    </div>
+  </div>
+</ng-template>

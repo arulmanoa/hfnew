@@ -1,0 +1,481 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="">
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>Experience Details</b></small>
+            <h6 class="modal-title subheader_h6"> Add/Edit </h6>
+          </div>
+          <div class="modal-close" *ngIf="isLoading" (click)="confirmExit()" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+
+
+        <div class="modal-body no-padder">
+
+          <div id="overlay">
+            <div class="w-100 d-flex justify-content-center align-items-center">
+              <div class="spinner"></div>
+            </div>
+          </div>
+
+
+          <div class="flex-column">
+
+            <form [formGroup]="workExpForm">
+
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+
+                  <div class="row">
+
+
+
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                      *ngIf="this.workExpForm.controls.title">
+                      <label class="form-label">Title <span class="required">{{getRequired('title')}}</span> <span
+                          class="form__length">
+                          {{title.value?.length}}/25</span> </label>
+                      <input class="form-control" name="title" spellcheck="false"
+                        onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" maxlength="25" #title
+                        formControlName="title" pattern="[\x00-\x7F]+" placeholder="Full stack Developer"
+                        [ngClass]="{ 'is-invalid': submitted && g.title.errors }" type="text" autocomplete="off">
+                      <div *ngIf="submitted && g.title.errors" class="invalid-feedback">
+                        <div *ngIf="g.title.errors.required">Title is required
+                        </div>
+                      </div>
+                      <div *ngIf="workExpForm.get('title').errors && workExpForm.get('title').touched"
+                        class="help-block">
+
+                        <span *ngIf="workExpForm.get('title').errors.pattern"> Entered special characters are not
+                          allowed
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-push-12 col-sm-6"
+                      *ngIf="this.workExpForm.controls.companyName">
+                      <label class="form-label">Company Name <span
+                          class="required">{{getRequired('companyName')}}</span> </label>
+
+
+                      <input class="form-control" type="text" name="companyName" formControlName="companyName"
+                        pattern="[\x00-\x7F]+" [ngClass]="{ 'is-invalid': submitted && g.companyName.errors }"
+                        placeholder="Integrum Technologies" autocomplete="off">
+                      <div *ngIf="submitted && g.companyName.errors" class="invalid-feedback">
+                        <div *ngIf="g.companyName.errors.required">Company Name is required
+                        </div>
+                      </div>
+                      <div *ngIf="workExpForm.get('companyName').errors && workExpForm.get('companyName').touched"
+                        class="help-block">
+
+                        <span *ngIf="workExpForm.get('companyName').errors.pattern"> Entered special characters are not
+                          allowed
+                        </span>
+                      </div>
+
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                      *ngIf="this.workExpForm.controls.isCurrentCompany">
+                      <label class="form-label">Is Current Company</label>
+                      <!-- <div class="pretty p-switch p-fill">
+                                                <input type="checkbox" name="isCurrentCompany" formControlName="isCurrentCompany" (change)="onChangeCurrentFlag($event)" />
+                                                <div class="state p-success">
+                                                    <label>
+
+                                                          </label>
+                                                </div>
+                                            </div> -->
+
+                      <div class="p-t-10">
+
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="isCurrentCompany" formControlName="isCurrentCompany"
+                            (change)="onChangeCurrentFlag($event)" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                      *ngIf="this.workExpForm.controls.workLocation">
+                      <label class="form-label">Work Location <span
+                          class="required">{{getRequired('workLocation')}}</span> </label>
+                      <input class="form-control" name="workLocation" spellcheck="false"
+                        onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" maxlength="25"
+                        formControlName="workLocation" pattern="[\x00-\x7F]+" placeholder="Bangalore"
+                        [ngClass]="{ 'is-invalid': submitted && g.workLocation.errors }" type="text" autocomplete="off">
+                      <div *ngIf="submitted && g.workLocation.errors" class="invalid-feedback">
+                        <div *ngIf="g.workLocation.errors.required">Work Location is required
+                        </div>
+                      </div>
+                      <div *ngIf="workExpForm.get('workLocation').errors && workExpForm.get('workLocation').touched"
+                        class="help-block">
+
+                        <span *ngIf="workExpForm.get('workLocation').errors.pattern"> Entered special characters are not
+                          allowed
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                      *ngIf="this.workExpForm.controls.startdate">
+                      <label class="form-label">Start Date <span
+                          class="required">{{getRequired('startdate')}}</span></label>
+                      <input class="form-control" name="startdate" formControlName="startdate" bsDatepicker
+                        placement="top" readonly (bsValueChange)="onChangeStartDate($event)"
+                        [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                        placeholder="01-01-2000" [ngClass]="{ 'is-invalid': submitted && g.startdate.errors }"
+                        type="text" autocomplete="off">
+                      <div *ngIf="submitted && g.startdate.errors" class="invalid-feedback">
+                        <div *ngIf="g.startdate.errors.required">Start Date is required
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                      *ngIf="this.workExpForm.controls.enddate">
+                      <label class="form-label">End Date <span class="required">{{getRequired('enddate')}}</span>
+                      </label>
+                      <input class="form-control" name="enddate" bsDatepicker placement="top" readonly
+                        [minDate]="EnddateminDate"
+                        [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                        type="text" formControlName="enddate" placeholder="01-01-2000"
+                        [ngClass]="{ 'is-invalid': submitted && g.enddate.errors }" type="text" autocomplete="off">
+                      <div *ngIf="submitted && g.enddate.errors" class="invalid-feedback">
+                        <div *ngIf="g.enddate.errors.required">End Date is required
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="this.workExpForm.controls.fucntionalArea">
+                                            <label class="form-label">Functional Area <span class="required" >{{getRequired('fucntionalArea')}}</span></label>
+
+                                            <ng-select [multiple]="true" [closeOnSelect]="false" [searchable]="false" [items]="FunctionalAreaList" placeholder="-- select on option --" formControlName="fucntionalArea" [ngClass]="{ 'ng-touched': submitted && g.fucntionalArea.invalid }" bindLabel="Name"
+                                                bindValue="Id">
+                                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                                    <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                                        <span class="ng-value-label">{{item.Name}}</span>
+                                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                                    </div>
+                                                    <div class="ng-value" *ngIf="items.length > 2">
+                                                        <span class="ng-value-label">{{items.length - 2}} more...</span>
+                                                    </div>
+                                                </ng-template>
+                                            </ng-select>
+                                            <div *ngIf="submitted && g.fucntionalArea.invalid" class="help-block">
+                                                <div *ngIf="g.fucntionalArea.errors.required">Functional Area is required
+                                                </div>
+                                            </div>
+
+                                        </div> -->
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                      *ngIf="this.workExpForm.controls.lastDrawnSalary">
+                      <label class="form-label">Last Drawn Salary <span
+                          class="required">{{getRequired('lastDrawnSalary')}}</span></label>
+                      <input class="form-control" name="lastDrawnSalary" formControlName="lastDrawnSalary" type="text"
+                        onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="500000"
+                        [ngClass]="{ 'is-invalid': submitted && g.lastDrawnSalary.errors }" autocomplete="off">
+                      <div *ngIf="submitted && g.lastDrawnSalary.errors" class="invalid-feedback">
+                        <div *ngIf="g.lastDrawnSalary.errors.required">Last Drawn Salary is required
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                      *ngIf="this.workExpForm.controls.noticePeriod">
+                      <label class="form-label">Notice Period(days) <span class="required"
+                          *ngIf="this.workExpForm.get('isCurrentCompany').value == true"> * </span></label>
+
+                      <ng-select [items]="noticePeriod" placeholder="-- select on option --"
+                        formControlName="noticePeriod" [ngClass]="{ 'ng-touched': submitted && g.noticePeriod.invalid }"
+                        bindLabel="Name" bindValue="Id">
+                      </ng-select>
+                      <div *ngIf="submitted && g.noticePeriod.invalid" class="help-block">
+                        <div *ngIf="g.noticePeriod.errors.required">Notice Period is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 col-12"
+                      *ngIf="this.workExpForm.controls.rolesAndResponsiabilities">
+                      <label class="form-label">Responsibilities <span class="form__length">
+                          {{rolesAndResponsiabilities.value?.length}}/60</span> </label>
+                      <textarea class="form-control" name="rolesAndResponsiabilities" spellcheck="false" maxlength="60"
+                        #rolesAndResponsiabilities formControlName="rolesAndResponsiabilities" pattern="[\x00-\x7F]+"
+                        placeholder="Roles And Responsiabilities"></textarea>
+                      <div
+                        *ngIf="workExpForm.get('rolesAndResponsiabilities').errors && workExpForm.get('rolesAndResponsiabilities').touched"
+                        class="help-block">
+
+                        <span *ngIf="workExpForm.get('rolesAndResponsiabilities').errors.pattern"> Entered special
+                          characters are not allowed
+                        </span>
+                      </div>
+                    </div> 
+                    <ng-container *ngIf="BusinessType != 3 && workExpForm.get('isCurrentCompany').value">  
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                      *ngIf="this.workExpForm.controls.OldEmployeeId">
+                      <label class="form-label">Old Employee Id <span
+                          class="required">*</span></label>
+                      <input class="form-control" name="OldEmployeeId" formControlName="OldEmployeeId" type="text"
+                        onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987"
+                        [ngClass]="{ 'is-invalid': submitted && g.OldEmployeeId.errors }" autocomplete="off">
+                      <div *ngIf="submitted && g.OldEmployeeId.errors" class="invalid-feedback">
+                        <div *ngIf="g.OldEmployeeId.errors.required">Old Employee Id is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">HR EmailID <span
+                        class="required">*</span> <i class="mdi mdi-information-outline" placement="right"
+                          style="cursor: pointer;"
+                          ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, seperated by comma or space."></i><span
+                          class="help-text m-l-5">(Please separate email ids using
+                          comma)</span> </label>
+
+                      <div class="editor-tag" (click)="focusTagInput()">
+                        <span class="tag-item" *ngFor="let tag of ccmailtags">
+                          {{tag}}
+                          <span class="remove-tag" (click)="removeTag(tag)">×</span>
+                        </span>
+                        <input class="form-control" onkeydown="return (event.keyCode!=13);"
+                          class="input-tag input_border"
+                          pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" type="text"
+                          name="HREmailID" formControlName="HREmailID"
+                          [ngClass]="{'is-invalid': submitted && g.HREmailID.errors }" placeholder="example@domain.com"
+                          autocomplete="none|false|no" style="width: 100%;" #tagInput (keyup)="onKeyUp($event)"
+                          (change)="onchangeCC($event)">
+                      </div>
+                      <div *ngIf="submitted && ccmailtags.length <= 0" class="help-block">
+                        <div *ngIf="ccmailtags.length <= 0">HR Email ID is required
+                        </div>
+                      </div>
+                      <div class="help-block" *ngIf="CCemailMismatch"> 'Please type your e-mail
+                        address in the format example.domin.com
+                      </div>
+
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-push-12 col-sm-6"
+                      *ngIf="workExpForm.controls.ManagerName">
+                      <label class="form-label">Manager Name <span
+                        class="required">*</span> </label>
+
+
+                      <input class="form-control" type="text" name="ManagerName" formControlName="ManagerName"
+                        pattern="[\x00-\x7F]+" [ngClass]="{ 'is-invalid': submitted && g.ManagerName.errors }"
+                        placeholder="Integrum Technologies" autocomplete="off">
+                      <div *ngIf="submitted && g.ManagerName.errors" class="invalid-feedback">
+                        <div *ngIf="g.ManagerName.errors.required">Manager Name is required
+                        </div>
+                      </div>
+                      <div *ngIf="workExpForm.get('ManagerName').errors && workExpForm.get('ManagerName').touched"
+                        class="help-block">
+
+                        <span *ngIf="workExpForm.get('ManagerName').errors.pattern"> Entered special characters are not
+                          allowed
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                      *ngIf="this.workExpForm.controls.ManagerEmailID">
+                      <label class="form-label">Manager Email ID <span
+                        class="required">*</span></label>
+                      <input class="form-control" type="ManagerEmailID" name="ManagerEmailID"
+                        pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                        formControlName="ManagerEmailID" [ngClass]="{'is-invalid': submitted && g.ManagerEmailID.errors
+                                                        }" placeholder="example@domain.com"
+                        autocomplete="none|false|no">
+
+                      <div
+                        *ngIf="workExpForm.get('ManagerEmailID').errors && workExpForm.get('ManagerEmailID').touched "
+                        class="help-block">
+                        <div *ngIf="g.ManagerEmailID.errors">Manager E-Mail is required
+                        </div>
+                        <span *ngIf="workExpForm.get('ManagerEmailID').errors.pattern"> Please enter
+                          valid ManagerEmailID (pattern mismatch)
+                        </span>
+                      </div>
+                    </div>
+
+
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                      *ngIf="this.workExpForm.controls.ManagerContactNumber">
+                      <label class="form-label">ManagerContact Number <span
+                        class="required">*</span></label>
+                     
+                        <input class="form-control" 
+                          style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;"
+                          type="text" onkeypress="return /^[0-9]+$/i.test(event.key)" name="ManagerContactNumber"
+                          formControlName="ManagerContactNumber" [ngClass]="{'is-invalid': submitted && g.ManagerContactNumber.errors }"
+                          placeholder="9876543210" autocomplete="none|false|no"
+                          >
+                      
+                      <div *ngIf="workExpForm.get('ManagerContactNumber').errors && workExpForm.get('ManagerContactNumber').touched "
+                        class="help-block">
+                        <div *ngIf="g.ManagerContactNumber.errors">Manager Contact Number is required
+                        </div>                      
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-push-12 col-sm-6"
+                    *ngIf="this.workExpForm.controls.ManagerDesignation">
+                    <label class="form-label">Manager Designation <span
+                      class="required">*</span> </label>
+                    <input class="form-control" type="text" name="ManagerDesignation" formControlName="ManagerDesignation"
+                      pattern="[\x00-\x7F]+" [ngClass]="{ 'is-invalid': submitted && g.ManagerDesignation.errors }"
+                      placeholder="Executive Manager" autocomplete="off">
+                    <div *ngIf="submitted && g.ManagerDesignation.errors" class="invalid-feedback">
+                      <div *ngIf="g.ManagerDesignation.errors.required">Manager Designation is required
+                      </div>
+                    </div>
+                    <div *ngIf="workExpForm.get('ManagerDesignation').errors && workExpForm.get('ManagerDesignation').touched"
+                      class="help-block">
+
+                      <span *ngIf="workExpForm.get('ManagerDesignation').errors.pattern"> Entered special characters are not
+                        allowed
+                      </span>
+                    </div>
+                  </div>
+                </ng-container>
+
+               
+                <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.workExpForm.controls.idProoftype">
+                      <label class="form-label">Attachment Type <span
+                        class="required">*</span> </label>
+
+                      <ng-select [items]="LstWorkExperienceDocumentTypes" (change)="IdFroofChange($event)"
+                        placeholder="-- select an option --" formControlName="idProoftype"
+                        [ngClass]="{ 'ng-touched': submitted && g.idProoftype.invalid }" bindLabel="Name"
+                        bindValue="DocumentTypeId">
+                      </ng-select>
+
+                      <div *ngIf="submitted && g.idProoftype.invalid" class="help-block">
+                        <div *ngIf="g.idProoftype.errors.required">Attachment Type is required
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!-- #region AFTER JSZIP -->
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <label class="form-label">Attachment <span
+                        class="required">*</span>  <span class="help-text m-l-5">(Max file size
+                          2MB)</span></label>
+                      <label class="upload control" style="width: 100%; float: left;z-index: 999;margin-bottom: 10px;">
+                        <div class="upload-draggable is-primary">
+                          <section class="section">
+                            <div class="has-text-centered">
+                              <span class="icon is-large">
+                                <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                    style="color: #9ba7ca;"></i> Upload </span>
+                              </span>
+
+                            </div>
+                          </section>
+                        </div>
+                        <input type="file" accept="application/msword,  application/pdf, image/*"
+                          (change)="onAddingFile($event)" (click)="$event.target.value=null"
+                          id="sTest-uploadFile-candidateAddResume" multiple>
+
+
+
+
+                      </label>
+
+                      <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                        <div *ngIf="g.DocumentId.errors.required">Attachment is required
+                        </div>
+                      </div>
+
+                      <div class="d-flex align-items-center" style="width: 100%;"
+                        *ngIf="firstTimeDocumentId && !fileList[0] && !isFileChange">
+                        <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                      </div>
+
+                      <p class="control" *ngFor="let file of fileList">
+                        <span class="file-name">
+                          <button class="btn btn-danger c-btn" (click)="doDeleteFile(file)"><a ngbTooltip="Delete Photo"
+                              id="sTest-deleteFile-candidateAddResume"
+                              style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                                   display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                          </button>
+
+
+                          <a target="blank" class="ahref" style="padding: 2px;">
+                            {{file.name}}
+                          </a>
+
+                        </span>
+
+                      </p>
+                    </div>
+
+                    <!-- #endregion -->
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+            </form>
+
+          </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+          <div *ngIf="isLoading">
+            <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban"
+                aria-hidden="true"></i> &nbsp; Cancel</button>
+
+            <!-- <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                            <div>
+                                <div>
+                                    <button class="btn  btn-primary " type="Submit" name="btnSaveAndNewSubmit" id="btnSaveAndNewSubmit" [disabled]="!disableBtn" (click)="savebutton()">
+                                      <div class="pos-rlt sm-btn-component"> <span> Save and add other </span> </div>
+                                  </button>
+                                </div>
+                            </div>
+                        </div> -->
+
+            <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+              <div>
+                <div>
+                  <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                    [disabled]="!disableBtn" (click)="onFileUpload()">
+                    <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                        Save </span></div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="d-flex align-items-center" *ngIf="!isLoading">
+            <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

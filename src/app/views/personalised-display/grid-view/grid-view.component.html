@@ -1,0 +1,6 @@
+<angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+[dataset]="dataset" gridWidth="100%"
+(sgOnSelectedRowsChanged)="selectedRowsChanged($event)"
+(sgOnClick)="cellClicked($event)"
+(onAngularGridCreated)="gridReady($event)">
+</angular-slickgrid>

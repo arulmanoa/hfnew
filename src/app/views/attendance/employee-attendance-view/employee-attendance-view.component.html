@@ -1,0 +1,982 @@
+<div class="page-wrapper ff" style="background-color: #FFF !important;">
+  <div class="page-content" style="padding-bottom: 15px;">
+    <app-loading-screen></app-loading-screen>
+    <div class="row" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left">
+          <h6 class="h6_c" style="font-size: 16px;font-weight: 600;"> My Attendance</h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <ul class="list-inline">
+          <li class="list-inline-item" *ngIf="!spinner">
+            <button type="button" class="btn btn-primary" (click)="viewShiftsByEmployee()">
+              <i class="material-icons desktop-icon">track_changes</i> View Shift
+            </button>
+          </li>
+          <!--  ! : 16.2 for panasonic  -->
+          <li class="list-inline-item"
+            *ngIf="!spinner && _attendanceConfiguration != null && 
+                _attendanceConfiguration.IsEmployeeAllowToRegularizeAttendance && _attendanceConfiguration.RegularizationType == 1">
+            <button [disabled]="selectedDays.length == 0" type="button" class="btn btn-primary"
+              (click)="doMarkAsPresent()">
+              <i class="material-icons desktop-icon"> fact_check</i> Mark as Present
+            </button>
+          </li>
+          <li class="list-inline-item" *ngIf="!spinner && isEmployeeAllowedToSubmitAttendance">
+            <button type="button" class="btn btn-primary" (click)="onSubmit()">
+              <i class="mdi mdi-checkbox-multiple-marked-circle  m-r-xs"></i> Submit
+            </button>
+          </li>
+          <!-- <li class="list-inline-item" *ngIf="!spinner">
+            <button type="button" class="btn btn-default" (click)="onRefresh()">
+              <i class="mdi mdi-refresh  m-r-xs desktop-icon"></i>Refresh
+            </button>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+
+    <div class="docs-page" *ngIf="spinner">
+
+      <div class="d-flex align-items-center" style="display: none;text-align: center;margin: 0 auto;">
+        <div class="spinner-border ml-auto" role="status" style="text-align: center; display: block;  margin: 0 auto;"
+          aria-hidden="true"></div>
+      </div>
+
+
+      <div class="Error full-screen">
+        <div class="cu-mind__content ng-tns-c1053-135">
+          <div class="cu-mind__quotes cu-mind__quotes_open ng-tns-c1053-135"><svg width="116px" height="92px"
+              viewBox="449 454 116 92" version="1.1" class="ng-tns-c1053-135">
+              <path d="M449.1,513.55 C449.1,533.85 461.7,545.4 476.05,545.4 C489.35,545.4 499.85,534.55 499.85,
+              521.6 C499.85,508.65 490.75,499.55 479.2,499.55 C476.75,499.55 473.95,499.9 473.25,500.25 C475.35,
+              488.35 487.25,474 498.45,467.35 L481.65,454.05 C462.4,467.7 449.1,489.4 449.1,513.55 L449.1,
+              513.55 Z M513.85,513.55 C513.85,533.85 526.45,545.4 540.8,545.4 C554.1,545.4 564.6,534.55 564.6,
+              521.6 C564.6,508.65 555.5,499.55 543.95,499.55 C541.5,499.55 538.7,499.9 538,500.25 C540.1,
+              488.35 552,474 563.2,467.35 L546.4,454.05 C527.15,467.7 513.85,489.4 513.85,513.55 L513.85,513.55 Z"
+                id="“" stroke="none" fill-opacity="0.0758888134" fill="#9688AE" fill-rule="evenodd"
+                class="ng-tns-c1053-135">
+              </path>
+            </svg></div>
+          <div class="cu-mind__text ng-tns-c1053-135"> I have not failed. I’ve just found 10,000 ways that won’t work.
+            <cite class="ng-tns-c1053-135"> - Thomas Edison</cite>
+          </div>
+          <div class="cu-mind__quotes cu-mind__quotes_close ng-tns-c1053-135"><svg width="117px" height="92px"
+              viewBox="876 492 117 92" version="1.1" class="ng-tns-c1053-135">
+              <path d="M903.6,584 C916.9,584 927.4,573.15 927.4,560.2 C927.4,547.25 918.3,538.15 906.75,
+        538.15 C904.3,538.15 901.5,538.5 900.8,538.85 C902.9,526.95 914.8,512.6 926,505.95 L909.2,
+        492.65 C889.95,506.3 876.65,528 876.65,552.15 C876.65,572.45 889.25,584 903.6,584 Z M941.4,
+        552.15 C941.4,572.45 954,584 968.35,584 C981.65,584 992.15,573.15 992.15,560.2 C992.15,
+        547.25 983.05,538.15 971.5,538.15 C969.05,538.15 966.25,538.5 965.55,538.85 C967.65,526.95 979.55,
+        512.6 990.75,505.95 L973.95,492.65 C954.7,506.3 941.4,528 941.4,552.15 L941.4,552.15 Z" id="“" stroke="none"
+                fill-opacity="0.0758888134" fill="#9688AE" fill-rule="evenodd"
+                transform="translate(934.400000, 538.325000) rotate(-180.000000) translate(-934.400000, -538.325000) "
+                class="ng-tns-c1053-135"></path>
+            </svg></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content m-b report-content" style="box-shadow: none;padding: 0;" *ngIf="!spinner">
+      <ng-template #customCellTemplate let-day="day" let-locale="locale">
+        <div *ngFor="let event of day.events" class="cal-cell-top" [ngClass]="{ 
+          'highlight-week-off-holiday': (event.meta.breakupObject && event.meta.breakupObject.IsHoliday) 
+          || (event.meta.breakupObject && event.meta.breakupObject.IsWeekOff) }">
+          <span *ngIf="_attendanceConfiguration != null && _attendanceConfiguration.IsEmployeeAllowToRegularizeAttendance
+           && _attendanceConfiguration.RegularizationType == 1">
+            <!--  ! : 16.2 for panasonic  -->
+            <span *ngIf="(event.meta.StatusInUI != '' && event.color.primary == '#FF5555')">
+              <input type="checkbox" style="text-align: center; margin-left: 7px;margin-right: 5px; cursor: pointer;"
+                [ngModel]="event.meta.isChecked" (change)="selectDay($event,event,event.meta)"
+                (click)="$event.stopPropagation()" />
+            </span>
+          </span>
+          <!-- <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span> -->
+          <span *ngIf="!isMobileResolution && event.meta.breakupObject && event.meta.breakupObject.AttendanceCode">
+            <span class="attdCode-style" [ngClass]="{
+              'stripe': event.meta.breakupObject && event.meta.breakupObject.IsRegularizationSubmitted == 1}">
+              {{ event.meta.breakupObject.AttendanceCode }}
+            </span>
+          </span>
+          <span class="pull-right">
+            <span class="cal-day-number custom-cal-day-number" [ngStyle]="{
+              'font-weight': (event.meta.breakupObject && event.meta.breakupObject.IsHoliday) || 
+              (event.meta.breakupObject && event.meta.breakupObject.IsWeekOff) ? '600' : '400'
+            }"> {{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+          </span>
+
+          <span class="pull-right mt-set-custom"
+            [ngStyle]="{'margin-right': (day.date.getDate() > 9) ? '-1.2rem' : '-0.9rem'}">
+            <!-- attendance status when first and second half are same -->
+            <span *ngIf="event.meta.isFirstHalfAndSecondHalfSame && event.meta.StatusInUI != ''"
+              class="pull-right border-line" [ngClass]="{
+                'present-color': event.color.primary == '#3BBD72',
+                'absent-color': event.color.primary == '#FF5555',
+                'leave-color': event.color.primary == '#F39C12' && event.color.secondary != '#F39C12',
+                'leave-applied-color': event.color.primary == '#F39C12' && event.color.secondary == '#F39C12',
+                'od-color': event.color.primary == '#2506E2',
+                'week-off-color': event.color.primary == '#FFE79A',
+                'holiday-color': event.color.primary == '#8E44AD',
+                'permission-color': event.color.primary == '#365879',
+                'wowh-color': event.color.primary == '#F368E0',
+                'wfh-color':event.color.primary == '#00A8FF'
+              }"></span>
+            <div class="d-flex pull-left">
+              <!-- other combinations first half -->
+              <span *ngIf="!event.meta.isFirstHalfAndSecondHalfSame && event.meta.FirstHalfType != ''"
+                class="pull-right width-11 border-line" [ngClass]="{
+                'present-color': event.meta.firstHalfColor.primary == '#3BBD72',
+                'absent-color': event.meta.firstHalfColor.primary == '#FF5555',
+                'od-color': event.meta.firstHalfColor.primary == '#2506E2',
+                'week-off-color': event.meta.firstHalfColor.primary == '#FFE79A',
+                'holiday-color': event.meta.firstHalfColor.primary == '#8E44AD',
+                'permission-color': event.meta.firstHalfColor.primary == '#365879',
+                'wowh-color': event.meta.firstHalfColor.primary == '#F368E0',
+                'leave-color': event.meta.firstHalfColor.primary == '#F39C12' && event.meta.firstHalfColor.secondary != '#F39C12',
+                'leave-applied-color': event.meta.firstHalfColor.primary == '#F39C12' && event.meta.firstHalfColor.secondary == '#F39C12',
+                'wfh-color':event.meta.firstHalfColor.primary == '#00A8FF'
+              }"></span>
+              <!-- other combinations second half -->
+              <span *ngIf="!event.meta.isFirstHalfAndSecondHalfSame && event.meta.SecondHalfType != ''"
+                class="pull-right width-11 border-line" [ngClass]="{
+                'present-color': event.meta.secondHalfColor.primary == '#3BBD72',
+                'absent-color': event.meta.secondHalfColor.primary == '#FF5555',
+                'od-color': event.meta.secondHalfColor.primary == '#2506E2',
+                'week-off-color': event.meta.secondHalfColor.primary == '#FFE79A',
+                'holiday-color': event.meta.secondHalfColor.primary == '#8E44AD',
+                'permission-color': event.meta.secondHalfColor.primary == '#365879',
+                'wowh-color': event.meta.secondHalfColor.primary == '#F368E0',
+                'leave-color': event.meta.secondHalfColor.primary == '#F39C12' && event.meta.secondHalfColor.secondary != '#F39C12',
+                'leave-applied-color': event.meta.secondHalfColor.primary == '#F39C12' && event.meta.secondHalfColor.secondary == '#F39C12',
+                'wfh-color': event.meta.secondHalfColor.primary == '#00A8FF'
+              }"></span>
+            </div>
+          </span>
+        </div>
+        <div *ngFor="let event of day.events" [ngClass]="{ 
+          'highlight-week-off-holiday': (event.meta.breakupObject && event.meta.breakupObject.IsHoliday) 
+          || (event.meta.breakupObject && event.meta.breakupObject.IsWeekOff) }">
+          <span class="pull-right mt-set-custom permission-style permission-color"
+            *ngIf="!isMobileResolution && event.meta.breakupObject && event.meta.breakupObject.PermissionNumber && event.meta.breakupObject.PermissionNumber > 0">
+            P-{{event.meta.breakupObject.PermissionNumber}}
+          </span>
+        </div>
+        <small *ngFor="let event of day.events" [ngClass]="{ 'highlight-week-off-holiday': 
+          (event.meta.breakupObject && event.meta.breakupObject.IsHoliday) || 
+          (event.meta.breakupObject && event.meta.breakupObject.IsWeekOff) 
+          }">
+
+          <span class="ml-2 mr-2">
+
+            <span class="d-inline-grid" *ngIf="!isMobileResolution">
+              <span class="f-14 text-success" *ngIf="event.meta.FirstIn != '--:--'">
+                <i class="align-middle mdi mdi-arrow-right"></i> <span class="grey-muted-text" style="font-size: 11px;">
+                  {{formatOneTimeRange(event.meta.FirstIn)}} </span>
+              </span>
+              <span class="f-14 text-danger" *ngIf="event.meta.LastOut != '--:--'">
+                <i class="align-middle mdi mdi-arrow-left"></i> <span class="grey-muted-text" style="font-size: 11px;">
+                  {{formatOneTimeRange(event.meta.LastOut)}} </span>
+              </span>
+              <span class="f-14 text-danger" *ngIf="event.meta.FirstIn != '--:--' && event.meta.LastOut === '--:--'">
+                <i class="align-middle mdi mdi-arrow-left"></i> <span class="grey-muted-text" style="font-size: 16px;">
+                  {{event.meta.LastOut}} </span>
+              </span>
+            </span>
+
+            <span class="hrs-style pull-right" *ngIf="showTotalHours">
+              {{getnoOfHours(event)}} {{getnoOfHours1(event)}}
+            </span>
+
+            <span class="hrs-style pull-right" *ngIf="!showTotalHours">
+              {{getDayHoursConsidered(event.meta.breakupObject)}} &nbsp;&nbsp;
+            </span>
+            <span *ngIf="checkIsCurrentDate(event) && spinner"
+              class="spinner-border spinner-border-sm m-r-10 primary-color text-center" role="status"
+              aria-hidden="true"></span>
+          </span>
+
+          <span *ngIf=" day.events == null"></span>
+
+        </small>
+      </ng-template>
+
+      <div class="row" style="margin-bottom: 1rem;">
+        <div class="col-lg-12 text-center">
+          <div class="d-flex justify-content-center ">
+            <a href="javascript:;" (click)="decrement()" tooltip="Previous Month" tooltip-placement="bottom"
+              class="cursor-pointer btn action-edit pull-left" style="margin-right: 5px;margin-left: 5px;">
+              <i class="fa fa-angle-left cursor-pointer" aria-hidden="true" style="font-size: 20px;
+              color: #808080;margin-top: 3px; margin-left: -2px;"></i>
+            </a>
+            <h6 class="calendar-view-month">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h6>
+            <a class="cursor-pointer btn action-edit pull-left" (click)="increment()" tooltip="Next Month"
+              tooltip-placement="bottom">
+              <i class="fa fa-angle-right cursor-pointer" aria-hidden="true" style="font-size: 20px;
+                color: #808080;margin-top: 3px;margin-left: 2px;"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="!spinner">
+        <div class="col-lg-12">
+          <div [ngSwitch]="view">
+            <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+              (dayClicked)="dayClicked($event.day)" (beforeViewRender)="beforeMonthViewRender($event)"
+              [cellTemplate]="customCellTemplate" [excludeDays]="excludeDays">
+            </mwl-calendar-month-view>
+          </div>
+        </div>
+      </div>
+
+      <div class="row pull-right my-2">
+        <div class="col-12 pl-0 pr-2">
+          <p class="small mb-0 pull-right legend-text">
+            <i class="fa fa-square legend-stripe legend-square" aria-hidden="true"></i> Awaiting Regularization Approval
+          </p>
+          <p class="small mb-0 pull-right legend-text">
+            <i class="fa fa-square week-off-color legend-square" aria-hidden="true"></i> Week Off
+          </p>
+          <!-- <p class="small mb-0 pull-right legend-text">
+            <i class="fa fa-square wowh-color legend-square" aria-hidden="true"></i> Work on Weekoff/Holiday
+          </p>
+          <p class="small mb-0 pull-right legend-text">
+            <i class="fa fa-square wfh-color legend-square" aria-hidden="true"></i> Work From Home
+          </p> -->
+          <p class="small mb-0 pull-right legend-text">
+            <i class="fa fa-square od-color legend-square" aria-hidden="true"></i> On Duty
+          </p>
+          <p class="small mb-0 pull-right legend-text">
+            <i class="fa fa-square holiday-color legend-square" aria-hidden="true"></i> Holiday
+          </p>
+          <p class="small mb-0 pull-right legend-text">
+            <!-- <span class="text-self" style="font-size: 1em; color: #75d6db!important;">●</span> Permission -->
+            <i class="fa fa-square permission-color legend-square" aria-hidden="true"></i> Permission
+          </p>
+          <p class="small mb-0 pull-right legend-text">
+            <i class="fa fa-square leave-color legend-square" aria-hidden="true"></i> Leave
+          </p>
+          <p class="small mb-0 pull-right legend-text">
+            <i class="fa fa-square absent-color legend-square" aria-hidden="true"></i> Absent
+          </p>
+          <p class="small mb-0 pull-right legend-text">
+            <i class="fa fa-square present-color legend-square" aria-hidden="true"></i> Present
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Monthly Summary -->
+    <div class="row w-100 p-3 ml-1 mr-2" style="background: #EFF4FF;"
+      *ngIf="!spinner && (_employeeBasicAttendanceDefinition != null || _employeeBasicAttendanceDefinition != undefined)">
+      <div class="col-12 summary-text mb-2">Month Summary - {{selectedMonthName}}</div>
+      <div class="col-12 col-sm-6 col-lg-3 mb-1">
+        <div class="card no-border-card">
+          <div class="card-body padding-card-body-custom">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h6 class="card-value">
+                  {{_employeeBasicAttendanceDefinition.WorkedDays}} <span class="card-value-lighter">/
+                    {{_employeeBasicAttendanceDefinition.WorkingDays}}</span>
+                </h6>
+                <span class="grey-muted-text">
+                  Working Days
+                </span>
+              </div>
+              <div class="col-4 text-right">
+                <span class="circle icon-green"><i class="material-icons">work_outline</i></span>
+              </div>
+              <!-- <div class="col-auto" style="overflow: hidden;">
+                <img src="assets/Images/documentleave.png" style="width: 25px;">
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3 mb-1">
+        <div class="card no-border-card">
+          <div class="card-body padding-card-body-custom">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h6 class="card-value">
+                  {{_employeeBasicAttendanceDefinition.LeavesCount}}
+                </h6>
+                <span class="grey-muted-text">
+                  Leaves
+                </span>
+              </div>
+              <div class="col-4 text-right">
+                <span class="circle icon-yellow"><i class="material-icons">no_accounts</i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3 mb-1">
+        <div class="card no-border-card">
+          <div class="card-body padding-card-body-custom">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h6 class="card-value">
+                  {{_employeeBasicAttendanceDefinition.WeekOffsCount}}
+                  <!-- {{_employeeBasicAttendanceDefinition.WeekOffsCount | number:'2.0-0'}} -->
+                </h6>
+                <span class="grey-muted-text">
+                  WeekOffs
+                </span>
+              </div>
+              <div class="col-4 text-right">
+                <span class="circle icon-blue"><i class="material-icons">event</i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3 mb-1">
+        <div class="card no-border-card">
+          <div class="card-body padding-card-body">
+            <div class="row align-items-center pb-2">
+              <div class="col-8">
+                <h6 class="card-value">
+                  {{_employeeBasicAttendanceDefinition.HolidaysCount}}
+                </h6>
+                <span class="dropup dropup-with-arrow-down" *ngIf="lstHolidays && lstHolidays.length > 0">
+                  <button type="button" class="pl-0 btn dropdown-toggle grey-muted-text" data-toggle="dropdown">
+                    Holidays
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-submenu" *ngFor="let h of lstHolidays">
+                      <a class="dropdownHeader">{{h.date}}</a>
+                      <a class="dropdownValue">{{h.holidayName}}</a>
+                    </li>
+                  </ul>
+                </span>
+                <span class="grey-muted-text" *ngIf="lstHolidays && lstHolidays.length == 0">
+                  Holidays
+                </span>
+              </div>
+              <div class="col-4 text-right">
+                <span class="circle icon-purple"><i class="material-icons">beach_access</i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- DETAILED VIEW SLIDER FOR NON MOBILE-->
+<nz-drawer [nzVisible]="showSliderForWeb" [nzWidth]="550" (nzOnClose)="closeDetailedViewSlider()" [nzClosable]="true">
+  <div class="modal-dialog m-0 p-0" *ngIf="showSliderForWeb">
+    <div class="modal-content">
+      <div class="modal-header slider-header">
+        <div class="col-xs-11">
+          <h4 class="slider-title"> {{sliderTitle}} </h4>
+          <div class="d-flex mt-2">
+            <!-- SHOW HOLIDAY/WEEKOFF ONLY WHEN FIRST HALF AND SECOND HALF CODE ARE SAME -->
+            <span class="badge holiday-badge" *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame 
+              && selectedCalendarObj.meta.breakupObject.IsHoliday && selectedCalendarObj.meta.StatusInUI != 'Holiday'">
+              Holiday
+            </span>
+            <span class="badge week-off-badge" *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame 
+              && !selectedCalendarObj.meta.breakupObject.IsHoliday && selectedCalendarObj.meta.breakupObject.IsWeekOff 
+              && selectedCalendarObj.meta.StatusInUI != 'WeekOff'">
+              Week Off
+            </span>
+            <!-- Attendance status for same first and second half -->
+            <span class="badge" [ngClass]="{
+            'present-badge':selectedCalendarObj.color.primary == '#3BBD72',
+            'absent-badge':selectedCalendarObj.color.primary == '#FF5555',
+            'od-badge':selectedCalendarObj.color.primary == '#2506E2',
+            'week-off-badge':selectedCalendarObj.color.primary == '#FFE79A',
+            'holiday-badge':selectedCalendarObj.color.primary == '#8E44AD',
+            'permission-badge':selectedCalendarObj.color.primary == '#365879',
+            'leave-applied-badge':selectedCalendarObj.color.primary == '#F39C12' && selectedCalendarObj.color.secondary == '#F39C12',
+            'leave-badge':selectedCalendarObj.color.primary == '#F39C12' && selectedCalendarObj.color.secondary != '#F39C12',
+            'wfh-badge':selectedCalendarObj.color.primary == '#00A8FF'
+            }"
+              *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.StatusInUI != ''">
+              {{selectedCalendarObj.color.primary == '#2506E2' ? selectedCalendarObj.meta.FirstHalfCode :
+              selectedCalendarObj.meta.StatusInUI }}
+            </span>
+            <!-- Attendance status for first half -->
+            <span class="f-13 legend-text" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.FirstHalfType != '' &&
+              !selectedCalendarObj.meta.breakupObject.DontShowSplitStatus">
+              <i class="fa fa-square legend-square" aria-hidden="true" [ngClass]="{
+                'present-color': selectedCalendarObj.meta.firstHalfColor.primary == '#3BBD72',
+                'absent-color': selectedCalendarObj.meta.firstHalfColor.primary == '#FF5555',
+                'od-color': selectedCalendarObj.meta.firstHalfColor.primary == '#2506E2',
+                'week-off-color': selectedCalendarObj.meta.firstHalfColor.primary == '#FFE79A',
+                'holiday-color': selectedCalendarObj.meta.firstHalfColor.primary == '#8E44AD',
+                'permission-color': selectedCalendarObj.meta.firstHalfColor.primary == '#365879',
+                'wowh-color': selectedCalendarObj.meta.firstHalfColor.primary == '#F368E0',
+                'leave-color': selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12',
+                'wfh-color':selectedCalendarObj.meta.firstHalfColor.primary == '#00A8FF'
+              }"></i>
+              {{selectedCalendarObj.meta.firstHalfColor.primary == '#2506E2' ? selectedCalendarObj.meta.FirstHalfCode :
+              selectedCalendarObj.meta.FirstHalfType }}
+              <span *ngIf=" selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12'"> (
+                {{selectedCalendarObj.meta.FirstHalfCode }})</span>
+              <small> - First Half <i
+                  *ngIf="selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12' || selectedCalendarObj.meta.firstHalfColor.primary == '#2506E2'">
+                  ({{selectedCalendarObj.meta.breakupObject.FirstHalfRequestStatusDescription}})
+                  </i>
+              </small>
+            </span>
+            <!-- Attendance status for second half -->
+            <span class="f-13 legend-text" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.SecondHalfType != ''
+               && !selectedCalendarObj.meta.breakupObject.DontShowSplitStatus">
+              <i class="fa fa-square legend-square" aria-hidden="true" [ngClass]="{
+              'present-color':selectedCalendarObj.meta.secondHalfColor.primary == '#3BBD72',
+              'absent-color':selectedCalendarObj.meta.secondHalfColor.primary == '#FF5555',
+              'od-color':selectedCalendarObj.meta.secondHalfColor.primary == '#2506E2',
+              'week-off-color':selectedCalendarObj.meta.secondHalfColor.primary == '#FFE79A',
+              'holiday-color':selectedCalendarObj.meta.secondHalfColor.primary == '#8E44AD',
+              'permission-color':selectedCalendarObj.meta.secondHalfColor.primary == '#365879',
+              'wowh-color':selectedCalendarObj.meta.secondHalfColor.primary == '#F368E0',
+              'leave-color':selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12',
+              'wfh-color':selectedCalendarObj.meta.secondHalfColor.primary == '#00A8FF'
+            }"></i>
+              {{selectedCalendarObj.meta.secondHalfColor.primary == '#2506E2' ? selectedCalendarObj.meta.SecondHalfCode
+              : selectedCalendarObj.meta.SecondHalfType }}
+              <span *ngIf="selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12'">(
+                {{selectedCalendarObj.meta.SecondHalfCode }})</span>
+              <small> - Second Half <i
+                  *ngIf="selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12' || selectedCalendarObj.meta.secondHalfColor.primary == '#2506E2'">
+                  ({{selectedCalendarObj.meta.breakupObject.SecondHalfRequestStatusDescription}})
+                </i>
+              </small>
+            </span>
+          </div>
+          <!-- <span class="badge" [ngClass]="{
+            'present-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#3BBD72',
+            'absent-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#FF5555',
+            'od-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#2506E2',
+            'week-off-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#FFE79A',
+            'holiday-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#8E44AD',
+            'permission-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#365879',
+            'wowh-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#F368E0',
+            'leave-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12'
+          }" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.FirstHalfType != ''">
+            {{selectedCalendarObj.meta.FirstHalfType}}  
+          </span> -->
+          <!-- <span class="badge" [ngClass]="{
+            'present-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#3BBD72',
+            'absent-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#FF5555',
+            'od-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#2506E2',
+            'week-off-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#FFE79A',
+            'holiday-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#8E44AD',
+            'permission-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#365879',
+            'wowh-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#F368E0',
+            'leave-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12'
+          }" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.SecondHalfType != ''">
+            {{selectedCalendarObj.meta.SecondHalfType}} 
+          </span> -->
+        </div>
+      </div>
+      <div class="modal-body pl-0" style="max-height: 100% !important;">
+        <!-- Attendance status split for breakshift -->
+        <div class="row" *ngIf="selectedCalendarObj.meta.breakupObject.DontShowSplitStatus">
+          <span class="ml-3 grey-muted-text" *ngIf="selectedCalendarObj.meta.breakupObject.IntermittentStatus">
+            <i class="fa fa-square legend-square present-color" aria-hidden="true"></i>
+            {{selectedCalendarObj.meta.breakupObject.IntermittentStatus}} &nbsp;&nbsp;
+          </span>
+          <span class="ml-3 grey-muted-text font-italic"
+            *ngIf="selectedCalendarObj.meta.breakupObject.IntermittentText">
+            ( {{selectedCalendarObj.meta.breakupObject.IntermittentText}} )
+          </span>
+        </div>
+        <!-- Legends for Holiday type-->
+        <div class="row"
+          *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.breakupObject.IsHoliday">
+          <span class="ml-3 grey-muted-text">
+            <i class="fa fa-square holiday-color legend-square" aria-hidden="true"></i>
+            {{selectedCalendarObj.meta.breakupObject.HolidayInfo}}
+          </span>
+        </div>
+        <!-- Legends for Leave type-->
+        <div class="row" *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame">
+          <span class="ml-3 grey-muted-text"
+            *ngIf="selectedCalendarObj.meta.StatusInUI != '' && selectedCalendarObj.color.primary == '#F39C12'">
+            <i class="fa fa-square leave-color legend-square" aria-hidden="true"></i>
+            {{selectedCalendarObj.meta.FirstHalfCode}} <i>-
+              {{selectedCalendarObj.meta.breakupObject.FirstHalfRequestStatusDescription}}</i>
+          </span>
+          <!-- SHOW LEAVE REQUEST STATUS FOR ON DUTY ONLY -->
+          <span class="ml-4 grey-muted-text" *ngIf="selectedCalendarObj.meta.StatusInUI != '' 
+            && selectedCalendarObj.color.primary == '#2506E2'">
+            <i> {{selectedCalendarObj.meta.breakupObject.FirstHalfRequestStatusDescription}} </i>
+          </span>
+        </div>
+        <!-- show legends for Leave type only when half are different-->
+        <!-- <div class="row" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame">
+          <span class="ml-3 grey-muted-text"
+            *ngIf="selectedCalendarObj.meta.FirstHalfType != '' && selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12'">
+            <i class="fa fa-square leave-color legend-square" aria-hidden="true"></i> Half Day
+            ({{selectedCalendarObj.meta.FirstHalfCode}}): First Half
+          </span>
+          <span class="ml-3 grey-muted-text"
+            *ngIf="selectedCalendarObj.meta.SecondHalfType != '' && selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12'">
+            <i class="fa fa-square leave-color legend-square" aria-hidden="true"></i> Half Day
+            ({{selectedCalendarObj.meta.SecondHalfCode}}): Second Half
+          </span>
+        </div> -->
+        <!-- Working Hrs & Shift details -->
+        <div class="row p-0 mt-2">
+          <div class="pl-0 col-12">
+            <div class="col-6 pull-left" *ngIf="showRegularizeBtn">
+              <span class="description-title" >Total Working Hours</span>
+              <p class="description-value" *ngIf="showRegularizeBtn && getDayHoursConsidered(selectedBreakUpObject) != null">
+                <b class="fw-600">{{ getDayHoursConsidered(selectedBreakUpObject)}}<span> (hh:mm)</span></b>
+              </p>
+            </div>
+            <div class="col-6" [ngClass]="{ 'pull-right': showRegularizeBtn }">
+              <span class="description-title">Shift</span>
+              <p class="description-value"><b class="fw-600">{{LstworkShiftMapping.Code}}</b> ({{ formatTimeRange()}})
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Punch Details -->
+        <div class="m-0 p-0">
+          <div class="row m-0 p-0">
+            <div class="col-12 pl-0">
+              <div class="col-xs-8 mt-2 mb-2 pull-left">
+                <h4 class="slider-subtitle"> Punch In & Out History </h4>
+              </div>
+              <div class="col-xs-4 mt-2 mb-2 pull-right">
+                <button *ngIf="showRegularizeBtn" type="button" class="btn btn-primary" (click)="doRegularizeDetailType()">
+                  <i class="material-icons desktop-icon">fact_check</i>&nbsp;&nbsp;Regularize
+                </button>
+                <h4 *ngIf="!showRegularizeBtn" class="card-value-lighter">
+                 <i> Regularization Request Submitted</i>
+                </h4>
+              </div>
+            </div>
+          </div>
+           <!-- CURRENT (before regularized) DATA -->
+           <div class="row m-1 with-bg-grey mb-3" *ngIf="!showRegularizeBtn">
+            <div class="col-12 p-0">
+              <h6 class="slider-subtitle p-2">Existing Information</h6>
+              <div class="pl-2 form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-left">
+                <label class="form-label label-title" name="existingStatus">Status</label>
+                <button class="btn" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" 
+                  [class.holiday-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'Holiday'"
+                  [class.pending-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'WeekOff'"
+                  [class.approved-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'Present'"
+                  [class.rejected-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'Absent'"
+                  [class.default-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'default'">
+                  {{existingAttendanceData[0].AttendanceCode != null ? existingAttendanceData[0].AttendanceCode : 'Absent'}}
+                </button>
+                <span class="form-label label-title ml-0 mt-2" *ngIf="LstworkShiftMapping.IsBreakShift">
+                  <i class="fa fa-square" aria-hidden="true" 
+                  [class.holiday-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) == 'Holiday'"
+                  [class.pending-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) == 'WeekOff'"
+                  [class.approved-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) != 'Absent' && getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) != 'Holiday' && getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) != 'WeekOff'"
+                  [class.rejected-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                  {{getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData)}} - 1st Half
+                </span>
+                <span class="form-label label-title ml-0 mt-2" *ngIf="LstworkShiftMapping.IsBreakShift">
+                  <i class="fa fa-square" aria-hidden="true" 
+                  [class.holiday-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) == 'Holiday'"
+                  [class.pending-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) == 'WeekOff'"
+                  [class.approved-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) != 'Absent' && getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) != 'Holiday' && getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) != 'WeekOff'"
+                  [class.rejected-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                  {{getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData)}} - 2nd Half
+                </span>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right">
+                <label class="form-label label-title" name="existingHrs">Total Working Hours</label>
+                <span class="form-text label-value" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" > 
+                  {{getTotalWorkingHoursInHoursMinuteFormat(existingAttendanceData[0].DayHoursConsidered)}} 
+                  <span class="small-text">(hh:mm)</span>
+                </span>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right" *ngIf="LstworkShiftMapping.IsBreakShift">
+                <div class="mb-2">
+                  <label class="form-label label-title" name="existingFirstHalfWrkHrs">1st Half Working Hours</label>
+                  <span class="form-text label-value" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" > 
+                    {{getTotalWorkingHoursInHoursMinuteFormat(existingAttendanceData[0].FirstHalfHoursConsidered)}}
+                    <span class="small-text">(hh:mm)</span>
+                  </span>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label label-title" name="existingSecondHalfWrkHrs">2nd Half Working Hours</label>
+                  <span class="form-text label-value" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" > 
+                    {{getTotalWorkingHoursInHoursMinuteFormat(existingAttendanceData[0].SecondHalfHoursConsidered)}}
+                    <span class="small-text">(hh:mm)</span> 
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12" *ngIf="existingPunchDetails && existingPunchDetails.length > 0">
+              <table class="table emp-punches-table">
+                <thead class="emp-punches-table-header">
+                  <tr class="w-100">
+                    <th> Time </th>
+                    <th> In/Out </th>
+                    <th> Work Location/Machine </th>
+                    <th> Remarks </th>
+                  </tr>
+                </thead>
+                <tbody class="emp-punches-table-body">
+                  <tr *ngFor="let item of existingPunchDetails; let i = index">
+                    <td *ngIf="LstworkShiftMapping.IsBreakShift == false">{{item.Time}}</td>
+                    <td *ngIf="LstworkShiftMapping.IsBreakShift == true">{{item.Time}}
+                      <span *ngIf="item.Half_Type && item.Half_Type != ''" class="subLabel">({{item.Half_Type }})</span>
+                    </td>
+                    <td>{{item.Type}}</td>
+                    <td>
+                      <span *ngIf="item.BiometricDeviceId > 0 && item.LocationId == 0">
+                        {{item.BioMetricDeviceName}}
+                      </span>
+                      <span *ngIf="item.BiometricDeviceId == 0 && item.LocationId > 0">
+                        {{item.LocationName}}
+                      </span>
+                    </td>
+                    <td>
+                      <button id="ex-remarks-Popover-{{i}}" type="button" *ngIf="item.Remarks"
+                        class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;" [ngbPopover]="item.Remarks"
+                        popoverTitle="Remarks" triggers="mouseenter:mouseleave" container="body" placement="left"
+                        popoverClass="custom-popover-class">
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- REGULARIZED DATA -->
+          <div class="row m-1 with-bg-white" *ngIf="!showRegularizeBtn">
+            <div class="col-12 p-0">
+              <h6 class="slider-subtitle p-2">Regularized Information</h6>
+              <div class="pl-2 form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-left">
+                <label class="form-label label-title" name="existingStatus">Status</label>
+                <button class="btn" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" 
+                  [class.holiday-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'Holiday'"
+                  [class.pending-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'WeekOff'"
+                  [class.approved-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'Present'"
+                  [class.rejected-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'Absent'"
+                  [class.default-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'default'">
+                  {{regularizedAttendanceData[0].AttendanceCode != null  ? regularizedAttendanceData[0].AttendanceCode : 'Absent'}}
+                </button>
+                <span class="form-label label-title mt-2" *ngIf="LstworkShiftMapping.IsBreakShift">
+                  <i class="fa fa-square" aria-hidden="true"
+                  [class.holiday-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) == 'Holiday'"
+                  [class.pending-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) == 'WeekOff'" 
+                  [class.approved-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) != 'Holiday' && getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) != 'WeekOff' && getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) != 'Absent'"
+                  [class.rejected-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                  {{getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData)}} - 1st Half
+                </span>
+                <span class="form-label label-title mt-2" *ngIf="LstworkShiftMapping.IsBreakShift">
+                  <i class="fa fa-square" aria-hidden="true"
+                  [class.holiday-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) == 'Holiday'"
+                  [class.pending-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) == 'WeekOff'"
+                  [class.approved-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) != 'Absent' && getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) != 'Holiday' && getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) != 'WeekOff'"
+                  [class.rejected-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                  {{getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData)}} - 2nd Half
+                </span>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right">
+                <label class="form-label label-title" name="existingHrs">Total Working Hours</label>
+                <span class="form-text label-value" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" > 
+                  {{getTotalWorkingHoursInHoursMinuteFormat(regularizedAttendanceData[0].DayHoursConsidered) }} 
+                  <span class="small-text">(hh:mm)</span>
+                </span>
+              </div>
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right" *ngIf="LstworkShiftMapping.IsBreakShift">
+                <div class="mb-2">
+                  <label class="form-label label-title" name="existingFirstHalfWrkHrs">1st Half Working Hours</label>
+                  <span class="form-text label-value" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" > 
+                    {{getTotalWorkingHoursInHoursMinuteFormat(regularizedAttendanceData[0].FirstHalfHoursConsidered) }} 
+                    <span class="small-text">(hh:mm)</span>
+                  </span>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label label-title" name="existingSecondHalfWrkHrs">2nd Half Working Hours</label>
+                  <span class="form-text label-value" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" > 
+                    {{getTotalWorkingHoursInHoursMinuteFormat(regularizedAttendanceData[0].SecondHalfHoursConsidered) }} 
+                    <span class="small-text">(hh:mm)</span> 
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12" *ngIf="regularizedPunchDetails && regularizedPunchDetails.length > 0">
+              <table class="table emp-punches-table">
+                <thead class="emp-punches-table-header">
+                  <tr class="w-100">
+                    <th> Time </th>
+                    <th> In/Out </th>
+                    <th> Work Location/Machine </th>
+                    <th> Remarks </th>
+                  </tr>
+                </thead>
+                <tbody class="emp-punches-table-body">
+                  <tr *ngFor="let item of regularizedPunchDetails; let i = index">
+                    <td *ngIf="LstworkShiftMapping.IsBreakShift == false">{{item.Time}}</td>
+                    <td *ngIf="LstworkShiftMapping.IsBreakShift == true">{{item.Time}}
+                      <span *ngIf="item.Half_Type && item.Half_Type != ''" class="subLabel">({{item.Half_Type }})</span>
+                    </td>
+                    <td>{{item.Type}}</td>
+                    <td>
+                      <span *ngIf="item.BiometricDeviceId > 0 && item.LocationId == 0">
+                        {{item.BioMetricDeviceName}}
+                      </span>
+                      <span *ngIf="item.BiometricDeviceId == 0 && item.LocationId > 0">
+                        {{item.LocationName}}
+                      </span>
+                    </td>
+                    <td>
+                      <button id="reg-remarks-Popover-{{i}}" type="button" *ngIf="item.Remarks"
+                      class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;" [ngbPopover]="item.Remarks"
+                      popoverTitle="Remarks" triggers="mouseenter:mouseleave" container="body" placement="left"
+                      popoverClass="custom-popover-class">
+                    </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- PUNCH DATA -->
+          <div class="col-12 mt-2 p-0" *ngIf="showRegularizeBtn">
+            <table class="table emp-punches-table">
+              <thead class="emp-punches-table-header">
+                <tr class="w-100">
+                  <th> Time </th>
+                  <th> In/Out </th>
+                  <th> Work Location/Machine </th>
+                  <th> Remarks </th>
+                </tr>
+              </thead>
+              <tbody class="emp-punches-table-body">
+                <tr *ngFor="let item of lstPunches; let i = index">
+                  <td *ngIf="LstworkShiftMapping.IsBreakShift == false">{{item.Time}}</td>
+                  <td *ngIf="LstworkShiftMapping.IsBreakShift == true">{{item.Time}}
+                    <span *ngIf="item.Half_Type && item.Half_Type != ''" class="subLabel">({{item.Half_Type }})</span>
+                  </td>
+                  <td>{{item.Type}}</td>
+                  <td>
+                    <span *ngIf="item.BiometricDeviceId > 0 && item.LocationId == 0">
+                      {{item.BioMetricDeviceName}}
+                    </span>
+                    <span *ngIf="item.BiometricDeviceId == 0 && item.LocationId > 0">
+                      {{item.LocationName}}
+                    </span>
+                  </td>
+                  <td>
+                    <button id="remarks-Popover-{{i}}" type="button" *ngIf="item.Remarks"
+                      class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;" [ngbPopover]="item.Remarks"
+                      popoverTitle="Remarks" triggers="mouseenter:mouseleave" container="body" placement="left"
+                      popoverClass="custom-popover-class">
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="modal-footer pull-right" style="background: transparent;border-top: 0;">
+    <button type="button" class="btn btn-primary" (click)="doRegularizeDetailType()">
+      <i class="material-icons desktop-icon">fact_check</i>&nbsp;&nbsp;Regularize
+    </button>
+  </div> -->
+</nz-drawer>
+<!-- DETAILED VIEW SLIDER FOR MOBILE-->
+<nz-drawer [nzVisible]="showSliderForMobile" [nzWidth]="315" (nzOnClose)="closeDetailedViewSlider()"
+  [nzClosable]="true">
+  <div class="modal-dialog m-0 p-0" *ngIf="showSliderForMobile" style="min-height: 736px;">
+    <div class="modal-content">
+      <div class="modal-header slider-header">
+        <div class="col-xs-11">
+          <h4 class="slider-title"> {{sliderTitle}} </h4>
+          <!-- SHOW HOLIDAY/WEEKOFF ONLY WHEN FIRST HALF AND SECOND HALF CODE ARE SAME -->
+          <span class="badge holiday-badge" *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame 
+            && selectedCalendarObj.meta.breakupObject.IsHoliday && selectedCalendarObj.meta.StatusInUI != 'Holiday'">
+            Holiday
+          </span>
+          <span class="badge week-off-badge" *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame 
+            && !selectedCalendarObj.meta.breakupObject.IsHoliday && selectedCalendarObj.meta.breakupObject.IsWeekOff 
+            && selectedCalendarObj.meta.StatusInUI != 'WeekOff'">
+            Week Off
+          </span>
+          <!-- Attendance status for same first and second half -->
+          <span class="badge" [ngClass]="{
+            'present-badge':selectedCalendarObj.color.primary == '#3BBD72',
+            'absent-badge':selectedCalendarObj.color.primary == '#FF5555',
+            'od-badge':selectedCalendarObj.color.primary == '#2506E2',
+            'week-off-badge':selectedCalendarObj.color.primary == '#FFE79A',
+            'holiday-badge':selectedCalendarObj.color.primary == '#8E44AD',
+            'permission-badge':selectedCalendarObj.color.primary == '#365879',
+            'wowh-badge':selectedCalendarObj.color.primary == '#F368E0',
+            'leave-badge':selectedCalendarObj.color.primary == '#F39C12' && selectedCalendarObj.color.primary != '#F39C12',
+            'leave-applied-badge': selectedCalendarObj.color.primary == '#F39C12' && selectedCalendarObj.color.primary == '#F39C12',
+            'wfh-badge':selectedCalendarObj.color.primary == '#00A8FF'
+          }"
+            *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.StatusInUI != ''">
+            {{selectedCalendarObj.meta.StatusInUI }}
+          </span>
+          <!-- Attendance status split for breakshift -->
+          <div class="row" *ngIf="selectedCalendarObj.meta.breakupObject.DontShowSplitStatus">
+            <span class="badge present-badge" *ngIf="selectedCalendarObj.meta.breakupObject.IntermittentStatus">
+              {{selectedCalendarObj.meta.breakupObject.IntermittentStatus}}
+            </span>
+            <span class="f-13 legend-text" *ngIf="selectedCalendarObj.meta.breakupObject.IntermittentText">
+              ( {{selectedCalendarObj.meta.breakupObject.IntermittentText}} )
+            </span>
+          </div>
+          <!-- Attendance status for first half -->
+          <span class="f-13 legend-text"
+            *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && 
+            selectedCalendarObj.meta.FirstHalfType != '' && !selectedCalendarObj.meta.breakupObject.DontShowSplitStatus">
+            <i class="fa fa-square legend-square" aria-hidden="true" [ngClass]="{
+                'present-color': selectedCalendarObj.meta.firstHalfColor.primary == '#3BBD72',
+                'absent-color': selectedCalendarObj.meta.firstHalfColor.primary == '#FF5555',
+                'od-color': selectedCalendarObj.meta.firstHalfColor.primary == '#2506E2',
+                'week-off-color': selectedCalendarObj.meta.firstHalfColor.primary == '#FFE79A',
+                'holiday-color': selectedCalendarObj.meta.firstHalfColor.primary == '#8E44AD',
+                'permission-color': selectedCalendarObj.meta.firstHalfColor.primary == '#365879',
+                'wowh-color': selectedCalendarObj.meta.firstHalfColor.primary == '#F368E0',
+                'leave-color': selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12',
+                'wfh-color':selectedCalendarObj.meta.firstHalfColor.primary == '#00A8FF'
+              }"></i>
+            {{selectedCalendarObj.meta.FirstHalfType }}
+            <span *ngIf=" selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12'"> (
+              {{selectedCalendarObj.meta.FirstHalfCode }})</span>
+            <small> - First Half</small>
+          </span>
+          <!-- <span class="badge" [ngClass]="{
+            'present-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#3BBD72',
+            'absent-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#FF5555',
+            'od-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#2506E2',
+            'week-off-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#FFE79A',
+            'holiday-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#8E44AD',
+            'permission-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#365879',
+            'wowh-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#F368E0',
+            'leave-badge': selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12'
+          }" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.FirstHalfType != ''">
+            {{selectedCalendarObj.meta.FirstHalfType}}  
+          </span> -->
+          <!-- Attendance status for second half -->
+          <span class="f-13 legend-text"
+            *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame 
+            && selectedCalendarObj.meta.SecondHalfType != '' && !selectedCalendarObj.meta.breakupObject.DontShowSplitStatus">
+            <i class="fa fa-square legend-square" aria-hidden="true" [ngClass]="{
+              'present-color':selectedCalendarObj.meta.secondHalfColor.primary == '#3BBD72',
+              'absent-color':selectedCalendarObj.meta.secondHalfColor.primary == '#FF5555',
+              'od-color':selectedCalendarObj.meta.secondHalfColor.primary == '#2506E2',
+              'week-off-color':selectedCalendarObj.meta.secondHalfColor.primary == '#FFE79A',
+              'holiday-color':selectedCalendarObj.meta.secondHalfColor.primary == '#8E44AD',
+              'permission-color':selectedCalendarObj.meta.secondHalfColor.primary == '#365879',
+              'wowh-color':selectedCalendarObj.meta.secondHalfColor.primary == '#F368E0',
+              'leave-color':selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12',
+              'wfh-color':selectedCalendarObj.meta.secondHalfColor.primary == '#00A8FF'
+            }"></i>
+            {{selectedCalendarObj.meta.SecondHalfType }}
+            <span *ngIf="selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12'">(
+              {{selectedCalendarObj.meta.SecondHalfCode }})</span>
+            <small> - Second Half</small>
+          </span>
+          <!-- <span class="badge" [ngClass]="{
+            'present-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#3BBD72',
+            'absent-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#FF5555',
+            'od-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#2506E2',
+            'week-off-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#FFE79A',
+            'holiday-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#8E44AD',
+            'permission-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#365879',
+            'wowh-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#F368E0',
+            'leave-badge':selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12'
+          }" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame && selectedCalendarObj.meta.SecondHalfType != ''">
+            {{selectedCalendarObj.meta.SecondHalfType}} 
+          </span> -->
+        </div>
+      </div>
+      <div class="modal-body pl-0 ">
+        <!-- Legends for Leave type-->
+        <div class="row" *ngIf="selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame">
+          <span class="ml-3 grey-muted-text"
+            *ngIf="selectedCalendarObj.meta.StatusInUI != '' && selectedCalendarObj.color.primary == '#F39C12'">
+            <i class="fa fa-square leave-color legend-square" aria-hidden="true"></i>
+            {{selectedCalendarObj.meta.FirstHalfCode}}
+          </span>
+        </div>
+        <!-- show legends for Leave type only when half are different-->
+        <!-- <div class="row" *ngIf="!selectedCalendarObj.meta.isFirstHalfAndSecondHalfSame">
+          <span class="ml-3 grey-muted-text"
+            *ngIf="selectedCalendarObj.meta.FirstHalfType != '' && selectedCalendarObj.meta.firstHalfColor.primary == '#F39C12'">
+            <i class="fa fa-square leave-color legend-square" aria-hidden="true"></i> Half Day
+            ({{selectedCalendarObj.meta.FirstHalfCode}}):First Half
+          </span>
+          <span class="ml-3 grey-muted-text"
+            *ngIf="selectedCalendarObj.meta.SecondHalfType != '' && selectedCalendarObj.meta.secondHalfColor.primary == '#F39C12'">
+            <i class="fa fa-square leave-color legend-square" aria-hidden="true"></i> Half Day
+            ({{selectedCalendarObj.meta.SecondHalfCode}}):Second Half
+          </span>
+        </div> -->
+        <!-- Working Hrs  -->
+        <div class="row m-1">
+          <div class="col-12 pl-0">
+            <span class="description-title">Total Working Hours</span>
+            <p class="description-value"><b>{{ getDayHoursConsidered(selectedBreakUpObject)}}<span class="small-text">
+                  (hh:mm)</span></b></p>
+          </div>
+        </div>
+        <!-- Shift details -->
+        <div class="row m-1">
+          <div class="col-12 pl-0">
+            <span class="description-title">Shift</span>
+            <p class="description-value"><b>{{LstworkShiftMapping.Code}}</b> ({{ formatTimeRange()}}) </p>
+          </div>
+        </div>
+        <!-- Punch Details -->
+        <div class="m-1 p-0">
+          <div class="w-100 pull-right">
+            <button *ngIf="showRegularizeBtn" type="button" class="btn btn-primary" (click)="doRegularizeDetailType()">
+              <i class="material-icons">fact_check</i>&nbsp;&nbsp;Regularize
+            </button>
+            <span *ngIf="!showRegularizeBtn">
+              <i>Regularization Submitted</i>
+            </span>
+          </div>
+          <div class="w-100">
+            <h4 class="description-title"> Punch In & Out History </h4>
+          </div>
+          <div class="pl-0 col-12 mt-2 card-container">
+            <div class="card mb-2" *ngFor="let item of lstPunches;">
+              <div class="col-12">
+                <div class="p-0 col-6 pull-left">
+                  <span class="calendar-view-month m-0 f-13"
+                    *ngIf="LstworkShiftMapping.IsBreakShift == false">{{item.Time}} <i
+                      class="font-small color-grey mdi mdi-checkbox-blank-circle"></i>&nbsp;
+                    <span>{{item.Type}}</span>
+                  </span>
+                  <span class="calendar-view-month m-0 f-13"
+                    *ngIf="LstworkShiftMapping.IsBreakShift == true">{{item.Time}}
+                    <span class="f-13 font-italic">({{ item.Half_Type }})</span>&nbsp; <i
+                      class="font-small color-grey mdi mdi-checkbox-blank-circle"></i>&nbsp;
+                    <span>{{item.Type}}</span>
+                  </span>
+                  <span *ngIf="item.BiometricDeviceId > 0 && item.LocationId == 0" class="grey-muted-text">
+                    {{item.BioMetricDeviceName}}
+                  </span>
+                  <span *ngIf="item.BiometricDeviceId == 0 && item.LocationId > 0" class="grey-muted-text">
+                    {{item.LocationName}}
+                  </span>
+                </div>
+                <div class="p-0 col-6 pull-right">
+                  <button id="remarks-Popover-{{i}}" type="button" *ngIf="item.Remarks"
+                    class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;" [ngbPopover]="item.Remarks"
+                    popoverTitle="Remarks" triggers="mouseenter:mouseleave" container="body" placement="left"
+                    popoverClass="custom-popover-class">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-drawer>

@@ -1,0 +1,455 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="">
+
+
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>Family Details</b></small>
+            <h6 class="modal-title subheader_h6"> Add your dependent/nominee/parent details </h6>
+          </div>
+          <div class="modal-close" *ngIf="isLoading" (click)="confirmExit()" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+
+
+
+        <div class="modal-body no-padder">
+
+
+          <div class="flex-column">
+
+            <form [formGroup]="candidatesForm">
+
+
+
+
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+                  <div class="row">
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.candidatesForm.controls.nomineeName">
+                      <label class="form-label">Name <span class="required">*</span> <span
+                          class="form__length">
+                          {{nomineeName.value?.length}}/100</span></label>
+
+                      <input class="form-control" type="text" spellcheck="false"
+                        onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" maxlength="100" #nomineeName
+                        name="nomineeName" formControlName="nomineeName" pattern="[\x00-\x7F]+"
+                        [ngClass]="{ 'is-invalid': submitted && g.nomineeName.errors }" placeholder="Ar Ma"
+                        autocomplete="off">
+                      <div *ngIf="submitted && g.nomineeName.errors" class="invalid-feedback">
+                        <div *ngIf="g.nomineeName.errors.required">Name is required
+                        </div>
+                      </div>
+                      <div *ngIf="candidatesForm.get('nomineeName').errors && candidatesForm.get('nomineeName').touched"
+                        class="help-block">
+
+                        <span *ngIf="candidatesForm.get('nomineeName').errors.pattern"> Entered special characters are
+                          not allowed
+                        </span>
+                      </div>
+
+                    </div>
+
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                      *ngIf="this.candidatesForm.controls.relationship">
+                      <label class="form-label">Relationship <span
+                          class="required">*</span></label>
+
+
+                      <ng-select [items]="relationship" placeholder="-- select an option --"
+                        formControlName="relationship" [ngClass]="{ 'ng-touched': submitted && g.relationship.invalid }"
+                        bindLabel="name" bindValue="id" (change)="onChangeRelationShip($event)">
+                      </ng-select>
+
+
+                      <div *ngIf="submitted && g.relationship.invalid" class="help-block">
+                        <div *ngIf="g.relationship.errors.required">Relationship is required
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.candidatesForm.controls.DOB">
+                      <label class="form-label">DOB <span class="required">*</span><span class="form__length">{{dobAge}} years</span></label>
+
+                      <input class="form-control" type="text" bsDatepicker [maxDate]="maxDate" placement="bottom"
+                        readonly
+                        [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                        name="DOB" formControlName="DOB" [ngClass]="{ 'is-invalid': submitted && g.DOB.errors }"
+                        placeholder="12-12-1990" autocomplete="off" (ngModelChange)="calculateAge()">
+                      <div *ngIf="submitted && g.DOB.errors" class="invalid-feedback">
+                        <div *ngIf="g.DOB.errors.required">DOB is required
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.candidatesForm.controls.IsNominee">
+                      <label class="form-label">Is Nominee? </label>
+                      <div class="p-t-10">
+
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="IsNominee" (change)="onChangeNomineeToggle($event)" formControlName="IsNominee" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+
+
+                    <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6" *ngIf="this.candidatesForm.controls.FamilyaAdhar">
+                                            <label class="form-label">Aadhaar No <span class="required">*</span> <span
+                                                class="form__length">
+                                                {{FamilyaAdhar.value?.length}}/12</span> </label>
+
+                                            <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" name="FamilyaAdhar" maxlength="12" #FamilyaAdhar formControlName="FamilyaAdhar" [ngClass]="{ 'is-invalid': submitted && g.FamilyaAdhar.errors }" placeholder="902384982392323"
+                                                autocomplete="off">
+                                            <div *ngIf="submitted && g.FamilyaAdhar.errors" class="invalid-feedback">
+                                                <div *ngIf="g.FamilyaAdhar.errors.required">Aadhaar no is required
+                                                </div>
+                                            </div>
+
+                                        </div> -->
+
+
+                   
+
+
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.candidatesForm.controls.FamilyPF && candidatesForm.get('IsNominee').value && !isAllenDigital">
+                      <label class="form-label">Coverage for PF (%) <span class="required"> *
+                        </span></label>
+
+                      <input class="form-control" type="text" maxlength="3" onkeypress="return /[0-9]/i.test(event.key)"
+                        name="FamilyPF" formControlName="FamilyPF"
+                        [ngClass]="{ 'is-invalid': submitted && g.FamilyPF.errors }" placeholder="00"
+                        autocomplete="off">
+                      <div *ngIf="submitted && g.FamilyPF.errors" class="invalid-feedback">
+                        <div *ngIf="g.FamilyPF.errors.required"> PF (%) is required
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.candidatesForm.controls.FamilyESIC && isESICapplicable && candidatesForm.get('IsNominee').value && !isAllenDigital">
+                      <label class="form-label">Coverage for ESIC (%) <span class="required">*</span></label>
+
+                      <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="3"
+                        name="FamilyESIC" formControlName="FamilyESIC"
+                        [ngClass]="{ 'is-invalid': submitted && g.FamilyESIC.errors }" placeholder="45"
+                        autocomplete="off">
+                      <div *ngIf="submitted && g.FamilyESIC.errors" class="invalid-feedback">
+                        <div *ngIf="g.FamilyESIC.errors.required"> ESIC (%) is required
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.candidatesForm.controls.FamilyGratuity && candidatesForm.get('IsNominee').value && !isAllenDigital">
+                      <label class="form-label">Coverage for Gratuity (%) <span class="required">*</span></label>
+
+                      <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="3"
+                        name="FamilyGratuity" formControlName="FamilyGratuity"
+                        [ngClass]="{ 'is-invalid': submitted && g.FamilyGratuity.errors }" placeholder="45"
+                        autocomplete="off">
+                      <div *ngIf="submitted && g.FamilyGratuity.errors" class="invalid-feedback">
+                        <div *ngIf="g.FamilyGratuity.errors.required"> Gratuity (%) is required
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                    *ngIf="this.candidatesForm.controls.FamilyisEmployed && (BusinessType == 1 || BusinessType == 2)">
+                    <label class="form-label">Is Employed by {{empClientContractName}} ?</label>
+                    <!-- <div class="pretty p-switch p-fill">
+                                              <input type="checkbox" name="FamilyisEmployed" formControlName="FamilyisEmployed" />
+                                              <div class="state p-success">
+                                                  <label>
+                                                                                    </label>
+                                              </div>
+                                          </div> -->
+
+                    <div class="p-t-10">
+
+                      <label class="el-switch el-switch-green">
+                        <input type="checkbox" name="FamilyisEmployed" formControlName="FamilyisEmployed" (change)="onChangeFamilyIsEmployeedToggle($event)" />
+                        <span class="el-switch-style"></span>
+                      </label>
+                    </div>
+
+                  </div>
+
+                  <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                  *ngIf="this.candidatesForm.controls.FamilyEmployeeID && this.candidatesForm.controls.FamilyisEmployed.value == true">
+                  <label class="form-label">Employee ID <span class="required">*</span> </label>
+                  <input class="form-control" type="text" spellcheck="false"
+                    onkeypress="return /^[[0-9A-Za-z-]+$/i.test(event.key)" #FamilyEmployeeID name="FamilyEmployeeID"
+                    formControlName="FamilyEmployeeID" [ngClass]="{ 'is-invalid': submitted && g.FamilyEmployeeID.errors }" placeholder="AB-01CDE"
+                    autocomplete="none|false|no">
+                    <div *ngIf="submitted && g.FamilyEmployeeID.errors" class="invalid-feedback">
+                      <div *ngIf="g.FamilyEmployeeID.errors.required">Employee ID is required
+                      </div>
+                    </div>
+                </div>
+      
+                <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                *ngIf="this.candidatesForm.controls.Occupation && this.candidatesForm.controls.FamilyisEmployed.value == false">
+                <label class="form-label">Occupation <span class="required">*</span></label>
+        
+                <ng-select [items]="occupationDropDownValues" placeholder="-- select an option --" formControlName="Occupation"
+                  [ngClass]="{ 'ng-touched': submitted && g.Occupation.errors }" bindLabel="name" bindValue="id">
+                </ng-select>
+                <div *ngIf="submitted && g.Occupation.errors" class="help-block">
+                  <div *ngIf="g.Occupation.errors.required">Occupation is required
+                  </div>
+                </div>
+              </div>
+                    <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6" *ngIf="this.candidatesForm.controls.mediclaim">
+                                            <label class="form-label">Do you want to insure this member? <span
+                                                    class="help-text m-l-5">(is Mediclaim)</span> </label>
+                                         
+                                            <div class="p-t-10">
+
+                                                <label class="el-switch el-switch-green">
+                                                    <input type="checkbox" name="mediclaim"
+                                                        formControlName="mediclaim" />
+                                                    <span class="el-switch-style"></span>
+                                                </label>
+                                            </div>
+
+                                        </div> -->
+
+                    <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.candidatesForm.controls.WeddingDate && (candidatesForm.get('relationship').value == 1 || candidatesForm.get('relationship').value == 2 || candidatesForm.get('relationship').value == 3) ">
+                      <label class="form-label">Wedding Date <span class="required"> *
+                      </span> </label>
+
+                      <input class="form-control" type="text" bsDatepicker [maxDate]="maxDate" placement="bottom"
+                        readonly
+                        [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                        name="DOB" formControlName="WeddingDate"
+                        [ngClass]="{ 'is-invalid': submitted && g.WeddingDate.errors }" placeholder="12-12-1990"
+                        autocomplete="off">
+                      <div *ngIf="submitted && g.WeddingDate.errors" class="invalid-feedback">
+                        <div *ngIf="g.WeddingDate.errors.required">Wedding Date is required
+                        </div>
+                      </div>
+
+                    </div> -->
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.candidatesForm.controls.IsDependent && (this.showIsDependentForRelationShipTypeValues.includes(this.candidatesForm.controls.relationship.value))">
+                      <label class="form-label">Is the member dependent ?</label>
+                      <div class="p-t-10">
+
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="IsDependent" formControlName="IsDependent" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+
+
+
+
+
+                    <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="candidatesForm.controls.IsAlive">
+                      <label class="form-label">Is Alive? </label>
+                      <div class="p-t-10">
+
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" name="IsAlive" formControlName="IsAlive" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div> -->
+
+                    <!-- #region Before JSzip -->
+                    <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                                            <label class="form-label">Attachment <span *ngIf="MaxSize"
+                                                    class="help-text m-l-5">(Max file size is  <span>{{MaxSize/1024}}</span>
+                                                    MB)</span> <span *ngIf="MaxSize == 0" class="help-text m-l-5">(Max
+                                                    file size 2MB)</span> </label>
+                                            <label class="upload control" style="width: 50%; float: left;" *ngIf="!FileName">
+                                                <div class="upload-draggable is-primary">
+                                                    <section class="section">
+                                                        <div class="has-text-centered">
+                                                            <span class="icon is-large">
+                                                                <span style="padding-left: 10px;"> <i
+                                                                        class="mdi mdi-cloud-upload "
+                                                                        style="color: #9ba7ca;"></i> Upload </span>
+                                                            </span>
+
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                                <input type="file"
+                                                    accept="application/msword,  application/pdf, image/*"
+                                                    (change)="onFileUpload($event)"
+                                                    id="sTest-uploadFile-candidateAddResume">
+                                            </label>
+
+
+                                            <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                                                <div *ngIf="g.DocumentId.errors.required">Attachment is required
+                                                </div>
+                                            </div>
+
+                                            <p class="control" *ngIf="FileName">
+                                                <span class="file-name">
+                                                    <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a
+                                                            ngbTooltip="Delete Photo"
+                                                            id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                               display: block   ;margin-top: -5px;"><i
+                                                                class="fa fa-trash-o"></i></a> </button>
+
+
+                                                    <a target="blank" class="ahref" style="padding: 2px;">
+                                                        {{FileName}}
+                                                    </a>
+
+                                                </span>
+
+                                            </p>
+                                        </div> -->
+                    <!-- #endregion -->
+
+                    <!-- #region After Jszip -->
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      *ngIf="this.candidatesForm.controls.idProoftype && !isAllenDigital">
+                      <label class="form-label">Proof type </label>
+
+                      <ng-select [items]="FamilyDocumentCategoryList" (change)="IdFroofChange($event)"
+                        placeholder="-- select an option --" formControlName="idProoftype"
+                        [ngClass]="{ 'ng-touched': submitted && g.idProoftype.invalid }" bindLabel="Name"
+                        bindValue="DocumentTypeId">
+                      </ng-select>
+
+                      <div *ngIf="submitted && g.idProoftype.invalid" class="help-block">
+                        <div *ngIf="g.idProoftype.errors.required">Proof type is required
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <label class="form-label">Attachment <span *ngIf="MaxSize" class="help-text m-l-5">(Max file size
+                          is <span>{{MaxSize/1024}}</span>
+                          MB)</span> <span *ngIf="MaxSize == 0" class="help-text m-l-5">(Max
+                          file size 2MB)</span> </label>
+                      <label class="upload control" style="width: 100%; float: left;z-index: 999;margin-bottom: 10px;">
+                        <div class="upload-draggable is-primary">
+                          <section class="section">
+                            <div class="has-text-centered">
+                              <span class="icon is-large">
+                                <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload "
+                                    style="color: #9ba7ca;"></i> Upload </span>
+                              </span>
+
+                            </div>
+                          </section>
+                        </div>
+                        <input type="file" accept="application/msword,  application/pdf, image/*"
+                          (change)="onAddingFile($event)" (click)="$event.target.value=null" multiple>
+                      </label>
+
+
+                      <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                        <div *ngIf="g.DocumentId.errors.required">Attachment is required
+                        </div>
+                      </div>
+
+                      <div class="d-flex align-items-center" style="width: 100%;"
+                        *ngIf="firstTimeDocumentId && !fileList[0] && !isFileChange">
+                        <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                      </div>
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+                      style="margin-top: 28px;">
+                      <p *ngFor="let file of fileList" class="control">
+                        <span class="file-name">
+                          <button class="btn btn-danger c-btn" (click)="doDeleteFile(file)"><a ngbTooltip="Delete Photo"
+                              id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                               display: block   ;margin-top: -5px;"><i
+                                class="fa fa-trash-o"></i></a> </button>
+
+
+                          <a target="blank" class="ahref" style="padding: 2px;">
+                            {{file.name}}
+                          </a>
+
+                        </span>
+
+                      </p>
+                    </div>
+                    <!-- #endregion -->
+
+
+
+                  </div>
+                </div>
+
+              </div>
+
+
+            </form>
+
+          </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+          <div *ngIf="isLoading">
+            <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban"
+                aria-hidden="true"></i> &nbsp; Cancel</button>
+
+            <!-- <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSaveAndNewSubmit" id="btnSaveAndNewSubmit" [disabled]="!disableBtn" (click)="savebutton()">
+                                  <div class="pos-rlt sm-btn-component"> <span> Save and add other </span> </div>
+                              </button>
+                            </div>
+                        </div>
+                    </div> -->
+
+            <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+              <div>
+                <div>
+                  <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                    [disabled]="!disableBtn" (click)="onFileUpload()">
+                    <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp;
+                        Save </span></div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="d-flex align-items-center" *ngIf="!isLoading">
+            <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

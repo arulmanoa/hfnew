@@ -1,0 +1,113 @@
+.table-sticky>thead>tr>th,
+.table-sticky>thead>tr>td {
+    top: 0px;
+    position: sticky;
+}
+
+.table-height {
+    display: block;
+    overflow: auto;
+    width: 100%;
+}
+
+
+/* .table-sticky>thead th {
+    background-color: rgb(245 245 245) */
+
+
+/* rgb(199 199 199) !important;
+} */
+
+.type-text-boarder {
+    border: white;
+}
+
+.table-th-td td {
+    text-transform: uppercase;
+    height: 35px;
+    padding-top: 3px;
+    padding-right: 0px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    max-height: 30px;
+    font-size: 11px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.table-th-td th {
+    text-transform: uppercase;
+    height: 35px;
+    padding-top: 10px;
+    padding-right: 0px;
+    padding-bottom: 5px;
+    padding-left: 0px;
+    max-height: 30px;
+    font-weight: 300;
+    font-size: 11px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.custom-btn-primary {
+    text-transform: uppercase;
+    color: #fff;
+    background-color: #0a609eeb;
+    border-color: #0a609eeb;
+    border-radius: 0.25rem;
+    border: 1px solid transparent;
+    padding-left: 10px;
+    padding-bottom: 4px;
+    padding-right: 10px;
+    padding-top: 1px;
+    font-size: 12px;
+    line-height: 1.5;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.custom-btn-primary:hover {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.greenCircle {
+    float: left;
+    width: 10px;
+    height: 10px;
+    margin: 6px;
+    shape-outside: circle();
+    -webkit-clip-path: circle();
+    clip-path: circle();
+    background: #1fb538;
+}
+
+.orangeCircle {
+    float: left;
+    width: 10px;
+    height: 10px;
+    margin: 6px;
+    shape-outside: circle();
+    -webkit-clip-path: circle();
+    clip-path: circle();
+    background: #fc780c;
+}
+
+.gryCircle {
+    float: left;
+    width: 10px;
+    height: 10px;
+    margin: 6px;
+    shape-outside: circle();
+    -webkit-clip-path: circle();
+    clip-path: circle();
+    background: #c2c9c3;
+}
+
+.table-th-td td input,
+.table-th-td td select {
+    border: none;
+}
+
+.table-th-td td .input-checkbox {
+    text-align: center;
+    margin-top: 15px;
+}

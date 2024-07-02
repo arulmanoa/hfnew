@@ -1,0 +1,233 @@
+<div style="display: block;" class="modal fade show animated fadeIn">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="padding-top: 1.5rem;padding-left: 1.5rem;">
+
+      <div class="row" style="padding-bottom: 15px;">
+        <div class="col-lg-12">
+          <span style="font-size: 20px; color: black;font-weight: 600;">  {{defaultSearchInputs.ClientName}} |
+            {{defaultSearchInputs.ClientContractName}} </span>
+          <p> Basic details : Create profile by adding the candidate details and setting some Of the onboarding preferences</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-8">
+
+          <form [formGroup]="candidateForm">
+            <div class="row">
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <label class="form-label"> Name <span class="required">*</span>
+                  <span class="help-text m-l-5">(as per Aadhaar Card)</span>
+                </label>
+                <input class="form-control" type="text" spellcheck="false" name="CandidateName" maxlength="100"
+                  #CandidateName formControlName="CandidateName" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                  [ngClass]="{ 'is-invalid': submitted && g.CandidateName.errors }" placeholder="A**** *****O"
+                  autocomplete="none|false|no">
+                <div *ngIf="submitted && g.CandidateName.invalid" class="help-block">
+                  <div *ngIf="g.CandidateName.errors.required">Candidate Name is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label">Date of Birth <span class="required"> * </span> <i
+                    class="mdi mdi-information-outline" placement="right" style="cursor: pointer;"
+                    ngbTooltip="Please Specify as per aadhaar, if DOB not available in aadhaar, Please specify as per PAN card."></i>
+                  <span class="help-text m-l-5">(Please specify as per Aadhaar - DD-MM-YYYY)</span> </label>
+                <input type="text" class="form-control" bsDatepicker placement="bottom" [minDate]="minDate" [maxDate]="maxDate"
+                  (bsValueChange)="onChangeDOB($event)" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+            containerClass:'theme-default' }" name="DOB" formControlName="DOB"
+                  [ngClass]="{'is-invalid': submitted && g.DOB.errors }" placeholder="12-12-1990"
+                  autocomplete="none|false|no">
+                <div *ngIf="submitted && g.DOB.errors" class="invalid-feedback">
+                  <div *ngIf="g.DOB.errors.required">DOB is required
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                <label class="form-label">Aadhaar Number <span class="required">*</span>
+                </label>
+                <input type="number" onkeypress="return /^[0-9]+$/i.test(event.key)" class="form-control"
+                  name="AadhaarNumber" formControlName="AadhaarNumber"
+                  [ngClass]="{'is-invalid': submitted && g.AadhaarNumber.errors }" placeholder="XXXX XXXX XX12"
+                  autocomplete="none|false|no" minlength="12" maxlength="12"
+                  (input)="doCheckAadhaarMaxlength($event, candidateForm.get('AadhaarNumber'))">
+                <div *ngIf="submitted && g.AadhaarNumber.errors" class="invalid-feedback">
+                  <div *ngIf="g.AadhaarNumber.errors.required">Aadhaar Number is required
+                  </div>
+                </div>
+                <div *ngIf="candidateForm.get('AadhaarNumber').errors && candidateForm.get('AadhaarNumber').touched"
+                  class="help-block">
+                  <span *ngIf="candidateForm.get('AadhaarNumber').errors.pattern">
+                    Please match the requested format (Ex: 2XXX XXXX 1111)
+                  </span>
+                </div>
+
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label">Gender <span class="required">*</span></label>
+                <ng-select [items]="LstGender" placeholder="-- select Gender --" formControlName="Gender"
+                  [ngClass]="{'ng-touched': submitted && g.Gender.invalid }" bindLabel="name" bindValue="id">
+                </ng-select>
+                <div *ngIf="submitted && g.Gender.invalid" class="help-block">
+                  <div *ngIf="g.Gender.errors.required">Gender is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label">Email <span class="required">*</span></label>
+                <input class="form-control" type="PrimaryEmail" name="PrimaryEmail"
+                  pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                  formControlName="PrimaryEmail" [ngClass]="{'is-invalid': submitted && g.PrimaryEmail.errors}"
+                  placeholder="example@domain.com" autocomplete="none|false|no">
+              
+                  <div *ngIf="submitted && g.PrimaryEmail.invalid" class="help-block">
+                  <div *ngIf="g.PrimaryEmail.errors.required">E-Mail is required
+                  </div>
+                </div>
+                <div *ngIf="candidateForm.get('PrimaryEmail').errors && candidateForm.get('PrimaryEmail').touched "
+                  class="help-block">                 
+                  <span *ngIf="candidateForm.get('PrimaryEmail').errors.pattern"> Please enter
+                    valid email (pattern mismatch)
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label">Mobile No. <span class="required">*</span></label>
+                <div class="input-group" style="margin-top: 0px;">
+                  <div class="input-group-prepend">
+                    <button disabled tabindex="-1" class="btn btn-outline-secondary dropdown-toggle"
+                      style="color: #fff; width: 90px;background-color: #6c757d;border-color: #6c757d;" type="button"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">+ 91</button>
+                    <div class="dropdown-menu" style="height: 200px;overflow-y: auto; border-radius: 0px;">
+                      <a class="dropdown-item" (click)="theFunction(item)"
+                        *ngFor="let item of LstcountryCode">{{item.name}}</a>
+                    </div>
+                  </div>
+                  <input class="form-control" minlength="10"
+                    style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;" type="text"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" name="MobileNumber" formControlName="MobileNumber"
+                    [ngClass]="{'is-invalid': submitted && g.MobileNumber.errors }" placeholder="9876543210"
+                    autocomplete="none|false|no"
+                    (input)="mobileNumberLengthRestrict($event, candidateForm.get('MobileNumber'))" numbersOnly>
+                </div>
+                <div *ngIf="submitted && g.MobileNumber.invalid" class="help-block">
+                  <div *ngIf="g.MobileNumber.errors.required">Mobile no is required
+                  </div>
+                </div>
+
+                <div *ngIf="candidateForm.get('MobileNumber').errors && candidateForm.get('MobileNumber').touched "
+                  class="help-block">
+                  <span *ngIf="candidateForm.get('MobileNumber').errors.minlength"> Mobile No
+                    should be minimum 10 characters
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                <label class="form-label"> Apprentice Code <span class="required">*</span> <span
+                  class="help-text m-l-5">(as per portal)</span> </label>
+
+                <input class="form-control" type="text"
+                  name="ApprenticeCode" formControlName="ApprenticeCode" placeholder="AITT112" autocomplete="none|false|no"
+                  style="text-transform: uppercase;"
+                  [ngClass]="{ 'is-invalid': submitted && g.ApprenticeCode.errors }"
+                  >
+                  
+                <div *ngIf="submitted && g.ApprenticeCode.errors" class="help-block">
+                  <div *ngIf="g.ApprenticeCode.errors.required"> Apprentice Code is required
+                  </div>
+                </div>
+             
+              </div>
+
+              <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                <label class="form-label"> PAN No  </label>
+
+                <input class="form-control" type="text"
+                  pattern="^[a-zA-Z]{3}[pPcCHhaAbBgGlLfFTtjJ]{1}[a-zA-Z]{1}[0-9]{4}[a-zA-Z]{1}?$" maxlength="10"
+                  name="PANNumber" formControlName="PANNumber" placeholder="ABCPD1234E" autocomplete="none|false|no"
+                  style="text-transform: uppercase;">
+                <div *ngIf="submitted && g.PANNumber.errors" class="invalid-feedback">
+                  <div *ngIf="g.PANNumber.errors.required">PAN no is required
+                  </div>
+                </div>
+                <div
+                  *ngIf="submitted && candidateForm.get('PANNumber').errors && candidateForm.get('PANNumber').touched"
+                  class="help-block">
+                  <span *ngIf="candidateForm.get('PANNumber').errors.pattern">
+                    Please match the requested format. (Ex: ABCPD1234E)
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                <label class="form-label">Father's Name  <span
+                    class="help-text m-l-5">(Please specify as per Aadhaar)</span>
+                  <span class="form__length"> {{ FathersName.value?.length }}/100</span>
+                </label>
+                <input class="form-control" spellcheck="false" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)"
+                  pattern="[\x00-\x7F]+" name="FathersName" maxlength="100" #FathersName formControlName="FathersName"
+                  [ngClass]="{     'is-invalid': submitted && g.FathersName.errors }" placeholder="Father's Name"
+                  autocomplete="none|false|no">
+                <div *ngIf="submitted && g.FathersName.errors" class="invalid-feedback">
+                  <div *ngIf="g.FathersName.errors.required">Father's Name is required
+                  </div>
+                </div>
+                <div *ngIf="candidateForm.get('FathersName').errors && candidateForm.get('FathersName').touched"
+                  class="help-block">
+                  <span *ngIf="candidateForm.get('FathersName').errors.pattern"> Entered
+                    special characters are not allowed
+                  </span>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="row" *ngIf="isInvalidCandidateInformation">
+            <div class="col-lg-12 text-center">
+              <ngb-alert [dismissible]="false">
+                <strong>{{DuplicateCheckMessage}}</strong>
+              </ngb-alert>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-12 text-right">
+              <button class="btn btn-link" type="button"
+                style="text-decoration: none !important;margin-top: 10px; margin-right: 15px;" (click)="doCancel('Modal Closed')">
+                &nbsp; &nbsp; Cancel &nbsp; &nbsp; </button>
+              <button class="btn btn-primary" (click)="doContinue()" [disabled]="smallspinner"
+                style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                  class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Continue&nbsp; &nbsp; <span
+                  *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+          
+          <br/>
+
+        </div>
+
+        <div class="col-lg-4">
+          <img src="assets/Images/kycvector.jpg">
+        </div>
+      </div>
+
+
+
+
+    </div>
+  </div>
+</div>

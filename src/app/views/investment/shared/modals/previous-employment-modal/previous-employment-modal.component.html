@@ -1,0 +1,390 @@
+<div style="display: block;" id="modal_aside_left" class="modal fixed-left fade show" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog modal-dialog-aside" role="document">
+    <div class="modal-content">
+
+
+      <div class="modal-body" style="max-height: calc(110vh - 143px) !important;overflow-x: hidden !important;">
+
+        <div class="row" style="padding-bottom: 1rem;">
+          <div class="col-md-6">
+            <h3
+              style="font-size: 16px;margin-bottom: 0px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;">
+              Previous Employment</h3>
+            <p class="small subheader_lable">---</p>
+          </div>
+          <div class="col-md-6" style="padding: 3px;">
+
+            <br />
+
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center" *ngIf="spinner" style=" margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);">
+          <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+
+        <div class="row" *ngIf="!spinner">
+          <div class="col-md-12 text-right" *ngIf="!IsEditMode">
+            <button class="btn btn-white" (click)="addNewPED()" style="background: #146BA2;color: #ffffff;">
+              <i class="mdi mdi-plus-circle-outline"></i>
+              &nbsp; Add New
+            </button>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center" *ngIf="!spinner && LstemploymentDetails.length == 0  && !IsEditMode"
+          style=" margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);">
+          <strong class="text-center"> No records found &nbsp;&nbsp;&nbsp;</strong>
+        </div>
+
+
+        <div class="row" *ngIf="!spinner && !IsEditMode">
+          <div class="col-lg-12" *ngFor="let item of LstemploymentDetails " style="padding: 10px;">
+            <div class="card card2" style="padding: 5px;">
+              <div class="row">
+                <!-- // bug fixes 16.2 -->
+                <div class="col-md-12" style="padding-left: 30px; margin-bottom: 10px;padding-top: 10px;">
+                  <h6 class="city" style="    font-weight: 700;letter-spacing: 1px;margin-bottom: 5px !important;">
+                    <span style="font-size: 12px;
+                          border: 1px solid #d3d3d3;
+                          border-radius: 5px;
+                          padding: 4px;
+                          letter-spacing: 0px;
+                          background: #f6f6f6;
+                        
+                          margin-right: 15px;"> {{item.FinancialYearName}} </span> {{item.CompanyName}}
+
+                    <div style="text-align: right;display: inline;">
+
+
+                      <span class="badge badge-warning" *ngIf="item.ApprovalStatus == 0"
+                        style="display: inline;color:white !important;cursor: pointer;">
+                        Saved
+
+
+                      </span>
+                      <span class="badge badge-danger" *ngIf="item.ApprovalStatus == 2"
+                        style="display: inline;color:white !important;cursor: pointer;">
+                        Rejected
+
+                      </span>
+                      <span class="badge badge-success" *ngIf="item.ApprovalStatus == 1"
+                        style="display: inline;color:white !important;cursor: pointer;">
+
+                        Approved
+
+                      </span>
+
+
+                    </div>
+
+                  </h6>
+                  <span class="description" style="font-size: 12px; font-weight: 600;letter-spacing: 1px;">
+                    {{item.StartDate | date : 'dd-MM-yyyy'}} -
+                    {{item.EndDate | date : 'dd-MM-yyyy'}} </span>
+
+                  <div class="media-right" style="margin-top: -15px;">
+
+                    <a href="javascript:;" class="btn action-edit pull-right" style="margin-right: 5px"
+                      (click)="doViewFile(item)" matTooltip="Preview" *ngIf="item.DocumentId > 0 ">
+                      <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a>
+                    <a href="javascript:;" class="btn action-edit pull-right" style="margin-right: 5px"
+                      (click)="deletePreviousEmployment(item)" matTooltip="Delete"
+                      *ngIf="PermissibleRoles() || item.ApprovalStatus != 1">
+                      <i class="fa fa-trash" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a>
+                    <a href="javascript:;" class="btn action-edit pull-right" style="margin-right: 5px"
+                      (click)="editPreviousEmployment(item)" matTooltip="Review"
+                      *ngIf="PermissibleRoles() ||item.ApprovalStatus != 1">
+                      <i class="fa fa-pencil" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a>
+                  </div>
+                  <!-- <span *ngIf="item.TransactionRemarks">| {{item.TransactionRemarks}} </span> -->
+                </div>
+
+
+
+              </div>
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Gross Salary <span class="required"></span></label>
+                    <p class="date">{{item.GrossSalary | number : '1.2-2'}} / {{item.ApprovedGrossSalary | number :
+                      '1.2-2'}}</p>
+
+                  </div>
+
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Previous PF<span class="required"></span></label>
+                    <p class="date">{{item.PreviousPF | number : '1.2-2'}} / {{item.ApprovedPreviousPF | number :
+                      '1.2-2'}}</p>
+
+                  </div>
+
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Previous PT<span class="required"></span></label>
+                    <p class="date">{{item.PreviousPT | number : '1.2-2'}} / {{item.ApprovedPreviousPT | number :
+                      '1.2-2'}}</p>
+
+                  </div>
+
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Tax Deducted <span class="required"></span></label>
+                    <p class="date">{{item.TaxDeducted | number : '1.2-2'}} / {{item.ApprovedTaxDeducted | number :
+                      '1.2-2'}}</p>
+
+                  </div>
+
+                </div>
+                <!-- bug fixes 16.2  -->
+                <div class="col-md-6">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label">Input Remarks <span class="required"></span></label>
+                    <p class="date" *ngIf="item.InputsRemarks != null && item.InputsRemarks !=''">
+                      {{item.InputsRemarks}}</p>
+                    <p class="date" *ngIf="item.InputsRemarks == null || item.InputsRemarks == ''">---</p>
+                  </div>
+
+                </div>
+
+                <div class="col-md-6" *ngIf="item.DocumentId > 0 ">
+                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                    <label class="form-label"> Appr. Remarks<span class="required"></span></label>
+                    <p class="date">{{item.ApproverRemarks}}</p>
+
+                  </div>
+
+                </div>
+
+                <!-- <hr> -->
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row" *ngIf="IsEditMode">
+          <div class="col-lg-12">
+            <form [formGroup]="employeeForm">
+
+              <div class="col-12 col-md-12 col-sm-12">
+                <div class="clearfix">
+
+                  <div class="row">
+
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 ">
+                      <label class="form-label ">Financial Year <span class="required">*</span></label>
+
+                      <ng-select [items]="FicalYearList" placeholder="-- select an option --"
+                        formControlName="prevEmpfinancialYear"
+                        [ngClass]="{ 'ng-touched': g.prevEmpfinancialYear.errors }" bindLabel="code" bindValue="Id">
+
+                      </ng-select>
+
+                      <div *ngIf="g.prevEmpfinancialYear.errors" class="help-block">
+                        Financial Year is required
+                      </div>
+
+
+                    </div>
+
+
+
+                    <div class="form-group form-group-vertical col-xs-push-12 col-sm-6">
+                      <label class="form-label">Company Name <span class="required">*</span> </label>
+                      <input class="form-control" type="text" name="companyName" formControlName="companyName"
+                        [ngClass]="{ 'is-invalid': submitted && g.companyName.errors }"
+                        placeholder="Integrum Technologies" autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.companyName.errors" class="invalid-feedback">
+                        Company Name is required
+                      </div>
+
+
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">Start Date <span class="required">*</span></label>
+                      <input class="form-control" name="startdate" formControlName="startdate" bsDatepicker
+                        placement="bottom" readonly (ngModelChange)="onChangeStartDate($event)"
+                        [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                        placeholder="01-01-2000" [ngClass]="{ 'is-invalid': submitted && g.startdate.errors }"
+                        type="text" autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.startdate.errors" class="invalid-feedback">
+                        Start Date is required
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                      <label class="form-label">End Date <span class="required">*</span> </label>
+                      <input class="form-control" name="enddate" bsDatepicker placement="bottom" readonly
+                        [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                        type="text" formControlName="enddate" placeholder="01-01-2000" [minDate]="EnddateminDate"
+                        [ngClass]="{ 'is-invalid': submitted && g.enddate.errors }" type="text"
+                        autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.enddate.errors" class="invalid-feedback">
+                        End Date is required
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">Gross Salary <span class="required">*</span>
+                        <span style="font-size: 11px !important;font-style: italic;color: #337ab7 !important;">(salary
+                          after considering Sec-10 exemptions (HRA exemption or any other reimbursement exemptions
+                          claimed during the given tenure))
+                        </span>
+                      </label>
+                      <input class="form-control" name="grossSalary" formControlName="grossSalary" type="text"
+                        onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987"
+                        [ngClass]="{ 'is-invalid': submitted && g.grossSalary.errors }" autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.grossSalary.errors" class="invalid-feedback">
+                        Gross Salary is required
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">Previous PT<span class="required">*</span></label>
+                      <input class="form-control" name="previousPT" formControlName="previousPT" type="text"
+                        onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987"
+                        [ngClass]="{ 'is-invalid': submitted && g.previousPT.errors }" autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.previousPT.errors" class="invalid-feedback">
+                        Previous PT is required
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">Previous PF <span class="required">*</span></label>
+                      <input class="form-control" name="previousPF" formControlName="previousPF" type="text"
+                        onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987"
+                        [ngClass]="{ 'is-invalid': submitted && g.previousPF.errors }" autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.previousPF.errors" class="invalid-feedback">
+                        >Previous PF is required
+                      </div>
+                    </div>
+                    <!-- // bug fixes 16.2 -->
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                      <label class="form-label">Tax Deducted <span class="required">*</span></label>
+                      <input class="form-control" name="taxDeducted" formControlName="taxDeducted" type="text"
+                        onkeypress="return /[0-9]/i.test(event.key)" maxlength="12" placeholder="56987"
+                        [ngClass]="{ 'is-invalid': submitted && g.taxDeducted.errors }" autocomplete="none|false|no">
+                      <div *ngIf="submitted && g.taxDeducted.errors" class="invalid-feedback">
+                        Tax Deducted is required
+                      </div>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                      <label class="form-label">Remarks </label>
+                      <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                        id="Remarks" formControlName="InputsRemarks"></textarea>
+
+                    </div>
+                    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                      <label class="form-label">Attachment <span class="required" *ngIf="currentTaxMode == 2">*</span>
+                        <span class="help-text m-l-5">(Max file
+                          size 2MB)</span></label>
+                      <label class="upload control" style="width: 50%; float: left;"
+                        *ngIf="!employeeForm.get('Prev_FileName').value">
+                        <div class="upload-draggable is-primary">
+                          <section class="section">
+                            <div class="has-text-centered">
+                              <span class="icon is-large">
+                                <span style="padding-left: 10px;"> <i class="fa fa-upload" style="color: #9ba7ca;"></i>
+                                  Upload
+                                </span>
+                              </span>
+
+                            </div>
+                          </section>
+                        </div>
+                        <input type="file" #myInput accept="application/msword,  application/pdf, image/*"
+                          (change)="onFileUpload($event, i, 'Investment')" id="sTest-uploadFile-candidateAddResume">
+
+                      </label>
+
+                      <div class="d-flex align-items-center" style="margin-top: 10%;" *ngIf="!isLoading">
+                        <strong class="text-right"> {{docSpinnerText}} ... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                      </div>
+
+                      <div *ngIf="g.Prev_DocumentId.errors" class="help-block">
+                        <div>Attachment is required
+                        </div>
+                      </div>
+                      <p class="control" *ngIf="employeeForm.get('Prev_FileName').value">
+                        <span class="file-name">
+                          <button class="btn btn-danger c-btn" (click)="doDeleteFile()" [disabled]="!isLoading"><a
+                              ngbTooltip="Trash Attachment" id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                           display: block ;margin-top: -5px;"><i
+                                class="fa fa-trash-o"></i></a>
+                          </button>
+                          <a target="blank" class="ahref" style="padding: 2px;">
+                            {{employeeForm.get('Prev_FileName').value}}
+                          </a>
+
+                        </span>
+
+                      </p>
+                    </div>
+
+
+                  </div>
+
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+
+
+
+
+      </div>
+
+      <div class="modal-footer">
+
+        <div class="row" style="width: 100%;">
+          <div class="col-lg-6">
+
+          </div>
+          <div class="col-lg-6 text-right">
+            <div class="text-right">
+              <ul class="list-inline">
+                <li class="list-inline-item" *ngIf="!IsEditMode">
+                  <button class="btn btn-link" type="button" (click)="close_slider_prevEmp()"> Close</button>
+                </li>
+                <li class="list-inline-item" *ngIf="IsEditMode">
+                  <button class="btn btn-link" type="button" (click)="IsEditMode = false"> Cancel</button>
+                </li>
+                <li class="list-inline-item" *ngIf="IsEditMode">
+                  <button class="btn  btn-primary"
+                    style="padding-left: 25px;padding-right: 25px;padding-top: 2px;padding-bottom: 3px;" type="Submit"
+                    name="btnSubmit" id="btnSubmit" (click)="updatePreviousEmplyment()"> Save
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

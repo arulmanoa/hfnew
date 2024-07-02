@@ -1,0 +1,456 @@
+<div style="display: block;background-color: #18171773;" class="modal fade show">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="dfc100 overflow-y-auto">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">PayGroup Product Details : </h4>
+          <!-- <h4 class="modal-title pull-left">{{header}}</h4> -->
+          <a class="icon btn-icon pull-left m-l-n-xxxl chrome-back-btn m-t-n-sm" (click)="closeModal()"><i
+              class="mdi mdi-close font-size-md icon-close"></i></a>
+        </div>
+        <div class="modal-body no-padder builtin-calling-wrapper">
+          <div class="text-center ma-5" *ngIf="spinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+              <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+              Please wait...
+            </button>
+          </div>
+          <div class="flex-column" *ngIf="!spinner">
+            <form [formGroup]="productdetailsForm">
+              <div class="row">
+                <div class="clearfix w-100">
+                  <div class="col-12 col-md-12 col-sm-12">
+                    <div class="form-row">
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                        *ngIf="this.productdetailsForm.controls.DisplayName">
+                        <label class="form-label">Product Name <span class="required"> * </span></label>
+                        <input type="text" class="form-control" placeholder="Product Name" formControlName="DisplayName"
+                          [ngClass]="{ 'ng-touched': submitted && g.DisplayName.invalid }" autocomplte="off">
+                        <div *ngIf="submitted && g.DisplayName.invalid" class="help-block">
+                          <div *ngIf="g.DisplayName.errors.required">Product Name is required</div>
+                        </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                        *ngIf="this.productdetailsForm.controls.producttype">
+                        <label class="form-label">Product Type <span class="required"> * </span></label>
+                        <input type="text" class="form-control" placeholder="Product Type" formControlName="producttype"
+                          [ngClass]="{ 'ng-touched': submitted && g.producttype.invalid }" autocomplte="off">
+                        <div *ngIf="submitted && g.producttype.invalid" class="help-block">
+                          <div *ngIf="g.producttype.errors.required">Product Type is required</div>
+                        </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                        *ngIf="this.productdetailsForm.controls.CalculationType">
+                        <label class="form-label">Calculation Type <span class="required"> * </span></label>
+                        <input type="text" class="form-control" placeholder="Calculation Type"
+                          formControlName="CalculationType"
+                          [ngClass]="{ 'ng-touched': submitted && g.CalculationType.invalid }" autocomplte="off">
+                        <div *ngIf="submitted && g.CalculationType.invalid" class="help-block">
+                          <div *ngIf="g.CalculationType.errors.required">Calculation Type is required</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group form-group-vertical  col-xs-12 col-md-6 col-lg-6 col-sm-12">
+                        <label class=form-label>GL Code </label>
+                        <input type="text" placeholder="GL Code" class="form-control" formControlName="GLCode"
+                          [ngClass]="{ 'is-invalid': submitted && g.GLCode.errors }">
+                      </div>
+  
+                      <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12">
+                        <label class="form-label">Tax Product <span class="required"> * </span></label>
+                        <ng-select [items]="listOfTaxProducts" placeholder="Tax Product" formControlName="TaxProductId"
+                          [ngClass]="{ 'ng-touched': submitted && g.TaxProductId.invalid }" bindLabel="Name"
+                          bindValue="Id" [clearable]="false">
+                        </ng-select>
+                        <div *ngIf="submitted && g.TaxProductId.invalid" class="help-block">
+                          <div *ngIf="g.TaxProductId.errors.required">Tax Product is required</div>
+                        </div>
+                        <div *ngIf="g.TaxProductId.hasError('notAllowedZero')" class="help-block">
+                          Please select one from dropdown
+                        </div>
+                      </div>  
+                    </div>
+                    
+                    
+
+
+                    
+                    
+                    <!-- <div class="form-group form-group-vertical col-xs-12 col-md-3 col-lg-3 col-sm-12" *ngIf="this.productdetailsForm.controls.payrollrule">
+                          <label class="form-label">Payroll Rule<span class="required"> * </span></label>
+          
+                              <ng-select [items]="payrollruleslist"  placeholder="Payroll Rule" formControlName="payrollrule" [ngClass]="{ 'ng-touched': submitted && g.payrollrule.invalid }" bindLabel="Name" bindValue="Id">
+                              </ng-select>
+                              <div *ngIf="submitted && g.payrollrule.invalid" class="help-block">
+                                  <div *ngIf="g.payrollrule.errors.required">Payroll Rule is required</div>
+                              </div>
+              
+                        </div> -->
+
+
+                    <!-- <div class="form-group form-group-vertical col-12 col-lg-3 col-md-3 col-xs-12 col-sm-12" *ngIf="this.calculationTypename == 'Rule'">
+                          <label class="form-label">Payroll Rule<span class="required">*</span> </label>
+                          <select class="form-control" formControlName="payrollrule" [ngClass]="{ 'is-invalid': submitted && g.payrollrule.errors }">
+                            <option value="">----Select----</option>
+                            <option *ngFor="let rule of payrollruleslist" [value]="rule.Id">
+                              {{rule.Name}}
+                            </option>
+                          </select>
+                          <div *ngIf="submitted && g.payrollrule.errors" class="invalid-feedback">
+                            <div *ngIf="g.payrollrule.errors.required">Payroll Rule is required</div>
+                          </div>
+                        </div> -->
+
+                    <div class="form-row" *ngIf="product.CalculationType != 2">
+                      <fieldset class="group-by">
+                        <legend>&nbsp;Payroll&nbsp;</legend>
+                        <div class="row">
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class="form-label">Is Billable</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="Is Billable" formControlName="IsBillable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3"
+                            *ngIf="this.productdetailsForm.controls.IsLopApplicable">
+                            <label class="form-label">LOP Applicable</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="LOP Applicable" formControlName="IsLopApplicable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3"
+                            *ngIf="this.productdetailsForm.controls.IsArrearApplicable">
+                            <label class="form-label">Arrear Applicable</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="Arrear Applicable" formControlName="IsArrearApplicable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3"
+                            *ngIf="this.productdetailsForm.controls.IsOveridable">
+                            <label class="form-label">Is Overridable</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="Is Overridable" formControlName="IsOveridable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3"
+                            *ngIf="this.productdetailsForm.controls.IsRecalculationrequired">
+                            <label class="form-label">Is Recalculation Required</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="Is Recalculation Required"
+                                  formControlName="IsRecalculationrequired" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class=form-label>Reverse Sequence Order</label>
+                            <input type="text" placeholder="0" class="form-control" formControlName="ReverseSequenceOrder"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)" [ngClass]="{ 'is-invalid': submitted && g.ReverseSequenceOrder.errors }">
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3"
+                            *ngIf="this.productdetailsForm.controls.IsBreakUpApplicable">
+                            <label class="form-label">BreakUp Applicable</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="BreakUp Applicable"
+                                  formControlName="IsBreakUpApplicable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-12 col-lg-3 col-md-3 col-xs-12 col-sm-12">
+                            <label class="form-label">Rule<span class="required">*</span> </label>
+                            <ng-select [items]="ctcPayrollRuleList" placeholder="Select Rule"
+                              formControlName="ProductCTCPayrollRuleMappingId"
+                              [ngClass]="{ 'ng-touched': submitted && g.ProductCTCPayrollRuleMappingId.invalid }"
+                              bindLabel="Name" bindValue="Id" [clearable]="false">
+                            </ng-select>
+                            <div *ngIf="g.ProductCTCPayrollRuleMappingId.errors" class="invalid-feedback">
+                              <div *ngIf="g.ProductCTCPayrollRuleMappingId.errors.required">Rule is required</div>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class="form-label">Threshold Applicable</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="Threshold Applicable"
+                                  formControlName="IsThresholdLimitApplicable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-lg-3 col-sm-12"
+                            *ngIf="this.productdetailsForm.controls.IsThresholdLimitApplicable.value == true">
+                            <label class="form-label">Threshold Limit<span class="required"> * </span></label>
+
+                            <input type="number" class="form-control" placeholder="Threshold Limit "
+                              formControlName="TaxThresholdLimit"
+                              [ngClass]="{ 'ng-touched': submitted && g.TaxThresholdLimit.invalid }" autocomplte="off">
+
+                            <div *ngIf="submitted && g.TaxThresholdLimit.invalid" class="help-block">
+                              <div *ngIf="g.TaxThresholdLimit.errors.required">Threshold Limit is required</div>
+                            </div>
+                            <div *ngIf="g.TaxThresholdLimit.hasError('notAllowedZero')" class="help-block">
+                              Please enter valid number
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class="form-label">Is Adjustment Product ?</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="IsAdjustmentProduct"
+                                  formControlName="IsAdjustmentProduct" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class="form-label">Proration Required For New Joiner </label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="IsProrationRequiredForNewJoiner"
+                                  formControlName="IsProrationRequiredForNewJoiner" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class="form-label">Consider Latest Amount When Splits Exist </label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="ConsiderLatestAmountWhenSplitsExist"
+                                  formControlName="ConsiderLatestAmountWhenSplitsExist" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class="form-label">Is Encash Days Not Applicable ? </label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="IsEncashDaysNotApplicable"
+                                  formControlName="IsEncashDaysNotApplicable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical  col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class=form-label>Decimal value</label>
+                            <input type="text" placeholder="0" class="form-control" formControlName="Decimalvalue"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)" [ngClass]="{ 'is-invalid': submitted && g.Decimalvalue.errors }">
+                          </div>
+                     
+
+                          <div class="form-group form-group-vertical  col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class=form-label>Numeric value</label>
+                            <input type="text" placeholder="0" class="form-control" formControlName="Numericvalue"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)" [ngClass]="{ 'is-invalid': submitted && g.Numericvalue.errors }" >
+                          </div>
+
+                          <div class="form-group form-group-vertical  col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class=form-label>String value</label>
+                            <input type="text" placeholder="String value" class="form-control" formControlName="Stringvalue"
+                              [ngClass]="{ 'is-invalid': submitted && g.Stringvalue.errors }">
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-lg-3 col-sm-12">
+                            <label class="form-label">Min. Work Time Type <span class="required"> * </span> </label>
+
+                            <ng-select [items]="minWorkTimeTypesArray" placeholder="Select"
+                              formControlName="MinWorkTimeType"
+                              [ngClass]="{ 'ng-touched': submitted && g.MinWorkTimeType.invalid }" bindLabel="name"
+                              bindValue="id" [clearable]="false">
+                            </ng-select>
+                            <div *ngIf="submitted && g.MinWorkTimeType.invalid" class="help-block">
+                              <div *ngIf="g.MinWorkTimeType.errors.required">Section is required</div>
+                            </div>
+                            <div *ngIf="g.MinWorkTimeType.hasError('notAllowedZero')" class="help-block">
+                              Please select one from dropdown
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-lg-3 col-sm-12"
+                            *ngIf="this.productdetailsForm.controls.MinWorkTimeType.value > 0">
+                            <label class="form-label">Min. Work Time To Pay<span class="required"> * </span></label>
+
+                            <input type="number" class="form-control" placeholder="0.5"
+                              formControlName="MinWorkTimeToPay"
+                              [ngClass]="{ 'ng-touched': submitted && g.MinWorkTimeToPay.invalid }" autocomplte="off">
+
+                            <div *ngIf="submitted && g.MinWorkTimeToPay.invalid" class="help-block">
+                              <div *ngIf="g.MinWorkTimeToPay.errors.required">Threshold Limit is required</div>
+                            </div>
+                            <div *ngIf="g.MinWorkTimeToPay.hasError('notAllowedZero')" class="help-block">
+                              Please enter valid number
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3"
+                            *ngIf="this.productdetailsForm.controls.MinWorkTimeType.value > 0">
+                            <label class="form-label">Is Arrear Required For Non Adhered MinWork TimePeriods ? </label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="IsArrearRequiredForNonAdheredMinWorkTimePeriods"
+                                  formControlName="IsArrearRequiredForNonAdheredMinWorkTimePeriods" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div class="form-row" *ngIf="product.CalculationType != 2">
+                      <fieldset class="group-by">
+                        <legend>&nbsp;Tax&nbsp;</legend>
+                        <div class="row">
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3"
+                            *ngIf="this.productdetailsForm.controls.IsTaxOverridable">
+                            <label class="form-label">Tax Overridable</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="Tax Overridable" formControlName="IsTaxOverridable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class="form-label">Gross Tax Applicable </label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="IsGrossTaxUpApplicable"
+                                  formControlName="IsGrossTaxUpApplicable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class="form-label">Tax projection Required </label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="Tax projection Required"
+                                  formControlName="IsTaxprojectionRequired" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-sm-12 col-lg-3">
+                            <label class="form-label">Tax Code Applicable</label>
+                            <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                <input type="checkbox" name="Tax Code Applicable"
+                                  formControlName="IsTaxCodeApplicable" />
+                                <span class="el-switch-style"></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group form-group-vertical col-xs-12 col-md-3 col-lg-3 col-sm-12"
+                            *ngIf="this.productdetailsForm.controls.IsTaxCodeApplicable.value == true">
+                            <label class="form-label">Section <span class="required"> * </span></label>
+                            <ng-select [items]="listOfTaxCodes" placeholder="Section" formControlName="TaxCodeId"
+                              [clearable]="false" [ngClass]="{ 'ng-touched': submitted && g.TaxCodeId.invalid }"
+                              bindLabel="Code" bindValue="Id">
+                            </ng-select>
+                            <div *ngIf="submitted && g.TaxCodeId.invalid" class="help-block">
+                              <div *ngIf="g.TaxCodeId.errors.required">Section is required</div>
+                            </div>
+                            <div *ngIf="g.TaxCodeId.hasError('notAllowedZero')" class="help-block">
+                              Please select one from dropdown
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <!-- <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12"
+                      *ngIf="this.productdetailsForm.controls.DisplayOrder">
+                      <label class="form-label">Display Order <span class="required"> * </span></label>
+
+                      <input type="text" class="form-control" placeholder="Display Order" formControlName="DisplayOrder"
+                        [ngClass]="{ 'ng-touched': submitted && g.DisplayOrder.invalid }" autocomplte="off">
+
+                      <div *ngIf="submitted && g.DisplayOrder.invalid" class="help-block">
+                        <div *ngIf="g.DisplayOrder.errors.required">Display Order is required</div>
+                      </div>
+                      <div *ngIf="submitted && g.DisplayOrder.hasError('notAllowedZero')" class="help-block">
+                        Please enter valid number
+                      </div>
+                    </div> -->
+                    <!-- <div class="form-group form-group-vertical col-xs-12 col-md-3 col-lg-3 col-sm-12" *ngIf="this.productdetailsForm.controls.ctcrule">
+                          <label class="form-label">CTC Rule <span class="required"> * </span></label>
+          
+                          <select *ngFor="let k of ctcruleslist"><option>{{k.Name}}</option></select>
+                              <ng-select [items]="ctcruleslist" placeholder="CTC Rule" formControlName="ctcrule" [ngClass]="{ 'ng-touched': submitted && g.ctcrule.invalid }" bindLabel="Name" bindValue="Id">
+                              </ng-select>
+                              <div *ngIf="submitted && g.ctcrule.invalid" class="help-block">
+                                  <div *ngIf="g.ctcrule.errors.required">CTC Rule is required</div>
+                              </div>
+              
+                        </div> -->
+                    <!-- <div class="form-group form-group-vertical col-xs-12 col-md-6 col-lg-6 col-sm-12" *ngIf="this.productdetailsForm.controls.IsTaxprojectionRequired.value == true && this.productdetailsForm.controls.IsTaxOverridable.value == true">
+                          <label class="form-label">Tax Product  <span class="required"> * </span></label>
+        
+                            <input type="text" class="form-control" placeholder="Tax Product " formControlName="TaxProductId" [ngClass]="{ 'ng-touched': submitted && g.TaxProductId.invalid }" autocomplte="off">
+                        
+                            <div *ngIf="submitted && g.TaxProductId.invalid" class="help-block">
+                                <div *ngIf="g.TaxProductId.errors.required">Tax Product  is required</div>
+                            </div>
+                        </div> -->
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default pull-right" type="button" (click)="closeModal()">
+            <i class="mdi mdi-close m-r-xs"></i>Cancel
+          </button>
+          <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+            <div>
+              <span class="d-none"> {{productdetailsForm.controls}}</span>
+              <button class="btn  btn-primary " type="Submit" name="btnSubmit"
+                [disabled]="!disableBtn || productdetailsForm.invalid" id="btnSubmit" (click)="savebutton()">
+                <div class="pos-rlt sm-btn-component"><span><i class="mdi mdi-content-save  m-r-xs"></i> Save </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+<div style="display: block;" class="modal fade show animated fadeIn">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header" style="padding: 15px !important;">
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Confirmation</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL">Approve Sale Order</h6>
+        </div>
+
+      </div>
+
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12  col-sm-12  p-r-50">
+            <div class="row">
+              <div class="col-md-12">
+
+                <div class="pretty p-icon p-round" style="margin-bottom: 10px;">
+                  <input type="radio" name="icon_solid1" value="1" checked (change)="ActionOfSelection(1)" />
+                  <div class="state p-success">
+                    <i class="icon mdi mdi-check"></i>
+                    <label>I want to Approve Sale Order and create Invoice</label>
+                  </div>
+                </div>
+
+                <div class="pretty p-icon p-round">
+                  <input type="radio" name="icon_solid1" value="2" (change)="ActionOfSelection(2)" />
+                  <div class="state p-success">
+                    <i class="icon mdi mdi-check"></i>
+                    <label>I want to only approve Sale Order</label>
+                  </div>
+                </div>
+
+              </div>
+
+
+            </div>
+            <div *ngIf="showApprovemode">
+              <br>
+              <div class="row">
+                <div class="col-md-12">
+                  <br>
+                  <p style="margin-bottom: 0.3rem;"><b>Approve Invoice Mode </b> </p>
+
+                  <div class="pretty p-icon p-round" style="margin-bottom: 10px;">
+                    <input type="radio" name="icon_solid" disabled value="1" (change)="onProfitSelectionChange(1)" />
+                    <div class="state p-success">
+                      <i class="icon mdi mdi-check"></i>
+                      <label>Auto</label>
+                    </div>
+                  </div>
+
+                  <div class="pretty p-icon p-round">
+                    <input type="radio" name="icon_solid" value="2" checked (change)="onProfitSelectionChange(2)" />
+                    <div class="state p-success">
+                      <i class="icon mdi mdi-check"></i>
+                      <label>Manual</label>
+                    </div>
+                  </div>
+
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer" style="border-top: none;">
+        <div class="pull-left left-margin-btn">
+        </div>
+        <div class="pull-right m-r-sm">
+          <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+            (click)="closeConfrimationAlert()">
+            <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> No, Cancel </span></div>
+          </button>
+
+          <button class="btn btn-primary pull-right" type="button" (click)="proceedConfirmationAlert()"> <i
+              class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Yes, Proceed</button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

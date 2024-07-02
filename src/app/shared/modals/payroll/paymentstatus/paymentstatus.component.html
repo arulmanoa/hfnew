@@ -1,0 +1,59 @@
+<span *ngIf="!spinner" class="pull-left text-overflow" style="font-size: 16px;width: 100%;margin-top: -15px;">Client Name : {{rowData.ClientName}} </span>
+<button *ngIf="!spinner" class="btn btn-default pull-right" type="button" (click)="exportAsXLSX()"
+style="margin-top: -30px;"> <i class="mdi mdi-file-excel"></i> &nbsp; Export </button>
+<p></p>
+<br>
+
+        <div class="row" style="margin-bottom: 10px;width: 107%;">
+          <div class="row" >
+          <div class="col-lg-12">
+        <div class="text-center ma-5" *ngIf="spinner" >
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+          </div>
+        </div>
+        <!-- <div class="row" *ngIf="!spinner">
+
+          <div class="col-lg-6 col-xs-6  col-sm-6">
+            <b> Include employee(s) with following Process Category : Termination</b>
+            <div class="p-t-10">
+              <label class="el-checkbox el-checkbox-green">
+                <input type="checkbox" name="Status" [(ngModel)]="isFnFEmployee"
+                  (change)="onChangeFnFCheckmark($event, 'FnF')" />
+                <span class="el-checkbox-style"></span> &nbsp; FnF Employee(s)
+              </label>
+            </div>
+          
+          </div>
+
+
+
+          <div class="col-lg-6 col-xs-12" style="text-align: right;">
+            <label> <b> No. Of Employee(s) : <b> {{inEmployeesInitiateList.length}}</b> &nbsp; &nbsp; &nbsp; Selected
+                Employee(s) : <b> {{inEmployeesInitiateSelectedItems.length}}</b></b></label>
+          </div>
+        </div> -->
+        <div class="row" *ngIf="!spinner" style="width: 100%;">
+          <div class="col-lg-12">
+            <angular-slickgrid gridId="grdinEmployeesInitiate"
+              [columnDefinitions]="inEmployeesInitiateColumnDefinitions" [gridOptions]="inEmployeesInitiateGridOptions"
+              [dataset]="inEmployeesInitiateList" (onAngularGridCreated)="inEmployeesInitiateGridReady($event)"
+              gridWidth="100%"
+              (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+            </angular-slickgrid>
+          </div>
+        </div>
+
+        <span *ngIf="!spinner" class="emp-id-label" style="float: right;
+        margin-top: -20px;
+        text-align: right;
+        width: 100%;
+        margin-right: 35px;">  No of Employee(s) : {{inEmployeesInitiateList.length}} </span>
+
+      </div>
+
+
+      

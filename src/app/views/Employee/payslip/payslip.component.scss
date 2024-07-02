@@ -1,0 +1,134 @@
+.card2 {
+
+    &:hover {
+      transition: all 0.2s ease-out;
+      box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
+      top: -4px;
+      border: 1px solid #0a609eeb;
+      background-color: white;
+    }
+    &:hover:before {
+      transform: scale(2.15);
+    }
+  }
+
+  
+
+.card {
+    margin-bottom: 1.5rem;
+    border-color: #edf2f9;
+    box-shadow: 0 0.75rem 1.5rem rgba(18,38,63,.03);
+  }
+  .card {
+    position: relative;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border:1px solid #d8d9d9;
+    border-radius: .5rem;
+  }
+  
+  .card-header:first-child {
+    border-radius: calc(.5rem - 1px) calc(.5rem - 1px) 0 0;
+  }
+  .card-header {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+    -webkit-box-align: center;
+    align-items: center;
+    height: 60px;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+  }
+  .card>* {
+    flex-shrink: 0;
+  }
+  .card-header {
+    padding: 1rem 1.5rem;
+    margin-bottom: 0;
+    background-color: transparent;
+    border-bottom: 1px solid #edf2f9;
+  }
+  .card-header>:first-child {
+    -webkit-box-flex: 1;
+    flex: 1;
+  }
+  
+  .card-header-title {
+    margin-bottom: 0;
+  }
+  .btn-white {
+    border-color: #e3ebf6;
+  }
+  
+   h4 {
+    letter-spacing: -.02em;
+  }
+   h4 {
+    margin-bottom: .5625rem;
+  }
+   h4 {
+    font-size: .9375rem;
+  }
+  
+  .table-sm {
+    font-size: .8125rem;
+  }
+  .card-table {
+    margin-bottom: 0;
+  }
+  
+  .table [data-sort] {
+    white-space: nowrap;
+  }
+  .text-muted {
+    color: #95aac9!important;
+  }
+  .table-sm thead th {
+    font-size: .625rem;
+  }
+  .table thead th {
+    background-color: #f9fbfd;
+    text-transform: uppercase;
+    // font-size: .8125rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: #95aac9;
+    border-bottom-width: 1px;
+  }
+  .table-nowrap td, .table-nowrap th {
+    white-space: nowrap;
+  }
+  th {
+    text-align: inherit;
+  }
+  
+  .card-table tbody td:first-child, .card-table thead th:first-child {
+    padding-left: 1.5rem!important;
+  }
+  .table tbody td, .table tbody th, .table thead th {
+    vertical-align: middle;
+  }
+  .table-nowrap td, .table-nowrap th {
+    white-space: nowrap;
+  }
+  .table-sm td, .table-sm th {
+    padding: 1rem;
+  }
+  .table td, .table th {
+    // padding: 1rem;
+    // vertical-align: top;
+    border-top: 1px solid #edf2f9;
+  }
+  .date { 
+    font-size: 12px !important;
+  }

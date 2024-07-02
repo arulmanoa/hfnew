@@ -1,0 +1,1333 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div *ngIf="cardsArr.length != 0" class="row" style="margin-bottom: 5px;margin-top: -15px;">
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="padding-top: 10px;">
+          <span *ngFor="let obj of cardsArr">
+            <h6 class="h6_c" *ngIf="obj.CardValue == isEnabled" style="font-size: 16px;
+          font-weight: 700;">{{obj.DisplayName}}</h6>
+          </span>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div [ngClass]="[cardslenght]" style="height: 85px !important;margin-right: 5px;margin-left: 7px;">
+      <label for="{{item.Id}}" style="height: 82px;"
+        class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer" *ngFor="let item of cardsArr">
+        <span class="custombadge translate-middle border rounded-circle" [style.background-color]="item.Color">
+          {{item.Count}}
+        </span>
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;text-transform: capitalize !important;">{{item.DisplayName}}</span>
+        <span><i [ngClass]="item.IconName" [style.color]="item.Color" aria-hidden="true"
+            style="margin-top: -10px !important;"></i></span>
+        <!-- <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{item.CountValue}} <span style="font-size: 12px;
+            color: black !important;"> {{item.labelValue}} </span> </span>
+        </span> -->
+
+        <input type="radio" name="plan" id="{{item.Id}}" value="{{item.CardValue}}"
+          class="absolute h-0 w-0 appearance-none" (click)="RefreshSepFn(item.CardValue)"
+          [checked]="isEnabled == item.CardValue" />
+        <span aria-hidden="true"
+          class="active-arrow hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+    </div>
+
+    <div *ngIf="isEnabled" class="content m-b report-content"
+      style="margin-top: 0px !important;margin-right: 7px; margin-left: 6px;">
+      <div *ngIf="isEnabled == 2">
+        <!--tableArray(permissions)-->
+        <div class="row" style="margin-left: 0px !important;">
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-3">
+            <label class="form-label searchbar-label">Date Range </label>
+            <div class="form-group m-t-m5" style="width: 210px;">
+              <div class="input-group">
+                <input class="form-control" style="height: 36px;border-color: rgb(204 204 204)"
+                  placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="DateId"
+                  (bsValueChange)="onChange_DateSearch($event,DateId)"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                  <i *ngIf="DateId" (click)="DateId = null" placeholder="Clear"
+                  style="position: absolute; right: 5px;transform: translate(-50%, -50%);top: 46%; cursor: pointer;color: #949494;"
+                  class="fa fa-times fa-1" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <label class="form-label searchbar-label">Status </label>
+            <div class="form-group m-t-m5" style="margin-left: -10px">
+              <div class="input-group">
+                <ng-select [items]="StatusList" [(ngModel)]="StatusId" placeholder="Status" bindLabel="Name"
+                  bindValue="id" style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+              <div class="input-group">
+                <button type="button" (click)="SearchSubFn()" class="btn btn-primary mr-2 float-right"
+                  style="display: inline;margin: 0 auto;">
+                  <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+              <div class="input-group">
+                <button type="button" class="btn btn-default" (click)="ReFreshFn()">
+                  <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="row">
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-12 text-right">
+            <div class="form-group m-t-m5" style="margin-right: 7px !important;">
+              <div class="input-group" style="margin-top:-16px">
+                <!-- <button type="button" class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;"
+                  [disabled]="AvailDisableFn()" (click)="submitFn('A')">
+                  <i class="mdi mdi-lead-pencil"></i> Avail
+                </button> -->
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <ngb-tab>
+              <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                <div class="table-responsive table-height" style="height: 300px;">
+                  <table class="table-sticky table-bordered tble-row-height table mb-0" *ngIf="!spinner">
+                    <thead class="tbl-freezhead">
+                      <tr>
+                        <!-- <th style="background: #f3f3f3; width: 30px;">
+                          <input #checkAll type="checkbox" id="checkAll" [checked]="checked" [(ngModel)]="CheckdVal"
+                            (change)="CheckAllFnPer(checkAll.checked)"
+                            style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                        </th> -->
+                        <th style="background: #f3f3f3;">
+                          Emp Code
+                        </th>
+                        <th style="background: #f3f3f3;">
+                          Date
+                        </th>
+                        <th style="background: #f3f3f3;">
+                          Requested On
+                        </th>
+                        <th style="background: #f3f3f3;">
+                          Start time
+                        </th>
+                        <th style="background: #f3f3f3;">
+                          End time
+                        </th>
+                        <th style="background: #f3f3f3;">
+                          Requested time
+                        </th>
+                        <th style="background: #f3f3f3;">
+                          Manager Remarks
+                        </th>
+                        <th style="background: #f3f3f3;">
+                          Status
+                        </th>
+                        <th style="background: #f3f3f3;width: 20px;">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <tbody class="tbl-scrollbody">
+                      <tr *ngFor="let item of tableArray">
+                        <!-- <td style="padding-top: 8px !important;">
+                          <input type="checkbox" [(ngModel)]="item.Select_Val" [checked]="item.Select_Val==true"
+                            id="check" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          {{item.EmployeeId}}
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          {{item.Date}}
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          {{item.CreatedOn}}
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          <!-- {{item.StartTime}} -->
+                          {{item.ApprovedStartTime}}
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          <!-- {{item.EndTime}} -->
+                          {{item.ApprovedEndTime}}
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          {{item.requestedTime}}
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          {{item.ApproverRemarks || '---'}}
+                        </td>
+                        <!-- <td style="padding-top: 8px !important;">
+                          {{item.Status == 100 ? 'Applied' :(item.Status == 200 ? 'Reject' : (item.Status == 300 ?
+                          'Approved' :'---'))}}
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          {{item.DisplayStatus}}
+                        </td>
+                        <!-- <td style="padding-top: 8px !important;">
+                          <i class="fa fa-pencil-square-o btn" aria-hidden="true"
+                            style="font-size: 20px; cursor: pointer;" (click)="submitFn('I',item)"></i>
+                        </td> -->
+                        <td style="padding-top: 1.5px !important;width: 20px;">
+                          <!-- <button [disabled] = "item.Status == 200" type="button" (click)="cancellationShowPopup(item)"
+                            style="color:rgba(194, 54, 54, 0.904)" class="btn btn-link">cancel
+                            request</button> -->
+                          <!-- <button *ngIf="item.Status != 200" type="button" (click)="cancellationShowPopup(item)"
+                            class="btn btn-danger rounded-pill btn-sm">
+                            <i class="fa fa-window-close" aria-hidden="true"></i> Cancel Rquest
+                          </button> -->
+                          <i *ngIf="item.Status != 200 && (item.CancelStatus == 0 || item.CancelStatus == 200)" class="fa fa-window-close" (click)="cancellationShowPopup(item)"
+                            style="margin-left: 15px; color: #c72727;cursor: pointer;" matTooltip="Cancel Rquest"
+                            placeholder="Cancel Rquest" aria-hidden="true"></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf="tableArray.length == 0 && !spinner" style="text-align: center;margin-top: 35px;">No
+                    Records Found
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="text-center ma-5" style="padding-top: 15px;" *ngIf="spinner">
+                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                            aria-hidden="true"></span>
+                          Please wait...
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ngb-tab>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="isEnabled == 3">
+        <!--tableArrayWOW-->
+        <div class="row" style="margin-left: 0px !important;">
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-3">
+            <label class="form-label searchbar-label">Date Range </label>
+            <div class="form-group m-t-m5" style="width: 210px;">
+              <div class="input-group">
+                <input class="form-control" style="height: 36px;border-color: rgb(204 204 204)"
+                  placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="DateIdWOW"
+                  (bsValueChange)="onChange_DateSearchWOW($event,DateIdWOW)"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                  <i *ngIf="DateIdWOW" (click)="DateIdWOW = null" placeholder="Clear"
+                  style="position: absolute; right: 5px;transform: translate(-50%, -50%);top: 46%; cursor: pointer;color: #949494;"
+                  class="fa fa-times fa-1" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <label class="form-label searchbar-label">Status </label>
+            <div class="form-group m-t-m5" style="margin-left: -10px">
+              <div class="input-group">
+                <ng-select [items]="StatusListWOW" [(ngModel)]="StatusIdWOW" placeholder="Status" bindLabel="Name"
+                  bindValue="id" style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+              <div class="input-group">
+                <button type="button" (click)="SearchSubFnWOW()" class="btn btn-primary mr-2 float-right"
+                  style="display: inline;margin: 0 auto;">
+                  <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+              <div class="input-group">
+                <button type="button" class="btn btn-default" (click)="ReFreshFnWOW()">
+                  <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-12 text-right">
+            <div class="form-group m-t-m5" style="margin-right: 7px !important;">
+              <div class="input-group" style="margin-top:-16px">
+                <!-- <button type="button" class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;"
+                  [disabled]="SubmitDisableFn()" (click)="submitWOWFn('A')">
+                  <i class="mdi mdi-lead-pencil"></i> Submit
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <ngb-tab>
+              <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                <div class="table-responsive table-height" style="height: 300px;">
+                  <table class="table-sticky table-bordered tble-row-height table mb-0" *ngIf="!spinner">
+                    <thead class="tbl-freezhead">
+                      <tr>
+                        <!-- <th style="background: #f3f3f3; width: 30px;">
+                          <input #checkAllWOW type="checkbox" id="checkAllWOW" [checked]="checked"
+                            [(ngModel)]="CheckdValWOW" (change)="CheckAllFnWOW(checkAllWOW.checked)"
+                            style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                        </th> -->
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 100px;">
+                          Emp ID
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 150px !important;">
+                          Date
+                        </th>
+                        <th style="background: #f3f3f3;width:130px;">
+                          Claim Type
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;">
+                          Employee Remarks
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;">
+                          Manager Remarks
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;">
+                          Status
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 20px;">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="tbl-scrollbody">
+                      <tr *ngFor="let item of tableArrayWOW">
+                        <!-- <td style="padding-top: 8px !important;">
+                          <input type="checkbox" [(ngModel)]="item.Select_Val" [checked]="item.Select_Val==true"
+                            id="check" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          {{item.EmployeeId}}
+                        </td>
+                        <td style="padding-top: 8px !important;width: 150px;">
+                          {{item.Date}}
+                        </td>
+                        <!-- <td style="padding-top: 0px !important;padding-bottom: 2px !important;">
+                          <div class="input-group" style="margin-top: 2px !important;">
+                            <div class="input-group-prepend">
+                              <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                              </label>
+                            </div>
+                            <input class="form-control" style="width: 130px;" type="text" name="AppliedFrom"
+                              bsDatepicker placement="bottom" [minDate]="_from_minDate" readonly
+                              [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }"
+                              [daysDisabled]="weekOffs" placeholder="12-12-1970"
+                              [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off"
+                              [(ngModel)]="item.Date">
+                          </div>
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          {{item.RequestedClaimType == 0 ? 'None' : (item.RequestedClaimType == 100 ? 'Decide Later' :
+                          (item.RequestedClaimType == 200 ? 'Encash' : 'Leave'))}}
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          <p matTooltip="{{item.EmployeeRemarks}}"
+                            style="text-overflow: ellipsis; overflow: hidden; width: 85px;  height: 1.2em; white-space: nowrap;cursor: pointer;">
+                            {{item.EmployeeRemarks || '---'}}
+                          </p>
+                          <!-- {{item.EmployeeRemarks || '---'}} -->
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          <p matTooltip="{{item.ApproverRemarks}}"
+                            style="text-overflow: ellipsis; overflow: hidden; width: 85px;  height: 25px; white-space: nowrap;cursor: pointer;margin-bottom:0px">
+                            {{item.ApproverRemarks || '---'}}
+                          </p>
+                          <!-- {{item.ApproverRemarks || '---'}} -->
+                        </td>
+                        <!-- <td style="padding-top: 8px !important;">
+                          {{item.Status == 300 ? 'Approved' : (item.Status == 200 ? 'Rejected' :'Applied')}}
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          {{item.DisplayStatus}}
+                        </td>
+                        <td style="padding-top: 8px !important;width: 20px;">
+                          <!-- <button type="button" [disabled]="item.Status == 200" (click)="cancellationShowWow(item)"
+                            style="color:rgba(194, 54, 54, 0.904)" class="btn btn-link">cancel
+                            request</button> -->
+                          <!-- <button *ngIf="item.Status != 200" type="button" (click)="cancellationShowWow(item)"
+                            class="btn btn-danger rounded-pill btn-sm">
+                            <i class="fa fa-window-close" aria-hidden="true"></i> Cancel Rquest
+                          </button> -->
+                          <i *ngIf="item.Status != 200 && (item.CancelStatus == 0 || item.CancelStatus == 200)" class="fa fa-window-close" (click)="cancellationShowWow(item)"
+                            style="margin-left: 15px; color: #c72727;cursor: pointer;" matTooltip="Cancel Rquest"
+                            placeholder="Cancel Rquest" aria-hidden="true"></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf="tableArrayWOW.length == 0 && !spinner" style="text-align: center;margin-top: 35px;">No
+                    Records Found</div>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="text-center ma-5" style="padding-top: 15px;" *ngIf="spinner">
+                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                            aria-hidden="true"></span>
+                          Please wait...
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ngb-tab>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="isEnabled == 4">
+        <!--tableArrayOd-->
+        <div class="row" style="margin-left: 0px !important;">
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-3">
+            <label class="form-label searchbar-label">Date Range </label>
+            <div class="form-group m-t-m5" style="width: 210px;">
+              <div class="input-group">
+                <input class="form-control" style="height: 36px;border-color: rgb(204 204 204)"
+                  placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="DateIdOd"
+                  (bsValueChange)="onChange_DateSearchOd($event,DateIdOd)"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                  <i *ngIf="DateIdOd" (click)="DateIdOd = null" placeholder="Clear"
+                  style="position: absolute; right: 5px;transform: translate(-50%, -50%);top: 46%; cursor: pointer;color: #949494;"
+                  class="fa fa-times fa-1" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <label class="form-label searchbar-label">Status </label>
+            <div class="form-group m-t-m5" style="margin-left: -10px">
+              <div class="input-group">
+                <ng-select [items]="StatusListOd" [(ngModel)]="StatusIdOd" placeholder="Status" bindLabel="Name"
+                  bindValue="id" style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+              <div class="input-group">
+                <button type="button" (click)="SearchSubFnOd()" class="btn btn-primary mr-2 float-right"
+                  style="display: inline;margin: 0 auto;">
+                  <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+              <div class="input-group">
+                <button type="button" class="btn btn-default" (click)="ReFreshFnOd()">
+                  <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-12 text-right">
+            <div class="form-group m-t-m5" style="margin-right: 7px !important;">
+              <div class="input-group" style="margin-top:-16px">
+                <!-- <button type="button" class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;"
+                  [disabled]="SubmitDisableFnOd()" (click)="submitOdFn('A')">
+                  <i class="mdi mdi-lead-pencil"></i> Submit
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <ngb-tab>
+              <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                <div class="table-responsive table-height" style="height: 300px;">
+                  <table class="table-sticky table-bordered tble-row-height table mb-0" *ngIf="!spinner">
+                    <thead class="tbl-freezhead">
+                      <tr>
+                        <!-- <th style="background: #f3f3f3; width: 30px;">
+                          <input #checkAllOd type="checkbox" id="checkAllOd" [checked]="checked"
+                            [(ngModel)]="CheckdValOd" (change)="CheckAllFnOd(checkAllOd.checked)"
+                            style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                        </th> -->
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 100px;">
+                          Emp ID
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 150px !important;">
+                          Date
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 200px !important;">
+                          Requested Dates
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;">
+                          Employee Remarks
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;">
+                          Manager Remarks
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;">
+                          Status
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 20px;">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="tbl-scrollbody">
+                      <tr *ngFor="let item of tableArrayOd">
+                        <!-- <td style="padding-top: 8px !important;">
+                          <input type="checkbox" [(ngModel)]="item.Select_Val" [checked]="item.Select_Val==true"
+                            id="check" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          {{item.EmployeeId}}
+                        </td>
+                        <td style="padding-top: 8px !important;width: 150px;">
+                          {{item.CreatedOn | date :'dd-MM-yyyy'}}
+                        </td>
+                        <!-- <td style="padding-top: 0px !important;padding-bottom: 2px !important;">
+                          <div class="input-group" style="margin-top: 2px !important;">
+                            <div class="input-group-prepend">
+                              <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                              </label>
+                            </div>
+                            <input class="form-control" style="width: 130px;" type="text" name="AppliedFrom"
+                              bsDatepicker placement="bottom" [minDate]="_MinDate" readonly
+                              [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }"
+                              [daysDisabled]="weekOffs" placeholder="12-12-1970"
+                              [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off"
+                              [(ngModel)]="item.Date">
+                          </div>
+                        </td> -->
+                        <td style="padding-top: 8px !important; width: 200px;">
+                          {{item.FromDate | date :'yyyy-MM-dd' || '---'}} / {{item.TillDate | date :'yyyy-MM-dd' ||
+                          '---'}}
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          <p matTooltip="{{item.EmployeeRemarks}}"
+                            style="text-overflow: ellipsis; overflow: hidden; width: 85px;  height: 1.2em; white-space: nowrap;cursor: pointer;">
+                            {{item.EmployeeRemarks || '---'}}
+                          </p>
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          <p matTooltip="{{item.ApproverRemarks}}"
+                            style="text-overflow: ellipsis; overflow: hidden; width: 85px;  height: 1.2em; white-space: nowrap;cursor: pointer;">
+                            {{item.ApproverRemarks || '---'}}
+                          </p>
+                        </td>
+                        <!-- <td style="padding-top: 8px !important;">
+                          {{item.Status == 300 ? 'Approved' : (item.Status == 200 ? 'Rejected' :'Applied')}}
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          {{item.DisplayStatus}}
+                        </td>
+                        <td style="padding-top: 8px !important; width: 20px;">
+                          <!-- <button type="button" [disabled]="item.Status == 200" (click)="cancellationShowOd(item)"
+                            style="color:rgba(194, 54, 54, 0.904)" class="btn btn-link">cancel
+                            request</button> -->
+                          <i *ngIf="item.Status != 200 && (item.CancelStatus == 0 || item.CancelStatus == 200)" class="fa fa-window-close" (click)="cancellationShowOd(item)"
+                            style="margin-left: 15px; color: #c72727;cursor: pointer;" matTooltip="Cancel Rquest"
+                            placeholder="Cancel Rquest" aria-hidden="true"></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf="tableArrayOd.length == 0 && !spinner" style="text-align: center;margin-top: 35px;">No
+                    Records Found</div>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="text-center ma-5" style="padding-top: 15px;" *ngIf="spinner">
+                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                            aria-hidden="true"></span>
+                          Please wait...
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ngb-tab>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="isEnabled == 5">
+        <!--tableArrayWfh-->
+        <div class="row" style="margin-left: 0px !important;">
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-3">
+            <label class="form-label searchbar-label">Date Range </label>
+            <div class="form-group m-t-m5" style="width: 210px;">
+              <div class="input-group">
+                <input class="form-control" style="height: 36px;border-color: rgb(204 204 204)"
+                  placeholder="Daterangepicker" bsDaterangepicker [(ngModel)]="DateIdWfh"
+                  (bsValueChange)="onChange_DateSearchWfh($event,DateIdWfh)"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                  <i *ngIf="DateIdWfh" (click)="DateIdWfh = null" placeholder="Clear"
+                  style="position: absolute; right: 5px;transform: translate(-50%, -50%);top: 46%; cursor: pointer;color: #949494;"
+                  class="fa fa-times fa-1" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <label class="form-label searchbar-label">Status </label>
+            <div class="form-group m-t-m5" style="margin-left: -10px">
+              <div class="input-group">
+                <ng-select [items]="StatusListWfh" [(ngModel)]="StatusIdWfh" placeholder="Status" bindLabel="Name"
+                  bindValue="id" style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+              <div class="input-group">
+                <button type="button" (click)="SearchSubFnWfh()" class="btn btn-primary mr-2 float-right"
+                  style="display: inline;margin: 0 auto;">
+                  <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+            <div class="form-group m-t-m5" style="margin-top: 22px !important;">
+              <div class="input-group">
+                <button type="button" class="btn btn-default" (click)="ReFreshFnWfh()">
+                  <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group-vertical col-xs-12 col-sm-2 col-md-12 text-right">
+            <div class="form-group m-t-m5" style="margin-right: 7px !important;">
+              <div class="input-group" style="margin-top:-16px">
+                <!-- <button type="button" class="btn btn-primary mr-2 float-right" style="display: inline;margin: 0 auto;"
+                  [disabled]="SubmitDisableFnWfh()" (click)="submitWfhFn('A')">
+                  <i class="mdi mdi-lead-pencil"></i> Submit
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <ngb-tab>
+              <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+                <div class="table-responsive table-height" style="height: 300px;">
+                  <table class="table-sticky table-bordered tble-row-height table mb-0" *ngIf="!spinner">
+                    <thead class="tbl-freezhead">
+                      <tr>
+                        <!-- <th style="background: #f3f3f3; width: 30px;">
+                          <input #checkAllWfh type="checkbox" id="checkAllWfh" [checked]="checked"
+                            [(ngModel)]="CheckdValWfh" (change)="CheckAllFnWfh(checkAllWfh.checked)"
+                            style="border-width: thin;width:15px;vertical-align: text-bottom;" />
+                        </th> -->
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 100px;">
+                          Emp ID
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 150px !important;">
+                          Date
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 200px !important;">
+                          Requested Dates
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;">
+                          Employee Remarks
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;">
+                          Manager Remarks
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;">
+                          Status
+                        </th>
+                        <th style="background: #f3f3f3;padding-top: 8px !important;width: 20px;">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="tbl-scrollbody">
+                      <tr *ngFor="let item of tableArrayWfh">
+                        <!-- <td style="padding-top: 8px !important;">
+                          <input type="checkbox" [(ngModel)]="item.Select_Val" [checked]="item.Select_Val==true"
+                            id="check" style="border-width: thin;width:15px;vertical-align: text-bottom;">
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          {{item.EmployeeId}}
+                        </td>
+                        <td style="padding-top: 8px !important; width: 150px;">
+                          {{item.CreatedOn | date :'dd-MM-yyyy'}}
+                        </td>
+                        <td style="padding-top: 8px !important; width: 200px;">
+                          {{item.FromDate | date :'yyyy-MM-dd' || '---'}} / {{item.TillDate | date :'yyyy-MM-dd' ||
+                          '---'}}
+                        </td>
+                        <!-- <td style="padding-top: 0px !important;padding-bottom: 2px !important;">
+                          <div class="input-group" style="margin-top: 2px !important;">
+                            <div class="input-group-prepend">
+                              <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                              </label>
+                            </div>
+                            <input class="form-control" style="width: 130px;" type="text" name="AppliedFrom"
+                              bsDatepicker placement="bottom" [minDate]="_MinDate" readonly
+                              [bsConfig]="{  dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default' }"
+                              [daysDisabled]="weekOffs" placeholder="12-12-1970"
+                              [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off"
+                              [(ngModel)]="item.Date">
+                          </div>
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          <p matTooltip="{{item.EmployeeRemarks}}"
+                            style="text-overflow: ellipsis; overflow: hidden; width: 85px;  height: 1.2em; white-space: nowrap;cursor: pointer;">
+                            {{item.EmployeeRemarks || '---'}}
+                          </p>
+                        </td>
+                        <td style="padding-top: 8px !important;">
+                          <p matTooltip="{{item.ApproverRemarks}}"
+                            style="text-overflow: ellipsis; overflow: hidden; width: 85px;  height: 1.2em; white-space: nowrap;cursor: pointer;">
+                            {{item.ApproverRemarks || '---'}}
+                          </p>
+                        </td>
+                        <!-- <td style="padding-top: 8px !important;">
+                          {{item.Status == 300 ? 'Approved' : (item.Status == 200 ? 'Rejected' :'Applied')}}
+                        </td> -->
+                        <td style="padding-top: 8px !important;">
+                          {{item.DisplayStatus}}
+                        </td>
+                        <td style="padding-top: 8px !important;width: 20px;">
+                          <!-- <button type="button" [disabled]="item.Status == 200" (click)="cancellationShowWfh(item)"
+                            style="color:rgba(194, 54, 54, 0.904)" class="btn btn-link">cancel
+                            request</button> -->
+                          <!-- <button *ngIf="item.Status != 200" type="button" (click)="cancellationShowWfh(item)"
+                            class="btn btn-danger rounded-pill btn-sm"> -->
+                          <i *ngIf="item.Status != 200 && (item.CancelStatus == 0 || item.CancelStatus == 200)" class="fa fa-window-close" (click)="cancellationShowWfh(item)"
+                            style="margin-left: 15px; color: #c72727;cursor: pointer;" matTooltip="Cancel Rquest"
+                            placeholder="Cancel Rquest" aria-hidden="true"></i>
+                          <!-- </button> -->
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf="tableArrayWfh.length == 0 && !spinner" style="text-align: center;margin-top: 35px;">No
+                    Records Found</div>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="text-center ma-5" style="padding-top: 15px;" *ngIf="spinner">
+                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                            aria-hidden="true"></span>
+                          Please wait...
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ngb-tab>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="popup_Comp" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+  aria-labelledby="popup_donext" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle"><b>Employee Compensation Claims</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL"> --
+            </h6>
+          </div>
+          <div class="modal-close" (click)="modal_dismiss()" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="modal-body no-padder">
+            <div class="row" style="margin-bottom: -13px;">
+              <div class="col-lg-8">
+                <div class="row">
+                  <div class="col-xs-12  col-sm-12  p-r-50">
+                    <div class="row form-group form-group-vertical">
+                      <label class="form-label col-md-3" style="max-width: 105px;">Leave Type :</label>
+                      <label class="form-label  col-md-7">Comp Off Leave </label>
+                    </div>
+                    <div class="form-group form-group-vertical row" *ngIf="!_IndividualDateShow">
+                      <div class="col-md-5" style="max-width: 130px;">
+                        <label class="form-label">Individual Leaves</label>
+                      </div>
+                      <div class="col-md-7">
+                        <div class="form-check-inline">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" name="leaveType" [(ngModel)]="LeaveTypSliderVal"
+                              (click)="SliderChngFn(LeaveTypSliderVal)" />
+                            <span class="el-switch-style"></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="!LeaveTypSliderVal && !_IndividualDateShow">
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label"> From - To Date <span class="required"> *</span></label>
+                        <div class="input-group" style="width: 240px;">
+                          <div class="input-group-prepend">
+                            <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                            </label>
+                          </div>
+                          <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker
+                            [(ngModel)]="_dateRange" (bsValueChange)="onChange_DateRange($event,_dateRange)"
+                            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="LeaveTypSliderVal && !_IndividualDateShow">
+                      <div class="row">
+
+                        <ng-container *ngFor="let obj of tableArray">
+                          <div class="col-lg-6 mb-4" *ngIf="obj.Select_Val == true">
+                            <div class="card">
+                              <div class="card-body p-2">
+                                <h6 class="card-title">Date :<label> {{obj.EarnedDate}}</label></h6>
+                                <div class="row">
+                                  <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                                    <label class="form-label ">Avail Date <span class="required"> *</span></label>
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                                        </label>
+                                      </div>
+                                      <input class="form-control" style="width: 130px;" type="text" name="AppliedFrom"
+                                        bsDatepicker placement="bottom" [minDate]="_from_minDate" readonly
+                                        [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                                        [daysDisabled]="weekOffs" placeholder="12-12-1970"
+                                        [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }"
+                                        autocomplete="off" [(ngModel)]="obj.Select_Date"
+                                        (bsValueChange)="onChange_SelDate($event)">
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="_IndividualDateShow">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                        <label class="form-label ">Select Date <span class="required"> *</span></label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <label class="h2 mdi mdi-calendar-blank text-muted mb-0 input-group-text">
+                            </label>
+                          </div>
+                          <input class="form-control" type="text" name="AppliedFrom" bsDatepicker placement="bottom"
+                            [minDate]="_from_minDate" readonly
+                            [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            [daysDisabled]="weekOffs" placeholder="12-12-1970"
+                            [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off"
+                            [(ngModel)]="_IndividualDate" (bsValueChange)="onChange_SelDate($event)">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4"
+                style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px; min-height: 260px;">
+
+                <img src="assets/Images/leaverequest.svg">
+
+                <div style="position: absolute;bottom: -3px;width: 90%;">
+                  <div></div>
+                  <div class="form-group tw-mb-0" style="margin-top: 10px;">
+                    <div class="tw-w-full tw-px-3">
+                      <button type="submit" (click)="saveEntitlementRequest()" class="btn btn-primary"
+                        style="width:100%;border-radius: 25px;"> Submit Request
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="popup_CancelReuestPermission" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Cancellation Request</small>
+          </div>
+          <div class="modal-close" (click)="cancellationhidePopup()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body" *ngIf="SelectedCancellationObj">
+          <div class="row" style="margin-bottom: -16px;">
+            <div class="col-lg-8">
+              <div class="row">
+                <div class="col-lg-12" *ngIf="false">
+                  <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon"
+                    style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{SelectedCancellationObj.EmployeeName}} </span>
+                </div>
+              </div>
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;"> Status </label>
+                      <span style="font-size: 12px;"> {{SelectedCancellationObj.Status == 300 ? 'Approved' :
+                        (SelectedCancellationObj.Status == 200 ? 'Rejected':(SelectedCancellationObj.Status == 100 ?
+                        'Applied': '---'))}}
+                      </span>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;"> Date </label>
+                      <span style="font-size: 12px;">{{SelectedCancellationObj.Date | date :'dd-MM-yyyy'}}
+                      </span>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;"> Start Time </label>
+                      <span style="font-size: 12px;"> {{SelectedCancellationObj.StartTime}}
+                      </span>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;"> End Time </label>
+                      <span style="font-size: 12px;">{{SelectedCancellationObj.EndTime}}
+                      </span>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;"> No Of Hours </label>
+                      <span style="font-size: 12px;">{{SelectedCancellationObj.totalTime }}
+                      </span>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;">Manager Remarks </label>
+                      <span style="font-size: 12px;"> {{SelectedCancellationObj.ApproverRemarks || '---'}} </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                      <label class="form-label "> Remarks</label>
+                      <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                        id="Remarks" [(ngModel)]="SelectedCancellationObj.EmployeeRemarks" name="Remarks"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+              <img src="assets/Images/leaverequest.svg">
+              <div>
+                <div style="position: absolute;bottom: 10px;width: 90%;">
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    </div>
+                  </div>
+                  <div>
+                    <div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="form-group tw-mb-0">
+                    <div class="tw-w-full tw-px-3">
+                      <button [disabled]="!SelectedCancellationObj.EmployeeRemarks" type="submit"
+                        (click)="cancelrequest('Permission',SelectedCancellationObj)"
+                        style="width: 50%;border-radius: 20px;" class="btn upgrade-btn"><i
+                          class="mdi mdi-check-all  m-r-xs"></i> Submit
+                      </button>
+                      <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                        style="width: 50%;border-radius: 20px;"
+                        (click)="cancellationhidePopup(SelectedCancellationObj)">
+                        <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="popup_CancelRequestWOW" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Cancellation Request</small>
+            <!-- <h6 class="modal-title subheader_h6" id="popup_release_AL">Your Request</h6> -->
+          </div>
+          <div class="modal-close" (click)="cancellationHideWow()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body"
+          style="margin: 0 !important;height: 100% !important;overflow-y: auto !important;overflow-x: hidden !important;"
+          *ngIf="SelectedCancellationWowObj">
+          <div class="row" style="margin-bottom: -16px;">
+            <div class="col-lg-8">
+              <div class="row">
+                <div class="col-lg-12" *ngIf="false">
+                  <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon"
+                    style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{SelectedCancellationWowObj.EmployeeName}} </span>
+                </div>
+              </div>
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <!-- <form> -->
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label mb-2" style="margin-bottom: -2px;"> Claim Type </label>
+                      <span style="font-size: 12px;"> {{SelectedCancellationWowObj.RequestedClaimType == 100 ?
+                        'DecideLater'
+                        :(SelectedCancellationWowObj.RequestedClaimType == 200 ? 'Encash'
+                        :(SelectedCancellationWowObj.RequestedClaimType == 300 ? 'Leave' : 'None'))}}
+                      </span>
+                      <!-- <ng-select [items]="WowClimeTypeArr" [clearable]="false"
+                        [(ngModel)]="SelectedCancellationWowObj.RequestedClaimType" placeholder="Claim Type"
+                        bindLabel="ClimeType_Name" bindValue="ClimeType_Val" style="width: 60% !important;">
+                      </ng-select> -->
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label mb-2" style="margin-bottom: -2px;"> Date </label>
+                      <span style="font-size: 12px;">{{SelectedCancellationWowObj.Date | date :'dd-MM-yyyy'}}
+                      </span>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label mb-2" style="margin-bottom: -2px;"> Requeted On </label>
+                      <span style="font-size: 12px;">{{SelectedCancellationWowObj.CreatedOn | date :'dd-MM-yyyy'}}
+                      </span>
+                    </div>
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                      <label class="form-label mb-2" style="margin-bottom: -2px;">Manager Remarks </label>
+                      <span style="font-size: 12px;"> {{SelectedCancellationWowObj.ApproverRemarks || '---'}} </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class=" form-group form-group-vertical col-xs-12 col-sm-12">
+                      <label class="form-label "> Remarks</label>
+                      <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                        id="Remarks" [(ngModel)]="SelectedCancellationWowObj.EmployeeRemarks" name="Remarks"></textarea>
+                    </div>
+                  </div>
+                  <!-- </form> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+              <img src="assets/Images/leaverequest.svg">
+              <div>
+                <div style="position: absolute;bottom: 10px;width: 90%;">
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    </div>
+                  </div>
+                  <div>
+                    <div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="form-group tw-mb-0">
+                    <div class="tw-w-full tw-px-3">
+                      <button type="submit" [disabled]="!SelectedCancellationWowObj.EmployeeRemarks"
+                        (click)="cancelrequest('wow',SelectedCancellationWowObj)"
+                        style="width: 50%;border-radius: 20px;" class="btn upgrade-btn"><i
+                          class="mdi mdi-check-all  m-r-xs"></i> Submit
+                      </button>
+
+                      <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                        style="width: 50%;border-radius: 20px;" (click)="cancellationHideWow()">
+                        <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                      </button>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- </div> -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="popup_CancelRequestOd" class="modal fade" tabindex="4" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Cancellation Request</small>
+          </div>
+          <div class="modal-close" (click)="cancellationHideOd()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body" style="margin: 0 !important;height: 100% !important;overflow-y: auto !important;
+        overflow-x: hidden !important;" *ngIf="SelectedCancellationOdObj">
+          <div class="row" style="margin-bottom: -16px;">
+            <div class="col-lg-8">
+              <div class="row">
+                <div class="col-lg-12" *ngIf="false">
+                  <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon"
+                    style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{SelectedCancellationOdObj.EmployeeName}} </span>
+                </div>
+              </div>
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;"> Date </label>
+                      <span style="font-size: 12px;">{{SelectedCancellationOdObj.CreatedOn | date :'dd-MM-yyyy'}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 pb-10">
+                      <label class="form-label ">From - To Date <span class="required">*</span></label>
+                      <span style="font-size: 12px;">{{SelectedCancellationOdObj.FromDate | date :'yyyy-MM-dd'}} /
+                        {{SelectedCancellationOdObj.TillDate | date :'yyyy-MM-dd'}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;">Manager Remarks </label>
+                      <span style="font-size: 12px;"> {{SelectedCancellationOdObj.ApproverRemarks || '---'}} </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class=" form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;">Remarks </label>
+                      <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                        id="Remarks" [(ngModel)]="SelectedCancellationOdObj.EmployeeRemarks" name="Remarks"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+              <img src="assets/Images/leaverequest.svg">
+              <div>
+                <div style="position: absolute;bottom: 10px;width: 90%;">
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    </div>
+                  </div>
+                  <div>
+                    <div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="form-group tw-mb-0">
+                    <div class="tw-w-full tw-px-3">
+                      <button type="submit" [disabled]="!SelectedCancellationOdObj.EmployeeRemarks"
+                        (click)="cancelrequest('od',SelectedCancellationOdObj)" style="width: 100%;border-radius: 20px;"
+                        class="btn upgrade-btn"><i class="mdi mdi-check-all  m-r-xs"></i> Submit
+                      </button>
+                      <!-- <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                        style="width: 50%;border-radius: 20px;" (click)="cancellationHideOd()">
+                        <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                      </button> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="popup_CancelRequestWfh" class="modal fade" tabindex="5" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Cancellation Request</small>
+          </div>
+          <div class="modal-close" (click)="cancellationHidewWfh()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body" *ngIf="SelectedCancellationWfhObj">
+          <div class="row" style="margin-bottom: -16px;">
+            <div class="col-lg-8">
+              <div class="row">
+                <div class="col-lg-12" *ngIf="false">
+                  <span color="white" class="ant-avatar Avatar-sc-7th3ur-0 kbEFEL ant-avatar-circle ant-avatar-icon"
+                    style="width: 36px; height: 36px; line-height: 36px; font-size: 18px;">
+                    <i aria-label="icon: user" class="anticon anticon-user">
+                      <svg viewBox="64 64 896 896" class="" data-icon="user" width="1em" height="1em"
+                        fill="currentColor" aria-hidden="true" focusable="false">
+                        <path
+                          d="M858.5 763.6a374 374 0 0 0-80.6-119.5 375.63 375.63 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z">
+                        </path>
+                      </svg></i> </span> <span style="padding-left: 11px; 
+                      font-size: 12px;"> {{SelectedCancellationWfhObj.EmployeeName}} </span>
+                </div>
+              </div>
+              <div class="row" style="margin-top: 15px;">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;"> Date </label>
+                      <span style="font-size: 12px;">{{SelectedCancellationWfhObj.CreatedOn | date :'dd-MM-yyyy'}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 pb-10">
+                      <label class="form-label ">From - To Date <span class="required">*</span></label>
+                      <span style="font-size: 12px;">{{SelectedCancellationWfhObj.FromDate | date :'yyyy-MM-dd'}} /
+                        {{SelectedCancellationWfhObj.TillDate | date :'yyyy-MM-dd'}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;">Manager Remarks </label>
+                      <span style="font-size: 12px;"> {{SelectedCancellationWfhObj.ApproverRemarks || '---'}} </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class=" form-group form-group-vertical col-xs-12 col-sm-12 pb-10">
+                      <label class="form-label" style="margin-bottom: -2px;">Remarks </label>
+                      <textarea class="form-control" rows="3" placeholder="Type your message here..." spellcheck="false"
+                        id="Remarks" [(ngModel)]="SelectedCancellationWfhObj.EmployeeRemarks" name="Remarks"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+              <img src="assets/Images/leaverequest.svg">
+              <div>
+                <div style="position: absolute;bottom: 10px;width: 90%;">
+                  <div class="row">
+                    <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    </div>
+                  </div>
+                  <div>
+                    <div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="form-group tw-mb-0">
+                    <div class="tw-w-full tw-px-3">
+                      <button type="submit" [disabled]="!SelectedCancellationWfhObj.EmployeeRemarks"
+                        (click)="cancelrequest('wfh',SelectedCancellationWfhObj)"
+                        style="width: 100%;border-radius: 20px;" class="btn upgrade-btn"><i
+                          class="mdi mdi-check-all  m-r-xs"></i> Submit
+                      </button>
+                      <!-- <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                        style="width: 50%;border-radius: 20px;" (click)="cancellationHidewWfh()">
+                        <i class="mdi mdi-close-circle  m-r-xs"></i> Reject
+                      </button> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

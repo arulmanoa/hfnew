@@ -1,0 +1,330 @@
+<form [formGroup]="additionalOperationalInfoForm" class="row">
+  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="IsUniformIssued">Is Uniform Issued
+      <span class="required" *ngIf="isFieldRequired('IsUniformIssued')">*</span>
+    </label>
+
+    <div class="p-t-10">
+      <label class="el-switch el-switch-green">
+        <input type="checkbox" value="yes" formControlName="IsUniformIssued" />
+        <span class="el-switch-style"></span>
+      </label>
+    </div>
+
+  </div> -->
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsUniformIssued.value">
+    <label class="form-label" for="NumberOfUniformSetsIssued">Number of Uniform Sets Issued</label>
+    <input type="text" id="NumberOfUniformSetsIssued" class="form-control"
+      onkeypress="return /^[0-9]+$/i.test(event.key)" formControlName="NumberOfUniformSetsIssued"
+      [ngClass]="{'is-invalid': submitted && g.NumberOfUniformSetsIssued.errors }" placeholder="Number of Uniform Sets">
+    <div *ngIf="submitted && g.NumberOfUniformSetsIssued.errors" class="invalid-feedback">
+      <div *ngIf="g.NumberOfUniformSetsIssued.errors.required">Number of Uniform Set is required
+      </div>
+    </div>
+    <div *ngIf="this.additionalOperationalInfoForm.controls.NumberOfUniformSetsIssued.value == 0" class="help-block">
+      <div>Number of Uniform Sets should be greater than zero
+      </div>
+    </div>
+  </div>
+  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="IsFingerPrintRegistered">Is Fingerprint Registered</label>
+    <div class="p-t-10">
+      <label class="el-switch el-switch-green">
+        <input type="checkbox" value="yes" formControlName="IsFingerPrintRegistered" />
+        <span class="el-switch-style"></span>
+      </label>
+    </div>
+  </div> -->
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="RoleCode !='Candidate' ">
+    <label class="form-label">Is Form Scanned</label>
+
+    <div class="row">
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">Yes</span>
+          <input type="radio" [value]="true" name="IsFormScanned" formControlName="IsFormScanned"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">No</span>
+          <input type="radio"[value]="false" name="IsFormScanned" formControlName="IsFormScanned"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+    </div>
+  </div> 
+  <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="IsIDCardIssued">Is ID Card Issued</label>
+    <div class="p-t-10">
+      <label class="el-switch el-switch-green">
+        <input type="checkbox" value="yes" formControlName="IsIDCardIssued" />
+        <span class="el-switch-style"></span>
+      </label>
+    </div>
+  </div> -->
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="IsInterviewedEarlier">Is Interviewed Earlier <b *ngIf="clientName"> ({{clientName}}) ?</b> </label>
+    <div class="row">
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">Yes</span>
+          <input type="radio"  [value]="true" name="IsInterviewedEarlier" formControlName="IsInterviewedEarlier"><span
+            class="el-radio-style" style="margin-left: 10px;"></span>
+        </label> 
+      </div>
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">No</span>
+          <input type="radio" [value]="false" name="IsInterviewedEarlier" formControlName="IsInterviewedEarlier"><span
+            class="el-radio-style" style="margin-left: 10px;"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsInterviewedEarlier.value == 'yes'">
+    <label class="form-label" for="EarlierInterviewedOn">Earlier Interviewed On</label>
+    <input type="text" onkeydown="return (event.keyCode!=13);" class="form-control" bsDatepicker placement="top"
+      [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+      name="EarlierInterviewedOn" formControlName="EarlierInterviewedOn"
+      [ngClass]="{'is-invalid': submitted && g.EarlierInterviewedOn.errors }" placeholder="12-12-2020"
+      autocomplete="none|false|no" readonly>
+    <div *ngIf="submitted && g.EarlierInterviewedOn.errors" class="invalid-feedback">
+      <div *ngIf="g.EarlierInterviewedOn.errors.required">Earlier Interviewed On is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsInterviewedEarlier.value  ">
+    <label class="form-label" for="EarlierInterviewedBy">Earlier Interviewed By</label>
+    <input type="text" id="EarlierInterviewedBy" class="form-control" formControlName="EarlierInterviewedBy"
+      [ngClass]="{'is-invalid': submitted && g.EarlierInterviewedBy.errors }" placeholder="Earlier Interviewed By">
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsInterviewedEarlier.value ">
+    <label class="form-label" for="EarlierInterviewResult">Earlier Interview Result</label>
+    <input type="text" id="EarlierInterviewResult" class="form-control" formControlName="EarlierInterviewResult"
+      [ngClass]="{'is-invalid': submitted && g.EarlierInterviewResult.errors }" placeholder="Earlier Interview Result">
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="IsEmployedByUsEarlier">Have you been previously Employed us <b *ngIf="clientName"> ({{clientName}}) ?</b> </label>
+
+    <!-- <div class="p-t-10">
+      <label class="el-switch el-switch-green">
+        <input type="checkbox" value="yes" formControlName="IsEmployedByUsEarlier" />
+        <span class="el-switch-style"></span>
+      </label>
+    </div> -->
+
+    <div class="row">
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">Yes</span>
+          <input type="radio"  [value]="true" name="IsEmployedByUsEarlier" formControlName="IsEmployedByUsEarlier"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">No</span>
+          <input type="radio" [value]="false" name="IsEmployedByUsEarlier" formControlName="IsEmployedByUsEarlier"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsEmployedByUsEarlier.value  ">
+    <label class="form-label" for="EarlierEmployeeId">Earlier Employee ID</label>
+    <input type="text" formControlName="EarlierEmployeeId" class="form-control" id="EarlierEmployeeId"
+      [ngClass]="{'is-invalid': submitted && g.EarlierEmployeeId.errors }" placeholder="Earlier Employee ID">
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsEmployedByUsEarlier.value  ">
+    <label class="form-label" for="EarlierEmploymentStartDate">Earlier Employment Start Date</label>
+    <input type="text" onkeydown="return (event.keyCode!=13);" class="form-control" bsDatepicker placement="top"
+      [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+      name="EarlierEmploymentStartDate" formControlName="EarlierEmploymentStartDate" [maxDate]="currentDate"
+      [ngClass]="{'is-invalid': submitted && g.EarlierEmploymentStartDate.errors }" placeholder="12-12-2020"
+      autocomplete="none|false|no" readonly (ngModelChange)="onStartDateChange()">
+    <div *ngIf="submitted && g.EarlierEmploymentStartDate.errors" class="invalid-feedback">
+      <div *ngIf="g.EarlierEmploymentStartDate.errors.required">Earlier Employment StartDate is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsEmployedByUsEarlier.value ">
+    <label class="form-label" for="EarlierEmploymentEndDate">Earlier Employment End Date</label>
+    <input type="text" onkeydown="return (event.keyCode!=13);" class="form-control" bsDatepicker placement="top"
+      [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+      name="EarlierEmploymentEndDate" formControlName="EarlierEmploymentEndDate" [maxDate]="currentDate"
+      [ngClass]="{'is-invalid': submitted && g.EarlierEmploymentEndDate.errors }" placeholder="12-12-2020"
+      autocomplete="none|false|no" readonly
+      [minDate]="additionalOperationalInfoForm.controls.EarlierEmploymentStartDate.value">
+    <div *ngIf="submitted && g.EarlierEmploymentEndDate.errors" class="invalid-feedback">
+      <div *ngIf="g.EarlierEmploymentEndDate.errors.required">Earlier Employment EndDate is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsEmployedByUsEarlier.value ">
+    <label class="form-label" for="EarlierDivision">Earlier Division</label>
+    <!-- <input type="text" id="EarlierDivision" class="form-control" formControlName="EarlierDivision"
+      [ngClass]="{'is-invalid': submitted && g.EarlierDivision.errors }" placeholder="Earlier Division"> -->
+
+      <ng-select [items]="onboardingAdditionalInfo.LstEmployeeDivision" placeholder="Earlier Division"
+      formControlName="EarlierDivision" [ngClass]="{'ng-touched': submitted && g.EarlierDivision.errors }" bindLabel="Name"
+      bindValue="Id">
+    </ng-select>
+
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsEmployedByUsEarlier.value ">
+    <label class="form-label" for="EarlierDepartment">Earlier Department</label>
+    
+    <!-- <input type="text" id="EarlierDepartment" class="form-control" formControlName="EarlierDepartment"
+      [ngClass]="{'is-invalid': submitted && g.EarlierDepartment.errors }" placeholder="Earlier Department"> -->
+
+      <ng-select [items]="onboardingAdditionalInfo.LstEmployeeDepartment" placeholder="Earlier Department"
+      formControlName="EarlierDepartment" [ngClass]="{'ng-touched': submitted && g.EarlierDepartment.errors }" bindLabel="Name"
+      bindValue="Id">
+    </ng-select>
+
+
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsEmployedByUsEarlier.value ">
+    <label class="form-label" for="ReasonForLeaving">Reason for Leaving</label>
+    <input type="text" id="ReasonForLeaving" class="form-control" formControlName="ReasonForLeaving"
+      [ngClass]="{'is-invalid': submitted && g.ReasonForLeaving.errors }" placeholder="Reason for Leaving">
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="IsChronicIllness">Is there a chronic or critical illness? </label>
+    <!-- <div class="p-t-10">
+      <label class="el-switch el-switch-green">
+        <input type="checkbox" value="yes" formControlName="IsChronicIllness" />
+        <span class="el-switch-style"></span>
+      </label>
+    </div> -->
+
+    <div class="row">
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">Yes</span>
+          <input type="radio"  [value]="true"  name="IsChronicIllness" formControlName="IsChronicIllness"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">No</span>
+          <input type="radio" [value]="false" name="IsChronicIllness" formControlName="IsChronicIllness"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsChronicIllness.value ">
+    <label class="form-label" for="ChronicIllnessDetails">Chronic or critical illness Details</label>
+    <input type="text" id="ChronicIllnessDetails" class="form-control" formControlName="ChronicIllnessDetails"
+      [ngClass]="{'is-invalid': submitted && g.ChronicIllnessDetails.errors }" placeholder="Chronic Illness Details">
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="IsPreparingForCompetitiveExam">Are they preparing for or appearing for any regular or
+      competitive exams?</label>
+    <!-- <div class="p-t-10">
+      <label class="el-switch el-switch-green">
+        <input type="checkbox" value="yes" formControlName="IsPreparingForCompetitiveExam" />
+        <span class="el-switch-style"></span>
+      </label>
+    </div> -->
+    <div class="row">
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">Yes</span>
+          <input type="radio"  [value]="true"  name="IsPreparingForCompetitiveExam" formControlName="IsPreparingForCompetitiveExam"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">No</span>
+          <input type="radio" [value]="false" name="IsPreparingForCompetitiveExam" formControlName="IsPreparingForCompetitiveExam"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsPreparingForCompetitiveExam.value ">
+    <label class="form-label" for="CompetitiveExamDetails">Competitive Exam Details</label>
+    <input type="text" id="CompetitiveExamDetails" class="form-control" formControlName="CompetitiveExamDetails"
+      [ngClass]="{'is-invalid': submitted && g.CompetitiveExamDetails.errors }" placeholder="Competitive Exam Details">
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+    <label class="form-label" for="IsConvictedByPolice">Is Convicted, Acuitted, or Booked by the Police?</label>
+    <!-- <div class="p-t-10">
+      <label class="el-switch el-switch-green">
+        <input type="checkbox" value="yes" formControlName="IsConvictedByPolice" />
+        <span class="el-switch-style"></span>
+      </label>
+    </div> -->
+    <div class="row">
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">Yes</span>
+          <input type="radio"  [value]="true"  name="IsConvictedByPolice" formControlName="IsConvictedByPolice"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">No</span>
+          <input type="radio" [value]="false" name="IsConvictedByPolice" formControlName="IsConvictedByPolice"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+    *ngIf="additionalOperationalInfoForm.controls.IsConvictedByPolice.value ">
+    <label class="form-label" for="PoliceCaseDetails"> Socio-legal/Criminal case details</label>
+    <input type="text" id="PoliceCaseDetails" class="form-control" formControlName="PoliceCaseDetails"
+      [ngClass]="{'is-invalid': submitted && g.PoliceCaseDetails.errors }"
+      placeholder="Socio-legal/Criminal case details">
+  </div>
+  <div class="form-group form-group-vertical col-xs-12 col-sm-6"  *ngIf="RoleCode !='Candidate'">
+    <label class="form-label" for="IsBlackListCheckDone">Is the blacklist check done?</label>
+    <!-- <div class="p-t-10">
+      <label class="el-switch el-switch-green">
+        <input type="checkbox" value="yes" formControlName="IsBlackListCheckDone" />
+        <span class="el-switch-style"></span>
+      </label>
+    </div> -->
+
+    <div class="row">
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">Yes</span>
+          <input type="radio"  [value]="true"  name="IsBlackListCheckDone" formControlName="IsBlackListCheckDone"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+      <div class="col-md-2">
+        <label class="el-radio el-radio-green">
+          <span class="margin-r customradiospan">No</span>
+          <input type="radio" [value]="false" name="IsBlackListCheckDone" formControlName="IsBlackListCheckDone"><span class="el-radio-style"
+            style="margin-left: 10px;"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+</form>

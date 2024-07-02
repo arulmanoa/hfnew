@@ -1,0 +1,325 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <div class="">
+      <app-loading-screen></app-loading-screen>
+
+      <div *ngIf="code" style="margin-top: -27px;">
+        <app-searchbar-view *ngIf="pageLayout" [BusinessType]="BusinessType"
+          [searchConfiguration]="pageLayout.SearchConfiguration" [isBtnDisabledRequired]="isBtnDisabledRequired"
+          (searchButtonClicked)="onClickingSearchButton($event)">
+        </app-searchbar-view>
+      </div>
+
+      <br>
+
+      <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+            Please wait...
+        </button>
+    </div>
+
+
+      <div class="content m-b report-content" [ngStyle]="{'margin-top':BusinessType == '3' ? '-25px': '-5px'}" *ngIf="!spinner && defaultSearchInputs.ClientId >= 0">
+
+        <div class="row m-t-b-10"  style="margin-bottom: 0px;">
+          <!-- <div class="col-lg-6">
+                      <ul class="list-inline">
+  
+                          <div class="showGirdActionButtons">
+                              <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                                  <div class="massOperationsPanel d-i-b"> -->
+  
+          <!-- <button class="btn btn-default btn-sm m-r-sm">
+                                <i class="mdi mdi-lead-pencil"></i> Edit
+                            </button><button class="btn btn-default btn-sm m-r-sm ">
+                                <i class="mdi mdi-content-duplicate"></i> Copy
+                            </button><button class="btn btn-default btn-sm m-r-sm ">
+                                  <i class="mdi mdi-chart-timeline"></i> Timeline
+                            </button> -->
+          <!-- <button class="btn btn-default btn-sm m-r-sm ">
+                                          <i class="mdi mdi-delete-forever"></i> Delete
+                                      </button> -->
+          <!-- </div>
+                              </div>
+                          </div>
+                      </ul>
+  
+                  </div> -->
+          <div class="col-lg-6">
+            <ul class="list-inline">
+              <li class="list-inline-item"
+                *ngIf="IsDownloadBtnShown && (selectedSavedItems.length == 1 || selectedRejectedItems.length == 1)">
+                <button class="btn btn-default btn-sm m-r-sm " (click)="DownloadCandidateEntireInformation()">
+                  <i class="mdi mdi-download m-r-xs"></i>
+                  Download Candidate Info
+                </button>
+              </li>
+  
+              <div class="showGirdActionButtons" *ngIf="selectedmigrationRecords?.length> 0">
+                <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                  <div class="massOperationsPanel d-i-b">
+  
+                    <button class="btn btn-default btn-sm m-r-sm " (click)="recall(selectedmigrationRecords)">
+                      <i class="mdi mdi-thumb-up-outline m-r-xs"></i>
+                      Claim
+                    </button>
+                    <!-- <button class="btn btn-default btn-sm m-r-sm " (click)="cancel_offer(selectedmigrationRecords)">
+                                          <i class="mdi mdi-account-remove m-r-xs"></i>
+                                          Cancel Offer
+                                      </button><button class="btn btn-default btn-sm m-r-sm " (click)="revise_offer(selectedmigrationRecords)">
+                                          <i class="mdi mdi-redo-variant m-r-xs"></i>
+                                          Revise Offer
+                                      </button>  -->
+  
+  
+  
+                  </div>
+                </div>
+              </div>
+  
+  
+            </ul>
+  
+          </div>
+          <!--end col-->
+          <div class="col-lg-6 text-right">
+            <div class="text-right">
+              <ul class="list-inline">
+                <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="addCandidates()"><i
+                      class="mdi mdi-library-plus m-r-xs"></i> New
+                    Request</button></li>
+  
+                <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="doRefresh()"><i
+                      class="mdi mdi-refresh m-r-xs"></i> Refresh</button></li>
+  
+              </ul>
+            </div>
+          </div>
+          <!--end col-->
+        </div>
+
+        <ngb-tabset *ngIf="isAllenDigital == false; else showAllTabset">
+          <ngb-tab>
+            <ng-template ngbTabTitle><i class="fa fa-bitbucket" aria-hidden="true"></i>&nbsp;&nbsp;{{AlternativeText}}
+            </ng-template>
+            <ng-template ngbTabContent>
+              <ng-container *ngTemplateOutlet="showAllTabset">
+              </ng-container>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab>
+            <ng-template ngbTabTitle><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search All
+            </ng-template>
+            <ng-template ngbTabContent>
+
+              <div class="accordion" id="accordionSearch" style="margin-top: 10px;">
+                <div class="card shadow-none border mb-1">
+                  <div class="card-header" id="headingTwo">
+                    <h5 class="my-0" style="height:1.5rem;">
+                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                        data-target="#CanCollapse" aria-expanded="false" aria-controls="clientCollapse"
+                        style="padding-top: 0px;text-decoration: none;">
+                        <p class="card-header-title"> <i class="fa fa-search p-r-10 search-icon" aria-hidden="true"></i>
+                          Search Criteria</p>
+                      </button>
+                    </h5>
+                  </div>
+
+                  <div id="CanCollapse" class="collapse show" aria-labelledby="headingOne"
+                    data-parent="#accordionSearch">
+                    <div class="card-body" style="padding-top: 0px;">
+                      <br>
+                      <div class="row">
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                          <label class="form-label searchbar-label">From Date</label>
+                          <div class="form-group m-t-m5">
+                            <div class="input-group">
+                              <input class="form-control" [(ngModel)]="fromDate" bsDatepicker placement="bottom"
+                                [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                                style="border-radius: 3px 0px 0px 3px !important;" placeholder="01-01-2020"
+                                autocomplete="off">
+                              <div class="input-group-addon"><i class="mdi mdi-calendar-today icon-color"></i></div>
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                          <label class="form-label searchbar-label">To Date</label>
+                          <div class="form-group  m-t-m5">
+                            <div class="input-group">
+                              <input class="form-control" [(ngModel)]="toDate" [minDate]="tblminDate" bsDatepicker
+                                placement="bottom"
+                                [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                                style="border-radius: 3px 0px 0px 3px !important;" placeholder="01-01-2020">
+                              <div class="input-group-addon"><i class="mdi mdi-calendar icon-color"></i></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                          <label class="form-label searchbar-label">Candidate Name</label>
+                          <div class="form-group  m-t-m5">
+                            <div class="input-group">
+                              <input class="form-control" [(ngModel)]="candName" type="text"
+                                style="border-radius: 3px 0px 0px 3px !important;" placeholder="Ar Ma"
+                                autocomplete="off">
+                              <div class="input-group-addon"><i class="mdi mdi-account-search icon-color"></i></div>
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                            <label class="form-label searchbar-label">Client</label>
+                                                            <div class="form-group  m-t-m5">
+                                                                <div class="input-group">
+                                                                    <input class="form-control" [(ngModel)]="clientName" type="text" style="border-radius: 3px 0px 0px 3px !important;" placeholder="Integrum Technologies" autocomplete="off">
+                                                                    <div class="input-group-addon"><i class="mdi mdi-account-switch icon-color"></i></div>
+        
+                                                                </div>
+                                                            </div>
+        
+        
+        
+                                                        </div> -->
+
+                        <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                            <label class="form-label">From Date</label>
+                                                            <input [(ngModel)]="fromDate" class="form-control ng-pristine ng-invalid ng-touched" placeholder="" type="date">
+                                                        </div>
+                                                        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                            <label class="form-label">To Date</label>
+                                                            <input placeholder="" [(ngModel)]="toDate" type="date" class="form-control ng-untouched ng-pristine ng-valid">
+                                                        </div> -->
+                        <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                            <label class="form-label">Client</label>
+                                                            <input [(ngModel)]="clientName" class="form-control ng-pristine ng-invalid ng-touched"  placeholder="" type="text">
+                                                        </div>
+                                                        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                            <label class="form-label">Mandate</label>
+                                                            <input [(ngModel)]="mandName" class="form-control ng-pristine ng-invalid ng-touched" placeholder="" type="text">
+                                                        </div> -->
+                        <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                                            <label class="form-label">Candidate Name</label>
+                                                            <input [(ngModel)]="candName" class="form-control ng-pristine ng-invalid ng-touched" placeholder="" type="text">
+                                                        </div> -->
+                        <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                                            <label class="form-label">Action Status</label>
+                                                            <input [(ngModel)]="actionStatus" class="form-control ng-pristine ng-invalid ng-touched"  placeholder="" type="text">
+                                                        </div>
+                                                        <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                                            <label class="form-label" style="display: block">Show My Requests
+                                                                Only</label>
+                                                            <label class="switch" style="margin-top: 6px">
+                                                                <input [(ngModel)]="onlyRequest"  type="checkbox">
+                                                                <span class="slider round"></span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                                            <label class="form-label" style="display: block">Show Claimable
+                                                                Only</label>
+                                                            <label class="switch" style="margin-top: 6px">
+                                                                <input [(ngModel)]="onlyClaim" type="checkbox">
+                                                                <span class="slider round"></span>
+                                                            </label>
+                                                        </div> -->
+                      </div>
+                      <div class="row" style="float:right;padding-bottom: 0.5em;">
+
+                        <button class="btn btn-primary btn-sm m-r-sm" (click)="clearSearchCriteria()">
+                          <i class="mdi mdi-eraser"></i> Clear
+                        </button>
+                        <button class="btn btn-primary btn-sm m-r-sm" (click)="searchData()">
+                          <i class="mdi mdi-magnify"></i> Search
+                        </button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center ma-5" *ngIf="spinner2">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+              <div *ngIf="!spinner2 && searchDataset?.length > 0">
+                <angular-slickgrid gridId="grdSearchAll"
+                  (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  [columnDefinitions]="searchColumnDefinitions" [gridOptions]="searchGridOptions"
+                  [dataset]="searchDataset" (onAngularGridCreated)="searchGridReady($event)" gridWidth="100%">
+                </angular-slickgrid>
+              </div>
+
+              <div class="text-center ma-5" *ngIf="searchDataset?.length == 0 && !spinner">
+                <img src="assets/Images/no-prodcts-found.png" style="OPACITY: 0.3;">
+              </div>
+
+            </ng-template>
+          </ngb-tab>
+          <!-- <app-loading-screen></app-loading-screen> -->
+        </ngb-tabset>
+
+
+        <ng-template #showAllTabset>
+          <!-- <ng-template ngbTabContent> -->
+
+          <ngb-tabset (tabChange)="childTabLoadData($event)" [(activeId)]="activeChildTabName">
+            <ngb-tab id="myBucket_saved">
+              <ng-template ngbTabTitle><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;&nbsp;Saved</ng-template>
+              <ng-template ngbTabContent>
+
+                <div class="text-center ma-5" *ngIf="spinner2">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div *ngIf="!spinner2">
+                  <angular-slickgrid gridId="grdInBucket" [columnDefinitions]="inBucketColumnDefinitions"
+                    [gridOptions]="inBucketGridOptions" [dataset]="inBucketList"
+                    (sgOnSelectedRowsChanged)="onSelectedSavedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    (onAngularGridCreated)="inBucketGridReady($event)" gridWidth="100%">
+                  </angular-slickgrid>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="myBucket_rejected">
+              <ng-template ngbTabTitle><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;&nbsp;Rejected</ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="spinner2">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+
+                <div *ngIf="!spinner2">
+                  <angular-slickgrid gridId="grdInRejectedBucket"
+                    [columnDefinitions]="inRejectedBucketColumnDefinitions" [gridOptions]="inRejectedBucketGridOptions"
+                    [dataset]="inRejectedBucketList"
+                    (sgOnSelectedRowsChanged)="onSelectedRejectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    (onAngularGridCreated)="inRejectedBucketGridReady($event)" gridWidth="100%">
+                  </angular-slickgrid>
+                </div>
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+        </ng-template>
+        <!-- </ng-template> -->
+
+
+      </div>
+    </div>
+
+  </div>
+</div>

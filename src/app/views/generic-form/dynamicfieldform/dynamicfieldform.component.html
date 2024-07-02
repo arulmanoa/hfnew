@@ -1,0 +1,103 @@
+<div class="row">
+
+    <div class="form-group form-group-vertical col-{{col_span_size}} col-xs-{{col_span_size}} col-lg-{{col_span_size}} col-md-{{col_span_size}} col-sm-{{col_span_size}}" *ngFor="let item of dynamicFieldDetails">
+        <!-- Text Box -->
+        <ng-container *ngIf="doCheckViewableField(item) == true">
+            <div *ngIf="item.InputControlType === 0">
+                <label class="form-label"> {{item.Label}}  <span class="required">{{getRequired(item)}}</span> </label>
+                <input type="text" class="form-control" [placeholder]="item.PlaceHolder" [(ngModel)]="item.Value">
+            </div>
+            <!-- Auto Fill Text Box -->
+            <div *ngIf="item.InputControlType === 3">
+                <label class="form-label"> 
+                    {{item.Label}}
+                    <span class="required">{{getRequired(item)}}</span>
+                </label>
+                <ng-select [items]="item.DropDownList" (open)="onOpeningDropDown(item)" [(ngModel)]="item.Value" [searchable]="true" [bindValue]="item.ValueField" [bindLabel]="item.DisplayField" placeholder="-- {{item.PlaceHolder}} --" [loading]="!item.DropDownList"
+                    [disabled]="doCheckEditableField(item)">
+                </ng-select>
+            </div>
+
+            <!-- Drop Down -->
+            <div *ngIf="item.InputControlType === 1">
+                <label class="form-label"> {{item.Label}} 
+                    <span class="required">{{getRequired(item)}}</span>
+                </label>
+                <ng-select #selectDropDown [items]="item.DropDownList" [(ngModel)]="item.Value" [loading]="!item.DropDownList" (open)="onOpeningDropDown(item)" [searchable]="false" [bindValue]="item.ValueField" [disabled]="doCheckEditableField(item)" [bindLabel]="item.DisplayField"
+                    placeholder="{{item.PlaceHolder}}" (change)="onSelectDropDownChangeFn($event, item)" >
+                    <ng-template ng-header-tmp>
+                        <input placeholder="Search" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="selectDropDown.filter($event.target.value)" />
+                    </ng-template>
+                </ng-select>
+            </div>
+
+            <!-- Multi Select Drop Down -->
+            <div *ngIf="item.InputControlType === 2">
+                <label class="form-label"> {{item.Label}} 
+                    <span class="required">{{getRequired(item)}}</span>
+                </label>
+                <ng-select #select [items]="item.DropDownList" [(ngModel)]="item.MultipleValues" [loading]="!item.DropDownList" (open)="onOpeningDropDown(item)" [searchable]="false" [multiple]="true" [closeOnSelect]="false" [bindValue]="item.ValueField" [bindLabel]="item.DisplayField"
+                    placeholder="{{item.PlaceHolder}}" [closeOnSelect]="false">
+                    <ng-template ng-header-tmp>
+                        <input placeholder="Search" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select.filter($event.target.value)" />
+                    </ng-template>
+                </ng-select>
+            </div>
+            <!-- Text Area -->
+            <div *ngIf="item.InputControlType === 4">
+                <label class="form-label"> {{item.Label}} 
+                    <span class="required">{{getRequired(item)}}</span>
+                </label>
+                <textarea class="form-control" [rows]="item.RowCount" spellcheck="false" [(ngModel)]="item.Value">
+        </textarea>
+            </div>
+
+            <!-- Radio Buttons -->
+            <div *ngIf="item.InputControlType === 5">
+                <label class="form-label"> {{item.Label}} <span class="required">{{getRequired(item)}}</span> </label>
+                <div class="radio-tile-group">
+                    <div class="input-container" *ngFor="let dataItem of item.DropDownList">
+
+                        <input class="c-card" type="radio" [(ngModel)]="item.Value" class="radio-button" [value]="dataItem[item.ValueField]" [checked]="dataItem.Checked" tabindex="0">
+                        <div class="radio-tile">
+                            <div class="card-state-icon"></div>
+                            <label>
+              <div class="image">
+                <div class="icon walk-icon">
+                  <i class="mdi {{dataItem.Icon}}"
+                    style="font-size:20px;display: block;margin: 0 auto;text-align: center;"></i>
+                </div>
+              </div>
+              <label class="radio-tile-label">{{dataItem[item.DisplayField]}}</label>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CheckBox -->
+            <div *ngIf="item.InputControlType === 6">
+                <div class="row">
+                    <div class="col">
+                        <label class="form-label">{{item.Label}} <span class="required">{{getRequired(item)}}</span> </label>
+                    </div>
+                    <div class="col" style="text-align: right;">
+                        <label class="el-switch el-switch-green">
+            <input type="checkbox" [(ngModel)]="item.Value" tabindex="-1" />
+            <span class="el-switch-style"></span>
+          </label>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- <div>
+      <span *ngFor="let validator of item.Validators">
+        <span style="color: red;"
+          *ngIf="validator.IsInvalidControl">{{validator.InvalidMessage}}</span>
+      </span>
+    </div> -->
+        </ng-container>
+    </div>
+</div>

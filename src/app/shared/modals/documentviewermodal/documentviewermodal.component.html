@@ -1,0 +1,76 @@
+<div style="display: block;" cdkDrag cdkDragRootElement="grabbable" class="modal fade show grabbable">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="">
+                <div class="modal-header" style="padding: 15px !important;">
+                    <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                        <small class="header-pretitle"><b> {{ this.currentModalHeading}}  -  {{ApprovalStatusEnumValues[currentModalItem?.ApprovalStatus]}}</b></small>
+                        <h6 class="modal-title subheader_h6">
+                            <small class="form-text text-muted">
+                          {{currentModalDetailsFormat}}
+                      </small>
+                            <label class="form-text text-muted">
+                          {{currentModalItem?.Details}}
+                      </label> </h6>
+                    </div>
+                    <div class="col-md-4" style="top: 13px;">
+                        <div style="float: right;margin-right: 45px;margin-top: -3px;padding-bottom: 10px;">
+                            <app-filedownload [documentId]="currentModalItem?.ObjectStorageId">
+                            </app-filedownload>
+                        </div>
+                        <div class="modal-close" (click)="closeModal()" style="margin-top: -20px;"><span class="mdi mdi-close pull-left"></span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="modal-body no-padder">
+                    <div class="iframe-container" *ngIf="SafeURL == null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+                        <img src="assets/Images/clientlogo/{{clientminiLogoLink}}">
+                        <span>
+                        <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                            &nbsp; Please wait...</i>
+                        <span class="sr-only">Please wait...</span>
+                        </span>
+                    </div>
+
+                    <div class="iframe-container" *ngIf="SafeURL != null" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+
+                        <iframe [src]="SafeURL" frameborder="0" scrolling="yes"></iframe>
+                        <img style="top: 0 !important;
+                    right: 0px !important;
+                    position: absolute !important;
+                    z-index: 9;
+                    height: 55px !important;
+                    vertical-align: top;
+                    opacity: inherit;
+                    bottom: unset !important;
+                    left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientLogoLink}}">
+                    </div>
+                </div>
+
+                <div class="modal-footer" *ngIf="!IsKYCVerified">
+                    <div class="row" style="width: 100%;
+                    padding: 10px;">
+                        <div class=" col-lg-6 text-left">
+                            <small class="form-text text-muted">Remarks</small>
+                            <label>{{currentModalItem?.Remarks}}</label>
+                        </div>
+                        <div class=" col-lg-6 text-right">
+                            <button class="btn upgrade-btn btn-sm" (click)="validateDocument(true)">
+                      <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i>
+                      Approve</button> &nbsp;
+                            <button class="btn btn-danger btn-sm" (click)="validateDocument(false)">
+                      <i class="mdi mdi-close-circle  m-r-xs" ></i>
+                      Reject&nbsp;</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,353 @@
+<div class="page-wrapper" style="margin-top: 0px;">
+  <div class="page-content ">
+    <app-loading-screen></app-loading-screen>
+
+    
+
+    <!-- <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" [isAnimated]="true">
+      <ngb-panel>
+        <ng-template ngbPanelTitle>
+          <i class="fa fa-search p-r-10 search-icon" aria-hidden="true"></i> Search Criteria
+        </ng-template>
+        <ng-template ngbPanelContent>
+              <app-searchbar-view [searchConfiguration]="searchConfiguration" Content="General"
+              (searchButtonClicked)="onClickingSearchButton($event)" 
+              (searchElementValueChange)="onSearchElementValueChange($event)" >
+              </app-searchbar-view>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion> -->
+   
+
+    <div class="content  report-content" style="padding-bottom: 30px;" >
+      <ngb-tabset (tabChange)="beforeTabChange($event)" [(activeId)]="activeTabName" [disabled]="spinner" >
+        <ngb-tab id="Add">
+          <ng-template ngbTabTitle><i class="fa fa-bitbucket" aria-hidden="true"></i>&nbsp;&nbsp;Generate New</ng-template>
+          <ng-template ngbTabContent>
+            
+            <!-- Search Bar -->
+            <div  style="margin: 10px 0px 20px 0px; padding: 0px 0px 0px 0px;">
+              <div class="accordion" id="accordionSearch" style="margin-top: 10px;">
+                <div class="card-header" id="headingTwo">
+                  <h5 class="my-0" style="height:1.5rem;">
+                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#CanCollapse" aria-expanded="false" aria-controls="clientCollapse" style="padding-top: 0px;text-decoration: none;">
+                          <p class="card-header-title"> <i class="fa fa-search p-r-10 search-icon"
+                                  aria-hidden="true"></i> Search Criteria</p>
+                      </button>
+                  </h5>
+                </div>
+
+                <div id="CanCollapse" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionSearch">
+                  <div class="card-body" style="padding-top: 10px; padding-bottom: 15px;">
+                    <app-searchbar-view [searchConfiguration]="searchConfiguration" Content="General"
+                    (searchButtonClicked)="onClickingSearchButton($event)" 
+                    (searchElementValueChange)="onSearchElementValueChange($event)" >
+                    </app-searchbar-view>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- spinner -->
+            <div class="text-center ma-5" *ngIf="spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+            <!-- Buttons -->
+            <div class="row" style="margin-top: 10px" *ngIf="!spinner && showGrid">
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left">
+                  <ul class="list-inline">
+
+                    <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="generateReport()">
+                      <i class="mdi mdi-account-multiple-outline  m-r-xs"></i> Generate Report
+                    </button>
+                  </li>
+                  
+                   
+  
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                <div class="text-right">
+                  <ul class="list-inline">
+                  
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- Grid -->
+            <div *ngIf="!spinner && pageLayout != null && showGrid" style="margin-top: 10px" >
+              <angular-slickgrid gridId="add" [columnDefinitions]="addColumnDefinitions"
+              [gridOptions]="addGridOptions" [dataset]="addDataset"
+              (onAngularGridCreated)="addAngularGridReady($event)" gridWidth="100%"
+              (sgOnClick)="onAddCellClicked($event.detail.eventData, $event.detail.args)"
+              (sgOnSelectedRowsChanged)="onAddSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+            </angular-slickgrid>
+            </div>
+
+            <!-- Row to show Count -->
+            <div class="row" style="margin-top: -10px;margin-bottom: -17px;" *ngIf="!spinner && pageLayout != null && showGrid">
+              <div class="col-lg-6">
+      
+              </div>
+              <div class="col-lg-6" style="text-align: right;">
+                <label> <b> Total Record(s) : <b> {{addDataset?.length}}</b>
+                    &nbsp; &nbsp; &nbsp; Selected Record(s) : <b> {{addSelectedItems?.length}}</b></b></label>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab id="Track">
+          <ng-template ngbTabTitle><i class="fa fa-bitbucket" aria-hidden="true"></i>&nbsp;&nbsp;Track</ng-template>
+          <ng-template ngbTabContent>
+            
+            <!-- Search Bar -->
+            <div style="margin-bottom: 20px; padding: 0px 0px 0px 0px;">
+              <div class="accordion" id="accordionSearchTrack" style="margin-top: 10px;">
+                <div class="card-header" id="headingTwo">
+                  <h5 class="my-0" style="height:1.5rem;">
+                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#TrackCollapable" aria-expanded="false" 
+                      aria-controls="clientCollapse" style="padding-top: 0px;text-decoration: none;">
+                          <p class="card-header-title"> <i class="fa fa-search p-r-10 search-icon"
+                                  aria-hidden="true"></i> Search Criteria</p>
+                      </button>
+                  </h5>
+                </div>
+
+                <div id="TrackCollapable" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionSearchTrack">
+                  <div class="card-body" style="padding-top: 10px; padding-bottom: 15px;">
+                    <app-searchbar-view [searchConfiguration]="searchConfigurationForTrack" Content="General"
+                    (searchButtonClicked)="onClickingTrackSearchButton($event)" 
+                    (searchElementValueChange)="onSearchElementValueChange($event)" >
+                    </app-searchbar-view>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- spinner -->
+            <div class="text-center ma-5" *ngIf="trackSpinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+
+            <!-- Buttons -->
+            <div class="row" style="margin-top: 10px" *ngIf="!trackSpinner && showGrid">
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left">
+                  <ul class="list-inline">
+
+                    <li class="list-inline-item">
+                      <button type="button" class="btn btn-primary" (click)="downloadReport()">
+                      <i class="mdi mdi-account-multiple-outline  m-r-xs"></i> Download Report
+                      </button>
+                    </li>
+
+                    <li class="list-inline-item" *ngIf="showRegenerateButton">
+                      <button type="button" class="btn btn-primary-custom" (click)="do_process_Record()">
+                      <i class="mdi mdi-play  m-r-xs"></i>Re-generate
+                      </button>
+                    </li>
+                  
+                   
+  
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                <div class="text-right">
+                  <ul class="list-inline">
+                    <li class="list-inline-item">
+                      <button type="button" tooltip="Refresh Processing Status of records"
+                      class="btn btn-primary-custom" (click)="refreshOuputDataset()">
+                        <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+                    </button></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Grid -->
+            <div *ngIf="!trackSpinner && trackPageLayout && showGrid" style="margin-top: 10px" >
+              <angular-slickgrid gridId="output" [columnDefinitions]="outputColumnDefinitions"
+              [gridOptions]="outputGridOptions" [dataset]="outputDataset"
+              (onAngularGridCreated)="outputAngularGridReady($event)" gridWidth="100%"
+              (sgOnClick)="onOutputCellClicked($event.detail.eventData, $event.detail.args)"
+              (sgOnSelectedRowsChanged)="onOutputSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+              </angular-slickgrid>
+            </div>
+
+            <!-- Row to show Count -->
+            <div class="row" style="margin-top: -10px;margin-bottom: -17px;" *ngIf="!trackSpinner && trackPageLayout && showGrid">
+              <div class="col-lg-6">
+      
+              </div>
+              <div class="col-lg-6" style="text-align: right;">
+                <label> <b> Total Record(s) : <b> {{outputDataset?.length}}</b>
+                    &nbsp; &nbsp; &nbsp; Selected Record(s) : <b> {{outputSelectedItems?.length}}</b></b></label>
+              </div>
+            </div>
+          </ng-template>
+
+        </ngb-tab>
+      </ngb-tabset>
+    </div>
+
+  </div>
+</div>
+
+
+<div id="popup_employee_confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_employee_confirmation"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          <div class="col-xs-11">
+            <h6 class="modal-title pull-left" id="popup_salary_breakup"> Confirm Employee</h6>
+            <div class="modal-close" (click)="modal_dismiss()"><span class="mdi mdi-close pull-left"></span></div>
+          </div>
+        </div>
+        <div class="modal-body" style="min-height: 25rem;">
+
+          <div class="row">
+            <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-4 col-sm-6">
+              <label class="form-label">Send Email</label>
+              <div class="p-t-10">
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox"  [(ngModel)]="isMailRequired" />
+                  <span class="el-switch-style"></span>
+                </label>
+              </div>
+            </div>
+           
+
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6" >
+              <label class="form-label">CC E-mail's  <i class="mdi mdi-information-outline" placement="right" style="cursor: pointer;" ngbTooltip="Enter the email addresses of the users you want to send. More than one email can be entered, separated by comma or space."></i><span class="help-text m-l-5">( Please separate email ids using comma )</span>   </label>
+
+              <div class="editor-tag" (click)="focusTagInput()">
+                  <span class="tag-item" *ngFor="let tag of ccmailtags">
+                                {{tag}}
+                                <span class="remove-tag" (click)="removeTag(tag)">×</span>
+                  </span>
+                  <input class="form-control" class="input-tag input_border" 
+                  pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" type="text" 
+                  name="emailList" [(ngModel)]="ccMailIds" 
+                  placeholder="example@domain.com"  autocomplete="none|false|no" s
+                  tyle="width: 100%;" #tagInput (keyup)="onKeyUp($event)" (change)="onchangeCC($event)">
+              </div>
+              <div class="help-block" *ngIf="CCemailMismatch">Please type your e-mail address in the format example@domain.com
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row" *ngIf="addSelectedItems?.length > 0">
+            
+            <label class="form-label" style="margin-left: 15px; margin-right: 15px;">You can search for an employee by emp. code / emp. name </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no" placeholder=" &#61442;  Start searching for a employee by emp. code or emp. name or client code or client name" style="margin-left: 15px; margin-right: 15px;margin-bottom: 15px;">
+
+            <div class="col-md-12 transitions" style="padding: 0px;">
+              <div class="job-box ">
+                <div class="inbox-message">
+                  <ul>
+                    <li *ngFor="let employee of addSelectedItems  | filter: searchText" style="width: 100% !important;">
+                      <div class="message-avatar">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                      </div>
+                      <div class="message-body" >
+                        <div class="message-body-heading">
+                          <h5>{{employee.EmployeeName}} - {{employee.EmployeeCode}} </h5>
+                          <span> <b>DOJ :  {{employee.DOJ | date : 'MMM d, y' }}</b></span>
+                        </div>
+                        <p>{{employee.ClientName}}</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      <div class="modal-footer" style="padding: 0px;">
+        <button type="button"  class="btn upgrade-btn" id="btn_onboarding_submit"
+          (click)="onEmployeeConfirmation()" style="width: 100%;"> <i class="mdi mdi-arrow-right-drop-circle-outline  m-r-xs"></i> Generate
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="popup_displayResult" class="modal fade" tabindex="-1" role="dialog"  aria-labelledby="popup_displayResult" 
+aria-hidden="true">
+      <div style="display: block;" class="modal fade show ">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header" style="padding: 15px !important;">
+              <div class="col-xs-11">
+                <h6 class="modal-title pull-left" >Result</h6>
+                <div class="modal-close" (click)="modal_dismiss_displayResult()"><span class="mdi mdi-close pull-left"></span></div>
+              </div>
+
+              <!-- <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                <small class="header-pretitle"><b>Processing Status (Employee) </b></small>
+                <h6 class="modal-title subheader_h6" id="popup_release_AL" >{{ClientName}} <span> - </span>
+                  {{ClientContractName}} </h6>
+              </div> -->
+
+              <!-- <div class="modal-close" (click)="modal_dismiss_display()" style="margin-top: 5px;"><span
+                  class="mdi mdi-close pull-left"></span>
+              </div> -->
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="job-box ">
+                    <div class="inbox-message">
+                      <ul>
+                        <li *ngFor="let i of resultList" style="width: 100% !important;">
+                          <a href="javascript:;">
+                            <div class="message-avatar">
+                              <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                            </div>
+                            <div class="message-body">
+                              <div class="message-body-heading">
+                                <h5>{{i.EmployeeName}} - <b *ngIf="i.Status" style="color: green;">Success</b>
+                                  <b style="color: red;" *ngIf="!i.Status">Failed</b> </h5>
+                              </div>
+                              <p>{{i.ErrorMessage}}</p>
+                            </div>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="pull-left left-margin-btn">
+
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+</div>
+

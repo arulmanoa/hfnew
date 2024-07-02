@@ -1,0 +1,249 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" *ngIf="item != null && item != undefined">
+
+            <div class="modal-header" style="padding: 15px !important;">
+                <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                    <small class="header-pretitle"><b>Landlord Details</b></small>
+                    <h6 class="modal-title subheader_h6">{{item.StartDate | date:'d MMM y'}} -
+                        {{item.EndDate | date:'d MMM y'}}
+
+                        <h6 *ngIf="!item.IsProposed && StatusNumber == 3"
+                            style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                            <span class="badge badge-success1"> Partially Approved </span>
+                            <span class="badge badge-remarks" matTooltip="{{item.ApproverRemarks}}"> <i
+                                    class="mdi mdi-message-alert-outline"></i>
+                            </span>
+                        </h6>
+                        <h6 *ngIf="!item.IsProposed && StatusNumber == 0"
+                            style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                            <span class="badge badge-warning1"> Saved </span>
+                        </h6>
+                        <h6 *ngIf="!item.IsProposed && StatusNumber == 2"
+                            style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                            <span class="badge badge-danger1"> Rejected </span>
+                            <span class="badge badge-remarks" matTooltip="{{item.ApproverRemarks}}"> <i
+                                    class="mdi mdi-message-alert-outline"></i>
+                            </span>
+                        </h6>
+                        <h6 *ngIf="!item.IsProposed && StatusNumber == 1"
+                            style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                            <span class="badge badge-success1"> Approved </span>
+                            <span class="badge badge-remarks" matTooltip="{{item.ApproverRemarks}}"> <i
+                                    class="mdi mdi-message-alert-outline"></i>
+                            </span>
+
+                            <span class="badge badge-remarks" style="cursor: pointer;"
+                                title="Approved Amount : {{item.ApprovedAmount}}"> <i
+                                    class="mdi mdi-checkbox-marked-circle"></i>
+                            </span>
+                        </h6>
+                        <h6 *ngIf="item.IsProposed" style="margin-top: 10px;margin-bottom: 10px;font-weight: 600;">
+                            <span class="badge badge-declaration"> Declaration </span>
+                        </h6>
+                    </h6>
+
+
+                </div>
+                <div class="modal-close" *ngIf="isLoading" (click)="confirmExit()" style="margin-top: 5px;"><span
+                        class="mdi mdi-close pull-left"></span>
+                </div>
+            </div>
+
+
+            <div class="modal-body no-padder">
+
+                <div class="row" *ngIf="DoesValidatioFailed">
+                    <div class="col-lg-12 text-center">
+                        <ngb-alert [dismissible]="false">
+                            <strong>{{ValidationFailedMessage}}</strong>
+                        </ngb-alert>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+
+                    <!-- -- approved -- -->
+                    <ng-container *ngIf="!item.IsProposed && (StatusNumber == 1 || StatusNumber == 2)">
+                        <div class="col-md-6" style="margin-top: 10px;">
+                            <label class="form-label">Approved Amount </label>
+                            <p class="small" style="line-height: 16px;  font-size: 12px; font-weight: 400;">
+                                {{item.ApprovedAmount}}</p>
+                        </div>
+                        <div class="col-md-6" style="margin-top: 10px;">
+                            <label class="form-label">Approver Remarks </label>
+                            <p class="small" *ngIf="item.ApproverRemarks != null && item.ApproverRemarks != ''"
+                                style="line-height: 16px;  font-size: 12px; font-weight: 400;">
+                                {{item.ApproverRemarks}}</p>
+                            <p class="small" *ngIf="item.ApproverRemarks == null || item.ApproverRemarks == ''"
+                                style="line-height: 16px;  font-size: 12px; font-weight: 400;">
+                                --- </p>
+                        </div>
+                    </ng-container>
+                    <!-- -- approved -- -->
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="PermissibleRoles() && !isGuidId(item.Id)">
+                        <label class="form-label">Approved Amount <span class="required"
+                                style="color: #f89595fa !important;">*</span>
+                        </label>
+                        <input class="form-control" type="text" maxlength="10"
+                            onkeypress="return /^[0-9]+$/i.test(event.key)" name="ApprovedAmount" [(ngModel)]="item.ApprovedAmount"                          
+                            placeholder="18000" autocomplete="none|false|no">
+    
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label searchbar-label">PAN of Landlord <span class="required"
+                                    *ngIf="isPanMandatoryForHRA">*</span></label>
+                            <label class="qcsummarylabel form-text text-muted">
+                                <input class="form-control" #input
+                                    (input)="input.value=$event.target.value.toUpperCase()"
+                                    [(ngModel)]="item.PANOfLandlord" type="text" (change)="onChangePAN($event, item)"
+                                    [ngClass]="{ 'is-invalid': DoesValidatioFailed && doFieldValidation(item.PANOfLandlord) }"
+                                    name="PANofLender" placeholder="ABCPD1234E"
+                                    pattern="^([a-zA-Z]){3}([pPcCHhaAbBgGlLfFTtjJ]){1}([a-zA-Z]){1}([0-9]){4}([a-zA-Z]){1}?$"
+                                    maxlength="10" autocomplete="off">
+                            </label>
+                            <!-- <div class="help-block">
+                  <span  *ngIf="lhpForm.get('PANofLender').errors?.pattern || lhpForm.get('PANofLender').errors?.invalid">
+                      Please  match the requested format. (Ex: ABCPD1234E)
+                  </span>
+              </div> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label searchbar-label">Rental House Address <span
+                                    class="required">*</span></label>
+                            <label class="qcsummarylabel form-text text-muted">
+                                <textarea class="form-control" [(ngModel)]="item.RentalHouseAddress" rows="3"
+                                    spellcheck="false" id="Remarks" placeholder="Type you address here..."></textarea>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label searchbar-label">Address of Landlord <span
+                                    class="required">*</span></label>
+                            <label class="qcsummarylabel form-text text-muted">
+                                <textarea class="form-control" [(ngModel)]="item.AddressOfLandlord" rows="3"
+                                    spellcheck="false" placeholder="Type your lender address here..."
+                                    id="AddressofLender"></textarea>
+                            </label>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label searchbar-label">Remarks</label>
+                            <label class="qcsummarylabel form-text text-muted">
+                                <textarea class="form-control" [(ngModel)]="item.HRARemarks" rows="4" spellcheck="false"
+                                    placeholder="Type your message here..." id="AddressofLender"></textarea>
+                            </label>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12" *ngIf="currentTaxMode == 2">
+                        <div class="row" style="padding: 15px;">
+                            <div class="'col-md-6"
+                               >
+                                <div class="form-group">
+                                    <label class="form-label searchbar-label">Attachments <span
+                                            class="required">*</span></label>
+                                    <div class="upload-files-container" draggable="true">
+                                        <div class="drag-file-area"
+                                            style="height: 95px; cursor: pointer;margin: 0px 0 0px;">
+
+                                            <label class="label"
+                                                style="margin-bottom: -5px;width: 100%;cursor: pointer;">
+                                                <h3 class="dynamic-message"
+                                                    style="color: #146BA2;top: 5%;position: relative;"> Upload
+                                                    your files here </h3>
+                                                <span style="display: block;font-size: 10px;"> (Max size:
+                                                    2MB) </span>
+                                                <span class="browse-files"> <input #myInput type="file"
+                                                        step="height: 100%;width: 100%;padding: 7px;"
+                                                        class="default-file-input"
+                                                        accept="application/msword,  application/pdf, image/*"
+                                                        (change)="onFileUpload($event, item)" />
+                                                </span>
+                                            </label>
+                                        </div>
+
+                                        <div class="d-flex align-items-center" style="margin-top: 10%;"
+                                            *ngIf="!isLoading && item.Id == selectedUploadIndex">
+                                            <strong class="text-right"> {{docSpinnerText}} ...
+                                                &nbsp;&nbsp;&nbsp;</strong>
+                                            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="padding: 5px;" *ngIf="item.DeclarationAttachments.length > 0">
+                                <div id="scroll-wrapper scrollbox_delayed">
+                                    <div id="thumbnails">
+                                        <div class="thumbnail-container" style="position: relative;
+                              border: 1px solid steelblue;
+                              margin: 16px;
+                              display: inline-block;
+                              height: 95px;                             
+                              border-radius: 3px;
+                              width: 110px;
+                              margin-left: 5px;" *ngFor="let photo of item.DeclarationAttachments">
+                                            <div class="box">
+                                                <button type="button" style="color: white" class="delete"
+                                                    (click)="doDeleteFile(item,photo, 'HRA')">
+                                                    <span> <i class="fa fa-minus-circle" style="margin-top: 2px;"
+                                                            aria-hidden="true"></i> </span>
+                                                </button>
+                                                <button type="button" class="delete"
+                                                    style="right: 1px;top: 70px;font-size: 20px;"
+                                                    (click)="doViewFile(medical, photo, 'Medical')">
+                                                    <span style="border-radius: 14%;background: #e4e4e4;"><i
+                                                            class="mdi mdi-progress-download"
+                                                            style="color: #787c7b;"></i> </span>
+                                                </button>
+                                                <div>
+                                                    <span class="material-icons p-r-10">
+                                                        file_present
+                                                    </span>
+                                                    <span class="file-name" matTooltip="{{photo.FileName}}">
+                                                        {{photo.FileName}} </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div>
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                                    (click)="UpdateLandlordDetails()">
+                                    <div class="pos-rlt sm-btn-component"> <span> Save Changes </span></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

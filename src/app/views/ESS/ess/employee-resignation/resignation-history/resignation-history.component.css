@@ -1,0 +1,168 @@
+.card-body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 10px;
+}
+
+.card {
+    width: 540px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+}
+
+.card-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.card-item.status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-item.status.pending {
+    background-color: #ffe0b2;
+    color: #f57c00;
+}
+
+.card-item.status.rejected {
+    background-color: #ffcccb;
+    color: #d32f2f;
+}
+
+.card-item.status.approved {
+    background-color: #c8e6c9;
+    color: #388e3c;
+}
+
+.card-item.status.revoked {
+    background-color: #EFC8FF;
+    color: #8E44AD;
+}
+
+.date {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.dropdown-icon {
+    font-size: 24px;
+    color: #999;
+}
+
+.card-details {
+    display: none;
+    padding: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.card-details p {
+    margin: 10px 0;
+}
+
+
+.txt-g{
+    color: #2DA05E;
+}
+.txt-r{
+    color: #d32f2f;
+}
+.txt-p{
+    color: #8E44AD;
+}
+
+.modal {
+    display: block;
+}
+.modal .modal-dialog-aside {
+    height: 100%;
+    margin: 0;
+    transform: translate(0);
+    transition: transform .2s;
+}
+
+.modal .modal-dialog-aside .modal-content {
+    height: inherit;
+    border: 0;
+    border-radius: 0;
+    padding: 5px;
+}
+
+.modal .modal-dialog-aside .modal-content .modal-body {
+    overflow-y: auto;
+    max-height: calc(100vh - 62px) !important;
+}
+
+.modal.fixed-left .modal-dialog-aside {
+    margin-left: auto;
+    transform: translateX(100%);
+}
+
+.modal.fixed-right .modal-dialog-aside {
+    margin-right: auto;
+    transform: translateX(-100%);
+}
+
+.modal.show .modal-dialog-aside {
+    transform: translateX(0);
+}
+
+.stickyhead {
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /* margin-top: -31px; */
+    padding: 10px;
+    box-shadow: 0 2px 3px 0px rgba(150,170,180,0.5);
+}
+
+.moudle_name {
+    font-size: 18px;
+    margin-bottom: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    margin-top: 15px;
+}
+
+.help-text {
+    font-style: italic;
+    color: #afb0b3;
+    letter-spacing: 0.2px;
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.advanceText{
+    font-size: 10px;
+    font-style: italic;
+    color: blue;
+    cursor: pointer;
+}
+
+.addnew{
+    font-size: 9px;
+    font-style: italic;
+    color: #4682b4;
+    cursor: pointer;
+    float: right;
+}

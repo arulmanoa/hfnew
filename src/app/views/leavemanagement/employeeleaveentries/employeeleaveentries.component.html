@@ -1,0 +1,1066 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="padding-top: 10px;">
+          <h6 class="h6_c"> My Leave Requests </h6>
+          <!-- <i class="mdi mdi-information  m-r-xs" tooltip="Time off" placement="right" theme="light" tooltip-class="size-f"> </i> -->
+
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <button type="button" class="btn btn-primary" (click)="do_applyLeave()">
+                <i class="mdi mdi-spellcheck  m-r-xs"></i> Apply Leave
+              </button>
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row hidden-sm" *ngIf="!isMobileResolution && !spinner">
+      <div [ngClass]="isAllenDigital ? 'col-xl-4 col-lg-4' : 'col-xl-3 col-lg-6'">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body" [ngStyle]="isAllenDigital ? { 'height': '80px' } : { 'width': '265px', 'height': '80px' }">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Requests (Pending)</h5>
+                <span class="h2 font-weight-bold mb-0"> {{count_applied}}</span>
+              </div>
+              <div class="col-auto">
+                <div class=" icon icon-shape bg-yellow text-white rounded-circle shadow">
+                  <i class="mdi mdi-marker-check"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <!-- <span class="text-warning mr-2"><i class="fa fa-arrow-down"></i> 0%</span>
+              <span class="text-nowrap">Since yesterday</span> -->
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div [ngClass]="isAllenDigital ? 'col-xl-4 col-lg-4' : 'col-xl-3 col-lg-6'">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body" [ngStyle]="isAllenDigital ? { 'height': '80px' } : { 'width': '265px', 'height': '80px' }">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Requests (Approved)</h5>
+                <span class="h2 font-weight-bold mb-0"> {{count_approved}}</span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape  bg-warning text-white rounded-circle shadow">
+                  <i class="mdi mdi-account-clock"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <!-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> %</span>
+              <span class="text-nowrap">Since last month</span> -->
+            </p>
+          </div>
+        </div>
+      </div>
+      <div [ngClass]="isAllenDigital ? 'col-xl-4 col-lg-4' : 'col-xl-3 col-lg-6'">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body" [ngStyle]="isAllenDigital ? { 'height': '80px' } : { 'width': '265px', 'height': '80px' }">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0"> Requests (Rejected)</h5>
+                <span class="h2 font-weight-bold mb-0"> {{count_rejected}}</span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                  <i class="mdi mdi-cancel"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <!-- <span class="text-danger mr-2"><i class="fa fa-arrow-down"></i> %</span>
+              <span class="text-nowrap">Since last week</span> -->
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-lg-6" *ngIf="!isAllenDigital">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body" style="width: 265px !important;height: 80px !important;">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">No of Days</h5>
+                <span class="h2 font-weight-bold mb-0"> {{count_totalDays}} </span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                  <i class="mdi mdi-shopping"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <!-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 0%</span>
+              <span class="text-nowrap">Since last month</span> -->
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+
+
+    <!-- <div class="row hidden-sm" *ngIf="!spinner">
+      <div class="col-6 col-lg-6 col-xl">
+
+        <div class="card" style="background: linear-gradient(to right, #ffbf96, #fe7096) !important;">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="text-uppercase text-muted mb-2 white_color">
+                 Requests (Pending)
+                </h6>
+                <span class="h2 mb-0 white_color">
+                {{count_applied}}
+                </span>
+              </div>
+              <div class="col-auto">
+                <span class="h2 fe fe-dollar-sign text-muted mb-0 white_color"> <i class="mdi mdi-marker-check "> </i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-6 col-lg-6 col-xl">
+
+        <div class="card" style="background: linear-gradient(to right, #90caf9, #047edf 99%) !important;">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="text-uppercase text-muted mb-2 white_color">
+                  Requests (Approved)
+                </h6>
+                <span class="h2 mb-0 white_color">
+                 {{count_approved}}
+                </span>
+              </div>
+              <div class="col-auto">
+                <span class="h2 fe fe-dollar-sign text-muted mb-0 white_color"> <i class="mdi mdi-account-clock"> </i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-6 col-lg-6 col-xl">
+
+        <div class="card" style="background: linear-gradient(to right, #84d9d2, #07cdae) !important;">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="text-uppercase text-muted mb-2 white_color">
+                  Requests (Rejected)
+                </h6>
+                <span class="h2 mb-0 white_color">
+                {{count_rejected}}
+                </span>
+              </div>
+              <div class="col-auto">
+                <span class="h2 fe fe-dollar-sign text-muted mb-0 white_color"> <i class="mdi mdi-cancel"> </i> </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-6 col-lg-6 col-xl">
+
+        <div class="card" style="background-image: linear-gradient(to right, #da8cff, #9a55ff);">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="text-uppercase text-muted mb-2 white_color">
+                 No Of Days (Requested)
+                </h6>
+                <span class="h2 mb-0 white_color">
+                {{count_totalDays}}
+                </span>
+              </div>
+              <div class="col-auto">
+                <span class="h2 fe fe-dollar-sign text-muted mb-0 white_color">  <i class="mdi mdi-shopping"> </i>   </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div> -->
+
+    <div class="content m-b report-content" style="margin-top: -5px;" *ngIf="!spinner">
+
+
+      <!-- <div class="row"> -- sandeep told not required this box
+        <ng-container *ngFor="let i of _entitlementList">
+          <div class="col-12 col-lg-4 col-md-4 col-sm-6 col-xl"
+            *ngIf="(i.IsQuickApplyRequired==true || i.Definition.IsQuickApplyRequired)">
+
+            <div class=" card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-auto">
+                    <div class="avatar avatar-sm">
+                      <div class="avatar-title font-size-lg bg-primary-soft rounded-circle text-primary">
+                        <i class="mdi mdi-bucket"> <img src="assets/Images/share.svg" width="25px"> </i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col ml-n2">
+                    <p class="small mb-0" style="font-size: 12px;">
+                      <strong> {{i.DisplayName}} </strong>
+                    </p>
+                    <small class="text-muted" *ngIf="(i.ShowBalanceInUI  == true || i.Definition.IsQuickApplyRequired)">
+                      Eligible : {{i.EligibleUnits}}
+                    </small>
+                  </div>
+                  <div class="">
+                    <button class="btn btn-default"
+                      style="margin-top: 5px;border-radius: 10px;margin-right: 3rem;background-color: #d9e7f3 !important;border-color: #337ab7 !important;"
+                      (click)="ontab_applyLeave(i)">Apply</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </ng-container>
+      </div> -->
+
+
+      <!-- <div class="row">
+
+        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+          <label class="form-label"> From - To Date </label>
+          <input class="form-control" placeholder="Daterangepicker" bsDaterangepicker
+            [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }">
+        </div>
+
+        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+          <label class="form-label"> Leave Type </label>
+          <ng-select [items]="_entitlementList" placeholder="-- select on option --" bindLabel="DisplayName"
+            bindValue="Id">
+          </ng-select>
+        </div>
+
+        
+        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+          <label class="form-label"> Request Status </label>
+          <ng-select [items]="_entitlementList" placeholder="-- select on option --" bindLabel="DisplayName"
+            bindValue="Id">
+          </ng-select>
+        </div>
+
+
+      </div> -->
+
+      <!-- <div class="row">
+        <div class="col-lg-6">
+
+        </div>
+        <div class="col-lg-6" style="padding: 0px;">
+          <div class="col-lg-6" style="float: right;">
+            <label class="form-label" style="text-align: left;">Start searching for an emp. by code or name </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+              placeholder="Search" style="border-color: #a9a1a1;">
+          </div>
+        </div>
+      </div>
+      <br> -->
+
+      <div class="row hidden-sm" style="float: right; width: 100%; text-align: right;padding-bottom: 10px;">
+        <div class="col-12 col-xs-6 col-lg-6 col-md-6 col-sm-6" style="margin-left: -30px;margin-right: 25px;">
+          <!-- <div class="text-left" style="margin-top: -10px;">
+            <button type="button" class="btn btn-danger" id="btn_qc_reject"
+              [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="cancelApprovedRequest()"> <i
+                class="mdi mdi-close-circle  m-r-xs"></i> Cancel Approved Request
+            </button>
+          </div> -->
+        </div>
+
+        <div class="col-12 col-xs-6 col-lg-6 col-md-6 col-sm-6">
+
+          <div class="radio-group a" style="margin-top: -10px;" *ngIf="!isMobileResolution">
+            <div class="col-auto mr-sm-2 mx-1 card-block py-0 text-center radio p-0 "
+              [ngClass]="IsMusterroll ? 'selected' : ''" tooltip="card view" (click)="onClickMode('MusterRoll')">
+              <div class="flex-row">
+                <div class="col p-0">
+                  <div class=""> <img class="irc_mut img-fluid" src="assets/Images/grid-view.jpg" width="18"
+                      style="margin-top: 7px;margin-left: 12px !important;">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-auto ml-sm-2 mx-1 card-block py-0 text-center radio p-0"
+              [ngClass]="IsMusterroll ? '' : 'selected'" tooltip="list view" (click)="onClickMode('NonMusterRoll')">
+              <div class="flex-row">
+                <div class="col p-0">
+                  <div class=""> <img class="irc_mut img-fluid" src="assets/Images/list-view.jpg" width="18"
+                      style="margin-top: 7px; margin-left: 12px !important;"> </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <div class="row hidden-sm" style="width: 102%;" *ngIf="!spinner  && !IsMusterroll">
+        <div class="col-lg-12">
+          <angular-slickgrid gridId="grdinEmployeesInitiate" [columnDefinitions]="inEmployeesInitiateColumnDefinitions"
+            [gridOptions]="inEmployeesInitiateGridOptions" [dataset]="inEmployeesInitiateList"
+            (onAngularGridCreated)="inEmployeesInitiateGridReady($event)" gridWidth="100%"
+            (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+          </angular-slickgrid>
+        </div>
+      </div>
+
+
+
+      <div class="row" style="width: 107%;" *ngIf="!spinner  && IsMusterroll">
+        <ng-container *ngIf="inEmployeesInitiateList.length > 0">
+          <div class="col-md-4 col-sm-4 col-xs-6"
+            *ngFor="let item of inEmployeesInitiateList | filter: searchText; let i = index">
+
+            <div class="card" style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7;">
+              <div class="card-header" style="background-color: white;border: none;padding: 10px;">
+                <span *ngIf="item.Status == 400">
+                  <input type="checkbox" [(ngModel)]="item.isSelected" (click)="selectClaimRequest(item)" style="padding: 10px;cursor: pointer;" />
+
+                </span>
+                <span *ngIf="item.Status == 100" class="badge badge-soft-warning"
+                  style="display: inline;">{{item.StatusName}} </span>
+                <span *ngIf="item.Status == 400" class="badge badge-soft-success"
+                  style="display: inline;">{{item.StatusName}} </span>
+                <span *ngIf="item.Status == 300 || item.Status == 200" class="badge badge-soft-danger"
+                  style="display: inline;"> {{item.StatusName}} </span>
+
+              </div>
+              <div class="card-body" style="background-color: #f3f8ff;padding: 10px;">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <span style="font-size: 13px;font-weight: 600;">{{item.EntitlementName}} Leave Request</span> <br />
+                    <span style="font-size: 11px;">{{item.AppliedFrom | date :'MMMM d'}} - {{item.AppliedTill | date
+                      :'MMMM d y'}} </span>
+
+
+                  </div>
+
+                </div>
+              </div>
+              <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <span style="font-size: 13px; color: #1890ff; font-weight: 600;">{{item.AppliedUnits}} day(s)</span>
+                    <br />
+                    <span style="font-size: 11px;" title="{{item.ApplierRemarks}}"> Comments : {{item.ApplierRemarks}}
+                    </span>
+                  </div>
+                  <div class="col-lg-6" style="text-align: right;">
+                    <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Edit"
+                      (click)="do_editAppliedRequest(item)">
+                      <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a>
+                    <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Cancel"
+                      (click)="do_cancelAppliedRequest(item)">
+                      <i class="fa fa-ban" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </ng-container>
+      </div>
+
+
+
+      <!-- <div class="row">
+        <div class="col-xs-4">
+          <a href="/recruitment/candidates?sort=a.createdAt&amp;direction=desc">
+            <div class="grid simple border-2px" style="border-color: #c6f5d7;">
+              <div class="grid-body">
+                <p class="bold m-b-0-i new-candidates-title">New candidates</p>
+                <span class="muted nowrap">This week</span>
+                <div style="clear: both"></div>
+                <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                    <i class="fas fa-circle fa-stack-1x" style="font-size: 12px; color: #63E59F"></i>
+                    <i class="fas fa-circle fa-stack-1x" style="font-size: 29px; color: #63E59F; opacity: 0.3"></i>
+                  </span></div>
+                <span class="size-34 semi-bold">
+                  0
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+      
+      </div> -->
+      <!-- <div class="table-scroll">
+
+        
+
+        <table class="rtable" style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th> <span style="font-size: 11px;"> Applied From</span> </th>
+              <th> <span style="font-size: 11px;"> Applied Till </span> </th>
+              <th> <span style="font-size: 11px;"> Entitlement Type </span> </th>
+              <th> <span style="font-size: 11px;"> Leave Type </span> </th>
+              <th> <span style="font-size: 11px;"> No of Days </span> </th>
+              <th> <span style="font-size: 11px;"> Status </span> </th>
+              <th class="text-center"> <span style="font-size: 11px;"> Action </span> </th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="_entitlementAvailmentRequests.length == 0">
+              <td colspan="12" style="text-align: center !important; padding: 10px;">
+                There's no leave to show :(
+              </td>
+            </tr>
+            <ng-container *ngIf="_entitlementAvailmentRequests.length > 0">
+              <tr *ngFor="let item of _entitlementAvailmentRequests; let i = index">
+
+                <td><span style="font-size: 11px;">{{item.AppliedFrom | date :'dd-MM-yyyy'}}</span> </td>
+                <td><span style="font-size: 11px;">{{item.AppliedTill | date :'dd-MM-yyyy'}}</span> </td>
+                <td><span style="font-size: 11px;"><span class="badge badge-soft-secondary">
+                      {{item.EntitlementTypeName}} </span></span> </td>
+                <td><span style="font-size: 11px;">{{item.EntitlementName}}</span> </td>
+                <td><span style="font-size: 11px;">{{item.AppliedUnits}}</span> </td>
+                <td><span style="font-size: 11px;">
+                    <span *ngIf="item.Status == 100" class="badge badge-soft-warning">{{item.StatusName}} </span>
+                    <span *ngIf="item.Status == 400" class="badge badge-soft-success">{{item.StatusName}} </span>
+                    <span *ngIf="item.Status == 300 || item.Status == 200"
+                      class="badge badge-soft-danger">{{item.StatusName}} </span>
+
+                  </span> </td>
+                <td class="text-center">
+                  <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Edit" (click)="do_editAppliedRequest(item)">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                  </a>
+                  <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" title="Cancel" (click)="do_cancelAppliedRequest(item)">
+                    <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                  </a>
+                </td>
+
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div> -->
+    </div>
+
+  </div>
+</div>
+
+<div id="popup_edit_attendance" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_edit_attendance" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-8" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">My Leave Request</small>
+            <!-- <h6 class="modal-title subheader_h6" id="popup_release_AL">Your Request</h6> -->
+          </div>
+
+          <div class="modal-close" (click)="close_leaverequest_slider()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+
+          <div class="row" style="margin-bottom: -16px;">
+            <div class="col-lg-12">
+
+              <div class="form-group form-group-vertical col-xs-12 col-sm-12 text-right"
+                *ngIf="leaveForm.get('Id').value == 0 &&  employeeEntitlement && employeeEntitlement.Definition.DownloadDocPath ">
+                <a (click)="downloadFile()" href="javascript:;"
+                  style="color: #1f62ff;cursor: pointer;font-size: 13px;font-weight: 600;">Click here to
+                  {{employeeEntitlement.Definition.DownloadLinkName}}
+                </a>
+              </div>
+
+
+              <div class="row" *ngIf="leaveForm.get('Id').value == 0 &&  employeeEntitlement && employeeEntitlement.Definition.InfoText">
+                <div class="col-lg-12 text-center">
+                  <ngb-alert [dismissible]="false">
+                    <strong> {{employeeEntitlement.Definition.InfoText}}
+                    </strong>
+                  </ngb-alert>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+
+
+
+
+
+                  <form [formGroup]="leaveForm" #formDirective="ngForm">
+
+                    <div class="row">
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label ">Leave Type <span *ngIf="leaveForm.get('Id').value == 0" class="fa fa-info-circle" placement="bottom"
+                            ngbTooltip="Note : The day off you are going to take should be on continuous dates."></span>
+                          <span class="required"> *</span> </label>
+                        <ng-select [items]="_entitlementList" placeholder="-- select an option --"
+                          formControlName="Entitlement" bindLabel="DisplayName" bindValue="EntitlementId"
+                          (change)="onChange_Entitlement($event)"
+                          [ngClass]="{ 'is-invalid': submitted && g.Entitlement.invalid }">
+                        </ng-select>
+                        <div *ngIf="submitted && g.Entitlement.invalid" class="help-block">
+                          <div *ngIf="g.Entitlement.errors.required">Entitlement is required
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                        *ngIf="employeeEntitlement && employeeEntitlement.Entitlement.IsOptionalHoliday">
+                        <label class="form-label ">Holiday's <span class="required"> *</span> </label>
+                        <ng-select [items]="optionalHolidayList" placeholder="-- select an option --"
+                          [clearable]="false" formControlName="OptinalHoliday" bindLabel="HolidayName" bindValue="Id"
+                          [ngClass]="{ 'is-invalid': submitted && g.OptinalHoliday.invalid }"
+                          (change)="onChangeHolidays($event)">
+                        </ng-select>
+                        <div *ngIf="submitted && g.OptinalHoliday.invalid" class="help-block">
+                          <div *ngIf="g.OptinalHoliday.errors.required">Optional Holiday is required
+                          </div>
+                        </div>
+                      </div>
+
+                       <!-- COMP OFF SELECTION  -->
+                       <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="employeeEntitlement && 
+                        employeeEntitlement.Definition && employeeEntitlement.Definition.IsCompOff">
+                        <label class="form-label ">{{employeeEntitlement.Definition.AdditionalDateLabelName}} <span class="required"> *</span></label>
+                        <ng-select *ngIf="leaveForm.get('Id').value == 0" [items]="availableCompOffDates" placeholder="-- select a date --" formControlName="compOffDates" 
+                          bindLabel="AttendanceDate" [ngClass]="{ 'is-invalid': submitted && g.compOffDates.invalid }" 
+                          (change)="onChangeCompOffDates($event)" [multiple]="employeeEntitlement.Definition.IsMultiSelectAllowedForCompOff" 
+                          [clearable]="!employeeEntitlement.Definition.IsMultiSelectAllowedForCompOff" [closeOnSelect]="!employeeEntitlement.Definition.IsMultiSelectAllowedForCompOff">
+                          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index" let-search="searchTerm">
+                            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{standalone: true}">
+                            {{ item.AttendanceDate }} ( {{item.ApplicableUnits}} day )
+                          </ng-template>
+                          <ng-template ng-label-tmp let-item="item">
+                            <span>  {{ item.AttendanceDate }} ( {{item.ApplicableUnits}} day )</span>
+                          </ng-template>
+                        </ng-select>
+                        <span *ngIf="leaveForm.get('Id').value > 0" style="font-size: 12px;">{{leaveForm.get('compOffDates').value }}
+                        </span>
+                        <div *ngIf="submitted && g.compOffDates.invalid" class="help-block">
+                          <div *ngIf="g.compOffDates.errors.required">Please choose one option from dropdown</div>
+                        </div>
+                      </div>
+
+                      <!-- Bereavement leave  -->
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6" *ngIf="employeeEntitlement && 
+                        employeeEntitlement.Definition && employeeEntitlement.Definition.IsBereavementLeave">
+                        <label class="form-label ">{{employeeEntitlement.Definition.AdditionalDateLabelName}} <span class="required"> *</span></label>
+                        <ng-select *ngIf="leaveForm.get('Id').value == 0" [items]="lstRelation" placeholder="-- select relationship --" 
+                          formControlName="relationshipId" [ngClass]="{ 'is-invalid': submitted && g.relationshipId.invalid }"
+                          bindLabel="Name" bindValue="Id" (change)="onChangeRelationshipForBL($event)" [clearable]="false">
+                        </ng-select>
+                        <span *ngIf="leaveForm.get('Id').value > 0" style="font-size: 12px;">
+                          {{ leaveForm.get('relationshipId').value }}
+                        </span>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                        *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsAdditionalDateInputRequired">
+                        <label class="form-label ">{{employeeEntitlement.Definition.AdditionalDateLabelName}} <span
+                            class="required"> *</span></label>
+                        <input *ngIf="leaveForm.get('Id').value == 0" class="form-control" type="text" name="AdditionalDateInput" bsDatepicker
+                          placement="bottom" readonly
+                          [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                          placeholder="12-12-1970" formControlName="AdditionalDateInput"
+                          [ngClass]="{ 'is-invalid': submitted && g.AdditionalDateInput.errors }" autocomplete="off" [minDate]="employeeEntitlement && employeeEntitlement.Definition.IsAdditionalDateFromDOJ ? minDateForAdditionalDateInput : employeeEntitlement && employeeEntitlement.Definition.MaxPastDaysForAdditionalDate ? minDateForAdditionalDateInput : null" 
+                          (ngModelChange)="onChange_AdditionalDate($event)">
+
+                          <span *ngIf="leaveForm.get('Id').value > 0" style="font-size: 12px;">{{leaveForm.get('AdditionalDateInput').value | date :'dd-MM-yyyy'}}
+                          </span>
+
+                        <div *ngIf="submitted && g.AdditionalDateInput.invalid" class="help-block">
+                          <div *ngIf="g.AdditionalDateInput.errors.required">
+                            {{employeeEntitlement.Definition.AdditionalDateLabelName}} is required
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row">
+
+
+                      <ng-container *ngIf="employeeEntitlement && !employeeEntitlement.Entitlement.IsOptionalHoliday">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                          <label class="form-label ">Applied From <span class="required"> *</span></label>
+                          <input *ngIf="leaveForm.get('Id').value == 0" class="form-control" type="text" name="AppliedFrom" bsDatepicker                           
+                             placement="bottom" readonly [minDate]="_from_minDate" [maxDate]="_from_maxDate"
+                            [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            placeholder="12-12-1970" formControlName="AppliedFrom"
+                            [ngClass]="{ 'is-invalid': submitted && g.AppliedFrom.errors }" autocomplete="off"
+                            (ngModelChange)="onChange_FromDate($event)">
+
+                            <span *ngIf="leaveForm.get('Id').value > 0" style="font-size: 12px;">{{leaveForm.get('AppliedFrom').value | date :'dd-MM-yyyy'}}
+                            </span>
+
+                          <div *ngIf="submitted && g.AppliedFrom.invalid" class="help-block">
+                            <div *ngIf="g.AppliedFrom.errors.required">Applied From is required
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;" *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <div *ngIf="(tabName!=null && getEntitlementDefintionCode(tabName) != 'COMP') || !isSameDate">
+                            <label class="form-label"> First Half </label>
+                            <div class="">
+                              <label class="el-checkbox el-checkbox-red">
+                                <input type="checkbox" name="IsAppliedForFirstHalf"
+                                  (change)="onChange_firstHalf($event)" [disabled]="tobeDisabledCheckbox"
+                                  formControlName="IsAppliedForFirstHalf" />
+                                <span class="el-checkbox-style"></span>
+                              </label>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-6 col-xs-6 col-sm-3" style="margin-top: 5px;" *ngIf="employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <div *ngIf="(tabName!=null && getEntitlementDefintionCode(tabName) != 'COMP') || !isSameDate">
+                            <label class="form-label"> Second Half</label>
+                            <div class="">
+                              <label class="el-checkbox el-checkbox-red">
+                                <input type="checkbox" name="IsAppliedFromSecondHalf"
+                                  (change)="onChange_secondHalf($event)" formControlName="IsAppliedFromSecondHalf"
+                                  [disabled]="isDisabledFromSecondHalf" />
+                                <span class="el-checkbox-style"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                          <label class="form-label ">Applied Till<span class="required"> *</span></label>
+                          <input *ngIf="leaveForm.get('Id').value == 0" class="disabled-prop form-control" type="text" name="AppliedTill" [minDate]="_till_minDate" [maxDate]="appliedTillMaxDate"
+                          bsDatepicker placement="bottom" [disabled]="shouldAllowtoEdit()"
+                            (ngModelChange)="onChange_TillDate($event)"
+                            [bsConfig]="{  dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+                            placeholder="12-12-1970" formControlName="AppliedTill" 
+                            [ngClass]="{ 'is-invalid': submitted && g.AppliedTill.errors }" autocomplete="off">
+
+                            <span *ngIf="leaveForm.get('Id').value > 0" style="font-size: 12px;">{{leaveForm.get('AppliedTill').value | date :'dd-MM-yyyy'}}
+                            </span>
+
+                          <div *ngIf="submitted && g.AppliedTill.invalid" class="help-block">
+                            <div *ngIf="g.AppliedTill.errors.required">Applied Till is required
+                            </div>
+                          </div>
+                          <div *ngIf="isinvalidDate == true" class="help-block">
+                            <div>Note: The till date has to be greater than or equal to the from date.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-12 col-xs-6 col-sm-3" style="margin-top: 5px;"
+                          *ngIf="!isSameDate && employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <label class="form-label"> First Half</label>
+                          <div class="">
+                            <label class="el-checkbox el-checkbox-red">
+                              <input type="checkbox" name="IsAppliedTillFirstHalf"
+                                (change)="onChange_tillfirstHalf($event)" formControlName="IsAppliedTillFirstHalf"
+                                [disabled]="isDisabledTillFirstHalf" />
+                              <span class="el-checkbox-style"></span>
+                            </label>
+                          </div>
+                        </div>
+                       
+                        <div class="form-group form-group-vertical col-12 col-xs-6 col-sm-3" style="margin-top: 5px;"
+                          *ngIf="!isSameDate && employeeEntitlement && employeeEntitlement.Definition.IsHalfDayApplicable">
+                          <label class="form-label"> Second Half</label>
+                          <div class="">
+                            <label class="el-checkbox el-checkbox-red">
+                              <input type="checkbox" name="IsAppliedTillSecondHalf" [disabled]="tobeDisabledCheckbox"
+                                (change)="onChange_tillSecondHalf($event)" formControlName="IsAppliedTillSecondHalf" />
+                              <span class="el-checkbox-style"></span>
+                            </label>
+                          </div>
+                        </div>
+
+                      </ng-container>
+
+                      <!-- [minDate]="getMinMaxRangeAdditionalDateInput('minDate')" [maxDate]="getMinMaxRangeAdditionalDateInput('maxDate')"  -->
+
+
+                      
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-6"
+                        *ngIf="leaveForm.get('Id').value == 0 && employeeEntitlement && employeeEntitlement.Definition.IsOptionRequiredToUploadDocuments">
+                        <div class="form-group">
+                          <label class="form-label searchbar-label">Attachment <span
+                              *ngIf="employeeEntitlement && employeeEntitlement.Definition.AreSupportingDocumentsMandatory"
+                              class="required">*</span>
+                            <span class="help-text m-l-5"> <i style="font-size: 10px;"> (Max file size 2MB) </i>
+                            </span>
+                          </label>
+
+                          <label class="qcsummarylabel form-text text-muted" *ngIf="!isLoading">
+                            <label class="upload control" style="width: 100%; float: left;"
+                              *ngIf="!leaveForm.get('AdditionalDocumentName').value">
+                              <div class="upload-draggable is-primary">
+                                <section class="section">
+                                  <div class="has-text-centered">
+                                    <span class="icon is-large">
+                                      Upload
+                                    </span>
+                                  </div>
+                                </section>
+                              </div>
+                              <input type="file" accept=".png,.gif,.jpg,.jpeg,.doc,.docx,.pdf,image/png,image/jpeg,image/gif,application/pdf,
+                                application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                (change)="onFileUpload($event)" id="sTest-uploadFile-candidateAddResume">
+                            </label>
+
+                            <div *ngIf="submitted && g.AdditionalDocumentId.invalid" class="help-block">
+                              <div *ngIf="g.AdditionalDocumentId.errors.required">Attachment is required
+                              </div>
+                            </div>
+
+                            <p class="control" *ngIf="leaveForm.get('AdditionalDocumentName').value">
+                              <span class="file-name">
+                                <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a
+                                    ngbTooltip="Delete Photo" id="sTest-deleteFile-candidateAddResume"
+                                    style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block;margin-top: -5px;">
+                                    <i class="fa fa-trash-o"></i>
+                                  </a>
+                                </button>
+                                <a target="blank" class="ahref" style="padding: 2px;">
+                                  {{leaveForm.get('AdditionalDocumentName').value}}
+                                </a>
+                              </span>
+                            </p>
+
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+                        *ngIf="leaveForm.get('Id').value > 0 && leaveForm.get('AdditionalDocumentId').value > 0 && leaveForm.get('AdditionalDocumentId').value != null">
+                        <label class="form-label" style="margin-bottom: -2px;"> Attachment
+                        </label>
+                        <span style="font-size: 12px;">{{leaveForm.get('AdditionalDocumentName').value}}
+                          <span *ngIf="!isZipFile()"  (click)="viewAttachments()"
+                            style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                            matTooltip="view attachment" title="view attachment">
+                            <i class="mdi mdi-file-document-outline"
+                              style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                          </span>
+
+                          <span *ngIf="isZipFile()" (click)="downloadAttachments()"
+                          style="cursor: pointer;display: inline-block;padding-right: 5px;"
+                          matTooltip="download attachment" title="download attachment">
+                          <i class="mdi mdi-download"
+                            style="display: block; top: 5px;position: relative;color: #0d395f;font-size: 18px;"></i>
+                        </span>
+                        
+
+                        </span>
+                      </div>
+
+                      <div class="d-flex align-items-center" style="text-align:center;padding-left: 1rem;"
+                        *ngIf="isLoading">
+                        <strong class="text-right"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                      </div>
+
+
+                      <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-sm-6">
+                        <label class="form-label">Second Half</label>
+                        <div class="p-t-10">
+                          <label class="el-switch el-switch-green">
+                            <input type="checkbox" name="IsAppliedTillSecondHalf" formControlName="IsAppliedTillSecondHalf"
+                             />
+                            <span class="el-switch-style"></span> 
+                          </label>
+                        </div>
+                      </div> -->
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label">No of Days </label>
+                        <input class="form-control" name="AppliedUnits" type="number" (change)="onChange_RequestedDays($event)" formControlName="AppliedUnits"
+                          placeholder="5.5" 
+                          [ngClass]="{ 'is-invalid': submitted && g.AppliedUnits.errors }"
+                          
+                         autocomplete="off">
+                        <div *ngIf="submitted && g.AppliedUnits.invalid" class="help-block">
+                          <div *ngIf="g.AppliedUnits.errors.required">Request Units is required
+                          </div>
+                        </div>
+                      </div> -->
+
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label">Balance Days</label>
+                        <input class="form-control" name="EligibleUnits" formControlName="EligibleUnits"
+                          placeholder="5.5" disabled type="text" autocomplete="off">
+                      </div> -->
+
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-12"
+                        *ngIf="leaveForm.get('Id').value == 0 &&  !IsLossOfPay && IsShowBalanceInUI">
+                        <div *ngIf="remainingDays < 0" class="help-block">
+                          Only {{availableDays}} days are left to take. So, please choose the no of request days
+                          equivalent to available days or below.
+                        </div>
+                      </div> -->
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                        <label class="form-label"> Comments <span class="required"> *</span> </label>
+                        <textarea class="form-control" rows="3" spellcheck="false" id="ApplierRemarks"
+                          formControlName="ApplierRemarks" placeholder="Include comments for your approver"
+                          [ngClass]="{ 'is-invalid': submitted && g.ApplierRemarks.errors }"></textarea>
+                        <div *ngIf="submitted && g.ApplierRemarks.invalid" class="help-block">
+                          <div *ngIf="g.ApplierRemarks.errors.required">Comments is required</div>
+                        </div>
+                      </div>
+
+
+                    </div>
+                    <!-- <div class="row">
+                      <div class="col-12">
+                        <span class="help-text"
+                          style="text-align: center;display: block;color: #f8a01c;font-size: 14px !important">
+                          <i class="mdi mdi-information-outline"></i> <b> Note : </b> <b>*
+                          </b> The day off you are going to take should be on continuous dates.</span>
+
+                      </div>
+                    </div> -->
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <div>
+
+          <div class="modal-footer" *ngIf="leaveForm.get('Id').value == 0">
+            <div class="pull-left left-margin-btn" style="width: 65%;">
+              <div class="row">
+                <!-- COMP OFF ELIGIBLE UNITS 
+                <div class="col-lg-6">
+                  <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;"
+                  *ngIf="employeeEntitlement && employeeEntitlement.Definition && employeeEntitlement.Definition.IsCompOff">
+                    You are eligible for <b style="color: black;">{{availableUnitsForCompOff}}</b> day
+                  </div>
+                </div>-->
+                <div class="col-lg-6">
+                  <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;"
+                    *ngIf="!IsLossOfPay && IsShowBalanceInUI == true">
+                    Available Balance : <b style="color: black;"> {{availableDays}} </b>
+                  </div>
+                </div>
+                 <!-- SHOW AVAILABLE BALANCE -->
+                 <div class="col-lg-6" *ngIf="leaveDaysApplied && leaveDaysApplied != ''">
+                  <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;">
+                    {{leaveDaysApplied}}
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <!-- <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;"
+                    *ngIf="!IsLossOfPay && IsShowBalanceInUI == true">
+                    Remaining Balance : <b style="color: black;" *ngIf="remainingDays >= 0"> {{remainingDays}} </b>
+                    <b style="color: red;" *ngIf="remainingDays < 0"> {{remainingDays}} </b>
+                  </div> -->
+                </div>
+              </div>
+
+
+              <!-- <div class="form-group" style="margin-bottom: 0.5rem;">
+                <div data-cy="remaining-allowance-amount" style="font-size: 0.85rem;">
+                  Applying for <b style="color: black;" *ngIf="requestedDays >= 0"> {{requestedDays}} </b> <b
+                    style="color: red;" *ngIf="requestedDays < 0"> {{requestedDays}} </b> day of
+                  <b style="color: black;"> {{leaveTypeName}} </b>
+                </div>
+              </div> -->
+
+
+            </div>
+            <div class="pull-right m-r-sm">
+              <div>
+                <div>
+
+                  <button type="submit" [disabled]="isLoading" (click)="saveEntitlementRequest()"
+                    style="border-radius: 20px;" class="btn btn-primary"
+                    [ngStyle]="leaveForm.get('Id').value > 0 ?{'width': '50%'} : {'width': '100%'}"> Submit Request
+                  </button>
+
+                  <button [disabled]="isLoading" type="button" class="btn btn-danger" id="btn_qc_reject"
+                    *ngIf="leaveForm.get('Id').value > 0" style="width: 50%;border-radius: 20px;"
+                    (click)="do_popup_cancelAppliedRequest(leaveForm.get('Id').value)">
+                    <i class="mdi mdi-cancel  m-r-xs"></i> Cancel
+                  </button>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APPLY LEAVE REQUEST SLIDER  -->
+
+
+
+<div id="documentviewer2" class="modal fade" tabindex="1" role="dialog" data-backdrop="static" data-keyboard="false"
+aria-labelledby="documentviewer2" aria-hidden="true">
+<div style="display: block;" class="modal fade show ">
+  <div class="modal-dialog modal-lg modal-dialog-centered" >
+    <div class="modal-content" style="box-shadow: #00000096 1px 14px 15px !important;">
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-md-8">
+          <small class="header-pretitle" style="float: left; width: 100%;"><b
+              style="float: left;">Documents</b></small>
+          <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview</h6>
+        </div>
+        <div class="col-md-4" style="top: 13px;">
+          <div class="modal-close" (click)="close_documentviewer2()" style="margin-top: -22px;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+          <div style="margin-top: -8px;float: right;margin-right: 33px">
+            <app-filedownload [documentId]="leaveForm.get('AdditionalDocumentId').value">
+            </app-filedownload>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal-body">
+        <div class="iframe-container" *ngIf="contentmodalurl == null"
+          style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">
+          <!-- <img src="assets/Images/clientlogo/{{clientminiLogoLink}}" style="opacity: .5;"> -->
+          <span>
+            <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+              &nbsp; Please wait...</i>
+            <span class="sr-only">Please wait...</span>
+          </span>
+        </div>
+        <div class="iframe-container" *ngIf="contentmodalurl != null"
+          style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;height: 20rem;">
+
+          <iframe [src]="contentmodalurl" frameborder="0" scrolling="yes"
+            style="width: 100%;height: 100%;" width="100%" height="600px"></iframe>
+          <!-- <img style="top: 0 !important;
+      right: 0px !important;
+      position: absolute !important;
+      z-index: 9;
+      height: 55px !important;
+      vertical-align: top;
+      opacity: inherit;
+      bottom: unset !important;
+      left: unset !important;" src="../../../../assets/Images/clientlogo/{{clientLogoLink}}"> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<div id="documentviewer" cdkDrag class="modal fade grabbable" cdkDragRootElement="grabbable" tabindex="-1" role="dialog" aria-labelledby="documentviewer" aria-hidden="true">
+<div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 1030px;">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+        <div class="col-md-8">
+          <small class="header-pretitle" style="float: left; width: 100%;"><b
+              style="float: left;">Documents</b></small>
+          <h6 class="modal-title subheader_h6 text-left" id="popup_release_AL">Preview</h6>
+        </div>
+        <div class="col-md-4" style="top: 13px;">
+          <div class="modal-close" (click)="close_documentviewer3()" style="margin-top: -22px;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+          <div style="margin-top: -8px;float: right;margin-right: 33px">
+            <app-filedownload [documentId]="leaveForm.get('AdditionalDocumentId').value">
+            </app-filedownload>
+          </div>
+        </div>
+      </div>
+
+        <div class="modal-body" style="overflow: auto !important;">
+
+            <div class="iframe-container" *ngIf="docList?.length == 0" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;">              
+                <span>
+                    <i class="mdi mdi-cached mdi-spin" style="text-align: center;font-weight: 600;font-size: 16px;">
+                        &nbsp; Please wait...</i>
+                    <span class="sr-only">Please wait...</span>
+                </span>
+            </div>
+            <ng-container *ngIf="docList?.length > 0">
+                <div class="iframe-container" *ngFor="let item of docList" style="  border: 1px solid #d3d3d3 !important; border-radius: 1rem;margin-bottom: 10px">
+                    <iframe [src]="item.ImageURL" frameborder="0" scrolling="yes" width="100%" height="600px"></iframe>
+                    <div><span style="top: 0 !important;
+                        left: 0px !important;
+                        position: absolute !important;
+                        z-index: 5;
+                        height: 25px !important;
+                        vertical-align: top;
+                        opacity: inherit;
+                        bottom: unset !important;
+                        right: unset !important;
+                        background: #c9c9c7;
+                        width: 30%;
+                        padding-left: 5px;
+                        opacity: 0.9;">{{item.name}}  </span></div>
+
+         
+
+                </div>
+            </ng-container>                   
+
+        </div>
+        
+    </div>
+</div>
+</div>

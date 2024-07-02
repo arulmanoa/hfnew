@@ -1,0 +1,545 @@
+<div class="page-wrapper ff" *ngIf="isESSLogin == true">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;">
+      <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" [fullScreen]="true">
+        <p style="color: #0a609eeb"> Loading... </p>
+    </ngx-spinner> -->
+
+      <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+          Please wait...
+        </button>
+      </div>
+      <div class="row" *ngIf="!spinner">
+        <div class="col-lg-6 col-xs-12 col-sm-12">
+          <div class="headerbar">
+            <div>
+              <h2 class="header_title">My Family Details</h2>
+              <p class="subheader_title" *ngIf="employeedetails != null">Name : {{employeedetails.FirstName}} ~ Code :
+                {{employeedetails.Code}}
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-lg-6 text-right">
+          <div class="text-right">
+            <ul class="list-inline" *ngIf="!spinner">
+              <li class="list-inline-item" *ngIf="shouldShowActionButtons('btn_addfamily')"><button type="button"
+                  [disabled]="!isLoading" class="btn btn-default" (click)="openNomineeSlider()"> <i
+                    class="mdi mdi-account-plus m-r-xs"></i> Add New
+                </button>
+              </li>
+
+              <li class="list-inline-item" *ngIf="shouldShowActionButtons('btn_savefamily')">
+                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(false)">
+                  <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!spinner">
+
+        <ng-container *ngTemplateOutlet="mydocumentTemplate">
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isESSLogin == false && !spinner">
+  <ng-container *ngTemplateOutlet="mydocumentTemplate">
+  </ng-container>
+</div>
+
+<ng-template #mydocumentTemplate>
+
+  <div class="row" *ngIf="isESSLogin == false &&  !spinner">
+    <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12"
+      style="margin-bottom:0px;">
+      <div class="text-right">
+        <ul class="list-inline" *ngIf="allowedToSave">
+          <li class="list-inline-item"><button type="button" [disabled]="!isLoading" class="btn btn-primary"
+              (click)="openNomineeSlider()"> <i class="mdi mdi-database-plus  m-r-xs"></i> Add New
+            </button>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <br>
+
+  <div class="row deskContent">
+    <div class="col-12">
+      <table class="table table-bordered table-container">
+        <thead>
+          <tr class="document_table_tr">
+            <th scope="col" style="width:20%;font-weight: 500 !important;">
+              Name
+            </th>
+            <th scope="col" style="width:10%;font-weight: 500;">
+              Relationship
+            </th>
+            <th scope="col" style="width:15%;font-weight: 500;">
+              Date Of Birth (Age)
+            </th>
+            <th scope="col" style="width:10%;font-weight: 500;">
+              Is Nominee
+            </th>
+            <th scope="col" style="width:10%;font-weight: 500;">
+              Status
+            </th>
+            <!-- <th scope="col" style="width:10%;font-weight: 500;">
+              PF (%)
+            </th> -->
+            <!-- <th scope="col" style="width:10%;font-weight: 500;">
+              Gratuity (%)
+            </th> -->
+            <th scope="col" style="width:25%;font-weight: 500;" *ngIf="allowedToSave">
+              Action
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of LstNominees; let i = index">
+
+            <td class="document_table_docName table-vertical-align text-center">
+              <b> {{item.nomineeName}} </b>
+            </td>
+            <td class="document_table_docName table-vertical-align text-center">
+              <b> {{item.RelationShip}} </b>
+            </td>
+            <td class="txt-align table-vertical-align">
+              <span>{{item.DOB | date: 'dd/MM/yyyy'}} {{calculateAgeForList(item.DOB)}}
+              </span>
+            </td>
+            <td class="txt-align table-vertical-align">
+              <span>{{item.IsNominee == true ? 'Yes' : 'No'}}
+              </span>
+            </td>
+            <td class="txt-align table-vertical-align">
+
+            <p
+            style="font-weight: 500;font-size: 12px;line-height: 14px;color: #7B8193;transform: translatey(35%);">
+            <span class="badge badge-warning1" *ngIf="item.CandidateDocument && item.CandidateDocument.Status == 0">
+              Pending </span>
+            <span class="badge badge-danger1" *ngIf="item.CandidateDocument && item.CandidateDocument.Status == 2">
+              Rejected </span>
+            <span class="badge badge-success1" *ngIf="item.CandidateDocument && item.CandidateDocument.Status == 1">
+              Approved </span>
+          </p>
+          </td>
+
+            <!-- <td class="txt-align table-vertical-align">
+              <span>{{item.FamilyPF ? item.FamilyPF : '-'}}
+              </span>
+            </td> -->
+            <!-- <td class="txt-align table-vertical-align">
+              <span>{{item.FamilyGratuity ? item.FamilyGratuity : '-'}}
+              </span>
+            </td> -->
+
+            <td class="document_table_docName text-center" style="text-align: center">
+              <button class="btn btn-default btn-sm m-r-sm" *ngIf="shouldShowActionButtons('btn_editfamily')"
+                style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                (click)="family_file_edit(item)"><i class="fa fa-pencil-square-o m-r-xs"></i>
+                Edit
+              </button>
+              <button class="btn btn-default btn-sm m-r-sm" *ngIf="shouldShowActionButtons('btn_deletefamily')"
+                style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                (click)="family_file_delete(item)"><i class="fa fa-trash-o m-r-xs"></i> Delete
+              </button>
+              <span *ngIf="!shouldShowActionButtons('btn_editfamily') && !shouldShowActionButtons('btn_deletefamily')">
+                --- </span>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+
+
+
+  <div class="row phoneContent" style="padding: 10px;">
+    <div class="col-xs-12 col-sm-4" *ngFor="let item of LstNominees; let i = index">
+      <div class="card" style="border-radius: 0px;">
+        <div class="card-body" style="padding: 5px !important;">
+
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label">Name<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.nomineeName }}</p>
+
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label"> Relationship<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.RelationShip}}</p>
+
+              </div>
+            </div>
+
+
+
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label"> PF (%)<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.FamilyPF}}</p>
+
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label">Gratuity (%)<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.FamilyGratuity}}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer" style="padding: 5px !important;">
+          <div class="row">
+            <div class="col-12 text-right">
+              <button class="btn btn-default btn-sm m-r-sm "
+                style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                (click)="family_file_edit(item)"><i class="fa fa-pencil-square-o m-r-xs"></i>
+                Edit
+              </button>
+              <button class="btn btn-default btn-sm m-r-sm "
+                style="padding: 2px 12px; font-size: 11px; border: 1px solid #d8d9dd;"
+                (click)="family_file_delete(item)"><i class="fa fa-trash-o m-r-xs"></i> Delete
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 2rem;margin-bottom: 20px;" *ngIf="LstNominees.length == 0">
+    <div class="col-md-12 text-center">
+      <span style="font-weight: 600;color: #000;">No records found </span>
+    </div>
+  </div>
+
+</ng-template>
+
+
+
+<nz-drawer [nzVisible]="nominee_sliderVisible" [nzWidth]="640" nzTitle="Family Details" (nzOnClose)="close_nominee()">
+  <form [formGroup]="employeeForm">
+    <div class="col-12 col-md-12 col-sm-12">
+      <div class="clearfix">
+        <div class="row" style="margin-top: 15px;">
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+          *ngIf="this.employeeForm.controls.Salutation">
+          <label class="form-label">Salutation <span class="required">*</span></label>
+          <ng-select [items]="salutation" placeholder="-- select an option --" formControlName="Salutation"
+          [ngClass]="{ 'ng-touched': g.Salutation.errors }" bindLabel="name" bindValue="id">
+        </ng-select>
+        <div *ngIf="g.Salutation.errors" class="help-block">
+          Salutation is required
+          </div>
+        </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+            *ngIf="this.employeeForm.controls.nomineeName">
+            <label class="form-label">Name <span class="required">*</span> <span class="form__length">
+                {{nomineeName.value?.length}}/100</span></label>
+            <input class="form-control" type="text" spellcheck="false"
+              onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" maxlength="100" #nomineeName name="nomineeName"
+              formControlName="nomineeName" [ngClass]="{ 'is-invalid': g.nomineeName.errors }" placeholder="Ar Ma"
+              autocomplete="none|false|no">
+            <div *ngIf="g.nomineeName.errors" class="invalid-feedback">
+              Name is required
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+            *ngIf="this.employeeForm.controls.relationship">
+            <label class="form-label">Relationship <span class="required">*</span></label>
+
+            <ng-select [items]="relationship" placeholder="-- select an option --" formControlName="relationship"
+              [ngClass]="{ 'ng-touched': g.relationship.errors }" bindLabel="name" bindValue="id" (change)="onChangeRelationship()">
+            </ng-select>
+            <div *ngIf="g.relationship.errors" class="help-block">
+              Relationship is required
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+            *ngIf="this.employeeForm.controls.DOB">
+            <label class="form-label">DOB <span class="required">*</span><span class="form__length">{{dobAge}} years</span></label>
+            <input class="form-control" type="text" bsDatepicker [maxDate]="maxDate" placement="bottom" readonly
+              [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass:'theme-default' }"
+              name="DOB" formControlName="DOB" [ngClass]="{ 'is-invalid': g.DOB.errors }" placeholder="12-12-1990"
+              autocomplete="none|false|no" (ngModelChange)="calculateAge()">
+            <div *ngIf="g.DOB.errors" class="help-block">
+              DOB is required
+            </div>
+
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+          *ngIf="this.employeeForm.controls.IsNominee">
+          <label class="form-label">Is Nominee ?</label>
+          <div class="p-t-10">
+            <label class="el-switch el-switch-green">
+              <input type="checkbox" name="IsNominee" formControlName="IsNominee" />
+              <span class="el-switch-style"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+            *ngIf="this.employeeForm.controls.FamilyPF && this.employeeForm.controls.IsNominee.value == true">
+            <label class="form-label">Coverage for PF (%) <span class="required"> *
+              </span></label>
+
+            <input class="form-control" type="text" maxlength="3" onkeypress="return /[0-9]/i.test(event.key)"
+              name="FamilyPF" formControlName="FamilyPF" [ngClass]="{ 'is-invalid': g.FamilyPF.errors  }"
+              placeholder="00" autocomplete="none|false|no">
+            <div *ngIf="g.FamilyPF.errors " class="invalid-feedback">
+              PF (%) is required
+            </div>
+          </div> -->
+          <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+            *ngIf="this.employeeForm.controls.FamilyESIC && isESICapplicable && this.employeeForm.controls.IsNominee.value == true">
+            <label class="form-label">Coverage for ESIC (%) </label>
+
+            <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="3"
+              name="FamilyESIC" formControlName="FamilyESIC"
+              [ngClass]="{ 'is-invalid': submitted && g.FamilyESIC.errors }" placeholder="45"
+              autocomplete="none|false|no">
+            <div *ngIf="submitted && g.FamilyESIC.errors" class="invalid-feedback">
+              <div *ngIf="g.FamilyESIC.errors.required"> ESIC (%) is required
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+            *ngIf="this.employeeForm.controls.FamilyGratuity && this.employeeForm.controls.IsNominee.value == true">
+            <label class="form-label">Coverage for Gratuity (%) <span class="required">*</span></label>
+
+            <input class="form-control" type="text" onkeypress="return /[0-9]/i.test(event.key)" maxlength="3"
+              name="FamilyGratuity" formControlName="FamilyGratuity"
+              [ngClass]="{ 'is-invalid': g.FamilyGratuity.errors }" placeholder="45" autocomplete="none|false|no">
+            <div *ngIf="submitted && g.FamilyGratuity.errors" class="invalid-feedback">
+              <div *ngIf="g.FamilyGratuity.errors.required"> Gratuity (%) is required
+              </div>
+            </div>
+            <div *ngIf="g.FamilyGratuity.errors" class="invalid-feedback">
+              Gratuity (%) is required
+            </div>
+          </div> -->
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+            *ngIf="this.employeeForm.controls.FamilyisEmployed && (BusinessType == 1 || BusinessType == 2)">
+            <label class="form-label">{{ isAllenDigital ? 'Is Employed by ' + empClientContractName + ' ?' : 'Is Employed ?' }}
+            </label>
+            <div class="p-t-10">
+
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="FamilyisEmployed" formControlName="FamilyisEmployed" (change)="isFamilyEmployeedToggle()"/>
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+          *ngIf="this.employeeForm.controls.FamilyEmployeeID && this.employeeForm.controls.FamilyisEmployed.value == true && isAllenDigital">
+          <label class="form-label">Employee ID <span class="required">*</span> </label>
+          <input class="form-control" type="text" spellcheck="false"
+            onkeypress="return /^[[0-9A-Za-z-]+$/i.test(event.key)" #FamilyEmployeeID name="FamilyEmployeeID"
+            formControlName="FamilyEmployeeID" [ngClass]="{ 'is-invalid': g.FamilyEmployeeID.errors }" placeholder="AB-01CDE"
+            (change)="fetchFamilyEmployeeDetails()" autocomplete="none|false|no">
+          <div *ngIf="g.FamilyEmployeeID.errors" class="invalid-feedback">
+            Employee ID is required
+          </div>
+        </div>
+        <div class="form-group form-group-vertical col-xs-12  col-sm-6"
+        *ngIf="this.employeeForm.controls.Occupation && showOccupation">
+        <label class="form-label">Occupation <span class="required">*</span></label>
+
+        <ng-select [items]="occupationDropDownValues" placeholder="-- select an option --" formControlName="Occupation"
+          [ngClass]="{ 'ng-touched': g.Occupation.errors }" bindLabel="name" bindValue="id">
+        </ng-select>
+        <div *ngIf="g.Occupation.errors" class="help-block">
+          Occupation is required
+        </div>
+      </div>
+          
+          <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+            *ngIf="this.employeeForm.controls.mediclaim">
+            <label class="form-label">Do you want to insure this member? <span class="help-text m-l-5">(is
+                Mediclaim)</span> </label>
+            <div class="p-t-10">
+
+              <label class="el-switch el-switch-green">
+                <input type="checkbox" name="mediclaim" formControlName="mediclaim" />
+                <span class="el-switch-style"></span>
+              </label>
+            </div>
+          </div> -->
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+          *ngIf="this.employeeForm.controls.IsDependent && (this.showIsDependentForRelationShipTypeValues.includes(this.employeeForm.controls.relationship.value))">
+          <label class="form-label">Is the member dependent ?</label>
+          <div class="p-t-10">
+            <label class="el-switch el-switch-green">
+              <input type="checkbox" name="IsDependent" formControlName="IsDependent" />
+              <span class="el-switch-style"></span>
+            </label>
+          </div>
+        </div>
+
+          <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+                        <label class="form-label">Attachment <span class="help-text m-l-5">(Max file
+                size 2MB)</span> </label>
+                        <label class="upload control" style="width: 50%; float: left;" *ngIf="!familyFileName">
+              <div class="upload-draggable is-primary">
+                <section class="section">
+                  <div class="has-text-centered">
+                    <span class="icon is-large">
+                      <span style="padding-left: 10px;"> <i class="fa fa-upload" style="color: #9ba7ca;"></i> Upload
+                      </span>
+                    </span>
+                  </div>
+                </section>
+              </div>
+              <input type="file" accept="application/msword,  application/pdf, image/*"
+                (change)="onfamilyFileUpload($event)" id="sTest-uploadFile-candidateAddResume">
+            </label>
+                        <div *ngIf="submitted && g.familyDocumentId.invalid" class="help-block">
+                            <div *ngIf="g.familyDocumentId.errors.required">Attachment is required
+                            </div>
+                        </div>
+                        <p class="control" *ngIf="familyFileName">
+                            <span class="file-name">
+                <button class="btn btn-danger c-btn" [disabled]="!isLoading" (click)="doDeleteFamilyFile()"><a
+                    ngbTooltip="Trash Attachment" id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                         display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                </button>
+                <a target="blank" class="ahref" style="padding: 2px;">
+                  {{familyFileName}}
+                </a>
+              </span>
+                        </p>
+                        <div class="d-flex align-items-center" *ngIf="!isLoading">
+                            <strong class="text-right"> {{spinnerText}}...
+                &nbsp;&nbsp;&nbsp;</strong>
+                            <div class="spinner-border ml-auto" style="width: 1rem;height: 1rem;margin-left: 0px !important; font-size: 12px;" role="status" aria-hidden="true"></div>
+                        </div>
+                    </div> -->
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6"
+            *ngIf="this.employeeForm.controls.idProoftype">
+            <label class="form-label">ID Proof type </label>
+          
+            <ng-select [items]="FamilyDocumentCategoryList" placeholder="-- select an option --" formControlName="idProoftype"
+              [ngClass]="{ 'ng-touched': g.idProoftype.errors }" bindLabel="Name" bindValue="DocumentTypeId">
+            </ng-select>
+          
+            <div *ngIf="g.idProoftype.errors" class="help-block">
+              Id Proof type is required
+            </div>
+          </div>
+
+          <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6">
+            <label class="form-label">Attachment <span *ngIf="MaxSize == 0"
+                class="help-text m-l-5">(Max file size 2MB)</span> <span *ngIf="MaxSize" class="help-text m-l-5">(Max
+                file size is <span>{{MaxSize/1024}}</span>
+                MB)</span> </label>
+            <label class="upload control" style="width: 100%; float: left;z-index: 999;margin-bottom: 10px;">
+              <div class="upload-draggable is-primary">
+                <section class="section">
+                  <div class="has-text-centered">
+                    <span class="icon is-large">
+                      <span style="padding-left: 10px;"> <i class="mdi mdi-cloud-upload " style="color: #9ba7ca;"></i>
+                        Upload </span>
+                    </span>
+
+                  </div>
+                </section>
+              </div>
+              <input type="file" accept="application/msword,  application/pdf, image/*" (change)="onAddingFile($event)"
+                (click)="$event.target.value=null" id="sTest-uploadFile-candidateAddResume" multiple>
+
+            </label>
+            <div *ngIf="submitted && !fileList[0]" class="help-block">
+              <div>Attachment is required
+              </div>
+            </div>
+            <div class="d-flex align-items-center" style="width: 100%;"
+              *ngIf="firstTimeDocumentId && !fileList[0] && !isFileChange">
+              <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+            <ng-container *ngIf="fileList?.length > 0">
+              <p class="control" *ngFor="let file of fileList">
+                <span class="file-name">
+                  <button class="btn btn-danger c-btn" (click)="doDeleteFile(file)"><a ngbTooltip="Delete Photo"
+                      id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                                                   display: block   ;margin-top: -5px;"><i
+                        class="fa fa-trash-o"></i></a>
+                  </button>
+
+
+                  <a target="blank" class="ahref" style="padding: 2px;">
+                    {{file.name}}
+                  </a>
+
+                </span>
+
+              </p>
+            </ng-container>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </form>
+  <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+
+    <div class="d-flex align-items-center " *ngIf="!isLoading ">
+      <strong class="text-right "> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+      <div class="spinner-border ml-auto " role="status " aria-hidden="true "></div>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="text-right">
+        <ul class="list-inline">
+          <!-- <li class="list-inline-item"><button *ngIf="isEnbleNomineeBtn" type="button" [disabled]="!isLoading" class="btn upgrade-btn" (click)="addNewNominee()"> <i class="mdi mdi-database-plus  m-r-xs"></i> Add
+              Nominee
+            </button></li> -->
+          <li class="list-inline-item"><button *ngIf="isEnbleNomineeBtn" type="button" [disabled]="!isLoading"
+              class="btn upgrade-btn" (click)="validate_nominee_formControl()"> <i
+                class="mdi mdi-account-plus  m-r-xs"></i> {{isEditMode ? 'Update':'Add'}}
+
+            </button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+</nz-drawer>

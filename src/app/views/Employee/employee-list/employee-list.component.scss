@@ -1,0 +1,426 @@
+.page-wrapper {
+    overflow-x: hidden !important;
+}
+
+.img-height {
+    height: 25px;
+    top: 10px;
+    margin: auto;
+}
+
+.al-list {
+    width: 100%;
+    padding: 10px;
+}
+
+.btn-label-danger {
+    background-color: rgba(88, 103, 221, 0.1);
+    color: #f53636;
+    cursor: pointer !important;
+}
+
+.btn-label-success {
+    background-color: rgba(88, 103, 221, 0.1);
+    color: #0a609eeb;
+    cursor: pointer !important;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+.btn-label-danger:hover {
+    background-color: #f53636;
+    color: #fff;
+}
+
+.btn-label-success:hover {
+    background-color: #0a609eeb;
+    color: #fff;
+}
+
+.btn-custom_preview {
+    padding: 0.2rem 1rem;
+    font-size: 0.75em;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+.pipetitle {
+    font-size: 16px;
+    color: #17274d;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.text-ellipsis,
+.text-ellipsis-inside div,
+activity-calendar-view .fc-day-grid-event .fc-content .act-title,
+sm-checkbox .clearfix label:nth-child(2),
+sm-custom-popover .popover-view-content ul li>a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-align-row {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+.btn.btn-sm i {
+    font-size: 10px !important;
+}
+
+.modal-wrapper-close {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: -2px;
+    left: -24px;
+    line-height: 0.4;
+    background-color: #183247;
+    border-radius: 0 0 0 3px;
+    opacity: 1;
+}
+
+button.close {
+    padding: 0;
+    cursor: pointer;
+    background: 0 0;
+    border: 0;
+    -webkit-appearance: none;
+    background-color: #183247;
+    top: 1px;
+}
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+.app-icon--white {
+    fill: #fff;
+}
+
+.app-icon--small {
+    width: 13px;
+    height: 13px;
+}
+
+
+/* colors */
+
+$blue: #0a609eeb;
+$red: #ff4a53;
+$dark: #333;
+$accent: $blue;
+$accent-inactive: desaturate($accent, 85%);
+$secondary: $accent-inactive;
+
+/* tab setting */
+
+$tab-count: 2;
+$indicator-width: 50px;
+$indicator-height: 4px;
+
+/* breakpoints */
+
+$breakpoints: ( medium: #{$tab-count * 250px}, small: #{$tab-count * 150px});
+
+/* selectors relative to radio inputs */
+
+$label-selector: "~ ul > li";
+$slider-selector: "~ .slider";
+$content-selector: "~ .content > section";
+@mixin tabs( $label-selector: $label-selector, $slider-selector: $slider-selector, $content-selector: $content-selector) {
+    @for $i from 1 through $tab-count {
+        &:nth-of-type(#{$i}):checked {
+            #{$label-selector}:nth-child(#{$i}) {
+                @content;
+            }
+            #{$slider-selector} {
+                transform: translateX(#{100% * ($i - 1)});
+            }
+            #{$content-selector}:nth-child(#{$i}) {
+                display: block;
+            }
+        }
+    }
+}
+
+.tabs {
+    padding: 50px;
+    width: 100%;
+    min-width: #{$tab-count * 60px};
+    input[name="tab-control"] {
+        display: none;
+    }
+    .content section h2,
+    ul li label {
+        font-weight: bold;
+        font-size: 14px;
+        color: $accent;
+    }
+    ul {
+        list-style-type: none;
+        padding-left: 0;
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 10px;
+        justify-content: space-between;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        li {
+            box-sizing: border-box;
+            flex: 1;
+            width: #{100% / $tab-count};
+            padding: 0 10px;
+            text-align: center;
+            label {
+                transition: all 0.3s ease-in-out;
+                color: $secondary;
+                padding: 5px auto;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+                white-space: nowrap;
+                -webkit-touch-callout: none;
+                // @include user-select(none);
+                br {
+                    display: none;
+                }
+                svg {
+                    fill: $secondary;
+                    height: 1.2em;
+                    vertical-align: bottom;
+                    margin-right: 0.2em;
+                    transition: all 0.2s ease-in-out;
+                }
+                &:hover,
+                &:focus,
+                &:active {
+                    outline: 0;
+                    color: lighten($secondary, 15%);
+                    svg {
+                        fill: lighten($secondary, 15%);
+                    }
+                }
+            }
+        }
+    }
+    .slider {
+        position: relative;
+        width: #{100% / $tab-count};
+        transition: all 0.33s cubic-bezier(0.38, 0.8, 0.32, 1.07);
+        .indicator {
+            position: relative;
+            width: $indicator-width;
+            max-width: 100%;
+            margin: 0 auto;
+            height: $indicator-height;
+            background: $accent;
+            border-radius: 1px;
+        }
+    }
+    .content {
+        margin-top: 30px;
+        section {
+            display: none;
+            animation: {
+                name: content;
+                direction: normal;
+                duration: 0.3s;
+                timing-function: ease-in-out;
+                iteration-count: 1;
+            }
+            line-height: 1.4;
+            h2 {
+                color: $accent;
+                display: none;
+                &::after {
+                    content: "";
+                    position: relative;
+                    display: block;
+                    width: 30px;
+                    height: 3px;
+                    background: $accent;
+                    margin-top: 5px;
+                    left: 1px;
+                }
+            }
+        }
+    }
+    input[name="tab-control"] {
+        @include tabs {
+            >label {
+                cursor: default;
+                color: $accent;
+                svg {
+                    fill: $accent;
+                }
+                @media (max-width: map-get($breakpoints, small)) {
+                    background: rgba(0, 0, 0, 0.08);
+                }
+            }
+        }
+    }
+    @keyframes content {
+        from {
+            opacity: 0;
+            transform: translateY(5%);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0%);
+        }
+    }
+    @media (max-width: map-get($breakpoints, medium)) {
+        ul li label {
+            white-space: initial;
+            br {
+                display: initial;
+            }
+            svg {
+                height: 1.5em;
+            }
+        }
+    }
+    @media (max-width: map-get($breakpoints, small)) {
+        ul li label {
+            padding: 5px;
+            border-radius: 5px;
+            span {
+                display: none;
+            }
+        }
+        .slider {
+            display: none;
+        }
+        .content {
+            margin-top: 20px;
+            section h2 {
+                display: block;
+            }
+        }
+    }
+}
+
+// label span {
+//     color: #6c757d !important;
+// }
+.slider {
+    background-color: #FFF;
+}
+
+// .tabs[_ngcontent-c6] input[name="tab-control"][_ngcontent-c6]:nth-of-type(2):checked~ul[_ngcontent-c6]>li[_ngcontent-c6]:nth-child(2)>label[_ngcontent-c6] {
+//     cursor: default;
+//     color: #0a609eeb !important;
+// }
+.modal-close {
+    color: #858fa6;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 5px;
+    padding-bottom: 0px;
+    padding-top: 2px;
+}
+
+.modal-close:hover {
+    background: #858fa6;
+    color: #fff;
+}
+
+$primary-color: #0a609eeb;
+
+
+.radio-tile-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+  
+    //set dimensions for invisible container
+    .input-container {
+      position: relative;
+      height:  4rem;
+      width:  6.5rem;
+      margin: 0.5rem;
+  
+      //make actual radio input invisible
+      // + stretch to fill container
+      .radio-button {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100% !important;
+        width: 100% !important;
+        margin: 0;
+        cursor: pointer;
+      }
+  
+      //default tile styles
+      .radio-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100% !important;
+        height: 100% !important;
+        border: 2px solid $primary-color;
+        border-radius: 5px;
+        padding: 1rem;
+        transition: transform 300ms ease;
+      }
+      .icon svg {
+        fill: $primary-color;
+        width: 3rem;
+        height: 3rem;
+      }
+      .radio-tile-label {
+        text-align: center;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: $primary-color;
+      }
+  
+     
+  
+      .radio-tile-label  + .radio-tile label + .mdi {
+          color: white !important;
+      }
+      //active tile styles
+      .radio-button:checked + .radio-tile {
+        background-color: $primary-color;
+        border: 2px solid $primary-color;
+        color: white !important;
+        transform: scale(1.1, 1.1);
+        
+        .mdi {
+          fill: white;
+          color: white !important;
+          background-color: $primary-color;
+        }
+        .radio-tile-label {
+          color: white !important;
+          background-color: $primary-color;
+        }
+  
+   
+      }
+      
+     
+  }
+     
+  }

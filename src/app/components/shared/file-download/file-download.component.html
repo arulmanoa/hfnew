@@ -1,0 +1,3 @@
+<!-- <button type="button" (click)="GetDocumentDetails();" class="btn btn-primary">Download</button> -->
+<ng-template #tipContent>{{documentName}}</ng-template>
+<i style="cursor:pointer" class="fa fa-download" aria-hidden="true" [ngbTooltip]="tipContent" (click)="GetDocumentDetails();"></i>

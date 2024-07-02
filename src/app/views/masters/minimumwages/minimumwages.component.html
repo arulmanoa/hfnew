@@ -1,0 +1,35 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <div class="row">
+      <!--add wages button-->
+      <div class="col-12 col-md-8 col-lg-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <button type="button" class="btn btn-primary" (click)="addWages()"><i class="mdi mdi-file-plus m-r-xs"></i> Add Wages</button></li>
+          </ul>
+        </div>
+      </div>
+    
+    
+    </div>
+    <br>
+    <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+    Please wait...
+      </button>
+    </div>
+
+    <!-- start slick grid data table   -->
+    <div class="content m-b report-content" *ngIf="isContent">
+
+        <!-- <angular-slickgrid gridId="grid1" [data]="ruleGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)" (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)"
+            (onAngularGridCreated)="angularGridReady($event)">
+        </angular-slickgrid> -->
+        <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+            (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged1($event.detail.eventData, $event.detail.args)">
+        </angular-slickgrid>
+    </div>
+  </div>
+</div>

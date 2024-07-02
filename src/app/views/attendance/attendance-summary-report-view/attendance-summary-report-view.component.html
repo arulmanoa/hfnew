@@ -1,0 +1,85 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="content m-0 p-0 report-content" style="background: transparent;box-shadow: none;" *ngIf="!spinner">
+      <div class="w-100">
+        <div class="col-12">
+          <app-searchbar-view [searchConfiguration]="searchElementConfiguration"
+            (searchButtonClicked)="onSearchBtnClickedEvent($event)">
+          </app-searchbar-view>
+        </div>
+        <div class="row w-100">
+          <div class="col-12">
+            <div class="mx-auto text-center ma-5" *ngIf="refreshing_table_spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                  aria-hidden="true"></span>
+                Please wait...
+              </button>
+            </div>
+            <div class="content mx-auto text-center ma-5" *ngIf="noData && !showTable">
+              <span>No records found !</span>
+            </div>
+            <div class="content col-md-12 m-3 " *ngIf="showTable && !spinner && !noData">
+              <div class="row w-100" style="padding-bottom: 10px; margin-top: 5px">
+                <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+                  <ul class="list-inline">
+                    <li class="list-inline-item" *ngIf="!noData && showTable">
+                      <button type="button" class="btn btn-primary-custom ml-3" (click)="exportExcel()">
+                        <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="row m-2">
+                <table class="w-100 table table-bordered custom-table" #tabletoExcel>
+                  <thead>
+                    <tr>
+                      <th *ngFor="let header of attendanceSummary_TableHeaders">{{ header }}</th>
+                    </tr>
+                    <!-- <tr>
+                      <th>WD Code</th>
+                      <th>Total DS (Planned DS)</th>
+                      <th>Total Active DS</th>
+                      <th>No.of Issue DS</th>
+                      <th>% Issue DS</th>
+                      <th>Issue 1 (Leave)</th>
+                      <th>Issue 2 (Regularization)</th>
+                      <th>Issue 3 (Attrition Check DS)</th>
+                      <th>Issue 4 (Confirmed Attrition by WD)</th>
+                    </tr> -->
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of attendanceSummary_tableData">
+                      <td *ngFor="let field of attendanceSummary_DataFields">{{ row[field] }}</td>
+                    </tr>
+                    <!-- <tr *ngFor="let row of attendanceSummary_tableData">
+                     <td>{{row.WDCode}}</td>
+                     <td>{{row.PlannedResourceCount}}</td>
+                     <td>{{row.ActiveResourceCount}}</td>
+                     <td>{{row.IssueCount}}</td>
+                     <td>{{row.IssuePercentage}}</td>
+                     <td>{{row.LeaveIssueCount}}</td>
+                     <td>{{row.RegularizationCount}}</td>
+                     <td>{{row.AttritionCheckCount}}</td>
+                     <td>{{row.AttritionCount}}</td>
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>

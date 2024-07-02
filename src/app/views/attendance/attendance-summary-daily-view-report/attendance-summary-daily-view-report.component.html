@@ -1,0 +1,57 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+    <div class="row" style="margin-bottom: 10px; margin-top: -15px" *ngIf="!spinner">
+      <div class="col-12">
+        <app-searchbar-view [searchConfiguration]="searchElementConfiguration"
+          (searchButtonClicked)="onSearchBtnClickedEvent($event)">
+        </app-searchbar-view>
+      </div>
+    </div>
+    <div class="content mx-auto text-center ma-5" *ngIf="noData && !showTable">
+      <span>No records found !</span>
+    </div>
+    <div class="content m-b report-content" style="margin-top: -5px" *ngIf="!spinner && showTable">
+      <div class="w-100">
+        <div class="row ml-1 w-100">
+          <div class="row w-100" style="padding-bottom: 10px; margin-top: 5px">
+            <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+              <ul class="list-inline">
+                <li class="list-inline-item" *ngIf="!noData && showTable">
+                  <button type="button" class="btn btn-primary-custom ml-3" (click)="exportExcel()">
+                    <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row w-100">
+            <div class="col-md-12 m-3" *ngIf="showTable && !spinner && !noData">
+              <table class="table table-bordered table-bordered-custom attendanceSummaryTable" #tabletoExcel>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th *ngFor="let item of keys">{{item}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of rows">
+                    <td>{{row.firstColumn}}</td>
+                    <td *ngFor="let item of keys">{{row[item]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>

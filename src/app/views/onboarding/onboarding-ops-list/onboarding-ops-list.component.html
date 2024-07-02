@@ -1,0 +1,1139 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+
+
+
+    <div *ngIf="code" style="margin-top: -27px;">
+      <app-searchbar-view *ngIf="pageLayout" [BusinessType]="BusinessType"
+        [searchConfiguration]="pageLayout.SearchConfiguration" [isBtnDisabledRequired]="isBtnDisabledRequired"
+        (searchButtonClicked)="onClickingSearchButton($event)">
+      </app-searchbar-view>
+    </div>
+
+
+    <!-- end row  -->
+    <br>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+
+
+
+
+
+    <div class="content m-b report-content" [ngStyle]="{'margin-top':BusinessType == '3' ? '-25px': '-5px'}"
+      *ngIf="!spinner && defaultSearchInputs.ClientId >= 0 && !convertedJSON?.length">
+
+      <div class="row m-t-b-10" style="margin-bottom: 0px;">
+
+        <div class=" col-lg-6 text-left">
+          <div class="text-left">
+            <ul class="list-inline">
+              <!-- <li class="list-inline-item ">
+                            <button class="btn btn-default btn-sm m-r-sm"
+                                (click)="openSurveyQuestions()">
+                                <i class="mdi mdi-file-export m-r-xs" style="color: #0a609eeb;"></i>
+                                survey &nbsp;                               
+                            </button>
+                        </li> -->
+
+              <li class="list-inline-item " *ngIf="!selectedmigrationRecords?.length && !convertedJSON?.length">
+                <button class="btn btn-default btn-sm m-r-sm" [disabled]="btnspinner" (click)="import_data()">
+                  <i class="mdi mdi-file-export m-r-xs" style="color: #0a609eeb;"></i>
+                  Bulk Request &nbsp;
+                  <span *ngIf="btnspinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+                  </span>
+                </button>
+              </li>
+              <li class="list-inline-item " *ngIf="defaultSearchInputs.IsNapBased">
+                <button class="btn btn-default btn-sm m-r-sm" [disabled]="btnNapsspinner" (click)="doOpenBulkNaps()">
+                  <i class="mdi mdi-file-export m-r-xs" style="color: #0a609eeb;"></i>
+                  Bulk NAPS Request &nbsp;
+                  <span *ngIf="btnNapsspinner" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true">
+                  </span>
+                </button>
+              </li>
+              <li class=" list-inline-item " *ngIf="selectedmigrationRecords?.length> 0">
+
+                <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                  <div>
+
+                    <button class="btn btn-default btn-sm m-r-sm " (click)="recall(selectedmigrationRecords)">
+                      <i class="mdi mdi-thumb-up-outline m-r-xs"></i>
+                      Claim Offer
+                    </button>
+
+                  </div>
+                </div>
+              </li>
+              <li class="list-inline-item">
+                <button>
+                  <button class="btn btn-default btn-sm m-r-sm " (click)="viewProcessLogsSearchPage()">
+                    <i class="mdi mdi-history m-r-xs" style="color: #0a609eeb;"></i>
+                    View Logs
+                  </button>
+                </button>
+              </li>
+              <li class="list-inline-item"
+                *ngIf="IsDownloadBtnShown && (selectedPendingItems.length == 1 || selectedSavedItems.length == 1 || selectedRejectedItems.length == 1)">
+                <button>
+                  <button class="btn btn-default btn-sm m-r-sm " (click)="DownloadCandidateEntireInformation()">
+                    <i class="mdi mdi-download m-r-xs" style="color: #0a609eeb;"></i>
+                    Download Candidate Info
+                  </button>
+                </button>
+              </li>
+              <li class="list-inline-item " *ngIf="activeChildTabName == 'myBucket_separated'">
+                <button class="btn btn-default btn-sm m-r-sm " (click)="makeAnNewOffer()">
+                  <i class="mdi mdi-new-box m-r-xs"></i>
+                  Make an Offer
+                </button>
+              </li>
+
+
+            </ul>
+          </div>
+
+        </div>
+
+        <!--end col-->
+        <div class="col-lg-6 text-right">
+
+          <div class="text-right">
+            <ul class="list-inline">
+
+              <!-- <li class="list-inline-item" *ngIf="!convertedJSON?.length"><button type="button" class="btn btn-primary" (click)="addCandidates1()"><i
+                                    class="mdi mdi-library-plus m-r-xs"></i> New
+                                Request</button></li> -->
+
+              <!-- <li class="list-inline-item" *ngIf="!convertedJSON?.length"><button type="button"
+                                    class="btn btn-primary" (click)="addCandidates()"><i
+                                        class="mdi mdi-library-plus m-r-xs"></i> New
+                                    Request</button></li> -->
+
+
+
+              <li class="list-inline-item" *ngIf="convertedJSON?.length > 0">
+                <button type="button" class="btn btn-default" (click)="cancelRequest()"><i
+                    class="mdi mdi-close-circle-outline m-r-xs"></i> Close </button>
+              </li>
+
+              <li class="list-inline-item" *ngIf="!convertedJSON?.length">
+                <button type="button" prevent-double-submit class="btn upgrade-btn" id="btn_onboarding_submit"
+                (click)="releaseOffer()" [disabled]="doDisableReleaseOfferBtn">
+                <i class="mdi mdi-file-document-outline  m-r-xs">
+                </i> {{ selectedPendingItems.length == 0 ? 'Release Offer'  : selectedPendingItems[0].OnBoardingType == 1 ? 'Release Offer' : 'Confirm Joining'}} 
+              </button>
+              </li>
+
+              <li class="list-inline-item" *ngIf="!convertedJSON?.length">
+                <button type="button" class="btn btn-default" (click)="doCalculateSalary()"><i
+                    class="mdi mdi-calculator m-r-xs"></i> Salary Calculator </button>
+              </li>
+
+          
+
+              
+
+
+              <li class="list-inline-item" *ngIf="!convertedJSON?.length">
+                <div class="drop-down">
+                  <div id="dropDown" class="drop-down__button" (click)="onb()">
+                    <span class="drop-down__name"> Onboarding Request &nbsp; <i class="fa fa-ellipsis-v"
+                        aria-hidden="true"></i>
+                    </span>
+                  </div>
+
+                  <div class="drop-down__menu-box" style="z-index: 100;">
+                    <ul class="drop-down__menu">
+                      <li data-name="profile" class="drop-down__item" (click)="onboardingNewRequest('Regular')"> <i
+                          class="mdi mdi-account-multiple-plus-outline"></i> &nbsp; Regular
+                        Onboarding
+
+                      </li>
+                      <!-- <li data-name="dashboard" class="drop-down__item"> <i
+                                                        class="mdi mdi-file-alert-outline"></i> &nbsp; Aadhaar
+                                                    Onboarding
+        
+                                                </li> -->
+                      <li data-name="activity" class="drop-down__item" *ngIf="defaultSearchInputs.IsNapBased"
+                        (click)="onboardingNewRequest('NAPS')"> <i class="mdi mdi-city-variant-outline"></i> &nbsp; NAPS
+                        Onboarding
+                      </li>
+
+                      <!-- <li data-name="activity" class="drop-down__item"
+                                                *ngIf="defaultSearchInputs.IsNapBased" (click)="doOpenBulkNaps()">
+                                                <i class="mdi mdi-city-variant-outline"></i> &nbsp; Bulk NAPS
+                                                Onboarding
+                                            </li> -->
+                      <!-- <li data-name="activity" class="drop-down__item" (click)="import_data()"> <i
+                                                    class="mdi mdi-file-excel"></i> &nbsp; Bulk Onboarding
+                                            </li> -->
+                    </ul>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-inline-item" *ngIf="!convertedJSON?.length">
+                <button type="button" class="btn btn-default" (click)="doRefresh()"><i
+                    class="mdi mdi-refresh m-r-xs"></i> Refresh</button>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+        <!--end col-->
+      </div>
+
+
+      <div *ngIf="!convertedJSON?.length">
+        <ngb-tabset (tabChange)="childTabLoadData($event)" [(activeId)]="activeChildTabName">
+
+          <ngb-tab id="myBucket_pending">
+            <ng-template ngbTabTitle><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;&nbsp;Pending</ng-template>
+            <ng-template ngbTabContent>
+
+              <div class="text-center ma-5" *ngIf="spinner2">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+              <div *ngIf="!spinner2">
+                <angular-slickgrid gridId="grdInBucket" [columnDefinitions]="inBucketColumnDefinitions"
+                  [gridOptions]="inBucketGridOptions" [dataset]="inBucketList"
+                  (sgOnSelectedRowsChanged)="onSelectedPendingRowsChanged($event.detail.eventData, $event.detail.args)"
+                  (onAngularGridCreated)="inBucketGridReady($event)" gridWidth="100%">
+                </angular-slickgrid>
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+          <ngb-tab id="myBucket_saved">
+            <ng-template ngbTabTitle><i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;&nbsp;Saved</ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner2">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+              <div *ngIf="!spinner2">
+                <angular-slickgrid gridId="grdInSavedBucket" [columnDefinitions]="inSavedBucketColumnDefinitions"
+                  [gridOptions]="inSavedBucketGridOptions" [dataset]="inSavedBucketList"
+                  (onAngularGridCreated)="inSavedBucketGridReady($event)"
+                  (sgOnSelectedRowsChanged)="onSelectedSavedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  gridWidth="100%">
+                </angular-slickgrid>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="myBucket_rejected">
+            <ng-template ngbTabTitle><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;&nbsp;Rejected</ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner2">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+              <div *ngIf="!spinner2">
+                <angular-slickgrid gridId="grdInRejectedBucket" [columnDefinitions]="inRejectedBucketColumnDefinitions"
+                  [gridOptions]="inRejectedBucketGridOptions" [dataset]="inRejectedBucketList"
+                  (onAngularGridCreated)="inRejectedBucketGridReady($event)"
+                  (sgOnSelectedRowsChanged)="onSelectedRejectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  gridWidth="100%">
+                </angular-slickgrid>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <!-- <ngb-tab id="myBucket_separated">
+                        <ng-template ngbTabTitle><i class="fa fa-ban" aria-hidden="true"></i>&nbsp;&nbsp;Separated
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                            <app-separation-list #separatedCandidate
+                                (separatedCandidateChangeHandler)="separatedCandidateChangeHandler($event)"></app-separation-list>
+                        </ng-template>
+                    </ngb-tab> -->
+
+
+        </ngb-tabset>
+      </div>
+
+      <div *ngIf="!convertedJSON?.length && IsNotRequired">
+        <ngb-tabset (tabChange)="loadData($event)" [(activeId)]="activeTabName">
+          <ngb-tab id="myBucket">
+            <ng-template ngbTabTitle><i class="fa fa-bitbucket" aria-hidden="true"></i>&nbsp;&nbsp;{{AlternativeText}}
+            </ng-template>
+            <ng-template ngbTabContent>
+
+
+              <!-- <angular-slickgrid 
+                    (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)" gridWidth="100%">
+                </angular-slickgrid> -->
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="searchAll">
+            <ng-template ngbTabTitle><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Search All
+            </ng-template>
+            <ng-template ngbTabContent>
+
+              <div class="accordion" id="accordionSearch" style="margin-top: 10px;">
+                <div class="card shadow-none border mb-1">
+                  <div class="card-header" id="headingTwo">
+                    <h5 class="my-0" style="height:1.5rem;">
+                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                        data-target="#CanCollapse" aria-expanded="false" aria-controls="clientCollapse"
+                        style="padding-top: 0px;text-decoration: none;">
+                        <p class="card-header-title"> <i class="fa fa-search p-r-10 search-icon" aria-hidden="true"></i>
+                          Search Criteria</p>
+                      </button>
+                    </h5>
+                  </div>
+
+                  <div id="CanCollapse" class="collapse show" aria-labelledby="headingOne"
+                    data-parent="#accordionSearch">
+                    <div class="card-body" style="padding-top: 0px;">
+                      <br>
+                      <div class="row">
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                          <label class="form-label searchbar-label">From Date</label>
+                          <div class="form-group m-t-m5">
+                            <div class="input-group">
+                              <input class="form-control" [(ngModel)]="fromDate" bsDatepicker
+                                (bsValueChange)="onChangeFromdate($event)" placement="bottom"
+                                [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                                style="border-radius: 3px 0px 0px 3px !important;" placeholder="01-01-2020"
+                                autocomplete="off">
+                              <div class="input-group-addon"><i class="mdi mdi-calendar-today icon-color"></i></div>
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                          <label class="form-label searchbar-label">To Date</label>
+                          <div class="form-group  m-t-m5">
+                            <div class="input-group">
+                              <input class="form-control" [(ngModel)]="toDate" [minDate]="tblminDate" bsDatepicker
+                                placement="bottom"
+                                [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' }"
+                                style="border-radius: 3px 0px 0px 3px !important;" placeholder="01-01-2020">
+                              <div class="input-group-addon"><i class="mdi mdi-calendar icon-color"></i></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+                          <label class="form-label searchbar-label">Candidate Name</label>
+                          <div class="form-group  m-t-m5">
+                            <div class="input-group">
+                              <input class="form-control" [(ngModel)]="candName" type="text"
+                                style="border-radius: 3px 0px 0px 3px !important;" placeholder="Ar Ma"
+                                autocomplete="off">
+                              <div class="input-group-addon"><i class="mdi mdi-account-search icon-color"></i></div>
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                    <label class="form-label searchbar-label">Client</label>
+                                                    <div class="form-group  m-t-m5">
+                                                        <div class="input-group">
+                                                            <input class="form-control" [(ngModel)]="clientName" type="text" style="border-radius: 3px 0px 0px 3px !important;" placeholder="Integrum Technologies" autocomplete="off">
+                                                            <div class="input-group-addon"><i class="mdi mdi-account-switch icon-color"></i></div>
+
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div> -->
+
+                        <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                    <label class="form-label">From Date</label>
+                                                    <input [(ngModel)]="fromDate" class="form-control ng-pristine ng-invalid ng-touched" placeholder="" type="date">
+                                                </div>
+                                                <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                    <label class="form-label">To Date</label>
+                                                    <input placeholder="" [(ngModel)]="toDate" type="date" class="form-control ng-untouched ng-pristine ng-valid">
+                                                </div> -->
+                        <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                    <label class="form-label">Client</label>
+                                                    <input [(ngModel)]="clientName" class="form-control ng-pristine ng-invalid ng-touched"  placeholder="" type="text">
+                                                </div>
+                                                <div class="form-group form-group-vertical col-xs-12 col-sm-3">
+                                                    <label class="form-label">Mandate</label>
+                                                    <input [(ngModel)]="mandName" class="form-control ng-pristine ng-invalid ng-touched" placeholder="" type="text">
+                                                </div> -->
+                        <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                                    <label class="form-label">Candidate Name</label>
+                                                    <input [(ngModel)]="candName" class="form-control ng-pristine ng-invalid ng-touched" placeholder="" type="text">
+                                                </div> -->
+                        <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                                    <label class="form-label">Action Status</label>
+                                                    <input [(ngModel)]="actionStatus" class="form-control ng-pristine ng-invalid ng-touched"  placeholder="" type="text">
+                                                </div>
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                                    <label class="form-label" style="display: block">Show My Requests
+                                                        Only</label>
+                                                    <label class="switch" style="margin-top: 6px">
+                                                        <input [(ngModel)]="onlyRequest"  type="checkbox">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group form-group-vertical col-xs-12  col-sm-3">
+                                                    <label class="form-label" style="display: block">Show Claimable
+                                                        Only</label>
+                                                    <label class="switch" style="margin-top: 6px">
+                                                        <input [(ngModel)]="onlyClaim" type="checkbox">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div> -->
+                      </div>
+                      <div class="row" style="float:right;padding-bottom: 0.5em;">
+
+                        <button class="btn btn-primary btn-sm m-r-sm" (click)="clearSearchCriteria()">
+                          <i class="mdi mdi-eraser"></i> Clear
+                        </button>
+                        <button class="btn btn-primary btn-sm m-r-sm" (click)="searchData()">
+                          <i class="mdi mdi-magnify"></i> Search
+                        </button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="row">
+                            <div class="col-lg-12">
+                                <ul class="list-inline">
+
+                                    <div class="showGirdActionButtons">
+                                        <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+                                            <div class="massOperationsPanel d-i-b">
+
+
+                                                <button class="btn btn-default btn-sm m-r-sm ">
+                                      <i class="mdi mdi-thumb-up-outline m-r-xs"></i>
+                                      Recall
+                                  </button><button class="btn btn-default btn-sm m-r-sm ">
+                                      <i class="mdi mdi-account-remove m-r-xs"></i>
+                                      Cancel Offer
+                                  </button><button class="btn btn-default btn-sm m-r-sm ">
+                                      <i class="mdi mdi-redo-variant m-r-xs"></i>
+                                      Revise Offer
+                                  </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+                        <br>
+                        <br> -->
+
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+
+              <div *ngIf="!spinner && searchDataset?.length > 0">
+                <angular-slickgrid gridId="grdSearchAll"
+                  (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  [columnDefinitions]="searchColumnDefinitions" [gridOptions]="searchGridOptions"
+                  [dataset]="searchDataset" (onAngularGridCreated)="searchGridReady($event)" gridWidth="100%">
+                </angular-slickgrid>
+              </div>
+
+              <div class="text-center ma-5" *ngIf="searchDataset?.length == 0 && !spinner">
+                <img src="assets/Images/no-prodcts-found.png" style="OPACITY: 0.3;">
+              </div>
+
+
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="unClaimed" *ngIf="IsExtraTabRequired">
+            <ng-template ngbTabTitle><i class="fa fa-bitbucket"
+                aria-hidden="true"></i>&nbsp;&nbsp;{{AlternativeText1}}</ng-template>
+            <ng-template ngbTabContent>
+              <div class="text-center ma-5" *ngIf="spinner">
+                <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                    aria-hidden="true"></span>
+                  Please wait...
+                </button>
+              </div>
+
+              <div *ngIf="!spinner">
+
+
+                <angular-slickgrid gridId="grdUnclaimed" [columnDefinitions]="unclaimedColumnDefinitions"
+                  [gridOptions]="unclaimedGridOptions" [dataset]="unclaimedDataset"
+                  (onAngularGridCreated)="unClaimedGridReady($event)"
+                  (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                  gridWidth="100%">
+                </angular-slickgrid>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <!-- <app-loading-screen></app-loading-screen> -->
+        </ngb-tabset>
+      </div>
+
+
+
+
+    </div>
+
+    <div class="content m-b report-content" *ngIf="convertedJSON?.length > 0">
+      <div class="row">
+        <div class="col-lg-6 text-left">
+
+          <div class="d-flex align-items-center" *ngIf="!isLoading">
+            <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+          </div>
+
+          <!-- <label class="upload control" style="width: 39%; float: left;" *ngIf="isLoading && selectedExcelItems?.length > 0">
+                        <div class="upload-draggable is-primary upload-custom">
+                            <section class="section" style="padding: 0.15rem 1rem;">
+                                <div class="has-text-centered">
+                                    <span class="icon is-large">
+                                        <span> <i class="fa fa-upload" style="color: #9ba7ca;"></i> &nbsp; Minimumwages Doc </span>
+                                    </span>
+                                </div>
+                            </section>
+                        </div>
+                        <input type="file" accept="application/msword,  application/pdf, image/*"
+                            (change)="onFileUpload($event, 'Minimumwages')" id="sTest-uploadFile-candidateAddResume">
+                    </label>
+
+                    <label class="upload control" style="width: 39%; float: left;" *ngIf="isLoading && selectedExcelItems?.length > 0">
+                        <div class="upload-draggable is-primary upload-custom">
+                            <section class="section" style="padding: 0.15rem 1rem;">
+                                <div class="has-text-centered">
+                                    <span class="icon is-large">
+                                        <span> <i class="fa fa-upload" style="color: #9ba7ca;"></i> &nbsp; Re-Upload Client
+                                            Approval </span>
+                                    </span>
+                                </div>
+                            </section>
+                        </div>
+                        <input type="file" accept="application/msword,  application/pdf, image/*"
+                            (change)="onFileUpload($event, 'Individual')" id="sTest-uploadFile-candidateAddResume">
+                    </label> -->
+          <!-- <p class="control" *ngIf="FileName">
+                        <span class="file-name">
+                            <button class="btn btn-danger c-btn" (click)="doDeleteFile()"><a
+                                    ngbTooltip="Delete Attachment" id="sTest-deleteFile-candidateAddResume"
+                                    style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block   ;margin-top: -5px;">
+                                    <i class="fa fa-trash-o"></i></a>
+                            </button>
+                            <a target="blank" class="ahref" style="padding: 2px;">
+                                {{FileName}}
+                            </a>
+                        </span>
+                    </p> -->
+
+          <button class="btn btn-default" [disabled]="!selectedExcelItems?.length"
+            [ngClass]="{'not-allowed-cursor': !selectedExcelItems.length }"
+            *ngIf="activeBulkMode =='Regular' && isLoading" (click)="openClientApprovalModal()"
+            tooltip-placement="bottom" data-original-title="" title="">
+            <i class="mdi mdi-file-document-outline font-size-md"></i> &nbsp; Upload Supportive Documents
+          </button> &nbsp;
+
+          <button class="btn btn-danger btn-bold" *ngIf="isLoading" (click)="removeCandidate()"
+            tooltip-placement="bottom" tooltip="Remove candidate from bulk upload" data-original-title="" title=""
+            [disabled]="!selectedExcelItems.length" [ngClass]="{'not-allowed-cursor': !selectedExcelItems.length }">
+            <i class="mdi mdi-trash-can-outline font-size-md"></i> &nbsp; Remove
+          </button>
+          <button class="btn btn-primary btn-bold ml-1"
+            *ngIf="isLoading && environment.environment.IsPennyDropCheckRequired && activeBulkMode == 'NAPS'"
+            (click)="openBankDocUploadDialog()" [disabled]="!selectedExcelItems?.length"
+            [ngClass]="{'not-allowed-cursor': !selectedExcelItems.length }">
+            <app-file-uploader (filesUploaded)="onBankUpload($event)" [ALLOWED_FILE_TYPES]="'image/*, application/pdf'"
+              [MAX_FILE_SIZE_MB]="2" [expectedDocUploads]="selectedExcelItems.length" (err)="showAlertErr($event)"
+              style="display:none"></app-file-uploader>
+
+            <i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload Bank Documents
+            <span *ngIf="isBankDocUploading" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+          </button>
+
+
+          <div class="pull-left" *ngIf="showFailed">
+            <div class="pretty p-switch p-fill">
+              <input type="checkbox" [(ngModel)]="showFailed_item" (change)="showonlyFailedItems()" />
+              <div class="state p-danger">
+                <label>Show only failed</label>
+              </div>
+
+            </div>
+          </div>
+
+          <div style="display: inline;">
+            <a *ngIf="willDownload" id="download" style="cursor:pointer;text-decoration: underline;"
+              (click)="setDownload()"> Download
+              Excel File (Export)</a>
+
+            <!-- <div style="display: inline-block;
+                        padding-left: 24px;"> <input type="file" (change)="onFileChange($event)"
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" #inputFile />
+                        </div> -->
+          </div>
+        </div>
+        <div class="col-lg-6 text-right">
+          <div class="pull-right">
+
+
+
+            <button class="btn btn-sm btn-primary m-r-xs"
+              *ngIf="activeBulkMode == 'NAPS' && !apiSpinner && progressRequest.totalRequest.length == 0"
+              (click)="doSubmitNaps()"> <i class="mdi mdi-checkbox-marked-circle-outline"></i> Submit
+              Request(s)</button>
+
+            <button class="btn btn-sm btn-default m-r-xs" (click)="Validate('false', 'Validate')"
+              *ngIf="activeBulkMode == 'Regular'"> <i class="mdi mdi-checkbox-marked-circle-outline"></i>
+              Validate
+            </button>
+
+            <button class="btn btn-sm btn-primary m-r-xs ng-binding" (click)="Validate('true', 'Save')"
+              *ngIf="activeBulkMode == 'Regular'"> <i class="mdi mdi-content-save"></i>
+              Save <span></span>
+            </button>
+
+            <button class="btn btn-sm btn-primary m-r-xs ng-binding" (click)="Validate('true', 'Submit')"
+              *ngIf="onboardingTypeId == 1 && requestForId ==1  &&  activeBulkMode == 'Regular'"> <i
+                class="mdi mdi-check-all"></i>
+              Submit <span></span>
+            </button>
+
+
+            <button class="btn btn-sm btn-default m-r-xs" (click)="cancelRequest()"> <i
+                class="mdi mdi-close-circle-outline m-r-xs"></i> Close </button>
+          </div>
+        </div>
+      </div>
+
+
+      <br>
+      <br>
+
+
+
+      <div class="d-flex align-items-center text-center" *ngIf="apiSpinner"
+        style=" display: block !important;margin-left: auto;margin-right: auto;margin-bottom: 15px;">
+        <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+      </div>
+
+
+      <div class="row" *ngIf="apiSpinner">
+        <div class="col-lg-12 m-b-5">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" [ngStyle]="getColorCodeValueEvent()" aria-valuenow="15"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row" *ngIf="!IsCompleted && progressRequest.totalRequest.length > 0">
+        <div class="col-lg-12 text-center">
+          <ngb-alert [dismissible]="false">
+            <div class="row">
+              <div class="col-lg-4">
+                <b> No of Requests : {{progressRequest.totalRequest.length}} </b>
+              </div>
+              <div class="col-lg-4">
+                <b> No of Completed Requests : {{progressRequest.completedRequest.length}} </b>
+              </div>
+              <div class="col-lg-4">
+                <b> No of Failed Requests : {{progressRequest.failedRequest.length}} </b>
+              </div>
+            </div>
+          </ngb-alert>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="!apiSpinner && IsCompleted && progressRequest.totalRequest.length > 0">
+        <div class="col-lg-12 m-b-5 text-center" *ngIf="progressRequest.failedRequest.length > 0">
+          <p class="secondary-text m-b-lg"><a (click)="download_failed_request()" href="javascript:;"
+              style="color: #1f62ff;cursor: pointer;">Click
+              here</a> to download a failed NAPS request
+          </p>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="!apiSpinner && IsCompleted && progressRequest.totalRequest.length > 0">
+        <div class="col-lg-12 text-center">
+          <ngb-alert [dismissible]="false">
+            <div class="row">
+              <div class="col-lg-4">
+                <b> No of Requests : {{progressRequest.totalRequest.length}} </b>
+              </div>
+              <div class="col-lg-4">
+                <b> No of Completed Requests : {{progressRequest.completedRequest.length}} </b>
+              </div>
+              <div class="col-lg-4">
+                <b> No of Failed Requests : {{progressRequest.failedRequest.length}} </b>
+              </div>
+            </div>
+          </ngb-alert>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;width: 100%;" *ngIf="!apiSpinner">
+        <table *ngIf="convertedJSON?.length > 0"
+          class="table table-bordered table-striped table-responsive-stack deallist-tbl" id="dataTable">
+          <thead>
+            <ng-container *ngIf="activeBulkMode == 'Regular'">
+              <tr>
+                <th class="d-flex align-items-center justify-content-center">
+                  <input class="text-center" type="checkbox" (click)="selectAllRows($event.target.checked)">
+                </th>
+                <!-- <ng-container *ngFor="let head of convertedJSON[0] | keys">
+                                    <th [style.width.px]="tblWidth"
+                                        [ngStyle]="{'min-width':head == 'ValidationRemarks' ? '400px': '140px'}">
+                                        {{getLetterSpace(head)}}
+                                    </th>
+                                </ng-container> -->
+                <th [style.width.px]="tblWidth" [ngStyle]="{'min-width':'400px'}">
+                  {{capitalizeFirstLetter("ValidationRemarks")}}
+                </th>
+                <th [style.width.px]="tblWidth" [ngStyle]="{'min-width':'400px'}">
+                  {{capitalizeFirstLetter("IsValid")}}
+                </th>
+                <ng-container *ngFor="let head of convertedJSON[0] | keys">
+                  <th
+                    *ngIf="!['DocumentInfo', 'IsSelected', 'InvalidCells', 'ValidationRemarks', 'IsValid' ].includes(head)"
+                    [style.width.px]="tblWidth"
+                    [ngStyle]="{'min-width':head == 'ValidationRemarks' ? '400px': '140px'}">
+                    {{capitalizeFirstLetter(head)}}
+                  </th>
+                </ng-container>
+              </tr>
+            </ng-container>
+
+            <ng-container *ngIf="activeBulkMode == 'NAPS'">
+              <tr>
+                <th class="d-flex align-items-center justify-content-center">
+                  <input class="text-center" type="checkbox" (click)="selectAllRows($event.target.checked)">
+                </th>
+                <th [style.width.px]="tblWidth" [ngStyle]="{'min-width':'400px'}">
+                  {{capitalizeFirstLetter("Remarks")}}
+                </th>
+                <ng-container *ngFor="let head of convertedJSON[0] | keys">
+                  <th *ngIf="!['BankDocumentId', 'IsSelected', 'Remarks', 'Id', 'IsFailedRequest'].includes(head)"
+                    [ngStyle]="{'min-width':head == 'Remarks' ? '400px': '140px'}">
+                    {{capitalizeFirstLetter(head)}}
+                  </th>
+                </ng-container>
+              </tr>
+            </ng-container>
+          </thead>
+          <tbody [style.width.px]="tblWidth">
+            <ng-container *ngIf="activeBulkMode == 'Regular'">
+              <ng-container *ngFor="let item of convertedJSON; let i = index">
+                <tr
+                  [ngStyle]="{'color':(item.IsValid == false || !convertedJSON[i].InvalidCells.length == false)  ? 'red' : 'green' ,'min-width':item.ValidationRemarks != null || item.ValidationRemarks == null ? '400px': '140px', 'font-size': item.ValidationRemarks != null ? '10px': '12px'}">
+                  <td style="width: 3%;text-align: center !important" class="text-center"
+                    *ngIf="hasCheckBoxProperty(item)"><input type="checkbox" [checked]="item.IsSelected"
+                      (click)="onChangeRow(item, $event, i)">
+                  </td>
+                  <td> {{convertedJSON[i].ValidationRemarks}}</td>
+                  <td> {{item.IsValid}}</td>
+                  <ng-container *ngFor="let list of item | keys">
+                    <td
+                      *ngIf="!['DocumentInfo', 'IsSelected', 'InvalidCells', 'ValidationRemarks', 'IsValid' ].includes(list)">
+                      {{item[list]}}</td>
+                  </ng-container>
+                </tr>
+                <!-- <tr
+                                [ngStyle]="{'color':item.IsValid == false ? 'red' : 'green' ,'min-width':item.ValidationRemarks != null || item.ValidationRemarks == null ? '400px': '140px', 'font-size': item.ValidationRemarks != null ? '10px': '12px'}">
+                                
+                                <ng-container *ngFor="let list of item | keys">
+                                    <td> {{item[list]}}</td>
+                                </ng-container>
+                            </tr> -->
+              </ng-container>
+            </ng-container>
+
+            <ng-container *ngIf="activeBulkMode != 'Regular'">
+              <ng-container *ngFor="let item of convertedJSON; let i = index">
+                <tr
+                  [ngStyle]="{'color':(item.InvalidCells.length > 0 || item.IsFailedRequest) ? 'red' : 'green' ,'min-width':item.Remarks != null || item.Remarks == null ? '400px': '140px', 'font-size': item.Remarks != null ? '10px': '12px'}">
+                  <td style="width: 3%;text-align: center !important" class="text-center"
+                    *ngIf="hasCheckBoxProperty(item)"><input type="checkbox" [checked]="item.IsSelected"
+                      (click)="onChangeRow(item, $event, i)">
+                  </td>
+                  <td> {{convertedJSON[i].Remarks}}</td>
+                  <ng-container *ngFor="let list of item | keys">
+                    <td *ngIf="!['BankDocumentId', 'IsSelected', 'Remarks', 'Id', 'IsFailedRequest'].includes(list)">
+                      {{item[list]}}</td>
+                  </ng-container>
+                </tr>
+                <!-- <tr
+                                [ngStyle]="{'color':item.IsValid == false ? 'red' : 'green' ,'min-width':item.ValidationRemarks != null || item.ValidationRemarks == null ? '400px': '140px', 'font-size': item.ValidationRemarks != null ? '10px': '12px'}">
+                                
+                                <ng-container *ngFor="let list of item | keys">
+                                    <td> {{item[list]}}</td>
+                                </ng-container>
+                            </tr> -->
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+
+      </div>
+
+
+
+
+    </div>
+
+
+  </div>
+</div>
+
+
+<div id="popup_uploadClientApproval" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="popup_uploadClientApproval" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="row" style="padding: 16px;padding-bottom: 0px;">
+          <div class="col-lg-8">
+            <small class="header-pretitle hed"><b>Bulk Onboarding Request - Attachment</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL">{{defaultSearchInputs.ClientName}} |
+              {{defaultSearchInputs.ClientContractName}}
+            </h6>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" (click)="modal_dismiss1('ClientApprovals')" style="margin-top: 5px;">
+              <span class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+
+          <br />
+
+
+
+          <!-- <p class="secondary-text m-b-lg"><a (click)="download_template()" href="javascript:;"
+                            style="color: #1f62ff;cursor: pointer;">Click
+                            here</a> to download a sample file </p> -->
+
+          <div class="row">
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+              <label class="form-label">Approval For</label>
+              <ng-select [items]="getApprovalForItems()" placeholder="select an option" [(ngModel)]="approvalForId"
+                bindLabel="name" bindValue="id">
+              </ng-select>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+              <!-- <label class="form-label">Attachment</label>
+                            <input type="file" (change)="onChangeFile($event, 'Approvals')"
+                                accept="application/msword,  application/pdf, image/*" #inputFile /> -->
+
+              <label class="upload control" style="width: 39%; float: left;margin-top: 24px;">
+                <div class="upload-draggable is-primary upload-custom">
+                  <section class="section" style="padding: 0.15rem 1rem;">
+                    <div class="has-text-centered">
+                      <span class="icon is-large">
+                        <span> <i class="fa fa-upload" style="color: #9ba7ca;"></i> &nbsp;
+                          Attachment </span>
+                      </span>
+                    </div>
+                  </section>
+                </div>
+                <input type="file" accept="application/msword,  application/pdf, image/*"
+                  (change)="onChangeFile($event, 'Approvals')" id="sTest-uploadFile-candidateAddResume" #inputFile1>
+              </label>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center" *ngIf="!isLoading">
+            <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+          </div>
+
+          <br />
+          <br />
+
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="popup_import_data" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_import_data"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-sm modal-dialog-centered" style="max-width: 850px !important">
+      <div class="modal-content">
+        <!-- <div class="modal-header" style="padding: 15px !important;">
+                    <h4 class="modal-title pull-left">Bulk Request</h4>
+
+
+                    <div class="modal-close" (click)="modal_dismiss()"><span class="mdi mdi-close pull-left"></span>
+                    </div>
+
+
+                </div> -->
+
+        <div class="row" style="padding: 16px;padding-bottom: 0px;">
+          <div class="col-lg-8">
+            <small class="header-pretitle hed"><b>Bulk Onboarding Request</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL">{{defaultSearchInputs.ClientName}} |
+              {{defaultSearchInputs.ClientContractName}}
+            </h6>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" (click)="modal_dismiss('Regular')" style="margin-top: 5px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+
+
+
+          <!-- <p class="secondary-text m-b-lg"><a (click)="download_template()" href="javascript:;"
+                            style="color: #1f62ff;cursor: pointer;">Click
+                            here</a> to download a sample file </p> -->
+
+          <div class="row">
+
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Pay Structure </label>
+              <ng-select [items]="LstPayGroup" placeholder="select an option" [(ngModel)]="payGroupId" bindLabel="Name"
+                bindValue="Id" (change)="OnChangePayGroup($event)">
+              </ng-select>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Onboarding Type </label>
+              <ng-select [items]="onboardingType" placeholder="select an option" [(ngModel)]="onboardingTypeId"
+                bindLabel="name" bindValue="id">
+              </ng-select>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+              <label class="form-label">Request For </label>
+              <ng-select [items]="requestFor" placeholder="select an option" [(ngModel)]="requestForId" bindLabel="name"
+                bindValue="id" (change)="OnChangeRequestFor($event)">
+              </ng-select>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-4">
+              <label class="form-label">Client Approval</label>
+              <input type="file" (change)="onChangeFile($event, 'Initial')" [(ngModel)]="DocumentId"
+                accept="application/msword,  application/pdf, image/*" #inputFile />
+            </div>
+          </div>
+
+
+          <div class="row" *ngIf="hasFailedInput" style="padding-left: 17px;">
+            <div class="col-lg-12 text-center">
+              <ngb-alert [dismissible]="false">
+                <strong>{{failedInputErrorMessage}}</strong>
+              </ngb-alert>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <p style="padding: 17px;">
+              Import transfer into port from Excel files. Choose a Pay Structure to
+              download a
+              sample excel file.
+
+              <!-- Import transfer into port from Excel files. Click here to download a sample excel file.  -->
+
+              <a (click)="download_template('Regular')" href="javascript:;"
+                style="color: #1f62ff;cursor: pointer;">Download Excel File
+                <span *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+              </a>
+            </p>
+
+            <div class="d-flex align-items-center" style="margin-left: 10px;" *ngIf="!isLoading">
+              <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+              <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+
+
+            <div *ngIf="isLoading" class="col-12"> <input type="file" (change)="onFileChange($event, 'Regular')"
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" #inputFile />
+
+            </div>
+            <br>
+            <br>
+
+
+
+
+            <div class="wrapper-lg bg-white tips-listing">
+              <h3 style="font-size: 1.3rem;font-weight: 600;"><i
+                  class="mdi mdi-lightbulb-on-outline m-r text-warning pull-left"></i>Tips for import
+              </h3>
+              <ul>
+                <li> Import excel file first, Importing in this order will ensure that all records are
+                  related correctly.</li>
+                <li> Setup <a>custom fields</a> before import.</li>
+                <li> We support file limits upto 100. If your file limit is larger than 100, we suggest
+                  you break it up in to multiple files.</li>
+                <li> The first row of your import file must be the column headers you wish to import.
+                </li>
+                <li hidden=""> Duplicate deals check will be performed on Email or Mobile Number. </li>
+                <li> Unexpected errors may occur if XLS file do have any special styles, combo filters
+                  or images. </li>
+                <li> By default, the character encoding is UTF-8 character set will be escaped. </li>
+                <li> We suggest you to import a small set of sample data, before importing your actual
+                  data. </li>
+                <li> Description field only supports 2000 characters max. </li>
+
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div id="popup_import_data_naps" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popup_import_data_naps"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-xs modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="row" style="padding: 16px;padding-bottom: 0px;">
+          <div class="col-lg-8">
+            <small class="header-pretitle hed"><b>Bulk NAPS Onboarding Request</b></small>
+            <h6 class="modal-title subheader_h6" id="popup_release_AL">{{defaultSearchInputs.ClientName}}
+            </h6>
+          </div>
+          <div class="col-lg-4">
+            <div class="modal-close" (click)="modal_dismiss('NAPS')" style="margin-top: 5px;"><span
+                class="mdi mdi-close pull-left"></span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-body">
+
+
+
+          <!-- <p class="secondary-text m-b-lg"><a (click)="download_template()" href="javascript:;"
+                            style="color: #1f62ff;cursor: pointer;">Click
+                            here</a> to download a sample file </p> -->
+
+          <div class="row">
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+              <label class="form-label">Team </label>
+              <ng-select [items]="LstTeam" placeholder="select an option" [(ngModel)]="teamId" bindLabel="Name"
+                bindValue="Id" (change)="OnChangeTeam($event)">
+              </ng-select>
+            </div>
+          </div>
+
+
+          <div class="row" *ngIf="hasFailedInput" style="padding-left: 17px;">
+            <div class="col-lg-12 text-center">
+              <ngb-alert [dismissible]="false">
+                <strong>{{failedInputErrorMessage}}</strong>
+              </ngb-alert>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <p style="padding: 17px;">
+              Import transfer into port from Excel files. Choose a Team to
+              download a
+              sample excel file.
+
+              <!-- Import transfer into port from Excel files. Click here to download a sample excel file.  -->
+
+              <a (click)="download_template('NAPS')" href="javascript:;"
+                style="color: #1f62ff;cursor: pointer;">Download Excel File
+                <span *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+              </a>
+            </p>
+
+
+            <div class="col-12"> <input type="file" (change)="onFileChange($event, 'NAPS')"
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" #inputFile />
+            </div>
+            <br>
+            <br>
+
+            <div class="wrapper-lg bg-white tips-listing">
+              <h3 style="font-size: 1.3rem;font-weight: 600;"><i
+                  class="mdi mdi-lightbulb-on-outline m-r text-warning pull-left"></i>Tips for import
+              </h3>
+              <ul>
+                <li> Import excel file first, Importing in this order will ensure that all records are
+                  related correctly.</li>
+                <li> Setup <a>custom fields</a> before import.</li>
+                <li> We support file limits upto 100. If your file limit is larger than 100, we suggest
+                  you break it up in to multiple files.</li>
+                <li> The first row of your import file must be the column headers you wish to import.
+                </li>
+                <li> Please use the Date format as DD/MM/YYYY (01-12-2000)</li>
+                <li hidden=""> Duplicate deals check will be performed on Email or Mobile Number. </li>
+                <li> Unexpected errors may occur if XLS file do have any special styles, combo filters
+                  or images. </li>
+                <li> By default, the character encoding is UTF-8 character set will be escaped. </li>
+                <li> We suggest you to import a small set of sample data, before importing your actual
+                  data. </li>
+
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

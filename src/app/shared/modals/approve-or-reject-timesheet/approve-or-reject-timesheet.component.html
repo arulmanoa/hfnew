@@ -1,0 +1,135 @@
+<div class="mx-auto text-center" style="font-family: 'Roboto';"> 
+  <app-loading-screen></app-loading-screen>
+  <div class="row mx-auto text-center" *ngIf="title !== 'submit' && title !== 'delete' ">
+    <div class="col-md-12" style="margin-left: 38%;margin-top: 35%;">
+      <img src="assets/Images/warning-outline.png" alt="warning">
+    </div>
+    <div class="row mx-auto text-center">
+      <div class="col-md-12 text-big">
+        Are you sure ?
+      </div>
+      <div class="col-md-12 mb-4 text-small" *ngIf="!isMultiple">
+        Do you want {{title | lowercase}} <span class="text-black">{{rowData[0].EmployeeName}}'s {{rowData[0].formattedDateRange}}</span> <br>
+        timesheet
+      </div>
+      <div class="col-md-12 mb-4 text-small" *ngIf="isMultiple">
+        Do you want {{title | lowercase}} <span class="text-black">selected</span> <br>
+        timesheet(s)
+      </div>
+    </div>
+    <!-- ENTER REMARKS -->
+    <div class="row col-xs-12 col-lg-12 col-md-12 mb-2 text-left" style="font-family: 'Roboto';">
+      <div class="form-group col-xs-12 col-sm-12">
+        <label class="form-label" *ngIf="title == 'approve'">Approval Remarks</label>
+        <label class="form-label" *ngIf="title == 'reject'">Rejection Remarks</label>
+        <textarea id="remarks" rows="3" maxlength="500" [(ngModel)]="remarks"
+          required="true" class="form-control w-100" autocomplete="off" placeholder=""></textarea>
+      </div>
+    </div>
+    <!-- BUTTONS -->
+    <div style="float: right; width: 100%;text-align: right;font-family: 'Roboto';">
+      <button id="cancelTimesheetBtn" class="btn btn-default m-r-sm" type="button" (click)="cancelDrawer()">
+        Cancel
+      </button>
+      <button id="rejectTimesheetBtn" *ngIf="title == 'reject'" class="btn btn-danger" type="button" 
+      (click)="ApproveRejectTimeSheet('REJECT')" style="margin-right: 10%;">
+        Reject
+      </button>
+      <button id="approveTimesheetBtn" *ngIf="title == 'approve'" class="btn btn-success" type="button"
+        (click)="ApproveRejectTimeSheet('APPROVE')" style="margin-right: 10%;">
+        Approve
+      </button>
+    </div>
+   
+  </div>
+  <div class="row mx-auto text-center" *ngIf="title === 'submit' ">
+    <div class="col-md-12" style="margin-left: 42%;">
+      <img src="assets/Images/warning-outline.png" alt="warning">
+    </div>
+    <div class="row mx-auto text-center">
+      <div class="col-md-12 text-big">
+        Are you sure ?
+      </div>
+      <div class="col-md-12 mb-4 text-small">
+        Do you want {{title | lowercase}} <span class="text-black">{{rowData[0].formattedDateRange}}</span> <br>
+        timesheet
+      </div>
+    </div>
+    <!-- FILE UPLOAD -->
+    <div class="row col-xs-12 col-lg-12 col-md-12 mb-2 mx-auto">
+      <label class="form-label simple-label">Support Document</label>
+      <div class="drag-drop-container form-group col-xs-12 col-sm-12" (click)="fileInput.click()" fileDragDrop (filesChangeEmiter)="onFileChange($event)">
+        <span class="mdi mdi-cloud-upload icon-props"></span>
+        <div class="drag-drop-message">
+          <p class="mb-0">Drag & Drop your files here or&nbsp;&nbsp;</p>
+          <a href="#" (click)="onBrowseClick($event)" class="btn-primary">Browse</a>&nbsp; your files here
+          <input type="file" #fileInput (change)="onFileChange($event.target.files)" accept="application/msword, application/pdf, image/*" class="d-none">
+        </div>
+      </div>
+    </div>
+    <div class="row fileItem" *ngFor="let f of files; let ind = index">
+      <div class="col-sm-12 fileItemText">
+        <span>{{f.name}}</span>
+        <button class="btn btn-link text-danger" (click)="deleteFile(f)"> <i class="fa fa-trash-o"></i></button>
+      </div>
+    </div>
+    <!-- TAG NAME -->
+    <div class="row col-xs-12 col-lg-12 col-md-12 mb-2 mx-auto text-left" style="font-family: 'Roboto';">
+      <div class="form-group w-100">
+        <label class="form-label simple-label">Tag Name</label>
+        <input class="form-control" type="text" name="taggedName" [(ngModel)]="tagName" spellcheck="false" placeholder="Enter a name"/>
+      </div>
+    </div>
+    <!-- ENTER REMARKS -->
+    <div class="row col-xs-12 col-lg-12 col-md-12 mb-2 mx-auto text-left" style="font-family: 'Roboto';">
+      <div class="form-group w-100">
+        <label class="form-label simple-label">Remarks</label>
+        <textarea id="remarks" rows="3" maxlength="500" [(ngModel)]="remarks"
+          required="true" class="form-control w-100" autocomplete="off" placeholder=""></textarea>
+      </div>
+    </div>
+    <!-- BUTTONS -->
+    <div style="float: right; width: 100%;text-align: right;font-family: 'Roboto';">
+      <button id="cancelTimesheetBtn" class="btn btn-default m-r-sm" type="button" (click)="cancelDrawer()">
+        Cancel
+      </button>
+      <button class="btn action-btn" type="button" (click)="submitEmployeeTimeSheet()" [disabled]="disableConfirmBtn">
+        Confirm
+      </button>
+    </div>
+   
+  </div>
+
+  <div class="row mx-auto text-center" *ngIf="title === 'delete' ">
+    <div class="col-md-12" style="margin-left: 42%;">
+      <img src="assets/Images/warning-outline.png" alt="warning">
+    </div>
+    <div class="row mx-auto text-center">
+      <div class="col-md-12 text-big">
+        Are you sure ?
+      </div>
+      <div class="col-md-12 mb-4 text-small">
+        Do you want {{title | lowercase}} <span class="text-black">{{rowData[0].formattedDateRange}}</span> <br>
+        timesheet
+      </div>
+    </div>
+    <!-- ENTER REMARKS -->
+    <div class="row col-xs-12 col-lg-12 col-md-12 mb-2 mx-auto text-left" style="font-family: 'Roboto';">
+      <div class="form-group w-100">
+        <label class="form-label simple-label">Remarks</label>
+        <textarea id="remarks" rows="3" maxlength="500" [(ngModel)]="remarks"
+          required="true" class="form-control w-100" autocomplete="off" placeholder=""></textarea>
+      </div>
+    </div>
+    <!-- BUTTONS -->
+    <div style="float: right; width: 100%;text-align: right;font-family: 'Roboto';">
+      <button id="cancelTimesheetBtn" class="btn btn-default m-r-sm" type="button" (click)="cancelDrawer()">
+        Cancel
+      </button>
+      <button class="btn action-btn" type="button" (click)="deleteEmployeeTimeSheet()" >
+        Delete
+      </button>
+    </div>
+   
+  </div>
+</div>

@@ -1,0 +1,149 @@
+/* .p-15 {
+    padding: 8px;
+}
+
+
+.chrome-back-btn {
+    background: #858fa6;
+    border-radius: 50px;
+    line-height: 34px;
+    font-size: 10px;
+    color: #fff;
+    transition: all .5s ease-out;
+}
+
+.btn-icon {
+    padding: 0!important;
+    text-align: center;
+    width: 28px;
+    height: 28px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.m-t-n-sm {
+    margin-top: -6px;
+}
+
+.m-l-n-xxxl {
+    margin-left: -60px;
+}
+
+.pull-left {
+    float: left!important;
+}
+
+.builtin-calling-wrapper {
+    background: #fff url(https://arrr.salesmate.io/assets/images/content-purple-bg.png) 0 bottom no-repeat !important;
+    background-size: 100% 15% !important;
+    padding-bottom: 100px !important;
+} */
+
+
+/* Customize the label (the container) */
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* 
+.p-20{
+    margin-left:10px;
+    padding:5px;
+
+    
+} */
+
+.checkbox-grid li {
+    display: block;
+    float: left;
+    width: 15%;
+    /* padding-bottom:15px; */
+    /* width:88px; */
+}
+
+
+/* Hide the browser's default checkbox */
+
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+
+/* Create a custom checkbox */
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: rgba(255, 255, 255, 0.12);
+    border: 1px solid #007bff;
+    border-radius: 3px;
+}
+
+
+/* On mouse-over, add a grey background color */
+
+.container:hover input~.checkmark {
+    background-color: #FFF;
+}
+
+
+/* When the checkbox is checked, add a blue background */
+
+.container input:checked~.checkmark {
+    background-color: #0a609eeb;
+    border-radius: 3px;
+}
+
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+
+/* Show the checkmark when checked */
+
+.container input:checked~.checkmark:after {
+    display: block;
+}
+
+
+/* Style the checkmark/indicator */
+
+.container .checkmark:after {
+    left: 9px;
+    top: 4px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0px 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}

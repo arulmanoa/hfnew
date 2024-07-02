@@ -1,0 +1,18 @@
+<div>
+  <label>Email:</label>
+  <input type="text" [(ngModel)]="email">
+</div>
+<div>
+  <button (click)="generateSecretKey()">Generate Secret Key</button>
+</div>
+<div *ngIf="secretKey">
+  <img [src]="qrCode" style="width: 300px;
+  height: 300px;
+">
+  <p>Secret Key: {{ secretKey }}</p>
+</div>
+<div>
+  <label>Two Factor Code:</label>
+  <input type="text" [(ngModel)]="twoFactorCode">
+  <button (click)="validateTwoFactorCode()">Validate Two Factor Code</button>
+</div>

@@ -1,0 +1,66 @@
+{
+  "compileOnSave": false,
+   "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true
+  },
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    //"module": "esnext", 
+    "module": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+   "allowSyntheticDefaultImports": true,
+   "skipLibCheck": true,
+   "downlevelIteration": true,
+   //"target": "es2015",
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    // "plugins": [ 
+    //   { "name": "tslint-language-service"}
+    // ],
+    "paths": {
+      "jszip": [
+        "./node_modules/jszip/dist/jszip.min.js"
+      ],
+      "@angular/*": [
+        "../node_modules/@angular/*"
+      ],
+      "@services/*":["src/app/_services/*"]
+    }
+  },
+  "include": ["src/**/*.ts","node_modules/angular-bootstrap-md/**/*.ts" ]
+}
+// {
+//   "compileOnSave": false,
+//   "compilerOptions": {
+//     "outDir": "./dist/out-tsc",
+//     "sourceMap": true,
+//     "declaration": false,
+//     "moduleResolution": "classic",
+//     "emitDecoratorMetadata": true,
+//     "experimentalDecorators": true,
+//     "target": "es5",
+//     "typeRoots": [
+//       "node_modules/@types"
+//     ],
+//     "lib": [
+//       "es2017",
+//       "dom"
+//     ],
+//     "plugins": [
+//       { "name": "tslint-language-service"}
+//     ]
+//   }
+// }

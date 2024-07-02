@@ -1,0 +1,161 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg modal-dialog-centered animated fadeInDownBig">
+    <div class="modal-content">
+      <div class="modal-header" style="padding: 15px !important;">
+
+
+        <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+          <small class="header-pretitle"><b>Payroll Verification Request : History Logs</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL" > <b *ngIf="inPayrollHistoryLogs.length == 0 "> QC Verification History Logs</b> <B *ngIf="inPayrollHistoryLogs.length !== 0 "> {{ClientName}}  | {{ContractCode}}</B></h6>
+        </div>
+
+        <div class="modal-close" (click)="closeModal()" style="margin-top: 5px;"><span
+            class="mdi mdi-close pull-left"></span>
+        </div>
+      </div>
+
+
+      <div class="modal-body">
+        <div class="row" style="margin-bottom: 10px;" *ngIf="pageLayout  && !spinner">
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+
+                      </div>
+
+          <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+
+            <div class="text-right">
+              <ul class="list-inline">
+
+              
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <p style="font-weight: 700;margin-bottom:0px; text-align: center;margin-top: 10px;"
+          *ngIf="inPayrollHistoryLogs.length == 0"> No record were found! Please try after sometimes.
+        </p>
+
+
+        <div class="text-center ma-5" *ngIf="spinner">
+          <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+              aria-hidden="true"></span>
+            Please wait...
+          </button>
+        </div>
+        <div class="row">
+          <!-- <div class="col-lg-12" style="text-align: right;">
+            <label > <b>  No. Of Employee(s) : <b> {{inPayrollHistoryLogs.length}}</b> &nbsp; &nbsp; &nbsp; Selected Employee(s) : <b> {{inPayrollHistoryLogSelectedItems.length}}</b></b></label>
+          </div> -->
+        </div>
+        <div class="row" *ngIf="!spinner && inPayrollHistoryLogs.length !== 0">
+          <div class="col-lg-12">
+            <table class="table  table-container customborder">
+              <thead>
+                <tr class="document_table_tr">
+                  <th scope="col" style="width: 10%; text-align: center !important">PVR #</th>
+                  <!-- <th scope="col" style="width: 20%; text-align: center !important">ClientName</th> -->
+                  <!-- <th scope="col" style="width: 12%;text-align: center !important; ">Contract Code</th> -->
+                  <th scope="col" style="width: 20%;text-align: center !important">Team</th>
+                  <th scope="col" style="width: 20%;text-align: center !important">Pay Period</th>
+                  <th scope="col" style="width: 30%;text-align: center !important">Overall Status</th>
+                  <th scope="col" style="width: 10%;text-align: center !important">Remarks (Request/Approver)</th>
+                  <th scope="col" style="width: 10%;text-align: center !important">Status</th>
+                  <th scope="col" style="width: 10%;text-align: center !important" >Action</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of inPayrollHistoryLogs;let ii = index; let last = last">
+                  <tr style="font-size: 12px;">
+                  <td style="width: 8%;text-align: center !important" class="text-center"> {{item.PVRId}}</td>
+                    <!-- <td style="width: 17%;text-align: right !important;" class="text-center">
+                      {{item.ClientName}}</td> -->
+                    <!-- <td style="width: 17%;text-align: right !important;" class="text-center">
+                      {{item.ContractCode}}</td> -->
+                    <td style="width: 17%;text-align: right !important;" class="text-center">
+                      {{item.Team}}</td>
+                    <td style="width: 17%;text-align: right !important;" class="text-center">
+                      {{item.PayPeriod}}</td>
+                    <td style="width: 17%;text-align: center !important;" class="text-center"> {{item.EmployeeCount}}
+                    </td>
+                    <td style="width: 17%;text-align: center !important;" class="text-center"> {{item.RequestRemarks}}/{{item.ApproverRemarks}}
+                    </td>
+                    <td style="width: 17%;text-align: center !important;" class="text-center"> {{item.PVRStatus}}
+                    </td>
+                    <td  style="width: 17%;padding: 5px !important;" class="text-center"
+                      data-toggle="collapse" [attr.data-target]="'#demo'+ item.Id" class="accordion-toggle">
+                      <button type="button" class="ant-btn d-inline-flex align-items-center m-1 ant-btn-sm"
+                        style="font-size: 10px;" tooltip="view" title="View Employee(s)"><span><i class="fa fa-users" aria-hidden="true"
+                            style="padding-right: 5px;" ></i></span></button></td>
+                  </tr>
+                  <tr>
+                    <td colspan="12" class="hiddenRow" style="padding: 0px;">
+                      <div class="accordian-body collapse" id="demo{{item.Id}}"
+                        style="padding: 10px;font-size: 12px;">
+
+                          <table class="table table-striped customborder">
+                            <thead>
+                              <tr style="font-weight: 400 !important;">
+                                <td>Emp. Code</td>
+                                <td>Emp. Name</td>
+                                <td>DOJ</td>
+                                <td>Team </td>
+                                <td>Request Remarks</td>
+                                <td>Remarks (Approve/Reject)</td>
+                                <td>Status</td>
+                              </tr>
+                             </thead>
+                            <tbody>
+                              <tr *ngFor="let child of item.EmployeeList" style="font-weight: 400 !important;">
+                                <td>{{child.EmployeeCode}}</td>
+                                <td>{{child.EmployeeName}}</td>
+                                <td>{{child.DOJ}}</td>
+                                <td>{{child.TeamName}}</td>
+                                <td>{{child.RequestRemarks}}</td>
+                                <td>{{child.ApproverRemarks}}</td>
+                                <td>{{getStatus(child.EmployeePVRStatus)}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                      </div>
+                    </td>
+                  </tr>
+                 
+                </ng-container>
+               
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="modal-footer">
+        <div class="pull-left left-margin-btn">
+
+        </div>
+        <div class="pull-right m-r-sm">
+          <div>
+            <!-- <div>
+              <button class="btn  btn-default m-r-sm" type="Submit" name="btnSubmit" id="btnSubmit"
+                (click)="closeModal()">
+                <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-close"></i> Cancel </span></div>
+              </button>
+              
+
+             
+              
+              <button class="btn upgrade-btn pull-right" type="button" (click)="Confirm()"> <i
+                  class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp; Confirm</button>
+
+
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

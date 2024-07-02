@@ -1,0 +1,222 @@
+<div style="position:relative;top:100px; ">
+  <nz-steps [nzCurrent]="index" nzDirection="vertical" nzSize="medium" (click)="onIndexChange($event)"  >
+    <nz-step nzTitle="Client Details" ></nz-step>
+     <nz-step nzTitle="Address" ></nz-step>
+    <nz-step nzTitle="Contact Information" ></nz-step>
+   <nz-step nzTitle="Contract Information" ></nz-step>
+   </nz-steps>
+  </div> 
+
+  <div *ngIf="index===0">
+<!--<app-client-new></app-client-new>-->
+<app-add-update-client (clientCreated)="createOrUpdateClient($event)"  [clientInfo]="currentClient"></app-add-update-client>
+</div>
+
+<div *ngIf="index===1">
+ <div style="position: relative;bottom: 200px;left: 200px;">
+<!--<app-client-location></app-client-location>-->
+<!--<app-client-location-list></app-client-location-list>-->
+
+<div class="page-wrapper">
+   
+  <div class="page-content">
+          <div class="row" >
+                  <div class="col-12 col-md-12 col-lg-12 text-right">
+          <div class="pull-right">
+              <button type="button" class="btn btn-primary" (click)="newButtonLocationClick()">
+                <i class="mdi mdi-file-plus m-r-xs"></i> Add Client Location</button>
+          </div>
+      </div>
+  </div>
+
+          <div class="text-center ma-5" *ngIf="spinner" style="position: relative;">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+                                      Please wait...
+                    </button>
+              </div>
+              <br>
+              <div class="content m-b report-content" *ngIf="!spinner">
+          <angular-slickgrid gridId="grid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)" (onAngularGridCreated)="angularGridReady($event)"
+              (onAngularGridCreated)="angularGridReady($event)">
+          </angular-slickgrid>
+      </div>
+      </div>
+</div>
+<div id="modaldeleteconfimation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modaldeleteconfimation" aria-hidden="true">
+  <div class="modal-dialog ">
+      <div class="modal-content">
+          <div class="modal-header">
+              <div class="col-xs-11">
+                  <h4 class="modal-title" id="modaldeleteconfimation">Confirmation</h4>
+              </div>
+              <div class="col-xs-1">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span>
+                    </button>
+              </div>
+          </div>
+          <div class="modal-body alert-warning">
+              <div class="row">
+                  <div class="col-xs-2">
+                      <i class="fa fa-warning fa-3x "></i>
+                  </div>
+                  <div class="col-xs-10">
+                      <div>
+                          <h5>
+                              Are you sure you want to delete this value <span> {{deleteColumn}}</span>?
+                          </h5>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-danger btn-sm" (click)="delete()">Yes</button> &nbsp;
+              <button class="btn btn-default btn-sm" data-dismiss="modal">No</button>
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+</div>
+
+<div *ngIf="index===2">
+    <div style="position: relative;bottom: 200px;left: 200px;">
+        <div class="page-wrapper">
+    <div class="page-content">
+   <div class="row" >
+         <div class="col-12 col-md-12 col-lg-12 text-right">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary" (click)="newButtonContactClick()">
+                    <i class="mdi mdi-file-plus m-r-xs"></i> Add Client Contact</button>
+            </div>
+        </div>
+    </div>
+            <div class="text-center ma-5" *ngIf="spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+                                        Please wait...
+                      </button>
+                </div>
+                <br>
+                <div class="content m-b report-content" *ngIf="!spinner">
+            <angular-slickgrid gridId="grid1" [columnDefinitions]="ContactcolumnDefinitions" [gridOptions]="gridOptions" [dataset]="contactdataset" gridWidth="100%" (sgOnClick)="onCellClickedContact($event.detail.eventData, $event.detail.args)" (onAngularGridCreated)="angularGridReady($event)"
+                (onAngularGridCreated)="angularGridReady($event)">
+            </angular-slickgrid>
+        </div>
+       
+    </div>
+</div>
+
+<div id="modaldeleteconfimation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modaldeleteconfimation" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="col-xs-11">
+                    <h4 class="modal-title" id="modaldeleteconfimation">Confirmation</h4>
+                </div>
+                <div class="col-xs-1">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                              aria-hidden="true">&times;</span>
+                      </button>
+                </div>
+            </div>
+            <div class="modal-body alert-warning">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-warning fa-3x "></i>
+                    </div>
+                    <div class="col-xs-10">
+                        <div>
+                            <h5>
+                                Are you sure you want to delete this value <span> {{deleteColumn}}</span>?
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-sm" (click)="delete()">Yes</button> &nbsp;
+                <button class="btn btn-default btn-sm" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+<div *ngIf="index===3">
+   <!--<app-contract-new></app-contract-new> -->
+   <div style="position: relative;bottom: 200px;left: 200px;">
+
+   <div>
+  <!-- <app-add-update-contract (contractCreated)="createNewContract($event)" [contractInfo]="currentContract" [contractData]="contractData" [editData]="editData">
+   </app-add-update-contract>-->
+  <!-- <app-contract-grid [contractData]="contractData"></app-contract-grid>-->
+
+  <div class="page-wrapper">
+    <div class="page-content">
+   <div class="row" >
+         <div class="col-12 col-md-12 col-lg-12 text-right">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary" (click)="newButtonContractClick()">
+                    <i class="mdi mdi-file-plus m-r-xs"></i> Add Client Contract</button>
+            </div>
+        </div>
+    </div>
+            <div class="text-center ma-5" *ngIf="spinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+                                        Please wait...
+                      </button>
+                </div>
+                <br>
+                <div class="content m-b report-content" *ngIf="!spinner">
+            <angular-slickgrid gridId="grid2" [columnDefinitions]="contractColumndefinitions" [gridOptions]="gridOptions" [dataset]="contractdataset" gridWidth="100%" (sgOnClick)="onCellClickedContract($event.detail.eventData, $event.detail.args)" (onAngularGridCreated)="angularGridReady($event)"
+                (onAngularGridCreated)="angularGridReady($event)">
+            </angular-slickgrid>
+        </div>
+       
+    </div>
+</div>
+
+<div id="modaldeleteconfimation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modaldeleteconfimation" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="col-xs-11">
+                    <h4 class="modal-title" id="modaldeleteconfimation">Confirmation</h4>
+                </div>
+                <div class="col-xs-1">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                              aria-hidden="true">&times;</span>
+                      </button>
+                </div>
+            </div>
+            <div class="modal-body alert-warning">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-warning fa-3x "></i>
+                    </div>
+                    <div class="col-xs-10">
+                        <div>
+                            <h5>
+                                Are you sure you want to delete this value <span> {{deleteColumn}}</span>?
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-sm" (click)="delete()">Yes</button> &nbsp;
+                <button class="btn btn-default btn-sm" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+  </div>
+  </div>
+
+<div >
+</div>

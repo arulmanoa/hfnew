@@ -1,0 +1,297 @@
+.card-box {
+  padding: 20px;
+  border-radius: 3px;
+  margin-bottom: 30px;
+  background-color: #fff;
+  
+}
+.custom-font-family {
+font-family: Roboto;
+font-size: 14px;
+font-weight: 500;
+line-height: 16.41px;
+text-align: left;
+
+}
+
+.file-man-box {
+  padding: 20px;
+  /* border: 1px solid #f1f5f7; */
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.file-man-box .file-close {
+  color: #f1556c;
+  position: absolute;
+  line-height: 24px;
+  font-size: 24px;
+  right: 10px;
+  top: 10px;
+  visibility: hidden
+}
+
+.file-man-box .file-img-box {
+  line-height: 120px;
+  text-align: center
+}
+
+.file-man-box .file-download {
+  font-size: 32px;
+  color: #98a6ad;
+  position: absolute;
+  right: 10px
+}
+
+.file-man-box .file-download:hover {
+  color: #313a46
+}
+
+.file-man-box .file-man-title {
+  padding-right: 25px
+}
+
+.file-man-box:hover {
+  -webkit-box-shadow: 0 0 24px 0 rgba(0, 0, 0, .06), 0 1px 0 0 rgba(0, 0, 0, .02);
+  box-shadow: 0 0 24px 0 rgba(0, 0, 0, .06), 0 1px 0 0 rgba(0, 0, 0, .02)
+}
+
+.file-man-box:hover .file-close {
+  visibility: visible
+}
+.text-overflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+h5 {
+  font-size: 15px;
+}
+
+.action-btns{
+  display: flex;
+  position: absolute;
+  top: 25px;
+  /* right: 30px; */
+}
+
+.video-dimension{
+  width: 80vw !important;
+  height:67vh;
+}
+
+.previous{
+  background-color: #f1f1f1;
+  color: black;
+}
+
+/* #actionbtns:hover{
+  display: inline-block;
+} */
+
+.customjustify {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.node .hover-display {
+  display: none;
+}
+
+.node:hover .hover-display {
+  display: flex;
+}
+
+.folder-man-box {
+  padding: 20px;
+  border: 1px solid #f1f5f7;
+  position: relative;
+  margin-bottom: 20px;
+  Width:250px;
+  Height:180px
+}
+
+@media (max-width: 685px) {
+  #extension-img {
+      height: 27px; 
+      width: 27px;
+  }
+}
+@media (max-width: 950px) {
+  #file-box {
+      height: 90px !important; 
+  }
+}
+@media (min-width: 690px) and (max-width: 1024px) {
+  #extension-img {
+      height: 27px;
+      width: 27px;
+  }
+}
+
+
+.p-l-r-10 {
+padding-left: 10px;
+  padding-right: 10px;
+}
+
+.p-l-r-0 {
+padding-left: 0px;
+  padding-right: 0px;
+}
+
+.header-title-container {
+width: 400px;
+display: flex;
+}
+
+.header_title {
+margin-top: 2px;
+margin-left: 4px;
+font-weight: 500;
+}
+
+.header_title_span {
+font-size: large;
+font-weight: 600;
+}
+
+.text-center.ma-5 {
+margin: 5rem 0;
+}
+
+.header_title_span {
+font-size: 13px;
+color: #333333;
+}
+
+.form-group-vertical.ml-md-5.mt-md-4 {
+margin-left: 2rem;
+margin-top: 1rem;
+}
+
+.folder-count {
+display: inline;
+font-weight: 500;
+}
+
+.search-container {
+display: inline;
+}
+
+.search-input {
+width: 208px;
+float: right;
+}
+
+.folder-man-box {
+padding: 14px;
+box-shadow: 0px 2px 8px 0px #0000001A;
+border-radius: 10px;
+cursor: pointer;
+}
+
+.file-img-box {
+line-height: 112px;
+text-align: center;
+}
+
+.file-man-title {
+padding-right: 0px;
+margin-top: 50px;
+}
+
+.folder-name {
+font-size: 12px;
+display: block;
+margin: 0 auto;
+font-weight: 700;
+}
+
+.folder-files-count {
+font-weight: 300;
+margin-top: 2px;
+font-size: small;
+}
+
+.folder-text-center {
+display: block;
+margin: 0 auto;
+text-align: center;
+}
+
+.files-count {
+display: inline;
+font-weight: 500;
+}
+
+.card-box {
+cursor: pointer;
+padding: 0px;
+}
+
+.file-box {
+box-shadow: 0px 2px 8px 0px #0000001a;
+height: 67px;
+margin: 0px;
+border-radius: 10px;
+}
+
+.file-box-title {
+padding: 0px;
+}
+
+.file-name {
+font-size: 12px;
+text-align: left;
+display: block;
+margin: 0 auto;
+font-weight: 500;
+border: none !important;
+}
+
+.file-view-icon {
+cursor: pointer;
+display: inline-block;
+padding-right: 5px;
+}
+
+.file-download-icon {
+cursor: pointer;
+display: inline-block;
+padding-left: 5px;
+}
+
+.modal.fade.show {
+display: block;
+}
+
+.video-dimension {
+width: 100%;
+}
+
+.folder-box {
+  min-width: 200px;
+}
+.folder-man-box {
+ 
+  padding: 10px; 
+  margin: 10px; 
+  /* box-sizing: border-box;  */
+}
+/* .file-img-box {
+  width: 50px;
+  height: 50px;
+} */
+.file-man-title {
+  width: 100%; 
+}
+.text-overflow {
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+}

@@ -1,0 +1,266 @@
+<div>
+  <div class="row">
+    <div class="header col-md-10">
+      <div class="kt-header__topbar-user pull-left">
+        <a class="nav-link waves-effect waves-light nav-user" href="javascript:;" role="button" aria-haspopup="false"
+          aria-expanded="false">
+          <span
+            class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">
+            {{userName | uppercase}}
+          </span>
+        </a>
+      </div>
+      <div class="title mt-3">{{rowData.EmployeeName}}</div>
+      <!-- <div class="subtitle">{{rowData.EmployeeCode}}</div > -->
+      <!-- <div class="clearfix"></div> -->
+    </div>
+    <div class="col-md-2">
+      <p class="resignation-success-text mt-3" *ngIf="rowData.Status == 'approved'">{{rowData.Status}}</p>
+      <p class="resignation-rejected-text mt-3" *ngIf="rowData.Status == 'rejected'">{{rowData.Status}}</p>
+      <p class="resignation-revoked-text mt-3" *ngIf="rowData.Status == 'revoked'">{{rowData.Status}}</p>
+      <p class="resignation-pending-text mt-3" *ngIf="rowData.Status == 'Pending'">{{rowData.Status}}</p>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+
+  <div class="row">
+
+    <div class="form-group form-group-vertical col-md-6" *ngIf="rowData.FnFTransactionType">
+      <label class="form-label resignation-label">Transaction Type</label>
+      <span class="resignation-text-bold">{{rowData.FnFTransactionType ? rowData.FnFTransactionType == 1 ? 'Separation' : 'Resignation' :
+        '-'}}
+      </span>
+    </div> 
+
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Employee Code</label>
+      <p class="resignation-text-bold">{{rowData.EmployeeCode ? rowData.EmployeeCode : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Designation</label>
+      <p class="resignation-text-bold">{{rowData.Designation ? rowData.Designation : '-' }}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Date of Joining</label>
+      <p class="resignation-text-bold">{{rowData.DOJ ? rowData.DOJ : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Location</label>
+      <p class="resignation-text-bold">{{rowData.Location ? rowData.Location : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Reporting To</label>
+      <p class="resignation-text-bold">{{rowData.ReportingTo ? rowData.ReportingTo : '-'}}</p>
+      <!-- reporing to needs to be send -->
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Employement Type</label>
+      <p class="resignation-text-bold">{{rowData.EmploymentType ? rowData.EmploymentType: '-'}}</p>
+      <!-- employment type needs to be send -->
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">{{rowData.FnFTransactionType == 1 ? 'Terminated On' : 'Resigned On' }} </label>
+      <p class="resignation-text-bold">{{rowData.ResignedOn ? rowData.ResignedOn: '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">{{rowData.FnFTransactionType == 1 ? 'Expected LWD' : 'Requested Relieving Date' }}  </label>
+      <p class="resignation-text-bold">{{rowData.RequestedRelievingDate ? rowData.RequestedRelievingDate : '-'}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">{{rowData.FnFTransactionType == 1 ? 'Reason' : 'Employee - (Reason)' }} </label>
+      <p class="resignation-text-bold">{{rowData.Reason}}</p>
+    </div>
+
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">{{rowData.FnFTransactionType == 1 ? 'Remarks' : 'Employees Remarks' }} </label>
+      <p class="resignation-text-bold">{{ rowData.Remarks }}</p>
+    </div>
+    
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Notice Period</label>
+      <p class="resignation-text-bold">{{rowData.NoticePeriod}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6" *ngIf="rowData.RelievingDateAsPerNoticePeriod">
+      <label class="form-label resignation-label">Relieving Date as per Notice Period</label>
+      <p class="resignation-text-bold">{{rowData.RelievingDateAsPerNoticePeriod}}</p>
+    </div>
+
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">{{rowData.FnFTransactionType == 1 ? 'Actual LWD' : 'Approved Reliving Date' }}  </label>
+      <p class="resignation-text-bold">{{rowData.ApprovedRelievingDate ? rowData.ApprovedRelievingDate : '-'}}</p>
+      <!-- we are not getting -->
+    </div>
+    <div class="form-group form-group-vertical col-md-6" *ngIf="rowData.FnFTransactionType != 1">
+      <label class="form-label resignation-label">Manager's Remarks</label>
+      <p class="resignation-text-bold">{{rowData.ManagerRemarks ? rowData.ManagerRemarks : '-'}}</p>
+      <!-- we are not getting -->
+    </div>
+
+    <div class="form-group form-group-vertical col-md-6" *ngIf="rowData.DocumentId > 0">
+      <label class="form-label resignation-label">Attachment</label>
+      <!-- <p class="resignation-text-bold"> -->
+      <h6 class="form_body_content_span downloadattachmentbtn" (click)="downloadAttachments(rowData.DocumentId,rowData.DocumentName)" matTooltip="download attachment">
+        {{rowData.DocumentName}}
+        <span style="cursor: pointer;display: inline-block;padding-right: 5px;" 
+          title="download attachment">
+          <i class="mdi mdi-download"
+            style="display: block; top: 5px;position: relative;color: #FFF;font-size: 18px;"></i>
+        </span>
+
+      </h6>
+      <!-- </p> -->
+      <!-- we are not getting -->
+    </div>
+
+    <div class="form-group form-group-vertical col-md-6" *ngIf="roleCode == 'CorporateHR'">
+      <label class="form-label resignation-label">NDC Status</label>
+      <p class="resignation-text-bold"
+        [ngStyle]="{ color: rowData.NDCStatus == 'No Due' ? 'green !important' : 'none'}">{{rowData.NDCStatus ?
+        rowData.NDCStatus : '-'}}</p> <!-- we are not getting -->
+    </div>
+    <div class="form-group form-group-vertical col-md-12"
+      *ngIf="ndcDocuments != undefined && ndcDocuments.length > 0 && roleCode == 'CorporateHR'">
+      <label class="form-label resignation-label">NDC Info</label>
+      <table class="table table-striped table-bordered">
+        <thead class="text-center">
+          <tr>
+            <th>Department Name</th>
+            <th>Recovery Amount</th>
+            <th>Recovery Remarks</th>
+            <th>Attachment</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr *ngFor="let ndc of ndcDocuments;let i = index">
+            <td>{{ ndc.DepartmentName ? ndc.DepartmentName : '-'}}</td>
+            <td>{{ ndc.aa[0].RecoveryAmount ? ndc.aa[0].RecoveryAmount : '-'}}</td>
+            <td>{{ ndc.aa[0].RecoveryRemarks ? ndc.aa[0].RecoveryRemarks : '-'}}</td>
+            <td>
+              <p class="control pt-2" *ngIf="ndc.aa && ndc.aa.length > 0">
+                <span class="file-name"
+                  *ngIf="ndc.aa[0].DocumentId != 0 && ndc.aa[0].DocumentName != ''; else noAttachFound">
+                  <button class="btn btn-primary c-btn" *ngIf="!isZipFile(ndc.aa[0].DocumentName)"
+                    (click)="previewImage(ndc.aa[0].DocumentId, ndc.aa[0].DocumentName )">
+                    <a matTooltip="Preview Attachment"
+                      style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block;margin-top: -5px;">
+                      <i class="fa fa-file-image-o"></i>
+                    </a>
+                  </button>
+                  
+                  <button class="btn btn-primary c-btn" *ngIf="isZipFile(ndc.aa[0].DocumentName)"
+                    (click)="downloadAttachments(ndc.aa[0].DocumentId, ndc.aa[0].DocumentName )">
+                    <a matTooltip="Download Attachment"
+                      style="padding-left: 10px;font-size: 15px;cursor: pointer;display: block;margin-top: -5px;">
+                      <i class="fa fa-download"></i>
+                    </a>
+                  </button>
+
+                  <a target="blank" class="ahref" style="padding: 2px;font-size: 10px;">
+                    {{ndc.aa[0].DocumentName }}
+                  </a>
+                </span>
+                <ng-template #noAttachFound>No Attachment Found</ng-template>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- <div class="row">
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Reason</label>
+      <p class="resignation-text-bold">{{rowData.Reason}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Resigned On</label>
+      <p class="resignation-text-bold">{{rowData.ResignedOn}}</p>
+    </div> 
+  </div>
+
+  <div class="row">
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Requested Relieving Date</label>
+      <p class="resignation-text-bold">{{rowData.RequestedRelievingDate}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Notice Period</label>
+      <p class="resignation-text-bold">{{rowData.NoticePeriod}}</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group form-group-vertical col-md-12">
+      <label class="form-label resignation-label">Remarks</label>
+      <p class="resignation-text">{{rowData.Remarks}}</p>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="roleCode == 'CorporateHR'">
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Client Name</label>
+      <p class="resignation-text-bold">{{rowData.ClientName}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Designation</label>
+      <p class="resignation-text-bold">{{rowData.Designation}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">DOJ</label>
+      <p class="resignation-text-bold">{{rowData.DOJ}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Recovery Remarks</label>
+      <p class="resignation-text-bold">{{rowData.RecoveryRemarks == '' ? '-' : rowData.RecoveryRemarks}}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Resignation Reason</label>
+      <p class="resignation-text-bold">{{rowData.ResignationReason == '' ? '-' : rowData.ResignationReason }}</p>
+    </div>
+    <div class="form-group form-group-vertical col-md-6">
+      <label class="form-label resignation-label">Resignation Remarks</label>
+      <p class="resignation-text-bold">{{rowData.ResignationRemarks == '' ? '-' : rowData.ResignationRemarks }}</p>
+    </div>
+  </div> -->
+
+
+
+  <!-- <div class="row">
+    <div class="form-group form-group-vertical col-md-12">
+      <label class="form-label resignation-label" *ngIf="rowData.Status == 'revoked' ">Revoke Remarks</label>
+      <label class="form-label resignation-label" *ngIf="rowData.Status == 'approved' || rowData.Status == 'Approved'">Approval Remarks</label>
+      <label class="form-label resignation-label" *ngIf="rowData.Status == 'rejected' || rowData.Status == 'Rejected'">Rejection Remarks</label>
+      <label class="form-label resignation-label" *ngIf="rowData.Status == 'Pending' || rowData.Status == 'Pending'">Manager Remarks</label>
+      <p class="resignation-text">{{rowData.ManagerRemarks ? rowData.ManagerRemarks : '-'}}</p>
+    </div>
+  </div> -->
+
+  <!-- <div class="row">
+    <div class="form-group form-group-vertical col-md-12">
+      <label class="form-label resignation-label" *ngIf="rowData.Status == 'revoked' ">Revoked On</label>
+      <label class="form-label resignation-label" *ngIf="rowData.Status == 'approved' || rowData.Status == 'Approved'">Approved On</label>
+      <label class="form-label resignation-label" *ngIf="rowData.Status == 'rejected' || rowData.Status == 'Rejected'">Rejected On</label>
+      <p class="resignation-text">{{rowData.ValidatedOn}}</p>
+    </div>
+  </div> -->
+  <div class="modal-footer" *ngIf="rowData.Status == 'Pending'">
+    <div class="row">
+      <div class="pull-right m-r-sm">
+        <div>
+          <div>
+            <button id="submitRejectResignBtn" class="btn btn-danger m-r-sm" type="button"
+              (click)="rejectResignation()">
+              Reject
+            </button>
+            <button id="submitApproveResignBtn" class="btn btn-success pull-right" type="button"
+              (click)="approveResignation()">
+              Approve
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

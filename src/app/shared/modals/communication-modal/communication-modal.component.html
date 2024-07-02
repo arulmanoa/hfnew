@@ -1,0 +1,229 @@
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="">
+              <div class="modal-header" style="padding: 15px !important;">
+                  <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                    <small class="header-pretitle"><b>Emergency Contact Details</b></small>
+                    <h6 class="modal-title subheader_h6"> New </h6>
+                  </div>                                <div class="modal-close" *ngIf="isLoading" (click)="confirmExit()" style="margin-top: 5px;"><span
+                      class="mdi mdi-close pull-left"></span>
+                  </div>
+                </div>
+
+
+              <div class="modal-body no-padder">
+
+                  <div id="overlay">
+                      <div class="w-100 d-flex justify-content-center align-items-center">
+                          <div class="spinner"></div>
+                      </div>
+                  </div>
+
+
+                  <div class="flex-column">
+
+                      <form [formGroup]="communicationForm">
+
+                          <div class="col-12 col-md-12 col-sm-12">
+                              <div class="clearfix">
+                                  <div class="d-flex align-items-center" *ngIf="isrendering_spinner">
+                                      <strong class="text-center"> Rendering... &nbsp;&nbsp;&nbsp;</strong>
+                                      <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                                  </div>
+
+
+
+                                  <div class="row" *ngIf="!isrendering_spinner">
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                      <label class="form-label ">Contact Person Name <span class="required" >*</span></label>
+                                      <input class="form-control" name="ContactPersonName" spellcheck="false"
+                                       formControlName="ContactPersonName" placeholder="Contact Person Name" [ngClass]="{ 'is-invalid': submitted && g.ContactPersonName .errors }"
+                                          type="text" autocomplete="off">
+                                      <div *ngIf="submitted && g.ContactPersonName .errors" class="invalid-feedback">
+                                          <div *ngIf="g.ContactPersonName .errors.required">Contact Person Name is required
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  <div class="form-group form-group-vertical col-xs-12 col-sm-6 " >
+                                    <label class="form-label ">Contact Person Number <span class="required" >*</span></label>
+                                    <input class="form-control" name="EmergencyContactNo" spellcheck="false"  formControlName="EmergencyContactNo" placeholder="Contact Person Mobile Number"
+                                     [ngClass]="{ 'is-invalid': submitted && g.EmergencyContactNo .errors }"
+                                        type="text" autocomplete="off">
+                                    <div *ngIf="submitted && g.EmergencyContactNo .errors" class="invalid-feedback">
+                                        <div *ngIf="g.EmergencyContactNo .errors.required">Emergency Contact No is required
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-group-vertical col-xs-12  col-sm-6" >
+                                  <label class="form-label">Relationship <span class="required" >*</span></label>
+                                  <ng-select [items]="relationshipLst" placeholder="-- select an option --" formControlName="RelationShip" [ngClass]="{ 'ng-touched': submitted && g.RelationShip.invalid }" bindLabel="name" bindValue="id">
+                                  </ng-select>
+                                  <div *ngIf="submitted && g.RelationShip.invalid" class="help-block">
+                                      <div *ngIf="g.RelationShip.errors.required">Relationship is required
+                                      </div>
+                                  </div>
+                                </div>
+
+                                <div class="form-group form-group-vertical col-xs-12">
+                                <label class="form-label">Address Line 1
+                                    <span
+                                        class="required">*</span>
+                                    <span class="form__length">
+                                        {{ Address1.value?.length }}/50</span>
+                                </label>
+                                <input class="form-control" name="Address1"
+                                    #Address1 maxlength="50"
+                                    formControlName="Address1"
+                                    [ngClass]="{'is-invalid': submitted && g.Address1.errors }"
+                                    placeholder="Falt/Building/Door No" spellcheck="off">
+                                <div *ngIf="submitted && g.Address1.errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="g.Address1.errors.required">Address
+                                        details is required
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group form-group-vertical col-xs-12">
+                                <label class="form-label">Address Line 2 </label>
+                                <input class="form-control" name="Address2"
+                                    formControlName="Address2"
+                                    placeholder="Street/Area/Locality" spellcheck="off">
+
+                            </div>
+                            <div class="form-group form-group-vertical col-xs-12">
+                                <label class="form-label">Address Line 3 </label>
+                                <input class="form-control" rows="5" cols="40"
+                                    name="Address3"
+                                    formControlName="Address3" placeholder="City/Town"
+                                    spellcheck="off">
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group form-group-vertical col-xs-12">
+                                        <label class="form-label">Country Name <span
+                                                class="required"> *</span></label>
+                                        <ng-select [items]="CountryList"
+                                            (change)="onChangeStateByCountryId($event)"
+                                            placeholder="-- select an option --"
+                                            formControlName="CountryId"
+                                            [ngClass]="{'ng-touched': submitted && g.CountryId.errors }"
+                                            bindLabel="Name" bindValue="Id">
+                                        </ng-select>
+                                        <div *ngIf="submitted && g.CountryId.invalid"
+                                            class="help-block">
+                                            <div *ngIf="g.CountryId.errors.required">Country is
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group form-group-vertical col-xs-12">
+                                        <label class="form-label">State Name <span
+                                                class="required"> * </span></label>
+                                        <ng-select [items]="StateList"
+                                            placeholder="-- select on option --"
+                                            formControlName="StateId"
+                                            [ngClass]="{'ng-touched': submitted && g.StateId.errors }"
+                                            bindLabel="Name" bindValue="Id">
+                                        </ng-select>
+                                        <div *ngIf="submitted && g.StateId.invalid"
+                                            class="help-block">
+                                            <div *ngIf="g.StateId.errors.required">State Name
+                                                is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group form-group-vertical col-xs-12">
+                                        <label class="form-label">City
+                                            <span class="required">*</span>
+
+                                        </label>
+                                        <input class="form-control" type="text" name="City"
+                                            formControlName="City"
+                                            [ngClass]="{'is-invalid': submitted && g.City.errors }"
+                                            placeholder="Bangalore" autocomplete="none|false|no">
+                                        <div *ngIf="submitted && g.City.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="g.City.errors.required">City is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group form-group-vertical col-xs-12">
+                                        <label class="form-label">Pincode
+                                            <span
+                                                class="required">*</span>
+                                            <span class="form__length">
+                                                {{ PinCode.value?.length }}/6</span>
+                                        </label>
+                                        <input class="form-control" type="text" minlength="6"
+                                            onkeypress="return /^[0-9]+$/i.test(event.key)"
+                                            name="PinCode" #PinCode maxlength="6"
+                                            formControlName="PinCode"
+                                            [ngClass]="{'is-invalid': submitted && g.PinCode.errors }"
+                                            placeholder="560001" autocomplete="none|false|no">
+                                      
+                                        <div *ngIf="submitted && g.PinCode.invalid"
+                                            class="help-block">
+                                            <div *ngIf="g.PinCode.errors.required">Pincode is
+                                                required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                              </div>
+
+                                  </div>
+                              </div>
+
+                          </div>
+
+
+                      </form>
+
+                  </div>
+
+              </div>
+
+
+              <div class="modal-footer">
+                  <div *ngIf="isLoading">
+                      <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel</button>
+                      <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                          <div>
+                              <div>
+                                  <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" [disabled]="!disableBtn" (click)="savebutton()">
+                                        <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save </span></div>
+                                    </button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="d-flex align-items-center" *ngIf="!isLoading">
+                      <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                      <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                  </div>
+
+
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

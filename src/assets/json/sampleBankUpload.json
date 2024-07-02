@@ -1,0 +1,457 @@
+{
+    "Id": 6,
+    "Code": "BankUpload",
+    "Name": "Bank Upload",
+    "CompanyId": 5,
+    "ImportTree": {
+        "DataSource": {
+            "Name": "Bank",
+            "Type": 1,
+            "IsCoreEntity": false
+        },
+        "RelationWithParent": 2,
+        "Children": []
+    },
+    "ControlElementsList": [
+        {
+            "Label": "EmployeeId",
+            "FieldName": "EmployeeId",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "EmployeeCode",
+            "FieldName": "EmployeeCode",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "EmployeeName",
+            "FieldName": "EmployeeName",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "ClientName",
+            "FieldName": "ClientName",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "PayTransactionId",
+            "FieldName": "PaytransactionId",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "BankName",
+            "FieldName": "BankName",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "IFSCCode",
+            "FieldName": "IFSCCode",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "AccountNumber",
+            "FieldName": "AccountNumber",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "Narration",
+            "FieldName": "Narration",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "Status",
+            "FieldName": "Status",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "AcknowledgmentDetail",
+            "FieldName": "AcknowledgmentDetail",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "IsPaymentDone",
+            "FieldName": "IsPaymentDone",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "NetPay",
+            "FieldName": "NetPay",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        },
+        {
+            "Label": "PaymentDate",
+            "FieldName": "PaymentDate",
+            "EntityList": [
+                "Bank"
+            ],
+            "InputControlType": 0,
+            "Type": 0
+        }
+    ],
+    "CreateExcelConfiguration": {
+        "DataSource": {
+            "Name": "GetPayOutDetailsForUpload",
+            "Type": 0,
+            "IsCoreEntity": false
+        },
+        "GridConfiguration": {
+            "DataSource": {
+                "Name": "GetPayOutDetailsForUpload",
+                "Type": 0,
+                "IsCoreEntity": false
+            },
+            "ColumnDefinitionList": [
+                {
+                    "Id": "EmployeeCode",
+                    "FieldName": "EmployeeCode",
+                    "DisplayName": "Employee Code",
+                    "IsFilterable": true,
+                    "Width": 0
+                },
+                {
+                    "Id": "EmployeeName",
+                    "FieldName": "EmployeeName",
+                    "DisplayName": "Employee Name",
+                    "Width": 0
+                },
+                {
+                    "Id": "ClientName",
+                    "FieldName": "ClientName",
+                    "DisplayName": "ClientName",
+                    "IsFilterable": true,
+                    "Width": 0
+                },
+                {
+                    "Id": "PayPeriodName",
+                    "FieldName": "PayPeriodName",
+                    "DisplayName": "PayPeriod Name",
+                    "IsFilterable": true,
+                    "Width": 0
+                }
+            ],
+            "ShowDataOnLoad": false,
+            "IsPaginationRequired": false,
+            "EnableColumnReArrangement": true,
+            "IsColumnPickerRequired": true,
+            "IsSummaryRequired": false,
+            "IsGroupingEnabled": false,
+            "DefaultGroupingFields": [],
+            "PinnedRowCount": -1,
+            "PinnedColumnCount": -1,
+            "PinRowFromBottom": true,
+            "IsMultiSelectAllowed": true,
+            "RowSelectionCheckBoxRequired": true,
+            "RowSelectionType": 1
+        },
+        "SearchConfiguration": {
+            "SearchElementList": [
+                {
+                    "DataSource": {
+                        "EntityType": 0,
+                        "IsCoreEntity": false,
+                        "Name": "ClientView",
+                        "Type": 1
+                    },
+                    "DefaultValue": "0",
+                    "DisplayFieldInDataset": "ClientName",
+                    "FieldName": "@clientId",
+                    "DisplayName": "Client Name",
+                    "ForeignKeyColumnNameInDataset": "Id",
+                    "InputControlType": 2,
+                    "IsIncludedInDefaultSearch": true,
+                    "TriggerSearchOnChange": false,
+                    "MultipleValues": null,
+                    "Value": null,
+                    "DropDownList": [],
+                    "ParentFields": null,
+                    "ParentHasValue": [],
+                    "GetValueFromUser": false,
+                    "SendElementToGridDataSource": true
+                },
+                { 
+              "DataSource" : {
+                "IsCoreEntity" : false,
+                "Name" : "clientcontract",
+                "Type" : 1
+              },
+              "DefaultValue" : "230",
+              "DisplayFieldInDataset" : "Name",
+              "FieldName" : "@clientcontractId",
+              "DisplayName" : "Contract Name",
+              "ForeignKeyColumnNameInDataset" : "Id",
+              "IsIncludedInDefaultSearch" : true,
+              "InputControlType" : 2,
+              "Value" : null,
+              "TriggerSearchOnChange" : false,
+              "ReadOnly" : true,
+              "DropDownList" : [],
+              "ParentHasValue" : [],
+              "ParentFields" : ["@clientId"],
+              "MultipleValues" : null,
+              "GetValueFromUser" : true,
+              "RefrenceFieldNameInSearchElements" : "@clientcontractId",
+              "SendElementToGridDataSource" : true
+            } ,
+                {
+                    "FieldName": "@processCategory",
+                    "DisplayName": "Transaction Type",
+                    "Value": null,
+                    "DataSource": {
+                        "Name": "",
+                        "Type": 2
+                    },
+                    "DropDownList": [
+                        {
+                            "label": "Salary",
+                            "value": 1
+                        },
+                        {
+                            "label": "Adhoc Payment",
+                            "value": 2
+                        },
+                        {
+                            "label": "Reimbursement",
+                            "value": 3
+                        },
+                        {
+                            "label": "FnF",
+                            "value": 4
+                        }
+                    ],
+                    "ForeignKeyColumnNameInDataset": "value",
+                    "DisplayFieldInDataset": "label",
+                    "InputControlType": 2,
+                    "IsIncludedInDefaultSearch": true,
+                    "TriggerSearchOnChange": false,
+                    "ParentFields": null,
+                    "ParentHasValue": [],
+                    "GetValueFromUser": false,
+                    "SendElementToGridDataSource": true
+                },
+                {
+                    "FieldName": "@month",
+                    "DisplayName": "Month",
+                    "Value": null,
+                    "DataSource": {
+                        "Name": "MonthView",
+                        "Type": 1,
+                        "IsCoreEntity": false
+                    },
+                    "DropDownList": [],
+                    "ForeignKeyColumnNameInDataset": "Id",
+                    "DisplayFieldInDataset": "MName",
+                    "InputControlType": 2,
+                    "IsIncludedInDefaultSearch": true,
+                    "TriggerSearchOnChange": false,
+                    "ParentFields": null,
+                    "ParentHasValue": [],
+                    "GetValueFromUser": false,
+                    "SendElementToGridDataSource": true
+                },
+                {
+                    "FieldName": "@year",
+                    "DisplayName": "Year",
+                    "Value": null,
+                    "DataSource": {
+                        "Name": "YearView",
+                        "Type": 1,
+                        "IsCoreEntity": false
+                    },
+                    "DropDownList": [],
+                    "ForeignKeyColumnNameInDataset": "Year",
+                    "DisplayFieldInDataset": "Year",
+                    "InputControlType": 2,
+                    "IsIncludedInDefaultSearch": true,
+                    "TriggerSearchOnChange": false,
+                    "ParentFields": null,
+                    "ParentHasValue": [],
+                    "GetValueFromUser": false,
+                    "SendElementToGridDataSource": true
+                }
+            ],
+            "SearchPanelType": 1,
+            "SearchButtonRequired": true,
+            "ClearButtonRequired": true
+        },
+        "FillWithDataAllowed": true
+    },
+    "SaveExcelDataConfiguration": {
+        "EntityRelations": {},
+        "UniqueIdentifiers": {},
+        "UseGeneralApi": false,
+        "ApiName": "api/PayOut/UpdateBankPayOutInformation",
+        "ApiRequestType": 2,
+        "UseGeneralSP": false,
+        "DataSource": {
+            "Name": "EmploymentDetailsImport",
+            "Type": 0,
+            "IsCoreEntity": false
+        },
+        "DisplayDataGridAfterApiResult": true,
+        "BeforeUploadGridConfiguration": {
+            "DataSource": {
+                "Name": "FillDataForSalaryRevisionImport",
+                "Type": 0,
+                "IsCoreEntity": false
+            },
+            "ColumnDefinitionList": [
+                {
+                    "Id": "EmployeeCode",
+                    "FieldName": "EmployeeCode",
+                    "DisplayName": "Emp. Code",
+                    "IsFilterable": true,
+                    "Width": 0
+                },
+                {
+                    "Id": "EmployeeName",
+                    "FieldName": "EmployeeName",
+                    "DisplayName": "Emp. Name",
+                    "IsFilterable": true
+                },   
+                {
+                    "Id": "AcknowledgmentDetail",
+                    "FieldName": "AcknowledgmentDetail",
+                    "DisplayName": "UTR",
+                    "IsFilterable": true,
+                    "Width": 0
+                },             
+                {
+                    "Id": "PaymentDate",
+                    "FieldName": "PaymentDate",
+                    "DisplayName": "Payment Date",
+                    "IsFilterable": true
+                },
+                {
+                    "Id": "NetPay",
+                    "FieldName": "NetPay",
+                    "DisplayName": "Net Pay",
+                    "IsFilterable": true
+                }
+            ],
+            "ShowDataOnLoad": true,
+            "IsPaginationRequired": false,
+            "DisplayFilterByDefault": false,
+            "EnableColumnReArrangement": true,
+            "IsColumnPickerRequired": true,
+            "IsSummaryRequired": false,
+            "IsGroupingEnabled": false,
+            "DefaultGroupingFields": [
+                "Code",
+                "Name"
+            ],
+            "PinnedRowCount": -1,
+            "PinnedColumnCount": -1,
+            "PinRowFromBottom": true,
+            "IsMultiSelectAllowed": true,
+            "RowSelectionCheckBoxRequired": false,
+            "RowSelectionType": 1
+        },
+        "ApiResultGridConfiguration": {
+            "DataSource": {
+                "Name": "",
+                "Type": 1,
+                "IsCoreEntity": false
+            },
+            "ColumnDefinitionList": [
+                {
+                    "Id": "EmployeeId",
+                    "FieldName": "EmployeeId",
+                    "DisplayName": "Employee Id",
+                    "IsFilterable": true,
+                    "Width": 0
+                },
+                {
+                    "Id": "EmployeeName",
+                    "FieldName": "EmployeeName",
+                    "DisplayName": "Employee Name"
+                },
+                {
+                    "Id": "StatusDisplay",
+                    "FieldName": "StatusDisplay",
+                    "DisplayName": "Status",
+                    "IsFilterable": true,
+                    "Width": 0
+                },
+                {
+                    "Id": "Message",
+                    "FieldName": "Message",
+                    "DisplayName": "Error Message",
+                    "IsFilterable": false,
+                    "Width": 0
+                }
+            ],
+            "ShowDataOnLoad": true,
+            "IsPaginationRequired": false,
+            "DisplayFilterByDefault": false,
+            "EnableColumnReArrangement": true,
+            "IsColumnPickerRequired": true,
+            "IsSummaryRequired": false,
+            "IsGroupingEnabled": false,
+            "DefaultGroupingFields": [
+                "Code",
+                "Name"
+            ],
+            "PinnedRowCount": -1,
+            "PinnedColumnCount": -1,
+            "PinRowFromBottom": true,
+            "IsMultiSelectAllowed": true,
+            "RowSelectionCheckBoxRequired": true,
+            "RowSelectionType": 1
+        },
+        "ShowAlertWarningIfFailed": false,
+        "DataFormat": 0
+    },
+    "Status": true
+}

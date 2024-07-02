@@ -1,0 +1,79 @@
+<!-- <app-banner-top [title]="'Template List'" [titleIcon]="'fa fa-object-group'"></app-banner-top>
+
+<div class="row toolbar">
+    <button class="toolbar-button add" (click)="addTemplate()"><i
+            class="fa fa-plus">&nbsp;</i>Add Template</button>|
+    <button class="toolbar-button add" (click)="editTemplate(true)"><i class="fa fa-copy">&nbsp;</i>Duplicate Template</button>|
+    <button class="toolbar-button edit" (click)="editTemplate(false)"><i class="fa fa-edit">&nbsp;</i>Edit Template</button>|
+    <button class="toolbar-button delete"><i class="fa fa-trash">&nbsp;</i>Delete Template</button>
+</div> -->
+
+<!-- <p-toolbar>
+    <div class="ui-toolbar-group-left">
+        <button pButton type="button" label="New" icon="pi pi-plus"></button>
+        <button pButton type="button" label="Upload" icon="pi pi-upload" class="ui-button-success"></button>
+            
+        <i class="pi pi-bars"></i>
+        
+        <p-splitButton label="Save" icon="pi pi-check" [model]="items" styleClass="ui-button-warning"></p-splitButton>
+    </div>
+    
+    <div class="ui-toolbar-group-right">
+        <button pButton type="button" icon="pi pi-search"></button>
+        <button pButton type="button" icon="pi pi-calendar" class="ui-button-success"></button>
+        <button pButton type="button" icon="pi pi-times" class="ui-button-danger"></button>
+    </div>
+</p-toolbar> -->
+
+<!-- <div class="container" id="grid-container" style="margin-top: 3rem;">
+    <fieldset>
+        <div class="col-sm-12">
+            <angular-slickgrid gridId="grdTemplatesList" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                gridWidth="100%">
+            </angular-slickgrid>
+        </div>
+    </fieldset>
+</div> -->
+
+
+
+
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-12 col-md-8 col-lg-12 text-right">
+              <div class="text-right">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <button type="button" class="toolbar-button add" class="btn btn-primary" (click)="addTemplate()"><i class="fa fa-plus"></i> Add Template</button></li>
+                  <!-- <li class="list-inline-item">
+                    <button  type="button" class="toolbar-button add" class="btn btn-primary" (click)="editTemplate(true)"><i class="fa fa-copy"></i>Duplicate Template</button>
+                  </li> -->
+                    
+                </ul>
+              </div>
+            </div>
+          
+          
+        </div>
+        <br>
+        <div class="text-center ma-5" *ngIf="spinner" >
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Pleas wait...
+          </button>
+        </div>
+
+        <!-- start slick grid data table   -->
+        <div class="content m-b report-content" id="grid-container" *ngIf="!spinner">
+        <!-- <fieldset> -->
+            <!-- <div class="col-sm-12"> -->
+            <angular-slickgrid gridId="grdTemplatesList" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                gridWidth="100%">
+            </angular-slickgrid>
+            <!-- </div> -->
+        <!-- </fieldset> -->
+        </div>
+    </div>
+</div>

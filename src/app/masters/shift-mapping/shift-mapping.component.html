@@ -1,0 +1,166 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+            <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+            Please wait...
+        </button>
+    </div>
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="!spinner">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="headerbar">
+            <div><h5 class="">Shift Mapping</h5></div>
+          </div>
+        </div>
+        <div class="col-md-4 text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item ng-star-inserted">
+              <button class="btn btn-sm btn-default" tooltip="Close" tooltip-placement="bottom" (click)="redirectToShiftMappingListingScreen()">
+                <i class="mdi mdi-close font-size-md"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex p-0">
+          <div class="col-3 col-md-3">
+            <label class="form-label ">Client</label>
+            <ng-select [items]="clientList" class="mt-1" (change)="onClientChange($event)" placeholder="Choose..." 
+              bindLabel="Name" bindValue="Id" [(ngModel)]="selectedClient" [multiple]="false">
+            </ng-select>
+          </div>
+          <div class="col-3 col-md-3">
+              <label class="form-label ">Client Contract</label>
+              <ng-select [items]="clientContractList" class="mt-1" (change)="onClientContractChange($event)" 
+                placeholder="Choose..." [disabled]="selectedClient == null || selectedClient == undefined"
+                bindLabel="Name" bindValue="Id" [(ngModel)]="selectedClientContract" [multiple]="false">
+              </ng-select>
+          </div>
+          <div class="col-3 col-md-3">
+              <label class="form-label ">Team</label>
+              <ng-select [items]="teamsList" class="mt-1" (change)="onTeamChange($event)" 
+                placeholder="Choose..." [disabled]="selectedClient == null || selectedClient == undefined"
+                bindLabel="Name" bindValue="Id" [(ngModel)]="selectedTeam" [multiple]="false">
+              </ng-select>
+          </div>
+          <div class="col-3 col-md-3">
+            <label class="form-label ">Location</label>
+            <ng-select [items]="locationList" class="mt-1" (change)="onLocationChange($event)" 
+              placeholder="Choose..."  [disabled]="selectedClient == null || selectedClient == undefined"
+              bindLabel="LocationName" bindValue="Id" [(ngModel)]="selectedLocation" [multiple]="false">
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12 col-md-12 d-flex p-0">
+          <div class="col-3 col-md-3">
+              <label class="form-label ">Employee</label>
+              <ng-select [items]="employeeDropdown" class="mt-1" (change)="onEmpDropDownChange($event)" placeholder="Choose..." 
+                bindLabel="name" bindValue="id" [(ngModel)]="selectedEmployeeDropdown" [disabled]="disableEmpDrpdwn" [multiple]="false">
+              </ng-select>
+          </div>
+          <div class="col-sm-12 col-md-3" *ngIf="selectedEmployeeDropdown == 0">
+            <label class="form-label ">Shift</label>
+            <ng-select [items]="shiftList" class="mt-1" (change)="onShiftDropdownChange($event)" placeholder="Choose..." 
+              bindLabel="Name" bindValue="Id" [(ngModel)]="selectedShift" [multiple]="false" 
+              [disabled]="selectedClient == null || selectedClient == undefined">
+              <ng-template ng-label-tmp let-item="item">
+                <span>{{item.Name + ' (' + item.modifiedStartTime + ' - ' + item.modifiedEndTime + ')'}}</span>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                <span>{{item.Name + ' (' + item.modifiedStartTime + ' - ' + item.modifiedEndTime + ')'}}</span>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="col-sm-12 col-md-3" *ngIf="selectedEmployeeDropdown == 0">
+              <label class="form-label ">Period From</label>
+              <input class="form-control" type="text" name="startDate" bsDatepicker placement="bottom"
+              (ngModelChange)="onChangeStartDate($event)" placeholder="DD-MM-YYYY" [minDate]="minDate" 
+              [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+              [(ngModel)]="selectedPeriodStartDate" autocomplete="off" readonly required>
+          </div>
+          <div class="col-sm-12 col-md-3" *ngIf="selectedEmployeeDropdown == 0">
+              <label class="form-label ">Period To</label>
+              <input class="form-control" type="text" name="endDate" [(ngModel)]="selectedPeriodEndDate" 
+              bsDatepicker placement="bottom" [minDate]="selectedPeriodStartDate" (ngModelChange)="onChangeEndDate($event)"
+              [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+              placeholder="DD-MM-YYYY" autocomplete="off"  readonly required>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-xxs-12 col-12 text-right mb-2" *ngIf="selectedEmployeeDropdown == 1 && employeesList && employeesList.length > 0">
+          <div class="col-lg-6" style="float: right;margin-right: 4%;">
+            <label class="form-label" style="text-align: left;">
+              Start searching by employee code or employee name
+            </label>
+            <input class="form-control" type="search" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+              placeholder="Start searching by employee code or employee name"
+            />
+          </div>
+        </div>
+        <div class="col-md-12 table-wrapper-scroll-y my-custom-scrollbar">
+          <div class="table-responsive table-height tableFixHead" style="width: 95%;"
+          *ngIf="selectedEmployeeDropdown == 1 && employeesList && employeesList.length > 0">
+            <table class="table table-sticky table-bordered tble-row-height mb-0 emp-specific-table">
+              <thead class="tbl-freezhead emp-specific-table-header">
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Employee Code</th>
+                  <th>Date Of Joining</th>
+                  <th>Designation</th>
+                  <th style="z-index: 10;">Shift</th>
+                  <th>Period From</th>
+                  <th>Period To</th>
+                </tr>
+              </thead>
+              <tbody class="tbl-scrollbody emp-specific-table-body">
+                <tr *ngFor="let obj of employeesList | filter: searchText; let i = index">
+                  <td style="padding-top: 2%;"> <span> {{obj.EmployeeName}} </span> </td>
+                  <td style="padding-top: 2%;"> <span> {{obj.EmployeeCode}} </span></td>
+                  <td style="padding-top: 2%;"> <span> {{obj.DOJ}} </span></td>
+                  <td style="padding-top: 2%;"> <span> {{obj.Designation}} </span></td>
+                  <td class="text-left" style="width: 25%;">
+                    <ng-select [items]="shiftList" class="mt-1" (change)="onEmpShiftDropdownChange($event)" placeholder="Choose..." 
+                      bindLabel="Name" bindValue="Id" [(ngModel)]="obj.Shift" [multiple]="false" [dropdownPosition]="'bottom'">
+                      <ng-template ng-label-tmp let-item="item">
+                        <span>{{item.Name + ' (' + item.modifiedStartTime + ' - ' + item.modifiedEndTime + ')'}}</span>
+                      </ng-template>
+                      <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                        <span>{{item.Name + ' (' + item.modifiedStartTime + ' - ' + item.modifiedEndTime + ')'}}</span>
+                      </ng-template>
+                    </ng-select>
+                  </td>
+                  <td>
+                    <input class="form-control" type="text" name="startDate" bsDatepicker placement="bottom"
+                    (ngModelChange)="onChangeEmployeeStartDate($event, obj)" placeholder="DD-MM-YYYY" [minDate]="minDate"
+                    [bsConfig]="{ showWeekNumbers:false, isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+                    [(ngModel)]="obj.selectedPeriodStartDate" autocomplete="off" readonly required>
+                  </td>
+                  <td>
+                    <input class="form-control" type="text" name="endDate" [(ngModel)]="obj.selectedPeriodEndDate" 
+                    bsDatepicker placement="bottom" [minDate]="obj.selectedPeriodStartDate" (ngModelChange)="onChangeEmployeeEndDate($event, obj)"
+                    [bsConfig]="{ showWeekNumbers:false, isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+                    placeholder="DD-MM-YYYY" autocomplete="off"  readonly required>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-center" *ngIf="selectedEmployeeDropdown == 1 && employeesList && employeesList.length == 0"><p>No Data Available</p></div>
+        </div>
+      </div>
+      <div class="row ml-1 mt-5">
+        <div class="ml-auto mr-3">
+          <button type="button" class="btn btn-default" style="margin-right: 8px;" (click)="redirectToShiftMappingListingScreen()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="submitShiftMapping()" [disabled]="disableSubmitBtn">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

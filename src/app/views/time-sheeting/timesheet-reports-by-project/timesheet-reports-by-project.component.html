@@ -1,0 +1,94 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+          <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+              aria-hidden="true"></span>
+          Please wait...
+      </button>
+    </div>
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="!spinner">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="headerbar">
+            <div><p class="headerTitle">Timesheet Report</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        
+        <div class="col-12 col-md-12 d-flex p-0">
+          <div class="col-xs-12 col-sm-2 col-md-2" *ngIf="BusinessType == 3">
+            <label class="form-label ">Client</label>
+            <ng-select [items]="clientList" class="mt-1" (change)="onClientChange($event)" placeholder="Choose..." 
+              bindLabel="Name" bindValue="Id" [(ngModel)]="selectedClient" [multiple]="false">
+            </ng-select>
+          </div>
+          <div class="col-xs-12 col-sm-2 col-md-2" *ngIf="BusinessType == 3">
+              <label class="form-label ">Client Contract</label>
+              <ng-select [items]="clientContractList" class="mt-1" (change)="onClientContractChange($event)" placeholder="Choose..." 
+                bindLabel="Name" bindValue="Id" [(ngModel)]="selectedClientContract" [multiple]="false" [disabled]="selectedClient == null">
+              </ng-select>
+          </div>
+          <div class="col-xs-12 col-sm-2 col-md-2">
+            <label class="form-label ">Project</label>
+            <ng-select [items]="projectList" class="mt-1" (change)="onProjectChange($event)" placeholder="Choose..." 
+              bindLabel="Name" bindValue="Id" [(ngModel)]="selectedProject" [multiple]="false" 
+              [clearable]="false" [disabled]="selectedClient == null">
+            </ng-select>
+        </div>
+          <div class="col-xs-12 col-sm-2 col-md-2">
+            <label class="form-label ">Period From</label>
+            <input class="form-control" type="text" name="startDate" bsDatepicker placement="bottom"
+            (bsValueChange)="onChangePeriodFrom($event)" placeholder="DD-MM-YYYY"
+            [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default',showClearButton: true, clearPosition: 'right'}"
+            [(ngModel)]="selectedPeriodFrom" autocomplete="off" readonly required>
+        </div>
+        <div class="col-xs-12 col-sm-2 col-md-2">
+            <label class="form-label ">Period To</label>
+            <input class="form-control" type="text" name="endDate" [(ngModel)]="selectedPeriodTo" 
+            bsDatepicker placement="bottom" [minDate]="selectedPeriodFrom" (bsValueChange)="onChangePeriodTo($event)"
+            [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY', containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}"
+            [maxDate]="maxDate"  placeholder="DD-MM-YYYY" autocomplete="off"  readonly required>
+        </div>
+        </div>
+      </div>
+      <div class="row ml-1">
+        <div class="ml-auto mr-3">
+          <button type="button" class="btn btn-primary" (click)="doSearch()" [disabled]="selectedProject == null">Generate Report</button>
+        </div>
+      </div>
+      <div class="row w-100">
+        <div class="col-12">
+          <div class="mx-auto text-center ma-5" *ngIf="tableSpinner">
+            <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+              <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                aria-hidden="true"></span>
+              Please wait...
+            </button>
+          </div>
+          <div class="col-md-12 m-0 p-0" *ngIf="!tableSpinner">
+            <div class="row w-100" style="padding-bottom: 10px; margin-top: 5px">
+              <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+                <ul class="list-inline" *ngIf="timesheetReport && timesheetReport.length > 0">
+                  <li class="list-inline-item">
+                    <button type="button" class="btn btn-primary-custom ml-3" (click)="exportExcel()">
+                      <i class="mdi mdi-file-excel m-r-xs"></i> Export Excel
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <angular-slickgrid gridId="projectsTimesheetReportId" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" 
+                [dataset]="timesheetReport" (onAngularGridCreated)="angularGridReady($event)">
+              </angular-slickgrid>
+            </div>
+          </div>
+        </div>
+        <br />
+      </div>
+    </div>
+  </div>
+</div>

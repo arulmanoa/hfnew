@@ -1,0 +1,175 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-lg-6">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <!-- <h5 class="mt-0 p-l-5">Add New City</h5> -->
+                        <h5 class="mt-0 p-l-5">{{header}}</h5>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-6 text-right">
+                <div class="text-right">
+                    <ul class="list-inline">
+
+                        <li class="list-inline-item"><button type="button" class="btn btn-primary" (click)="savebutton()">     <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                          </button></li>
+                        <!-- <li class="list-inline-item"><button type="button" class="btn btn-primary" [disabled]="!disableBtn" (click)="SaveandNewbutton()">Save and add
+                              new</button></li> -->
+                        <li class="list-inline-item">
+                            <button class="btn btn-sm btn-default" tooltip="Manage Columns" (click)="confirmExit()" tooltip-placement="bottom" data-original-title="" title="">
+                              <i class="mdi mdi-close font-size-md"></i>
+                          </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="wrapper-lg cell">
+
+            <div id="overlay">
+                <div class="w-100 d-flex justify-content-center align-items-center">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <div class="content m-b report-content">
+
+                <form [formGroup]="cityForm">
+                    <div class="row" style="border-radius: 10px;padding: 15px;">
+
+
+
+                        <div class="col-12 col-md-12 col-sm-12">
+                            <div class="clearfix">
+                                <div class="row">
+
+                                    <div class="col-md-6 col-sm-6 p-15">
+                                        <label>Country </label>
+                                        <div class="col-md-10 p-l-0">
+
+                                            <select class="ng-touched ng-pristine ng-valid select2-hidden-accessible" disabled [(ngModel)]="selectedCountry" class="form-control" formControlName="CountryId" [ngClass]="{ 'is-invalid': submitted && f.CountryId.errors }" (change)="OnCountryChange($event.target.value)">
+                          <option value="" disabled>Choose Country</option>
+                            <option *ngFor="let countries of LstCountry" [value]="countries.Id">
+                                                  {{countries.Name}}</option>
+                        </select>
+                                            <div *ngIf="submitted && f.CountryId.errors" class="invalid-feedback">
+                                                <div *ngIf="f.CountryId.errors.required">Country is required</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-sm-6 p-15">
+                                        <label>State </label>
+                                        <div class="col-md-10 p-l-0">
+
+                                            <select class="ng-untouched ng-pristine ng-valid select2-hidden-accessible" disabled [(ngModel)]="selectedState" class="form-control" formControlName="StateId" [ngClass]="{ 'is-invalid': submitted && f.StateId.errors }" (change)="OnStateChange($event.target.value)">
+                            <option value="" disabled>Choose State</option>
+                              <option *ngFor="let states of LstStateList" [value]="states.Id">
+                                                    {{states.Name}}</option>
+                          </select>
+                                            <div *ngIf="submitted && f.StateId.errors" class="invalid-feedback">
+                                                <div *ngIf="f.StateId.errors.required">State is required</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-sm-6 p-15">
+                                        <label> Code </label>
+                                        <div class="col-md-10 p-l-0">
+                                            <input type="text" placeholder="Code" onkeypress="return /[a-z]/i.test(event.key)" oninput="this.value = this.value.toUpperCase()" maxlength="10" autocomplete="off" class="form-control" formControlName="Code" [ngClass]="{ 'is-invalid': submitted && f.Code.errors }">
+
+                                            <div *ngIf="submitted && f.Code.errors" class="invalid-feedback">
+                                                <div *ngIf="f.Code.errors.required">City Code is required</div>
+                                                <div *ngIf="f.Code.errors.minlength">City Code must be at least 2 characters</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6 col-sm-6 p-15">
+                                        <label> Name </label>
+                                        <div class="col-md-10 p-l-0">
+
+                                            <input type="text" placeholder="Name" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" class="form-control" formControlName="Name" autocomplete="off" [ngClass]="{ 'is-invalid': submitted && f.Name.errors }">
+                                            <div *ngIf="submitted && f.Name.errors" class="invalid-feedback">
+                                                <div *ngIf="f.Name.errors.required">City Name is required</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-6 p-15">
+                                        <label>Status  </label>
+
+                                        <label class="container  p-l-0">
+                          <input type="checkbox" class="form-control"  formControlName="Status" [ngClass]="{ 'is-invalid': submitted && f.Status.errors }">
+                              <span class="checkmark"></span>
+                        </label>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-6 p-15">
+                                        <label>Is Metro</label>
+
+                                        <label class="container  p-l-0">
+                          <input type="checkbox" class="form-control"  formControlName="IsMetro" [ngClass]="{ 'is-invalid': submitted && f.IsMetro.errors }">
+                              <span class="checkmark"></span>
+                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+
+                <div class="row tablerow">
+                    <div class="col-md-6">
+                        <h4 class="m-b-md">Statutory Details</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="float-right d-flex justify-content-between">
+
+                            <div class="btn-group m-r-xs">
+
+                                <button class="btn upgrade-btn btn-sm m-r-sm " (click)="add_statuatory()">
+                  <i class="mdi mdi-plus m-r-xs" style="border-radius: 3px;"></i>
+                                  Add Statutory &nbsp;
+                  </button>
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row tablerow" style="padding-right: 15px;">
+
+                    <div class="col-md-12 col-sm-12">
+
+                        <!-- <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+                      (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged1($event.detail.eventData, $event.detail.args)">
+                    </angular-slickgrid> -->
+
+                        <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" gridWidth="100%" (onAngularGridCreated)="angularGridReady($event)" (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)">
+                        </angular-slickgrid>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

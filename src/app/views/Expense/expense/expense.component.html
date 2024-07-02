@@ -1,0 +1,1733 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <!-- Button actions and title of the page  -->
+    <div class="row" style="margin-bottom: 15px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="padding-top: 10px;">
+          <h6 class="h6_c" *ngIf="isEnabled == '1'" style="font-size: 16px;
+          font-weight: 700;"> My Claims </h6>
+          <h6 class="h6_c" *ngIf="isEnabled == '2'" style="font-size: 16px;
+           font-weight: 700;"> Pending For Claim Approval </h6>
+          <h6 class="h6_c" *ngIf="isEnabled == '3'" style="font-size: 16px;
+            font-weight: 700;">Approved Claim Request </h6>
+            <h6 class="h6_c" *ngIf="isEnabled == '4'" style="font-size: 16px;
+            font-weight: 700;">Rejected Claim Request </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <!-- 
+         <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onClose()">
+            <i class="mdi mdi-close  m-r-xs"></i>Close
+          </button>
+        </li> -->
+            <li class="list-inline-item" *ngIf="isEnabled == '1'">
+              <button type="button" class="btn btn-primary" (click)="submitForApproval()">
+                <i class="mdi mdi-spellcheck  m-r-xs"></i> Submit for Approval <span *ngIf="countOfExpense > 0">
+                  ({{countOfExpense}}) </span>
+              </button>
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="onRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="grid sm:grid-cols-4 gap-6" *ngIf="!spinner">
+      <label for="plan-hobby" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;">Unclaimed</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{LstExpenseUnClaimedRequest.length}} <span style="font-size: 12px;
+            color: black !important;"> claim(s) </span> </span>
+        </span>
+
+        <input type="radio" name="plan" id="plan-hobby" value="hobby" class="absolute h-0 w-0 appearance-none"
+          (click)="claimEnabled('1')" [checked]="isEnabled == '1'" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+      <label for="plan-hobby1" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;">Pending for Approval</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{LstExpenseClaimedRequestSubmitted.length}} <span
+              style="font-size: 12px;
+            color: black !important;"> batch(s) </span></span>
+        </span>
+
+        <input type="radio" name="plan" id="plan-hobby1" value="hobby1" class="absolute h-0 w-0 appearance-none"
+          (click)="claimEnabled('3')" [checked]="isEnabled == '3'" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+
+      <label for="plan-growth" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;">Claimed (Approved/Paid)</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{LstExpenseClaimedRequest.length}} <span style="font-size: 12px;
+            color: black !important;"> batch(s) </span> </span>
+        </span>
+
+        <input type="radio" name="plan" id="plan-growth" value="growth" class="absolute h-0 w-0 appearance-none"
+          (click)="claimEnabled('2')" [checked]="isEnabled == '2'" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+
+      <label for="plan-growth1" class="relative flex flex-col bg-white p-3 rounded-lg shadow-md cursor-pointer">
+        <span class="font-semibold text-gray-500 leading-tight uppercase mb-3"
+          style="font-size: 13px !important;color: black !important;">Rejected</span>
+        <span class="font-bold text-gray-900">
+          <span class="text-4xl" style="color: black !important;">{{LstExpenseUnClaimedRequest_Rejected.length}} <span style="font-size: 12px;
+            color: black !important;"> batch(s) </span> </span>
+        </span>
+
+        <input type="radio" name="plan" id="plan-growth1" value="growth1" class="absolute h-0 w-0 appearance-none"
+          (click)="claimEnabled('4')" [checked]="isEnabled == '4'" />
+        <span aria-hidden="true"
+          class="hidden absolute inset-0 border-2 border-green-500 bg-green-200 bg-opacity-10 rounded-lg">
+          <span
+            class="absolute top-4 right-4 h-6 w-6 inline-flex items-center justify-center rounded-full bg-green-200">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+              class="h-5 w-5 text-green-600">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </span>
+      </label>
+    </div>
+
+    <!-- unused code  -->
+    <!-- <div class="row hidden-sm">
+      <div class="col-xl-3 col-lg-6">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body card-body-hover">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0" style="font-size: 12px;">Unclaimed</h5>
+                <span class="h2 font-weight-bold mb-0"> 1 </span>
+              </div>
+              <div class="col-auto">
+                <div class=" icon icon-shape bg-yellow text-white rounded-circle shadow">
+                  <i class="mdi mdi-marker-check"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+             
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-lg-6">
+        <div class="card card-stats mb-4 mb-xl-0 card-body-hover">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0" style="font-size: 12px;">Claimed</h5>
+                <span class="h2 font-weight-bold mb-0"> 1 </span>
+              </div>
+              <div class="col-auto">
+                <div class=" icon icon-shape bg-yellow text-white rounded-circle shadow">
+                  <i class="mdi mdi-marker-check"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+            
+            </p>
+          </div>
+        </div>
+      </div>
+
+
+    </div> -->
+
+    <!-- unused code first setup -->
+    <!-- <div class="row">
+      <div class="col-md-4">
+        <a href="javascript:;">
+          <div class="grid simple border-2px">
+            <div class="grid-body">
+              <div class="row" style="margin-bottom: -10px;">
+                <div class="col-lg-6">
+                  <p class="m-b-0" style="height: 30px;font-weight: 600;">UnClaimed </p>
+                </div>
+                <div class="col-lg-6 text-right">
+                  <i class="mdi mdi-file-hidden" style="font-size: 32px;"></i>
+                </div>
+              </div>
+              <div style="clear: both"></div>
+              <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                  <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #FF945B"></i>
+                  <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #FF945B; opacity: 0.3"></i>
+                </span></div>
+              <span class="size-34 semi-bold">
+                1
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4">
+        <a href="javascript:;">
+          <div class="grid simple border-2px" style="border-color: #ffebb4;">
+            <div class="grid-body">
+              <div class="row" style="margin-bottom: -10px;">
+                <div class="col-lg-6">
+                  <p class="m-b-0" style="height: 30px;font-weight: 600;">Claimed </p>
+
+                </div>
+                <div class="col-lg-6 text-right">
+                  <i class="mdi mdi-file-document-outline" style="font-size: 32px;"></i>
+                </div>
+              </div>
+              <div class="nowrap">
+                <div class="circle-box hidden-md"><span class="fa-stack" style="line-height: 15px">
+                    <i class="fa fa-circle fa-stack-1x" style="font-size: 12px; color: #63E59F"></i>
+                    <i class="fa fa-circle fa-stack-1x" style="font-size: 29px; color: #63E59F; opacity: 0.3"></i>
+                  </span></div>
+                <span class="size-34 semi-bold">
+                  1 </span>
+              </div>
+
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div> -->
+    <!-- -- content --  -->
+    <div class="content m-b report-content" style="margin-top: 10px;" *ngIf="!spinner">
+
+      <!-- CLAIMED LIST AND SEARCH TEXT BOX  -->
+      <div class="row" *ngIf="isEnabled == '2' && LstExpenseClaimedRequest.length > 0" style="margin-bottom: 2rem;">
+        <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+
+        </div>
+        <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right" style="padding-right: 0px;">
+          <div class="col-lg-12" style="float: left;">
+            <label class="form-label" style="text-align: left;">Start searching for expense name, amount
+            </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText_claimed_submiited"
+              autocomplete="none|false|no" placeholder=" Start searching for expense name, amount">
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="isEnabled == '2'">
+        <div class="col-lg-12" *ngIf="LstExpenseClaimedRequest.length == 0">
+          <div class="card" style="border: none !important;padding: 2rem;">
+            <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot" data-maintainscrollposition="True"
+              style="text-align: center">
+              <p style="margin-bottom: 8px;"><span id="MainContent_ctl143" class="LabelMediumBig">There are no
+                  claimed request
+                  in this screen yet.</span></p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="isEnabled == '4' && LstExpenseUnClaimedRequest_Rejected.length > 0" style="margin-bottom: 2rem;">
+        <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+
+        </div>
+        <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right" style="padding-right: 0px;">
+          <div class="col-lg-12" style="float: left;">
+            <label class="form-label" style="text-align: left;">Start searching for expense name, amount
+            </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText_rejected"
+              autocomplete="none|false|no" placeholder=" Start searching for expense name, amount">
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="isEnabled == '4'">
+        <div class="col-lg-12" *ngIf="LstExpenseUnClaimedRequest_Rejected.length == 0">
+          <div class="card" style="border: none !important;padding: 2rem;">
+            <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot" data-maintainscrollposition="True"
+              style="text-align: center">
+              <p style="margin-bottom: 8px;"><span id="MainContent_ctl143" class="LabelMediumBig">There are no
+                  rejected claimed request
+                  in this bucket.</span></p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isEnabled == '3'">
+
+        <div class="row">
+          <div class="col-lg-12" *ngIf="LstExpenseClaimedRequestSubmitted.length == 0">
+            <div class="card" style="border: none !important;padding: 2rem;">
+              <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot"
+                data-maintainscrollposition="True" style="text-align: center">
+                <p style="margin-bottom: 8px;"><span id="MainContent_ctl143" class="LabelMediumBig">There are no
+                    submitted request
+                    in this screen yet.</span></p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 10px;" *ngIf="LstExpenseClaimedRequestSubmitted.length > 0">
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+
+          </div>
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right" style="padding-right: 0px;">
+            <div class="col-lg-12" style="float: left;">
+              <label class="form-label" style="text-align: left;">Start searching for expense name, amount
+              </label>
+              <input class="form-control" type="text" name="search" [(ngModel)]="searchText_unclaimed_submiited"
+                autocomplete="none|false|no" placeholder=" Start searching for expense name, amount">
+            </div>
+          </div>
+        </div>
+        <!-- SUBMITTED  -->
+        <div class="row">
+          <br>
+          <br />
+          <ng-container *ngIf="LstExpenseClaimedRequestSubmitted.length > 0">
+
+            <div class="col-md-6 col-sm-6 col-xs-6"
+              *ngFor="let item of LstExpenseClaimedRequestSubmitted  | slice:0:tobeShown_unclaimed  | filter: searchText_unclaimed_submiited; let i = index"
+              style="padding: 5px;">
+
+              <!-- <div class="packPrice ifOffer">
+                <div class="offer">
+                  <span class="voucherDisAmount"> {{item.Name}} </span>
+                </div>
+              </div> -->
+              <div class="card"
+                style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <div class="row">
+                        <div class="col-lg-6">
+
+
+                          <span style="font-size: 18px;
+                      font-weight: 600;
+                      color: black;"> {{item.Name}} - ₹{{item.TotalRequestedAmount | number : '1.2-2'}}
+                          </span>
+                        </div>
+                        <div class="col-lg-2">
+                          <span style="font-size: 13px;font-weight: 600;"> <span class="badge badge-soft-success"
+                              style="display: inline;"> {{item.StatusName}} </span> </span>
+                        </div>
+                        <div class="col-lg-4">
+                          <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> </span>
+                        </div>
+                      </div>
+                      <span style="font-size: 12px;"> <b> REFERENCE NO </b> : {{item.Id}} </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+            /* margin-bottom: 0px; */
+            padding-left: 0px;
+            padding-top: 12px !important;">
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-3">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;">SUBMITTED
+                          ON<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.CreatedOn | date :'dd-MM-yyyy'}} </p>
+
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">NO OF
+                          DOC.
+                          <span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.TotalNoOfDocuments}} </p>
+
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">NO OF
+                          REQUEST<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;">{{item.TotalNoOfRequests}}</p>
+
+                      </div>
+                    </div>
+
+                    <div class="col-md-3" style="text-align: right;">
+
+                      <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="View Claims"
+                        (click)="do_viewDocuments(item)">
+                        <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                      </a>
+
+                      <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit Request"
+                      (click)="do_editAppliedRequest(item)">
+                      <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a>
+                    <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="View Documents"
+                      (click)="do_viewDocuments(item)">
+                      <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a> -->
+                    </div>
+
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
+
+          </ng-container>
+
+          <div class="col-lg-12" style="text-align: center; font-size: 13px;font-weight: 700;cursor: pointer;"
+            (click)="seeMore_unclaimed_submitted()" *ngIf="LstExpenseClaimedRequestSubmitted.length > 0">
+            <span> {{seeMoreText_unclaimed_submitted}} </span> <br>
+            <span>
+              <i class="mdi mdi-chevron-down bounce" style="font-size: 17px;"
+                *ngIf="seeMoreText_unclaimed_submitted =='See more'"></i>
+              <i class="mdi mdi-chevron-up bounce" style="font-size: 17px;"
+                *ngIf="seeMoreText_unclaimed_submitted =='See less'"></i>
+            </span>
+
+          </div>
+        </div>
+
+
+      </div>
+
+      <div *ngIf="isEnabled == '1'">
+
+        <div class="row">
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+            <div class="redesign rd2015-header__container" style="margin-left: -15px;">
+              <nav class="xpd-navbar">
+                <ul class="xpd-navbar__nav">
+                  <li class="xpd-navbar__item" (click)="clickEvent('1')"
+                    [ngClass]="isCliekedPendingBtn ? 'xpd-navbar__item--active' : 'temp-bg'">
+                    <a class="xpd-navbar__link" data-testid="nav-user">
+                      Saved 
+                    </a>
+                    <!-- <span class="xpd-navbar__todo"> 
+                    <span>1</span>
+                  </span> -->
+                  </li>
+                  <!-- <li class="xpd-navbar__item" (click)="clickEvent('2')" style="margin-left: 11px;"
+                    [ngClass]="isCliekedSubmittedBtn ? 'xpd-navbar__item--active' : 'temp-bg'">
+                    <a class="xpd-navbar__link" data-testid="nav-approver">
+                      Rejected
+                    </a>
+                   
+                  </li> -->
+                  <!-- <li class="xpd-navbar__item ">
+                  <a class="xpd-navbar__link" data-testid="nav-finance" href="/cfo/expenses">
+                    Finance
+                  </a>
+                  <span class="xpd-navbar__todo hidden">
+                    <span>0</span>
+                  </span>
+                </li> -->
+                </ul>
+              </nav>
+            </div>
+          </div>
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right">
+            <button type="button" class="btn btn-primary" (click)='openDrawerAddExpense()'
+              style="display: inline;margin: 0 auto;">
+              <i class="mdi mdi-plus m-r-xs"></i> Add New Expense
+            </button>
+
+          </div>
+        </div>
+
+
+
+
+        <div class="row" *ngIf="isCliekedSubmittedBtn" style="margin-bottom: 10px;">
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left">
+
+          </div>
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right" style="padding-right: 0px;">
+            <div class="col-lg-12" style="float: left;">
+              <label class="form-label" style="text-align: left;">Start searching for category name, amount
+              </label>
+              <input class="form-control" type="text" name="search" [(ngModel)]="searchText_unclaimed_submiited"
+                autocomplete="none|false|no" placeholder=" Start searching for category name, amount">
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="isCliekedPendingBtn">
+          <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-3 col-md-3 col-sm-3 displayinlineblock">
+          <label class="form-label" style="text-align: left;"> Request Option </label>
+          <ng-select [items]="filterItem" placeholder="-- Select an option --" bindLabel="Name" bindValue="Id"
+            [(ngModel)]="selectedFilterId" (change)="onChange_filter($event)">
+          </ng-select>
+        </div> -->
+
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left" style="margin-top: 35px;"
+            *ngIf="LstExpenseUnClaimedRequest.length > 0">
+            <!-- <p style="font-weight: 700;margin-bottom:0px; text-align: left;padding-top: 15px !important;"> <input
+                type="checkbox" [(ngModel)]="selectAll" (click)="selectAllClaimRequest($event)"> <span
+                style="padding-top: 1px; padding-left: 5px;"> Select All </span> </p> -->
+
+
+            <div class="pretty p-icon p-curve p-bigger">
+              <input type="checkbox" [(ngModel)]="selectAll" (click)="selectAllClaimRequest($event)" />
+              <div class="state p-primary">
+                <i class="icon mdi mdi-check"></i>
+                <label style="font-weight: 600 !important;
+                padding-left: 4px;">Select All</label>
+              </div>
+              <!-- <div class="state p-is-hover">
+                <label>Select all claim request </label>
+            </div> -->
+            </div>
+            <!-- <div class="col-lg-12" style="float: left;">
+            <label class="form-label" style="text-align: left;">Start searching for category name, amount... 
+            </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+              placeholder=" Start searching for an employee by code or name">
+          </div> -->
+          </div>
+
+          <!-- <div class="col-12 col-xs-12 col-lg-3 col-md-3 col-sm-3 text-left" style="padding-left: 0px;">
+          <div class="col-lg-12" style="float: left;">
+            <label class="form-label" style="text-align: left;">Start searching for category name, amount and date
+            </label>
+            <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="none|false|no"
+              placeholder=" Start searching for an employee by code or name">
+          </div>
+        </div>  -->
+
+
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right" style="padding-right: 0px;"
+            *ngIf="LstExpenseUnClaimedRequest.length > 0">
+            <div class="col-lg-12" style="float: left;">
+              <label class="form-label" style="text-align: left;">Start searching for category name, amount
+              </label>
+              <input class="form-control" type="text" name="search" [(ngModel)]="searchText"
+                autocomplete="none|false|no" placeholder=" Start searching for category name, amount">
+            </div>
+          </div>
+
+          <br />
+          <div class="col-lg-12" *ngIf="LstExpenseUnClaimedRequest.length == 0">
+            <div class="card" style="border: none !important;padding: 2rem;">
+              <div id="MainContent_EmptyStateTextPanelContent" class="paddingpanelbot"
+                data-maintainscrollposition="True" style="text-align: center">
+                <p style="margin-bottom: 8px;"><span id="MainContent_ctl143" class="LabelMediumBig">There are no
+                    expenses
+                    in this screen yet.</span></p><span id="MainContent_ctl145" class="LabelSmall">Enter the details of
+                  the new expense or click on add new expense to add it to the screen.</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <br>
+
+
+        <div class="row" *ngIf="isCliekedPendingBtn">
+          <!-- SAVED -->
+          <ng-container *ngIf="LstExpenseUnClaimedRequest.length > 0">
+
+            <div class="col-md-6 col-sm-6 col-xs-6"
+              *ngFor="let item of LstExpenseUnClaimedRequest | slice:0:tobeShown | filter: searchText;let i = index"
+              style="padding: 5px;">
+
+              <!-- <div class="packPrice ifOffer">
+              <div class="offer">
+                <span class="voucherDisAmount"> IT Equipment and Software </span>
+              </div>
+            </div> -->
+              <div class="card"
+                style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <span>
+
+                            <input type="checkbox" [(ngModel)]="item.isSelected" (click)="selectClaimRequest(item)"
+                              style="cursor: pointer;" />
+
+                            <!-- <div class="pretty p-icon p-curve p-bigger" style="padding-top: 14px;">
+                              <input type="checkbox" [(ngModel)]="item.isSelected" (click)="selectClaimRequest(item)"
+                                style="cursor: pointer;" />
+                              <div class="state p-primary">
+                                <i class="icon mdi mdi-check"></i>
+                                <label></label>
+                              </div>
+                            </div> -->
+
+                          </span>
+
+                          <span style="font-size: 18px;
+                      font-weight: 600;
+                      color: black;"> {{item.ProductName}} &nbsp; ₹{{item.RequestedAmount | number : '1.2-2'}}</span>
+                        </div>
+                        <div class="col-lg-2">
+                          <span style="font-size: 13px;font-weight: 600;" *ngIf="item.Status != 300"> <span
+                              class="badge badge-soft-warning" style="display: inline;"> {{getStatusName(item.Status)}}
+                            </span> </span>
+                          <span style="font-size: 13px;font-weight: 600;" *ngIf="item.Status == 300"> <span
+                              class="badge badge-soft-danger" style="display: inline;"> {{getStatusName(item.Status)}}
+                            </span> </span>
+                        </div>
+                        <div class="col-lg-4">
+                          <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> </span>
+                        </div>
+                      </div>
+                      <!-- <span style="font-size: 12px;"> <b> REFERENCE NO </b> : {{item.TravelRequestReferenceId}} </span> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+            /* margin-bottom: 0px; */
+            padding-left: 0px;
+            padding-top: 12px !important;">
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-3">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;">EXPENSE
+                          DATE <span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.ExpenseIncurredDate | date :'dd-MM-yyyy'}} </p>
+
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" *ngIf="item.Status != 300"
+                          style="font-weight: 600 !important;font-size: 11px !important;">REMARKS
+                          <span class="required"></span>
+                        </label>
+                        <label class="form-label" *ngIf="item.Status == 300"
+                          style="font-weight: 600 !important;font-size: 11px !important;"> REMARKS
+                          <span class="required"></span>
+                        </label>
+                        <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                          overflow: hidden; 
+                          width: 125px; 
+                          height: 1.2em; 
+                          white-space: nowrap" *ngIf="item.Status != 300"> {{item.Remarks}} </p>
+
+                        <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+overflow: hidden; 
+width: 125px; 
+height: 1.2em; 
+white-space: nowrap" *ngIf="item.Status == 300" matTooltip="{{ShowRejectionRemarksAlone(item)}}">
+                          {{ShowRejectionRemarksAlone(item)}}</p>
+
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">BILL
+                          DATE<span class="required"></span></label>
+
+                        <p class="date" style="font-size: 13px;">{{item.ExpenseIncurredDate | date
+                          :'dd-MM-yyyy'}}</p>
+
+                        <!-- <p class="date" style="font-size: 13px;"
+                          *ngIf="item.DocumentNumber != '' && item.DocumentNumber != null">{{item.DocumentDate | date
+                          :'dd-MM-yyyy'}}</p>
+                        <p class="date" style="font-size: 13px;"
+                          *ngIf="item.DocumentNumber == '' || item.DocumentNumber == null">---</p> -->
+
+                      </div>
+                    </div>
+
+                    <div class="col-md-3" style="text-align: right;">
+                      <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit Request"
+                        (click)="do_editAppliedRequest(item)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                      </a>
+                      <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px"
+                        matTooltip="View Documents" (click)="do_viewDocuments(item)">
+                        <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                      </a> -->
+                    </div>
+
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
+
+          </ng-container>
+
+          <div class="col-lg-12" style="text-align: center; font-size: 13px;font-weight: 700;cursor: pointer;"
+            (click)="seeMore()" *ngIf="LstExpenseUnClaimedRequest.length > 0">
+            <span> {{seeMoreText}} </span> <br>
+            <span>
+              <i class="mdi mdi-chevron-down bounce" style="font-size: 17px;" *ngIf="seeMoreText =='See more'"></i>
+              <i class="mdi mdi-chevron-up bounce" style="font-size: 17px;" *ngIf="seeMoreText =='See less'"></i>
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- SUBMITTED  -->
+        <div class="row" *ngIf="isCliekedSubmittedBtn">
+          <br>
+          <br />
+          <ng-container *ngIf="LstExpenseUnClaimedRequest_Rejected.length > 0">
+
+            <div class="col-md-6 col-sm-6 col-xs-6"
+              *ngFor="let item of LstExpenseUnClaimedRequest_Rejected  | slice:0:tobeShown_rejected  | filter: searchText_rejected;let i = index"
+              style="padding: 5px;">
+
+              <div class="card"
+                style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <span>
+
+                            <input type="checkbox" [(ngModel)]="item.isSelected" (click)="selectClaimRequest(item)"
+                              style="cursor: pointer;" />
+
+                            <!-- <div class="pretty p-icon p-curve p-bigger" style="padding-top: 14px;">
+                            <input type="checkbox" [(ngModel)]="item.isSelected" (click)="selectClaimRequest(item)"
+                              style="cursor: pointer;" />
+                            <div class="state p-primary">
+                              <i class="icon mdi mdi-check"></i>
+                              <label></label>
+                            </div>
+                          </div> -->
+
+                          </span>
+
+                          <span style="font-size: 18px;
+                    font-weight: 600;
+                    color: black;"> {{item.ProductName}} &nbsp; ₹{{item.RequestedAmount | number : '1.2-2'}}</span>
+                        </div>
+                        <div class="col-lg-2">
+                          <span style="font-size: 13px;font-weight: 600;"> <span class="badge badge-soft-danger"
+                              style="display: inline;"> {{getStatusName(item.Status)}} </span> </span>
+                        </div>
+                        <div class="col-lg-4">
+                          <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> </span>
+                        </div>
+                      </div>
+                      <!-- <span style="font-size: 12px;"> <b> REFERENCE NO </b> : {{item.TravelRequestReferenceId}} </span> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+          /* margin-bottom: 0px; */
+          padding-left: 0px;
+          padding-top: 12px !important;">
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-3">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;">EXPENSE
+                          DATE <span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.ExpenseIncurredDate | date :'dd-MM-yyyy'}} </p>
+
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;">REMARKS
+                          <span class="required"></span></label>
+                        <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                      overflow: hidden; 
+                      width: 125px; 
+                      height: 1.2em; 
+                      white-space: nowrap"> {{item.Remarks}}</p>
+
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                      <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">
+                        BILL
+                        ON<span class="required"></span></label>
+                      <p class="date" style="font-size: 13px;">{{item.DocumentDate | date :'dd-MM-yyyy'}}</p>
+
+                    </div> -->
+                    </div>
+
+                    <div class="col-md-3" style="text-align: right;">
+                      <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit Request"
+                        (click)="do_editAppliedRequest(item)">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                      </a>
+                      <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px"
+                      matTooltip="View Documents" (click)="do_viewDocuments(item)">
+                      <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a> -->
+                    </div>
+
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
+
+          </ng-container>
+
+          <div class="col-lg-12" style="text-align: center; font-size: 13px;font-weight: 700;cursor: pointer;"
+            (click)="seeMore_rejected()" *ngIf="LstExpenseUnClaimedRequest_Rejected.length > 0">
+            <span> {{seeMoreText_rejected}} </span> <br>
+            <span>
+              <i class="mdi mdi-chevron-down bounce" style="font-size: 17px;"
+                *ngIf="seeMoreText_rejected =='See more'"></i>
+              <i class="mdi mdi-chevron-up bounce" style="font-size: 17px;"
+                *ngIf="seeMoreText_rejected =='See less'"></i>
+            </span>
+
+          </div>
+        </div>
+
+
+        <!-- <div class="row" *ngIf="isCliekedSubmittedBtn">
+        <ng-container *ngIf="LstExpenseUnClaimedRequest.length > 0">
+
+          <div class="col-md-6 col-sm-6 col-xs-6" *ngFor="let item of LstExpenseUnClaimedRequest;let i = index"
+            style="padding: 5px;">
+
+            <div class="packPrice ifOffer">
+              <div class="offer">
+                <span class="voucherDisAmount"> IT Equipment and Software </span>
+              </div>
+            </div>
+            <div class="card" style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+              <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <div class="row">
+                      <div class="col-lg-6">
+
+
+                        <span style="font-size: 18px;
+                      font-weight: 600;
+                      color: black;"> 0001{{i}} {{item.ProductName}}</span>
+                      </div>
+                      <div class="col-lg-2">
+                        <span style="font-size: 13px;font-weight: 600;"> <span class="badge badge-soft-success"
+                            style="display: inline;"> Approved </span> </span>
+                      </div>
+                      <div class="col-lg-4">
+                        <span style="font-size: 12px;font-weight: 600;float: right;padding-top: 10px;"> Approved By
+                          Manager </span>
+                      </div>
+                    </div>
+                    <span style="font-size: 12px;"> <b> REFERENCE NO </b> : 18940 </span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+            /* margin-bottom: 0px; */
+            padding-left: 0px;
+            padding-top: 12px !important;">
+
+
+                <div class="row">
+
+
+                  <div class="col-md-3">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                      <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">APPROVED
+                        ON<span class="required"></span></label>
+                      <p class="date" style="font-size: 13px;"> {{item.ExpenseIncurredDate | date :'dd-MM-yyyy'}} </p>
+
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                      <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">REQUEST
+                        AMT
+                        <span class="required"></span></label>
+                      <p class="date" style="font-size: 13px;">₹{{item.RequestedAmount}}.00 </p>
+
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                      <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">APPROVED
+                        AMT<span class="required"></span></label>
+                      <p class="date" style="font-size: 13px;">₹{{item.RequestedAmount}}.00</p>
+
+                    </div>
+                  </div>
+
+                  <div class="col-md-3" style="text-align: right;">
+                  
+                    <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="View Documents"
+                      (click)="finalpopup()">
+                      <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a>
+                  </div>
+
+                </div>
+
+
+              </div>
+            </div>
+
+          </div>
+
+        </ng-container>
+      </div> -->
+
+
+
+
+
+
+        <!-- <div class="row hidden-sm">
+        <div class="col-lg-12">
+          <angular-slickgrid gridId="grdinEmployeesInitiate" [columnDefinitions]="inEmployeesInitiateColumnDefinitions"
+            [gridOptions]="inEmployeesInitiateGridOptions" [dataset]="inEmployeesInitiateList"
+            (onAngularGridCreated)="inEmployeesInitiateGridReady($event)" gridWidth="100%"
+            (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+          </angular-slickgrid>
+        </div>
+      </div> -->
+
+
+      </div>
+
+      <div *ngIf="isEnabled == '2'">
+
+        <div class="row">
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left" style="padding-left: 0px;">
+
+          </div>
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right">
+            <!-- <button type="button" class="btn btn-primary" (click)='openDrawerAddExpense()'
+              style="display: inline;margin: 0 auto;">
+              <i class="mdi mdi-plus m-r-xs"></i> Add New Expense
+            </button> -->
+
+          </div>
+        </div>
+
+
+        <div class="row">
+          <ng-container *ngIf="LstExpenseClaimedRequest.length > 0">
+
+            <div class="col-md-12 col-sm-12 col-xs-12"
+              *ngFor="let item of LstExpenseClaimedRequest  | slice:0:tobeShown_claimed | filter: searchText_claimed_submiited ;let i = index"
+              style="padding: 5px;">
+
+              <div class="packPrice ifOffer">
+                <div class="offer">
+                  <span class="voucherDisAmount"> {{item.Name}} </span>
+                </div>
+              </div>
+              <div class="card"
+                style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <div class="row">
+                        <div class="col-lg-6">
+
+
+                          <span style="font-size: 18px;
+                      font-weight: 600;
+                      color: black;"> Batch Code : {{ item.Id}} </span>
+                          <p class="date" style="font-size: 13px;"> SUBMITTED ON : {{item.CreatedOn | date
+                            :'dd-MM-yyyy'}} </p>
+
+
+                          <!-- <span style="font-size: 13px;font-weight: 600;"> <span class="badge badge-soft-success"
+                              style="display: inline;"> Approved </span> </span> -->
+                        </div>
+                        <!-- <div class="col-lg-2">
+                         
+                        </div> -->
+                        <div class="col-lg-4">
+                          <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label"
+                              style="font-weight: 600 !important;font-size: 11px !important;">SUBMITTED
+                              ON<span class="required"></span></label>
+                            <p class="date" style="font-size: 13px;"> {{item.CreatedOn | date :'dd-MM-yyyy'}} </p>
+
+                          </div> -->
+                        </div>
+
+                        <div class="col-md-2" style="text-align: right;">
+
+                          <a href="javascript:;" class="btn action-edit" style="margin-right: 5px"
+                            matTooltip="View Claims" (click)="do_viewDocuments(item)">
+                            <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                          </a>
+                          <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit Request"
+                          (click)="do_editAppliedRequest(item)">
+                          <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                        </a>
+                        <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="View Documents"
+                          (click)="do_viewDocuments(item)">
+                          <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                        </a> -->
+                        </div>
+
+                      </div>
+                      <!-- <span style="font-size: 12px;"> <b> REFERENCE NO </b> : {{item.Id}} </span> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+            /* margin-bottom: 0px; */
+            padding-left: 0px;
+            padding-top: 12px !important;">
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">NO OF
+                          CLAIMS<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;">{{item.TotalNoOfRequests}}</p>
+
+                      </div>
+                    </div>
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;">REQUESTED AMOUNT <span
+                            class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.TotalRequestedAmount |
+                          currency:'INR':'symbol-narrow':'1.2-2'}}</p>
+
+                      </div>
+                    </div>
+
+
+                    <!-- <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">NO OF
+                          CLAIMS<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;">{{item.TotalNoOfRequests}}</p>
+
+                      </div>
+                    </div> -->
+
+                    <!-- <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">APPROVED 
+                          CLAIMS<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;">{{item.tO}}</p>
+
+                      </div>
+                    </div> -->
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;">APPROVED AMT. <span
+                            class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.TotalApprovedAmount |
+                          currency:'INR':'symbol-narrow':'1.2-2'}}</p>
+
+                      </div>
+                    </div>
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;color: #e72c2c !important;">REJECTED
+                          AMT.<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;color: #e72c2c !important;"> {{getRejectedClaimsAmt(item)
+                          | currency:'INR':'symbol-narrow':'1.2-2'}}</p>
+
+                      </div>
+                    </div>
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;color: #e72c2c !important;">REJECTED
+                          CLAIMS<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;color: #e72c2c !important;">{{getRejectedClaims(item)}}
+                        </p>
+
+                      </div>
+                    </div>
+
+                    <!-- <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">NO OF
+                          DOC.
+                          <span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.TotalNoOfDocuments}} </p>
+
+                      </div>
+                    </div>
+                    -->
+
+
+
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
+
+          </ng-container>
+
+          <div class="col-lg-12" style="text-align: center; font-size: 13px;font-weight: 700;cursor: pointer;"
+            (click)="seeMore_claimed_submitted()" *ngIf="LstExpenseClaimedRequest.length > 0">
+            <span> {{seeMoreText_claimed_submitted}} </span> <br>
+            <span>
+              <i class="mdi mdi-chevron-down bounce" style="font-size: 17px;"
+                *ngIf="seeMoreText_claimed_submitted =='See more'"></i>
+              <i class="mdi mdi-chevron-up bounce" style="font-size: 17px;"
+                *ngIf="seeMoreText_claimed_submitted =='See less'"></i>
+            </span>
+
+          </div>
+
+        </div>
+
+
+
+
+
+      </div>
+
+      <div *ngIf="isEnabled == '4'">
+
+        <div class="row">
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-left" style="padding-left: 0px;">
+
+          </div>
+          <div class="col-12 col-xs-12 col-lg-6 col-md-6 col-sm-6 text-right">
+            <!-- <button type="button" class="btn btn-primary" (click)='openDrawerAddExpense()'
+              style="display: inline;margin: 0 auto;">
+              <i class="mdi mdi-plus m-r-xs"></i> Add New Expense
+            </button> -->
+
+          </div>
+        </div>
+
+
+        <div class="row">
+          
+          <ng-container *ngIf="LstExpenseUnClaimedRequest_Rejected.length > 0">
+
+            <div class="col-md-12 col-sm-12 col-xs-12"
+            *ngFor="let item of LstExpenseUnClaimedRequest_Rejected  | slice:0:tobeShown_rejected  | filter: searchText_rejected;let i = index"
+              style="padding: 5px;">
+            
+              <div class="packPrice ifOffer">
+                <div class="offer">
+                  <span class="voucherDisAmount"> {{item.Name}} </span>
+                </div>
+              </div>
+              <div class="card"
+                style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+                <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <div class="row">
+                        <div class="col-lg-6">
+
+
+                          <span style="font-size: 18px;
+                      font-weight: 600;
+                      color: black;"> Batch Code : {{ item.Id}} </span>
+                          <p class="date" style="font-size: 13px;"> SUBMITTED ON : {{item.CreatedOn | date
+                            :'dd-MM-yyyy'}} </p>
+
+
+                          <!-- <span style="font-size: 13px;font-weight: 600;"> <span class="badge badge-soft-success"
+                              style="display: inline;"> Approved </span> </span> -->
+                        </div>
+                        <!-- <div class="col-lg-2">
+                         
+                        </div> -->
+                        <div class="col-lg-4">
+                          <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                            <label class="form-label"
+                              style="font-weight: 600 !important;font-size: 11px !important;">SUBMITTED
+                              ON<span class="required"></span></label>
+                            <p class="date" style="font-size: 13px;"> {{item.CreatedOn | date :'dd-MM-yyyy'}} </p>
+
+                          </div> -->
+                        </div>
+
+                        <div class="col-md-2" style="text-align: right;">
+
+                          <a href="javascript:;" class="btn action-edit" style="margin-right: 5px"
+                            matTooltip="View Claims" (click)="do_viewDocuments(item)">
+                            <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                          </a>
+                          <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit Request"
+                          (click)="do_editAppliedRequest(item)">
+                          <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                        </a>
+                        <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="View Documents"
+                          (click)="do_viewDocuments(item)">
+                          <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                        </a> -->
+                        </div>
+
+                      </div>
+                      <!-- <span style="font-size: 12px;"> <b> REFERENCE NO </b> : {{item.Id}} </span> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+            /* margin-bottom: 0px; */
+            padding-left: 0px;
+            padding-top: 12px !important;">
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">NO OF
+                          CLAIMS<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;">{{item.TotalNoOfRequests}}</p>
+
+                      </div>
+                    </div>
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;">REQUESTED AMOUNT <span
+                            class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.TotalRequestedAmount |
+                          currency:'INR':'symbol-narrow':'1.2-2'}}</p>
+
+                      </div>
+                    </div>
+
+
+                    <!-- <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">NO OF
+                          CLAIMS<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;">{{item.TotalNoOfRequests}}</p>
+
+                      </div>
+                    </div> -->
+
+                    <!-- <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">APPROVED 
+                          CLAIMS<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;">{{item.tO}}</p>
+
+                      </div>
+                    </div> -->
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;">APPROVED AMT. <span
+                            class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.TotalApprovedAmount |
+                          currency:'INR':'symbol-narrow':'1.2-2'}}</p>
+
+                      </div>
+                    </div>
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;color: #e72c2c !important;">REJECTED
+                          AMT.<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;color: #e72c2c !important;"> {{getRejectedClaimsAmt(item)
+                          | currency:'INR':'symbol-narrow':'1.2-2'}}</p>
+
+                      </div>
+                    </div>
+
+                    <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label"
+                          style="font-weight: 600 !important;font-size: 11px !important;color: #e72c2c !important;">REJECTED
+                          CLAIMS<span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;color: #e72c2c !important;">{{getRejectedClaims(item)}}
+                        </p>
+
+                      </div>
+                    </div>
+
+                    <!-- <div class="col-md-2">
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                        <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">NO OF
+                          DOC.
+                          <span class="required"></span></label>
+                        <p class="date" style="font-size: 13px;"> {{item.TotalNoOfDocuments}} </p>
+
+                      </div>
+                    </div>
+                    -->
+
+
+
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
+
+          </ng-container>
+
+          <div class="col-lg-12" style="text-align: center; font-size: 13px;font-weight: 700;cursor: pointer;"
+          (click)="seeMore_rejected()" *ngIf="LstExpenseUnClaimedRequest_Rejected.length > 0">
+          <span> {{seeMoreText_rejected}} </span> <br>
+          <span>
+            <i class="mdi mdi-chevron-down bounce" style="font-size: 17px;"
+              *ngIf="seeMoreText_rejected =='See more'"></i>
+            <i class="mdi mdi-chevron-up bounce" style="font-size: 17px;"
+              *ngIf="seeMoreText_rejected =='See less'"></i>
+          </span>
+
+        </div>
+
+        
+
+        </div>
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- modal popup  -->
+
+
+<div id="expense_batch" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="expense_batch"
+  aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+
+
+        <div class="content">
+          <div class="modal-body no-padder">
+            <section>
+              <div class="row" style="height: 50px; margin-top: -25px;">
+                <div class="col-lg-12 pull-right">
+                  <div class="modal-close" (click)="close_expensebatch_popup()"><span
+                      class="mdi mdi-close pull-left"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+
+                <div class="col-xs-6  col-sm-6  p-r-50">
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label"> Total Request Amount </label>
+                    <span> {{_totalAmount | number : '1.2-2' }} </span>
+                  </div>
+
+
+                </div>
+                <div class="col-xs-6  col-sm-6  p-r-50">
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label"> No of Claims </label>
+                    <span> {{_totalClaims}} </span>
+                  </div>
+                </div>
+
+
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label"> Claim Batch Name </label>
+                    <input type="text" [(ngModel)]="expenseBatchName" placeholder="Bangalore Tour" class="form-control">
+                  </div>
+
+
+                </div>
+                <div class="col-xs-12  col-sm-12  p-r-50"
+                  *ngIf="defaultExpenseEligibilityCriteria != null && defaultExpenseEligibilityCriteria.IsAllowToInputApproverForEmployee">
+                  <div class="form-group form-group-vertical col-xs-12 col-sm-12">
+                    <label class="form-label"> Choose Manager </label>
+                    <ng-select [items]="ManagerList" placeholder="-- select on option --"
+                      [(ngModel)]="expenseApproverName" bindLabel="ManagerName" bindValue="ManagerId"
+                      (change)="onChangeManagerName($event)">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <br>
+
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="text-right">
+                    <ul class="list-inline">
+                      <li class="list-inline-item"> <button class="btn btn-default" type="button"
+                          (click)="close_expensebatch_popup()">
+                          <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                          Cancel</button>
+                      </li>
+                      <li class="list-inline-item"> <button class="btn  btn-primary" type="Submit" name="btnSubmit"
+                          id="btnSubmit" (click)="confirm_submit_claimApproval()">
+                          <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i>
+                              &nbsp;
+                              Submit
+                            </span></div>
+                        </button></li>
+
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div id="expense_batch_claimrequest" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="expense_batch_claimrequest" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+
+
+        <div class="content" style="padding: 2px;">
+          <div class="modal-body no-padder">
+            <section>
+              <div class="row" style="height: 50px; margin-top: -25px;">
+                <div class="col-lg-12 pull-right">
+                  <div class="modal-close" (click)="close_expensebatch_claimrequest_popup()"><span
+                      class="mdi mdi-close pull-left"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="ExpenseErrorList.length > 0">
+                <div class="col-lg-12">
+                  <div class="card" style="padding: 10px;" *ngFor="let j of ExpenseErrorList">
+                    <div class="row">
+                      <div class="col-md-12" style="padding-left: 30px; margin-bottom: 10px;">
+                        <h6 class="city"
+                          style="    font-weight: 700;letter-spacing: 1px;margin-bottom: 0px !important;">
+                          {{j.ExpenseClaimRequest.ProductName}} <span *ngIf="j.Status == false"
+                            class="badge badge-soft-danger" style="display: inline;">
+                            Failed </span>
+                          <span *ngIf="j.Status == true" class="badge badge-soft-success" style="display: inline;">
+                            Success </span>
+                        </h6>
+                        <span class="description" style="font-size: 12px; font-weight: 600;letter-spacing: 1px;">
+                          Requested Amt. ₹ {{j.ExpenseClaimRequest.RequestedAmount | number : '1.2-2'}} </span>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                          <label class="form-label">Expense Date <span class="required"></span></label>
+                          <p class="date">{{j.ExpenseClaimRequest.ExpenseIncurredDate | date:'MMM d, y'}}</p>
+
+                        </div>
+
+                      </div>
+                      <div class="col-md-8">
+                        <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                          <label class="form-label">Message <span class="required"></span></label>
+                          <p class="date" style="font-size: 13px; text-overflow: ellipsis;
+                        overflow: hidden; 
+                        width: 200px; 
+                        height: 1.2em; 
+                        white-space: nowrap; color: rgb(25, 19, 19);" title={{j.Message}}>{{j.Message}}</p>
+
+                        </div>
+
+                      </div>
+
+                      <hr>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <br>
+
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+                  <div class="text-right">
+                    <ul class="list-inline">
+                      <li class="list-inline-item"> <button class="btn btn-default" type="button"
+                          (click)="close_expensebatch_claimrequest_popup()">
+                          <i class="fa fa-ban" aria-hidden="true"></i> &nbsp;
+                          Close</button>
+                      </li>
+
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<nz-drawer [nzVisible]="viewExpenseClaimRequestSlider" [nzWidth]="740" nzTitle="Expense Claim Request"
+  (nzOnClose)="close_viewExpenseClaimRequestSlider()">
+
+  <div class="row" *ngIf="rowData">
+
+
+
+  </div>
+
+  <nz-descriptions [nzColumn]="2" *ngIf="rowData">
+    <nz-descriptions-item nzTitle="Batch Name" [nzSpan]="0.5"><b>{{rowData.Name}}</b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Requested Amt" [nzSpan]="0.5"><b>{{rowData.TotalRequestedAmount |
+        currency:'INR':'symbol-narrow':'1.2-2'}}</b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Approved Amt" [nzSpan]="1"><b>{{rowData.TotalApprovedAmount |
+        currency:'INR':'symbol-narrow':'1.2-2'}}</b>
+    </nz-descriptions-item>
+    <nz-descriptions-item nzTitle="No of Docs" [nzSpan]="1"><b>{{rowData.TotalNoOfDocuments}}</b></nz-descriptions-item>
+    <nz-descriptions-item nzTitle="No of Claims"
+      [nzSpan]="0.5"><b>{{rowData.TotalNoOfRequests}}</b></nz-descriptions-item>
+
+
+  </nz-descriptions>
+
+
+  <div class="row" *ngIf="rowData">
+
+    <ng-container *ngIf="rowData.ExpenseClaimRequestList != null && rowData.ExpenseClaimRequestList.length > 0">
+
+      <div class="col-md-12 col-sm-12 col-xs-12" *ngFor="let item of rowData.ExpenseClaimRequestList;let i = index"
+        style="padding: 5px;">
+
+        <div class="card" style="border-width: 1px!important;border-style: solid!important; border-color: #c6f5d7;">
+          <div class="card-body" style="padding: 10px;border-bottom: 1px solid #d9d8d8;">
+            <div class="row align-items-center">
+              <div class="col">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <span style="font-size: 18px;
+            font-weight: 600;
+            color: black;"> {{rowData.Name}} - {{item.ProductName}} </span>
+                  </div>
+
+                  <div class="col-lg-2" style="padding-top: 10px;">
+                    <span style="font-size: 13px;font-weight: 600;">
+                      <!-- <span class="badge badge-soft-warning" *ngIf="item.Status == '100' || item.Status == '200'"
+                      style="display: inline;"> {{item.DisplayStatus}} </span>
+                    <span class="badge badge-soft-danger" *ngIf="item.Status == '300'" style="display: inline;">
+                      {{item.DisplayStatus}}</span>
+                    <span class="badge badge-soft-success" *ngIf="item.Status == '400'" style="display: inline;">
+                      {{item.DisplayStatus}} </span> -->
+                      <span class="badge badge-soft-danger" *ngIf="item.DisplayStatus == 'Rejected'"
+                        style="display: inline;">
+                        {{item.DisplayStatus}}</span>
+
+                      <span class="badge badge-soft-success" *ngIf="item.DisplayStatus != 'Rejected'"
+                        style="display: inline;">
+                        {{item.DisplayStatus}} </span>
+                    </span>
+                  </div>
+                  <div class="col-lg-4 text-right">
+
+                    <a href="javascript:;" *ngIf="item.DocumentId > 0" class="btn action-edit" style="margin-right: 5px"
+                      matTooltip="View Documents" (click)="do_seeDocs(item)">
+                      <i class="fa fa-eye" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+                    </a>
+
+
+                  </div>
+                </div>
+                <span style="font-size: 12px;"> <b> REFERENCE NO </b> : {{item.Id}} </span>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer" style="background-color: white;border: none;padding-bottom: 0px !important;
+  /* margin-bottom: 0px; */
+  padding-left: 0px;
+  padding-top: 12px !important;">
+
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">EXPENSE
+                    DATE <span class="required"></span></label>
+                  <p class="date" style="font-size: 13px;"> {{item.ExpenseIncurredDate | date :'dd-MM-yyyy'}} </p>
+
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">REQUEST AMT.
+
+                    <span class="required"></span></label>
+                  <p class="date" style="font-size: 13px;"> {{item.RequestedAmount}} </p>
+
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">APPROVED
+                    AMT.
+                    <span class="required"></span></label>
+                  <p class="date" style="font-size: 13px;"> {{item.ApprovedAmount}} </p>
+
+                </div>
+              </div>
+              <div class="col-md-3" *ngIf="item.DisplayStatus == 'Rejected'">
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                <label class="form-label" style="font-weight: 600 !important;font-size: 11px !important;">REMARKS<span class="required"></span></label>
+                <p class="date" style="font-size: 12px;">{{item.Remarks}}</p>
+
+              </div>
+              </div>
+
+              <!-- <div class="col-md-3" style="text-align: right;"> -->
+              <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="Edit Request"
+                (click)="do_editAppliedRequest(item)">
+                <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+              </a> -->
+              <!-- <a href="javascript:;" class="btn action-edit" style="margin-right: 5px" matTooltip="View Documents"
+                (click)="do_viewDocuments(item)">
+                <i class="fa fa-list" aria-hidden="true" style="font-size: 16px;color: #838383;"></i>
+              </a> -->
+              <!-- </div> -->
+
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+
+    </ng-container>
+  </div>
+
+  <div class="row" style="position: absolute;bottom: 10px;width: 100%;">
+
+    <div style="float: right;" class="ng-star-inserted" style="width:98%;text-align: right !important;">
+      <button nz-button="" style="margin-right: 8px;" (click)="close_viewExpenseClaimRequestSlider()" class="ant-btn">
+        <span class="ng-star-inserted">Close</span>
+      </button>
+      <!-- <button nz-button="" nztype="primary" (click)="submitExpenseRequest('false')" class="ant-btn ant-btn-primary">
+      <span class="ng-star-inserted">Submit</span>
+    </button> -->
+
+    </div>
+
+  </div>
+
+
+</nz-drawer>

@@ -1,0 +1,281 @@
+<div style="display: block;" class="modal fade show">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header" style="padding: 15px !important;">
+                <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+                    <small class="header-pretitle"><b>Add New User</b></small>
+                    <h6 class="modal-title subheader_h6"> --- </h6>
+                </div>
+                <div class="modal-close" (click)="confirmExit()" style="margin-top: 5px;"><span class="mdi mdi-close pull-left"></span>
+                </div>
+            </div>
+
+            <div class="modal-body no-padder">
+
+                <div class="d-flex align-items-center" *ngIf="isLoading">
+                    <strong class="text-right"> {{spinnerText}}... &nbsp;&nbsp;&nbsp;</strong>
+                    <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                </div>
+
+                <div class="flex-column" style="margin-top: -30px;" *ngIf="!isLoading">
+
+                    <div class="row" *ngIf="isFailedForValidation">
+                        <div class="col-lg-12 text-center">
+                            <ngb-alert [dismissible]="false">
+                                <strong>{{FailedProcessMessage}}</strong>
+                            </ngb-alert>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="userForm">
+
+                        <div class="col-12 col-md-12 col-sm-12">
+                            <div class="clearfix">
+
+                                <div class="row">
+
+
+                                    <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+                                        <label class="form-label ">First Name <span class="required"> * </span></label>
+                                        <input class="form-control" name="FirstName" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" formControlName="FirstName" placeholder="First Name" [ngClass]=" { 'is-invalid': submitted && g.FirstName.errors } " type="text " autocomplete="off ">
+                                        <div *ngIf="submitted && g.FirstName .errors " class="invalid-feedback ">
+                                            <div *ngIf="g.FirstName.errors.required ">First Name is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                        <label class="form-label ">Mobile Number <span class="required"> * </span></label>
+                                        <input class="form-control " name="PrimaryMobile " formControlName="PrimaryMobile" onkeypress="return /^[0-9]+$/i.test(event.key)" maxlength="10 " placeholder="9876543210 " [ngClass]="{ 'is-invalid': submitted && g.PrimaryMobile.errors } " type="text
+                                            " autocomplete="off ">
+                                        <div *ngIf="submitted || userForm.get( 'PrimaryMobile').errors && userForm.get( 'PrimaryMobile').touched " class="help-block ">
+                                            <div *ngIf="g.PrimaryMobile.errors ">Mobile Number is required
+                                            </div>
+                                            <span *ngIf="userForm.get('PrimaryMobile').errors.minlength "> Mobile No.
+                                              should be minimum 10 characters
+                                          </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                        <label class="form-label ">EMail ID<span class="required"> * </span></label>
+                                        <input class="form-control " name="PrimaryEmail" formControlName="PrimaryEmail" pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$" placeholder="abc@abc.com " [ngClass]="{ 'is-invalid': submitted
+                                            && g.PrimaryEmail.errors } " type="text " autocomplete="off ">
+                                        <div *ngIf="submitted && userForm.get('PrimaryEmail').errors && userForm.get('PrimaryEmail').touched " class="help-block ">
+                                            <div *ngIf="g.PrimaryEmail.errors ">E-Mail is required
+                                            </div>
+                                            <span *ngIf="userForm.get('PrimaryEmail').errors.pattern "> Please enter
+                                              valid email (pattern mismatch)
+                                          </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                        <label class="form-label ">Father Name </label>
+                                        <input class="form-control " name="FatherName" onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" formControlName="FatherName" placeholder="Father Name " [ngClass]="{ 'is-invalid': submitted && g.FatherName.errors } " type="text " autocomplete="off ">
+                                        <div *ngIf="submitted && g.FatherName.errors" class="invalid-feedback ">
+                                            <div *ngIf="g.FatherName.errors.required ">Father Name is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                        <label class="form-label ">Date Of Birth<span class="required"> * </span></label>
+                                        <input type="text " class="form-control " bsDatepicker (bsValueChange)="onChangeDOB($event)" [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD-MM-YYYY', containerClass: 'theme-default' }
+                                            " name="DOB " formControlName="DOB" [ngClass]="{ 'is-invalid': submitted && g.DOB.errors } " placeholder="12-12-1990 " autocomplete="none|false|no ">
+                                        <div *ngIf="submitted && g.DOB .errors " class="invalid-feedback ">
+                                            <div *ngIf="g.DOB.errors.required ">Date Of Birth is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                        <label class="form-label ">User Name<span class="required"> * </span></label>
+                                        <input class="form-control " name="UserName " formControlName="UserName" placeholder="User Name" [ngClass]="{ 'is-invalid': submitted && g.UserName.errors } " type="text " autocomplete="off ">
+                                        <div *ngIf="submitted && g.UserName .errors " class="invalid-feedback ">
+                                            <div *ngIf="g.UserName.errors.required ">User Name is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6 ">
+                                        <label class="form-label ">Password<span class="required"> * </span></label>
+                                        <input class="form-control" type="password" name="Password " formControlName="Password" placeholder="Password " [ngClass]="{ 'is-invalid': submitted && g.Password.errors }" autocomplete="off ">
+                                        <div *ngIf="submitted && g.Password .errors " class="invalid-feedback ">
+                                            <div *ngIf="g.Password.errors.required ">Password is required
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                        <label class="form-label">Role <span class="required"> * </span></label>
+                                        <ng-select [items]="LstRoles" placeholder="-- --" formControlName="Role" [multiple]="true" [ngClass]="{'ng-touched': submitted && g.Role.errors }" bindLabel="Name" bindValue="Id">
+                                        </ng-select>
+                                        <div *ngIf="submitted && g.Role.invalid" class="help-block">
+                                            <div *ngIf="g.Role.errors.required">Role is required
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                                        <label class="form-label"> Choose Client <span class="required"> * </span> </label>
+                                        <ng-select [items]="LstClient_ClientContract" formControlName="Clients" (change)="onChangeClient($event)" placeholder="-- --" [multiple]="true" name="Clients" bindLabel="ClientNamewithCode" bindValue="ClientId">
+                                        </ng-select>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+
+
+                    </form>
+
+                    <div class="row" *ngIf="isFailedForValidation">
+                        <div class="col-lg-12 text-center">
+                            <ngb-alert [dismissible]="false">
+                                <strong>{{FailedProcessMessage}}</strong>
+                            </ngb-alert>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-column" *ngIf="!isLoading">
+                    <!-- <div class="row">
+                        <div class="col-12" style="text-align: left;">
+                            <a href="javascript:;">::: Add Clients :::: </a>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-6">
+                        <label class="form-label"> Choose Client </label>
+                        <ng-select [items]="LstClient_ClientContract" (change)="onChangeClient($event)" placeholder="-- --" [multiple]="true" [(ngModel)]="companyArr" name="companyArr" bindLabel="ClientNamewithCode" bindValue="ClientId">
+                        </ng-select>
+
+                    </div> -->
+
+                    <div class="row">
+                        <div class="col-12">
+
+                            <table class="table table-bordered table-container">
+                                <thead>
+                                    <tr class="document_table_tr">
+                                        <th scope="col" style="width:10%;font-weight: 500 !important;">
+                                            Code </th>
+                                        <th scope="col" style="width:40%;font-weight: 500;">Client Name
+                                        </th>
+                                        <th scope="col" style="width:30%;font-weight: 500;">Contract Name
+                                        </th>
+                                        <th scope="col" style="width:10%;font-weight: 500;">
+                                            Is Active </th>
+                                        <th scope="col" style="width:10%;font-weight: 500;">Is Default
+                                        </th>
+
+                                        <!-- <th scope="col" style="width:10%;font-weight: 500;">Actions</th> -->
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <ng-container *ngFor="let item of LstClientMapping_Existing; let i = index">
+                                        <tr *ngIf="item.IsActive">
+
+                                            <td class="document_table_docName" style="font-size: 12px;">
+                                                {{item.ClientCode}}
+                                            </td>
+                                            <td class="document_table_docName" style="font-size: 12px;">
+                                                {{item.ClientName}}
+                                            </td>
+                                            <td class="document_table_docName" style="font-size: 12px;">
+                                                {{item.ClientContractName}}
+                                            </td>
+                                            <td class="document_table_docName" style="font-size: 12px;text-align: center;">
+                                                <span *ngIf="item.IsActive">Yes</span> <span *ngIf="!item.IsActive">No</span>
+                                            </td>
+                                            <td class="document_table_docName" style="text-align: center;font-size: 12px;">
+
+                                                <input type="checkbox" (change)="onChangeIsDefault($event, item)" [(ngModel)]="item.IsDefault">
+                                            </td>
+
+                                            <!-- <td class="table_header document_table_docNo">
+                                                <a href="JavaScript:;" (click)="deleteItem(item)" class="btn subheader__btn-primary btn-icon mr-2">
+                                                    <i class="fa fa-trash-o font-16"></i>
+                                                </a>
+                                            </td> -->
+                                        </tr>
+                                    </ng-container>
+
+                                    <tr *ngFor="let item of LstClientMapping_tbl; let i = index">
+
+
+                                        <td class="document_table_docName" style="font-size: 12px;">
+                                            {{item.ClientCode}}
+                                        </td>
+                                        <td class="document_table_docName" style="font-size: 12px;">
+                                            {{item.ClientName}}
+                                        </td>
+                                        <td class="document_table_docName" style="font-size: 12px;">
+                                            {{item.ClientContractName}}
+                                        </td>
+                                        <td class="document_table_docName" style="font-size: 12px;text-align: center !important;">
+                                            <span *ngIf="item.IsActive">Yes</span> <span *ngIf="!item.IsActive">No</span>
+                                        </td>
+                                        <td class="document_table_docName" style="text-align: center !important;font-size: 12px;">
+                                            <input type="checkbox" (change)="onChangeIsDefault($event, item)" [(ngModel)]="item.IsDefault">
+                                        </td>
+
+                                        <!-- <td class="table_header document_table_docNo">
+
+                                            <a href="JavaScript:;" (click)="deleteItem(item)" class="btn subheader__btn-primary btn-icon mr-2">
+                                                <i class="fa fa-trash-o font-16"></i>
+                                            </a>
+                                        </td> -->
+
+
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+            <div class="modal-footer" style="width: 100%; " *ngIf="!isLoading">
+                <div>
+                    <button class="btn btn-default pull-right" type="button" (click)="confirmExit()"> <i class="fa fa-ban" aria-hidden="true"></i> &nbsp; Cancel</button>
+
+
+                    <div class="pull-right m-r-sm ng-pristine ng-invalid ng-touched">
+                        <div>
+                            <div>
+                                <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit" (click)="onSave()">
+                                  <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save </span></div>
+                              </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>

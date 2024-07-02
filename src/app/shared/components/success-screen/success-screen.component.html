@@ -1,0 +1,25 @@
+<div class="jumbotron text-center" *ngIf="!isMobileResolution">
+    <img *ngIf="!isAllenDigital" src="assets/Images/clientlogo/appmainlogo.png" style="opacity: 0.5;height: 100px;">
+    <img *ngIf="isAllenDigital" src="assets/Images/clientlogo/AllenLogo.png" style="opacity: 0.5;height: 100px;">
+    <h1 class="display-3">Thank You!</h1>
+    <!-- <p class="lead"><strong>You will be intimated through mail, incase we need more information or concerns in the meantime.</strong> We wish you the best of luck for the subsequent and remaining stage.</p> -->
+    <p class="lead"><strong>Your submission has been received and is under review. You will be notified by mail should
+            we require further information in the interim. Thank you.</strong> </p>
+    <!-- <hr> -->
+
+</div>
+
+<div class="jumbotron text-center" *ngIf="isMobileResolution">
+  
+     <img *ngIf="!isAllenDigital" src="assets/Images/clientlogo/appmainlogo.png"style="opacity: 0.5;height: 100px;display: block;
+     margin: 0 auto;">
+     <img *ngIf="isAllenDigital" src="assets/Images/clientlogo/AllenLogo.png" style="opacity: 0.5;height: 100px;display: block;
+     margin: 0 auto;">
+    <h1 class="display-3" style="font-size: 2rem;    margin: 16px;">Thank You!</h1>
+    <p class="lead" style="font-size: 14px;"><strong>Your submission has been received and is under review. You will be notified by mail should
+            we require further information in the interim. Thank you.</strong> </p>
+
+    <!-- <button class="btn btn-default btn-sm m-r-sm " style="padding: 6px 20px;" (click)="closetab()"> Close </button> -->
+
+
+</div>

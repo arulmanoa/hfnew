@@ -1,0 +1,267 @@
+<div id="approveRejectDetailTypeRegularizationId" id="modal_aside_left-ar" class="d-block modal fixed-left fade show"
+  tabindex="-1" role="dialog">
+  <app-loading-screen></app-loading-screen>
+  <div id="approveRejectDetailTypeRegularizationDivId" class="modal-dialog modal-xl modal-dialog-set-width modal-dialog-aside animated animate__fadeInRight" role="document">
+    <div class="modal-content" >
+      <div id="div-modal-header" class="d-flex">
+        <div class="col-10">
+          <div class="modal_header">{{attendanceDate | date : 'dd MMM y'}} - Regularize Attendance</div>
+          <small class="sub_header" id="subHeader">Requested On:&nbsp; {{data.RequestedOn}}</small>
+        </div>
+        <div class="col-2">
+          <button type="button" class="close" (click)="closeModal()"><i class="mdi mdi-close"></i></button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-12 col-sm-12">
+          <div class="d-flex align-items-center m-0" *ngIf="modalSpinner"
+            style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+            <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!modalSpinner" class="modal-body" style="max-height: calc(110vh - 200px) !important; overflow-x: hidden !important;font-family: Roboto;">
+        <!-- EMP DETAILS -->
+        <div class="row">
+          <div class="col-md-8">
+            <div class="kt-header__topbar-user pull-left">
+              <a class="nav-link waves-effect waves-light nav-user" href="javascript:;" role="button" aria-haspopup="false" aria-expanded="false">
+                 <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">
+                  {{getShortName(data.FirstName) | uppercase}} 
+                </span>
+              </a>
+            </div>
+            <div class="nameLabel" id="nameLabel1">{{ data.FirstName }}</div>
+            <div class="subLabel" id="subLabel1">{{ data.Code }} - {{data.Designation}}</div >
+            <div class="clearfix"></div>
+          </div>
+          <div class="col-md-4">
+            <div class="nameLabel" id="shiftDetails">{{ data.Name }}</div>
+            <div class="nameLabel fw-400" id="shiftTiming">({{ formatTimeRange()}})</div>
+          </div>
+        </div>
+        <hr style="border: 1px solid #E9E9E9;margin: 1rem 0;">
+        <!-- EXISTING DATA -->
+        <div class="row mx-auto with-bg-grey mb-3">
+          <div class="col-12 p-0" >
+            <h6 class="modal_title p-2">Existing Information</h6>
+            <div class="pl-2 form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-left" *ngIf="existingDontShowSplitStatus">
+              <label class="form-label label-title" name="existingStatus">Status</label>
+              <button class="btn" *ngIf="data && data.OldIntermittentStatus" 
+                [class.holiday-status]="data.OldIntermittentStatus != '' && data.OldIntermittentStatus == 'Holiday'"
+                [class.pending-status]="data.OldIntermittentStatus != '' && data.OldIntermittentStatus == 'WeekOff'"
+                [class.approved-status]="data.OldIntermittentStatus != '' && data.OldIntermittentStatus != 'Absent' && data.OldIntermittentStatus != 'Holiday' && data.OldIntermittentStatus != 'WeekOff'"
+                [class.rejected-status]="data.OldIntermittentStatus != '' && data.OldIntermittentStatus == 'Absent'">
+                {{data.OldIntermittentStatus}}
+              </button>
+            </div>
+            <div class="pl-2 form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-left" *ngIf="!existingDontShowSplitStatus">
+              <label class="form-label label-title" name="existingStatus">Status</label>
+              <button class="btn" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" 
+                [class.holiday-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'Holiday'"
+                [class.pending-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'WeekOff'"
+                [class.approved-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'Present'"
+                [class.rejected-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'Absent'"
+                [class.default-status]="checkAttendanceStatus(existingAttendanceData[0].AttendanceCode, existingAttendanceData) == 'default'">
+                {{existingAttendanceData[0].AttendanceCode != null ? existingAttendanceData[0].AttendanceCode : 'Absent'}}
+              </button>
+              <span class="form-label label-title ml-0 mt-2" *ngIf="data.IsBreakShift">
+                <i class="fa fa-square" aria-hidden="true" 
+                [class.holiday-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) == 'Holiday'"
+                [class.pending-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) == 'WeekOff'"
+                [class.approved-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) != 'Absent' && getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) != 'Holiday' && getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) != 'WeekOff'"
+                [class.rejected-color]="getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                {{getAttendanceStatusCode(existingAttendanceData[0].FirstHalfAttendanceCode, existingAttendanceData)}} - 1st Half
+              </span>
+              <span class="form-label label-title ml-0 mt-2" *ngIf="data.IsBreakShift">
+                <i class="fa fa-square" aria-hidden="true" 
+                [class.holiday-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) == 'Holiday'"
+                [class.pending-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) == 'WeekOff'"
+                [class.approved-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) != 'Absent' && getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) != 'Holiday' && getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) != 'WeekOff'"
+                [class.rejected-color]="getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                {{getAttendanceStatusCode(existingAttendanceData[0].SecondHalfAttendanceCode, existingAttendanceData)}} - 2nd Half
+              </span>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right">
+              <label class="form-label label-title" name="existingHrs">Total Working Hours</label>
+              <span class="form-text label-value" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" > 
+                {{getTotalWorkingHoursInHoursMinuteFormat(existingAttendanceData[0].DayHoursConsidered)}} 
+                <span class="small-text">(hh:mm)</span>
+              </span>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right" *ngIf="data.IsBreakShift">
+              <div class="mb-2">
+                <label class="form-label label-title" name="existingFirstHalfWrkHrs">1st Half Working Hours</label>
+                <span class="form-text label-value" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" > 
+                  {{getTotalWorkingHoursInHoursMinuteFormat(existingAttendanceData[0].FirstHalfHoursConsidered)}}
+                  <span class="small-text">(hh:mm)</span>
+                </span>
+              </div>
+              <div class="mb-2">
+                <label class="form-label label-title" name="existingSecondHalfWrkHrs">2nd Half Working Hours</label>
+                <span class="form-text label-value" *ngIf="existingAttendanceData && existingAttendanceData.length > 0" > 
+                  {{getTotalWorkingHoursInHoursMinuteFormat(existingAttendanceData[0].SecondHalfHoursConsidered)}}
+                  <span class="small-text">(hh:mm)</span> 
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12" *ngIf="existingPunchDetails && existingPunchDetails.length > 0">
+            <table class="table emp-regularize-table">
+              <thead class="emp-regularize-table-header">
+                <tr class="w-100">
+                  <th class=""> Time </th>
+                  <th class=""> In/Out </th>
+                  <th class=""> Work Location/Machine </th>
+                  <th class=""> Remarks </th>
+                </tr>
+              </thead>
+              <tbody class="emp-regularize-table-body">
+                <tr *ngFor="let item of existingPunchDetails; let i = index">
+                 <td *ngIf="data.IsBreakShift == false">{{item.Time}} <span class="subLabel">({{ item.AttendanceDate | date:'dd MMM' }})</span></td>
+                 <td *ngIf="data.IsBreakShift == true">{{item.Time}} <span class="subLabel">({{ item.AttendanceDate | date:'dd MMM' }} - {{ item.Half_Type }})</span></td>
+                 <td>{{item.Type}}</td>
+                 <td> 
+                  <span *ngIf="item.BiometricDeviceId > 0 && item.LocationId == 0">
+                    {{item.BioMetricDeviceName}}
+                  </span>
+                  <span *ngIf="item.BiometricDeviceId == 0 && item.LocationId > 0">
+                    {{item.LocationName}}
+                  </span>
+                 </td>
+                 <td>
+                  <button id="remarks-Popover-{{i}}"  type="button" *ngIf="item.Remarks"
+                    class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;"
+                    [ngbPopover]="item.Remarks" popoverTitle="Remarks" triggers="mouseenter:mouseleave"
+                    container="body" placement="left" popoverClass="custom-popover-class">
+                  </button>
+                 </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- REGULARIZED DATA -->
+        <div class="row mx-auto with-bg-white">
+          <div class="col-12 p-0">
+            <h6 class="modal_title p-2">Regularized Information</h6>
+            <div class="pl-2 form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-left" *ngIf="regularizedDontShowSplitStatus">
+              <label class="form-label label-title" name="existingStatus">Status</label>
+              <button class="btn" *ngIf="data && data.NewIntermittentStatus" 
+                [class.holiday-status]="data.NewIntermittentStatus != '' && data.NewIntermittentStatus == 'Holiday'"
+                [class.pending-status]="data.NewIntermittentStatus != '' && data.NewIntermittentStatus == 'WeekOff'"
+                [class.approved-status]="data.NewIntermittentStatus != '' && data.NewIntermittentStatus != 'Absent' && data.NewIntermittentStatus != 'Holiday' && data.NewIntermittentStatus != 'WeekOff'"
+                [class.rejected-status]="data.NewIntermittentStatus != '' && data.NewIntermittentStatus == 'Absent'">
+                {{data.NewIntermittentStatus}}
+              </button>
+            </div>
+            <div class="pl-2 form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-left" *ngIf="!regularizedDontShowSplitStatus">
+              <label class="form-label label-title" name="existingStatus">Status</label>
+              <button class="btn" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" 
+                [class.holiday-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'Holiday'"
+                [class.pending-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'WeekOff'"
+                [class.approved-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'Present'"
+                [class.rejected-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'Absent'"
+                [class.default-status]="checkAttendanceStatus(regularizedAttendanceData[0].AttendanceCode, regularizedAttendanceData) == 'default'">
+                {{regularizedAttendanceData[0].AttendanceCode != null  ? regularizedAttendanceData[0].AttendanceCode : 'Absent'}}
+              </button>
+              <span class="form-label label-title mt-2" *ngIf="data.IsBreakShift">
+                <i class="fa fa-square" aria-hidden="true"
+                [class.holiday-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) == 'Holiday'"
+                [class.pending-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) == 'WeekOff'" 
+                [class.approved-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) != 'Holiday' && getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) != 'WeekOff' && getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) != 'Absent'"
+                [class.rejected-color]="getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                {{getAttendanceStatusCode(regularizedAttendanceData[0].FirstHalfAttendanceCode, regularizedAttendanceData)}} - 1st Half
+              </span>
+              <span class="form-label label-title mt-2" *ngIf="data.IsBreakShift">
+                <i class="fa fa-square" aria-hidden="true"
+                [class.holiday-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) == 'Holiday'"
+                [class.pending-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) == 'WeekOff'"
+                [class.approved-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) != 'Absent' && getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) != 'Holiday' && getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) != 'WeekOff'"
+                [class.rejected-color]="getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData) === 'Absent'" style="background: transparent;"></i> 
+                {{getAttendanceStatusCode(regularizedAttendanceData[0].SecondHalfAttendanceCode, regularizedAttendanceData)}} - 2nd Half
+              </span>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right">
+              <label class="form-label label-title" name="existingHrs">Total Working Hours</label>
+              <span class="form-text label-value" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" > 
+                {{getTotalWorkingHoursInHoursMinuteFormat(regularizedAttendanceData[0].DayHoursConsidered) }} 
+                <span class="small-text">(hh:mm)</span>
+              </span>
+            </div>
+            <div class="form-group form-group-vertical col-xs-12 col-sm-12 col-md-6 pull-right" *ngIf="isBreakShift">
+              <div class="mb-2">
+                <label class="form-label label-title" name="existingFirstHalfWrkHrs">1st Half Working Hours</label>
+                <span class="form-text label-value" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" > 
+                  {{getTotalWorkingHoursInHoursMinuteFormat(regularizedAttendanceData[0].FirstHalfHoursConsidered) }} 
+                  <span class="small-text">(hh:mm)</span>
+                </span>
+              </div>
+              <div class="mb-2">
+                <label class="form-label label-title" name="existingSecondHalfWrkHrs">2nd Half Working Hours</label>
+                <span class="form-text label-value" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0" > 
+                  {{getTotalWorkingHoursInHoursMinuteFormat(regularizedAttendanceData[0].SecondHalfHoursConsidered) }} 
+                  <span class="small-text">(hh:mm)</span> 
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12" *ngIf="regularizedPunchDetails && regularizedPunchDetails.length > 0">
+            <table class="table emp-regularize-table">
+              <thead class="emp-regularize-table-header">
+                <tr class="w-100">
+                  <th> Time </th>
+                  <th> In/Out </th>
+                  <th> Work Location/Machine </th>
+                  <th> Remarks </th>
+                </tr>
+              </thead>
+              <tbody class="emp-regularize-table-body">
+                <tr *ngFor="let item of regularizedPunchDetails; let idx = index">
+                 <td *ngIf="data.IsBreakShift == false">{{item.Time}} <span class="subLabel">({{ item.AttendanceDate | date:'dd MMM' }})</span></td>
+                 <td *ngIf="data.IsBreakShift == true">{{item.Time}} <span class="subLabel">({{ item.AttendanceDate | date:'dd MMM' }} - {{ item.Half_Type }})</span></td>
+                 <td>{{item.Type}}</td>
+                 <td> 
+                  <span *ngIf="item.BiometricDeviceId > 0 && item.LocationId == 0">
+                    {{item.BioMetricDeviceName}}
+                  </span>
+                  <span *ngIf="item.BiometricDeviceId == 0 && item.LocationId > 0">
+                    {{item.LocationName}}
+                  </span>
+                 </td>
+                 <td>
+                  <button id="remarks-Popover-{{idx}}"  type="button" *ngIf="item.Remarks"
+                    class="btn mdi mdi-file-outline color-grey" style="font-size: 15px;"
+                    [ngbPopover]="item.Remarks" popoverTitle="Remarks" triggers="mouseenter:mouseleave"
+                    container="body" placement="left" popoverClass="custom-popover-class">
+                  </button>
+                 </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-12 mb-5" *ngIf="regularizedPunchDetails && regularizedPunchDetails.length > 0">
+            <label class="form-label label-remarks" name="empSubmissionRemarks">Submission Remarks</label>
+            <span class="form-text text-remarks" *ngIf="regularizedAttendanceData && regularizedAttendanceData.length > 0">
+              {{data.RequisitionRemarks ? data.RequisitionRemarks : ' - '}}
+            </span>
+          </div>
+        </div>
+        <!-- FOOTER -->
+        <div class="row">
+          <div class="col-md-12 text-right modal-fixed-custom-footer m-2">
+            <div class="d-flex m-3 justify-content-end">
+              <button class="btn btn-danger btn-reject m-r-sm" type="button" (click)="approveRejectRegularizationDetailedType('Reject')">
+                Reject 
+              </button>
+              <button class="btn btn-success btn-approve" (click)="approveRejectRegularizationDetailedType('Approve')"> 
+                Approve
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

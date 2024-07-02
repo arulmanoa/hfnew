@@ -1,0 +1,56 @@
+@media (min-width: 992px) {
+    .modal-lg
+    {
+        max-width: 1000px;
+    }
+}
+.ng-select {
+    border: none;
+    box-shadow: none;
+  }
+  
+  /* Remove close button */
+  .ng-select ::ng-deep .ng-clear-wrapper {
+    display: none;
+  }
+  .ndcCell {
+    max-width: 200px;
+   
+  }
+  .notifyHeader {
+    width: 50px;
+    text-align: center;
+  }
+  .rupeeSybl {
+    position: absolute;
+    left: 20px; 
+    top: 13px
+  }
+  .ndcNotify {
+    width: auto; 
+    height: 30px; 
+    margin-top: 10px; 
+    padding-right: 10px;
+    color: steelblue;
+  }
+  
+  .notify {
+    cursor: pointer;
+  }
+  .upload-draggable section {
+    padding: 0.2rem 1.9rem !important;
+  }
+  
+  .successNotify {
+    color: green;
+    pointer-events: none;
+  }
+  .failedNotify {
+    color: red;
+    cursor: pointer;
+  }
+  .disabledTxt {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+

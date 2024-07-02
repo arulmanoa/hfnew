@@ -1,0 +1,275 @@
+<div style="display: block;" class="modal fade show animated fadeIn">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="row" style="padding: 16px;padding-bottom: 0px;">
+        <div class="col-lg-8">
+          <small class="header-pretitle hed"><b>Aadhaar Verification</b></small>
+          <h6 class="modal-title subheader_h6" id="popup_release_AL">{{defaultSearchInputs.ClientName}} |
+            {{defaultSearchInputs.ClientContractName}}
+          </h6>
+        </div>
+        <div class="col-lg-4">
+          <div class="modal-close" (click)="modal_dismiss('Modal Closed')" style="margin-top: 5px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-lg-7" style="padding-top: 7rem;">
+          <div class="modal-body">
+
+            <form [formGroup]="aadhaarForm">
+              <div class="row">
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label">Aadhaar Number <span class="required">*</span>
+                  </label>
+                 
+
+                  <input type="number" onkeypress="return /^[0-9]+$/i.test(event.key)" class="form-control"
+                    name="UINumber" formControlName="UINumber" #UINumber maxlength="12"  (input)="aadhaarKeyUp($event)"
+                    [ngClass]="{'is-invalid': submitted && g.UINumber.errors }" placeholder="XXXX XXXX XX12"
+                    autocomplete="none|false|no" minlength="12" maxlength="12">
+                  <div *ngIf="submitted && g.UINumber.errors" class="invalid-feedback">
+                    <div *ngIf="g.UINumber.errors.required">Aadhaar Number is required
+                    </div>
+                  </div>
+                  <div *ngIf="aadhaarForm.get('UINumber').errors && aadhaarForm.get('UINumber').touched"
+                    class="help-block">
+                    <span *ngIf="aadhaarForm.get('UINumber').errors.pattern">
+                      Please match the requested format (Ex: 2XXX XXXX 1111)
+                    </span>
+                  </div>
+
+                </div>
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12">
+                  <label class="form-label">Name as per Aadhaar <span class="required">*</span>
+                  </label>
+                  <input class="form-control" type="text" spellcheck="false"
+                    onkeypress="return /^[a-zA-Z \s]+$/i.test(event.key)" name="UIName" pattern="[\x00-\x7F]+"
+                    maxlength="100" formControlName="UIName" [ngClass]="{'is-invalid': submitted && g.UIName.errors }"
+                    placeholder="A**** *****O" autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.UIName.errors" class="invalid-feedback">
+                    <div *ngIf="g.UIName.errors.required">Name is required
+                    </div>
+                  </div>
+                </div>
+
+  
+
+                <!-- <div class="form-group form-group-vertical col-xs-12  col-sm-6" *ngIf="hasSentOTP">
+                  <label class="form-label"> Verification Code 
+                  </label>
+                  <input class="form-control" type="number" spellcheck="false" type="number"
+                    onkeypress="return /^[0-9]+$/i.test(event.key)" name="OTP" pattern="[\x00-\x7F]+" maxlength="100"
+                    formControlName="OTP" [ngClass]="{'is-invalid': submitted && g.OTP.errors }" placeholder="### ###"
+                    autocomplete="none|false|no">
+                  <div *ngIf="submitted && g.OTP.errors" class="invalid-feedback">
+                    <div *ngIf="g.OTP.errors.required">OTP is required
+                    </div>
+                  </div>
+                </div> -->
+
+                <div class="form-group form-group-vertical col-xs-12  col-sm-12 otp_input text-center"
+                  *ngIf="hasSentOTP">
+                  <label class="form-label text-left"> Verification Code <span class="required">*</span>
+                  </label>
+
+                  <input class="form-control" id="otp1" #otp1 required maxLength="1" formControlName="OTP"
+                    (keyup)="otpController($event,'otp2','')">
+
+                  <input id="otp2" class="form-control" #otp2 required maxLength="1" formControlName="OTP1"
+                    (keyup)="otpController($event,'otp3','otp1')">
+
+                  <input id="otp3" class="form-control" #otp3 required maxLength="1" formControlName="OTP2"
+                    (keyup)="otpController($event,'otp5','otp2')">
+
+                  <input id="otp5" class="form-control" #otp5 required maxLength="1" formControlName="OTP3"
+                    (keyup)="otpController($event,'otp6','otp3')">
+
+                  <input id="otp6" class="form-control" #otp6 required maxLength="1" formControlName="OTP4"
+                    (keyup)="otpController($event,'otp4','otp5')">
+
+                  <input id="otp4" class="form-control" #otp4 required maxLength="1" formControlName="OTP5"
+                    (keyup)="otpController($event,'','otp6')">
+
+
+                  <div *ngIf="submitted && g.OTP.errors" class="invalid-feedback">
+                    <div *ngIf="g.OTP.errors.required">OTP is required
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+
+            <br />
+
+            <div class="row" *ngIf="hasFailedInput" style="font-size: 12px;">
+              <div class="col-lg-12 text-center">
+                <ngb-alert [dismissible]="false">
+                  <strong>{{failedInputErrorMessage}}</strong>
+                </ngb-alert>
+              </div>
+            </div>
+            <br />
+
+            <div class="row" *ngIf="hasSuccessInput">
+              <div class="col-lg-12 text-center">
+                <ngb-alert type="success" [dismissible]="false">
+                  <strong>{{successInputErrorMessage}}</strong>
+                </ngb-alert>
+              </div>
+            </div>
+            <br />
+
+            <div class="row" *ngIf="!hasSentOTP && !hasSuccessInput">
+              <div class="col-md-12 text-right">
+                <button class="btn btn-primary" (click)="doVerifyAadhaar()" [disabled]="smallspinner"
+                  style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                    class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Verify E-Aadhaar &nbsp; &nbsp; <span
+                    *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="hasSuccessInput">
+              <div class="col-md-12 text-right">
+                <button class="btn btn-primary" (click)="doProceed()" [disabled]="smallspinner"
+                  style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                    class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Continue &nbsp; &nbsp; <span
+                    *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true">
+                  </span>
+                </button>
+              </div>
+            </div>
+
+
+            <div class="row" *ngIf="hasSentOTP">
+              <div class="col-md-12 text-right">
+                <div class="row">
+                  <div class="col-lg-12 waittimemsg text-left">
+                    <span> <i class="mdi mdi-info"></i> The 6-digit OTP sent to candidate's registered mobile number with Aadhaar.
+                      Please collect it from respective candidate and enter the OTP textbox and click Verify. It may take a minute to receive your code.
+                    </span>
+
+                  </div>
+                  <div class="col-lg-12 text-right" *ngIf="!hasSuccessInput">
+                    <button class="btn btn-primary" (click)="doVerifyOTP()" [disabled]="smallspinner"
+                      style="background: #146BA2 !important;margin-top: 10px;margin-right: 10px;"> <i
+                        class="mdi mdi-shape-square-rounded-plus"></i>&nbsp; &nbsp; Verify OTP &nbsp; &nbsp; <span
+                        *ngIf="smallspinner" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true"></span>
+                    </button>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+
+
+
+          <div class="row">
+            <div class="col-md-12 text-right">
+              <div class="row">
+                <div class="col-lg-12 waittimemsg">
+
+                  <svg id="Group_7705" data-name="Group 7705" alt="eSign-FAQ" style="height: 4rem;margin-bottom: 13px;"
+                    xmlns="http://www.w3.org/2000/svg" width="190.199" height="80.184" viewBox="0 0 190.199 80.184">
+                    <path id="Path_10851" data-name="Path 10851"
+                      d="M234.917,1651.235H303.6v22.547H301v5.9l-5.9-5.9H234.917Z"
+                      transform="translate(-113.399 -1624.872)" fill="#f0f0f0"></path>
+                    <rect id="Rectangle_2005" data-name="Rectangle 2005" width="64.865" height="18.037"
+                      transform="translate(123.426 28.559)" fill="#fff"></rect>
+                    <rect id="Rectangle_2006" data-name="Rectangle 2006" width="31.231" height="0.948"
+                      transform="translate(151.324 33.998)" fill="#f0f0f0"></rect>
+                    <rect id="Rectangle_2007" data-name="Rectangle 2007" width="54.433" height="0.948"
+                      transform="translate(128.122 37.277)" fill="#f0f0f0"></rect>
+                    <rect id="Rectangle_2008" data-name="Rectangle 2008" width="54.379" height="0.948"
+                      transform="translate(128.176 40.556)" fill="#f0f0f0"></rect>
+                    <path id="Path_10923" data-name="Path 10923"
+                      d="M27.145,0A27.145,27.145,0,1,1,0,27.145,27.145,27.145,0,0,1,27.145,0Z"
+                      transform="translate(16.224 12.5)" fill="#8dc1d6"></path>
+                    <path id="Path_10853" data-name="Path 10853"
+                      d="M506.758,1668.449a7.183,7.183,0,0,0-11.026,0,7.984,7.984,0,1,1,11.288-.262C506.935,1668.276,506.847,1668.364,506.758,1668.449Z"
+                      transform="translate(-446.3 -1626.625)" fill="#fff"></path>
+                    <path id="Path_10854" data-name="Path 10854"
+                      d="M550.515,1668.449a7.182,7.182,0,0,0-11.026,0,7.984,7.984,0,1,1,11.288-.262h0Q550.649,1668.321,550.515,1668.449Z"
+                      transform="translate(-511.613 -1626.625)" fill="#fff"></path>
+                    <ellipse id="Ellipse_843" data-name="Ellipse 843" cx="2.746" cy="2.746" rx="2.746" ry="2.746"
+                      transform="translate(54.922 30.584)" fill="#757575"></ellipse>
+                    <ellipse id="Ellipse_844" data-name="Ellipse 844" cx="2.746" cy="2.746" rx="2.746" ry="2.746"
+                      transform="translate(33.367 30.584)" fill="#757575"></ellipse>
+                    <path id="Path_10855" data-name="Path 10855" d="M527.271,1679.006l2.4,10.379-3.992-3.992Z"
+                      transform="translate(-482.704 -1638.962)" fill="#40788f"></path>
+                    <path id="Path_10856" data-name="Path 10856"
+                      d="M539.015,1743.58l2.719-2.282-.063,2.282h.845l.068-2.413,3.671,2.413h1.537l-5.181-3.406.2-7.15.15-5.4-.843-.023-.152,5.424-.2,7.144-4.064,3.412Z"
+                      transform="translate(-506.756 -1663.617)" fill="#40788f"></path>
+                    <path id="Path_10857" data-name="Path 10857"
+                      d="M513.088,1743.58l2.719-2.282-.063,2.282h.842l.068-2.413,3.672,2.413h1.537l-5.179-3.406.2-7.15.15-5.4-.844-.023-.152,5.424-.2,7.144-4.064,3.412Z"
+                      transform="translate(-468.053 -1663.617)" fill="#40788f"></path>
+                    <path id="Path_10858" data-name="Path 10858"
+                      d="M518.345,1615.754a2.235,2.235,0,0,1,1.841,1.468c.387-1.336,1.2-2.266,2.151-2.266a1.474,1.474,0,0,1,.192.032c.366-1.427,1.214-2.427,2.2-2.427,1.323,0,2.4,1.787,2.4,3.992s-1.072,3.992-2.4,3.992a1.476,1.476,0,0,1-.192-.032c-.365,1.427-1.214,2.427-2.2,2.427a2.235,2.235,0,0,1-1.841-1.467c-.387,1.336-1.2,2.265-2.151,2.265-1.323,0-2.4-1.787-2.4-3.992S517.022,1615.754,518.345,1615.754Z"
+                      transform="translate(-475.376 -1605.25)" fill="#40788f"></path>
+                    <path id="Path_10859" data-name="Path 10859"
+                      d="M441.171,1677.228l14.954-2.425a7.639,7.639,0,0,1,2.276-.138,2.581,2.581,0,0,1,1.9,1.137,1.9,1.9,0,0,1-2.014,2.83,4.818,4.818,0,0,1,2.4.333,1.655,1.655,0,0,1,.884,2.03,1.819,1.819,0,0,1-.423.535,3.876,3.876,0,0,1-4.078.692c.551.789,1.643.906,2.588,1.089s2.038.717,2.073,1.679c.039,1.081-1.247,1.655-2.306,1.876a30.254,30.254,0,0,1-16.913-1.379,6.8,6.8,0,0,1-1.7-.869,3.838,3.838,0,0,1,1.553-6.817"
+                      transform="translate(-372.21 -1636.738)" fill="#40788f"></path>
+                    <path id="Path_10860" data-name="Path 10860"
+                      d="M574.585,1690.707a30.251,30.251,0,0,1,11.266-12.69,6.817,6.817,0,0,1,1.719-.838,3.838,3.838,0,0,1,4.515,5.338l1.17-.605-7.048,13.409a7.635,7.635,0,0,1-1.258,1.9,2.579,2.579,0,0,1-2.05.833,1.893,1.893,0,0,1-1.492-2.708,3.662,3.662,0,0,1-1.267,1.114,1.655,1.655,0,0,1-2.154-.513,1.819,1.819,0,0,1-.173-.659,3.877,3.877,0,0,1,1.9-3.675c-.962-.034-1.712.768-2.426,1.414s-1.8,1.2-2.588.647C573.81,1693.059,574.124,1691.685,574.585,1690.707Z"
+                      transform="translate(-570.166 -1637.96)" fill="#40788f"></path>
+                    <path id="Path_10861" data-name="Path 10861"
+                      d="M358.96,1597.721H259.835v32.541h3.755v8.51l8.51-8.51h86.86Z"
+                      transform="translate(-181.036 -1597.721)" fill="#ececec"></path>
+                    <rect id="Rectangle_2010" data-name="Rectangle 2010" width="93.618" height="26.033"
+                      transform="translate(81.552 3.169)" fill="#fff"></rect>
+                    <rect id="Rectangle_2011" data-name="Rectangle 2011" width="45.075" height="1.368"
+                      transform="translate(122.567 10.769)" fill="#00b087"></rect>
+                    <rect id="Rectangle_2012" data-name="Rectangle 2012" width="78.561" height="1.368"
+                      transform="translate(89.081 15.501)" fill="#00b087"></rect>
+                    <rect id="Rectangle_2013" data-name="Rectangle 2013" width="78.485" height="1.368"
+                      transform="translate(89.158 20.233)" fill="#00b087"></rect>
+                    <path id="Path_10862" data-name="Path 10862"
+                      d="M450.058,1760.03h83.881a.22.22,0,0,0,0-.44H450.058a.22.22,0,1,0,0,.44Z"
+                      transform="translate(-449.838 -1679.847)" fill="#cacaca"></path>
+                  </svg>
+
+                  <!-- <span> <i class="mdi mdi-info"></i> E-KYC is a valid document as the regular KYC.
+                  </span>
+                  <span> <i class="mdi mdi-info"></i> Aadhaar E-KYC
+                    makes it very convenient to submit your details to any service provider for faster processing.
+                  </span> -->
+
+                  <p> Customers are remotely authenticated using this method using data gathered by the Unique
+                    Identification Authority of India (UIDAI). Customers have the option of choosing biometric or
+                    Aadhaar OTP-based verification</p>
+                </div>
+
+              </div>
+
+
+            </div>
+          </div>
+
+
+          <img src="assets/Images/kycvector.jpg">
+        </div>
+      </div>
+
+
+      <!-- <div class="modal-footer">
+      </div> -->
+    </div>
+  </div>
+</div>

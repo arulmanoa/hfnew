@@ -1,0 +1,1196 @@
+<div class="page-wrapper">
+    <div class="page-content">
+        <app-loading-screen></app-loading-screen>
+
+        <div class="row" style="margin-bottom: 10px;margin-top: -15px;">
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+                <div class="text-left">
+                    <h1 class="vss-HubTitle">
+                        <div class="vss-HubTitle--titleText" style="margin-top: 20px;">Tax Slip</div>
+                    </h1>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+                <div class="text-right" *ngIf="EmployeeTaxSlipRecords">
+                    <ul class="list-inline">
+
+
+                        <li class="list-inline-item"><button type="button" (click)="makePDF()" class="btn btn-default">
+                                <i class="mdi mdi-download m-r-xs"></i> Download as PDF
+                            </button>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="content m-b pb-5 report-content int-header-content-panel">
+            <div class="row">
+
+                <div style="z-index: 1000 !important"
+                    *ngIf="!isEssLogin && (RoleCode != 'PayrollAdmin') && BusinessType == 3"
+                    class="form-group-vertical col-xs-12 col-sm-2 col-md-3">
+                    <label class="form-label searchbar-label">Client Name *</label>
+                    <div class="form-group m-t-m5">
+                        <div class="input-group">
+                            <ng-select [items]="clientList" [searchable]="true" [(ngModel)]="clientId"
+                                placeholder="Client Name" bindLabel="Name" bindValue="Id" (keyup.enter)="onSearch()"
+                                (change)="onClientChange($event)"
+                                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="z-index: 1000 !important"
+                    *ngIf="!isEssLogin && (RoleCode != 'PayrollAdmin') && BusinessType == 3"
+                    class="form-group-vertical col-xs-12 col-sm-2 col-md-3">
+                    <label class="form-label searchbar-label">Contract Name *</label>
+                    <div class="form-group m-t-m5">
+                        <div class="input-group">
+                            <ng-select [items]="clientContractList" [searchable]="true" [(ngModel)]="clientContractId"
+                                placeholder="Contract Name" bindLabel="Name" bindValue="Id" (keyup.enter)="onSearch()"
+                                [disabled]="clientId == null"
+                                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-2 col-md-2" *ngIf="RoleCode != 'Employee'">
+                    <label class="form-label searchbar-label">Employee Code *</label>
+                    <div class="form-group m-t-m5">
+                        <div class="input-group">
+                            <input type="text" placeholder="Employee Code" [disabled]="isEssLogin" class="form-control"
+                                [(ngModel)]="empCode" (keyup.enter)="onSearch()"
+                                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                        </div>
+                    </div>
+                </div>
+                <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+                    <label class="form-label searchbar-label">Month *</label>
+                    <div class="form-group m-t-m5">
+                        <div class="input-group">
+                            <ng-select [items]="monthList" placeholder="-- select an option --" [(ngModel)]="month"
+                                bindLabel="name" bindValue="id" (keyup.enter)="onSearch()"
+                                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                            </ng-select>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+                    <label class="form-label searchbar-label">Year *</label>
+                    <div class="form-group m-t-m5">
+                        <div class="input-group">
+                            <ng-select [items]="yearList" [searchable]="true" [(ngModel)]="year" placeholder="Year"
+                                bindLabel="name" bindValue="id" (keyup.enter)="onSearch()"
+                                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                            </ng-select>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div [ngClass]="{'row': !isEssLogin}" class="float-right" [ngStyle]="{'margin-top: -3rem': isEssLogin}">
+                <div [ngClass]="{'col-12': !isEssLogin}">
+                    <button class="btn btn-primary btn-sm" (click)="onSearch()"
+                        style="margin-top: -5px;margin-right: 10px;">
+                        <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+                    </button>
+
+                    <button class="btn btn-default btn-bold" style="margin-top: -5px;" (click)="onClear()"
+                        data-original-title="" title="">
+                        <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="print" id="print">
+            <style>
+                .h6 {
+                    font-size: 13px !important;
+                }
+            </style>
+            <div #content class="card" style="padding:10px" id="contentToConvert" *ngIf="EmployeeTaxSlipRecords">
+                <!-- <h1 class="cccc">INVOICE No. 1</h1>
+      <p style="float:left">Doe, John A</p> 
+      <p style="left:50%; float:right">Oklahoma city</p>  -->
+
+                <div class="row">
+                    <div class="col-lg-6 col-xs-12 col-sm-12">
+                        <div class="headerbar" style="padding-top: 10px;">
+                            <div>
+                                <!-- <h2 class="header_title" *ngIf="!IsPrintOn">
+                                    <img id="image" src="assets/Images/clientlogo/{{clientLogoLink}}"
+                                        style="height: 30px;">
+                                </h2> -->
+                                <h2 class="header_title">
+                                    <img id="image" src="{{locationhref}}assets/Images/clientlogo/{{clientLogoLink}}"
+                                        style="height: 30px;">
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xs-12 col-sm-12  text-center">
+                        <div>
+                            <h2 class="header_title"> Tax Slip </h2>
+                            <p class=" p-line-space subheader_title" style="font-size: 16px;
+        font-weight: 800;">
+                                Income Tax Computation Statement
+                            </p>
+                            <!-- <button (click)="makePDF()">Save as PDF</button> -->
+                        </div>
+                    </div>
+                </div>
+                 <br/>
+
+
+                <div style="width: 100%;">
+                    <div style="width: 50%;float: left;">
+                        <div class="row" style="padding-left: 10px;width: 100%;">
+                            <div style="width: 50%;float: left;padding-left: 15px;">
+                                <label class="bold-font"> Employee Code</label>
+                            </div>
+                            <div class="col-lg-6" style="flex: 0 0 50%;
+          max-width: 50%;width: 50%;float: right;">
+                                <label> {{EmpDetails.EmployeeCode}}</label>
+                            </div>
+                            <div class="col-lg-6" style="flex: 0 0 50%;
+          max-width: 50%;width: 50%;float: left;">
+                                <label class="bold-font"> Employee Name</label>
+                            </div>
+                            <div class="col-lg-6 " style="flex: 0 0 50%;
+          max-width: 50%;width: 50%;float: right;">
+                                <label> {{EmpDetails.EmployeeName}} </label>
+                            </div>
+                            <div class="col-lg-6" style="flex: 0 0 50%;
+          max-width: 50%;width: 50%;float: left;">
+                                <label class="bold-font"> Gender</label>
+                            </div>
+                            <div class="col-lg-6 col-xs-6" style="flex: 0 0 50%;
+          max-width: 50%;width: 50%;float: right;">
+
+                                <label> {{EmpDetails.Gender}} </label>
+
+                            </div>
+                            <div class="col-lg-6 col-xs-6" style="flex: 0 0 50%;
+          max-width: 50%;width: 50%;float: left;">
+                                <label class="bold-font"> Tax Regime</label>
+                            </div>
+                            <div class="col-lg-6 col-xs-6" style="flex: 0 0 50%;
+          max-width: 50%;width: 50%;float: right;">
+                                <label *ngIf=EmpDetails.IsNewTaxRegime> NEW </label>
+                                <label *ngIf=!EmpDetails.IsNewTaxRegime> OLD </label>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width: 50%;float: right">
+                        <div class="row" style="width: 100%">
+                            <div class="col-lg-6 col-xs-12" style="width: 50%;float: left;">
+                                <label class="bold-font">PAN Number</label>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" style="width: 50%;float: right;">
+                                <label> {{EmpDetails.PAN}} </label>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" style="width: 50%;float: left;">
+                                <label class="bold-font"> Date Of Joining </label>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" style="width: 50%;float: right;">
+                                <label> {{EmpDetails.DOJ | date :'dd/MM/yyyy'}} </label>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" style="width: 50%;float: left;">
+                                <label class="bold-font"> Assessment Year </label>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" style="width: 50%;float: right;">
+                                <label> {{year}} </label>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" style="width: 50%;float: left;">
+                                <label class="bold-font"> Period</label>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" style="width: 50%;float: right;">
+                                <label> {{period}} </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <br/>
+                 <br/>
+                <div style="border: 1px solid #d3d3d3; padding: 10px;  border-radius: 5px;">
+
+                    <div class="row padding-10">
+                        <div class="col-lg-12 col-xs-12 col-sm-12" style="padding: 20px;">
+                            <div class="row row-border">
+                                <div class="col-4">
+                                    <h6 class=" h6-font"> <b> Heads of Income </b>
+                                         <br/>
+                                    </h6>
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class=" h6-font"> <b> Monthly
+                                             <br/><span style="margin-right: 20px;">(A)</span> </b>
+                                    </h6>
+
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font"> <b> Actual YTD
+                                             <br/><span style="margin-right: 20px;">(B)</span> </b>
+                                    </h6>
+
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font"> <b> Projected
+                                             <br/><span style="margin-right: 20px;">(C)</span> </b>
+                                    </h6>
+
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font"> <b> Total
+                                             <br/><span style="margin-right: 0px;">(B+C)</span> </b>
+                                    </h6>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b> Income from Salary </b>
+                                         <br/>
+                                         <br/>
+                                        <p class=" p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                                            {{getProductName(i.ProductId)}} </p>
+
+                                    </h6>
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font">
+                                         <br/>
+                                         <br/>
+                                        <p class="p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                                            <ng-container
+                                                *ngIf="doCheckHasProp(i,'LstTaxBreakUp') && i.LstTaxBreakUp && i.LstTaxBreakUp.length > 0">
+                                                {{i.LstTaxBreakUp[0].ActualAmount}}
+                                            </ng-container>
+                                        </p>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font">
+                                         <br/>
+                                         <br/>
+                                        <p class=" p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                                            <ng-container
+                                                *ngIf="doCheckHasProp(i,'LstTaxBreakUp') && i.LstTaxBreakUp && i.LstTaxBreakUp.length > 0">
+                                                {{i.LstTaxBreakUp[0].TillDateAmount}}
+                                            </ng-container>
+                                        </p>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font">
+                                         <br/>
+                                         <br/>
+                                        <p class="p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                                            <ng-container
+                                                *ngIf="doCheckHasProp(i,'LstTaxBreakUp') && i.LstTaxBreakUp && i.LstTaxBreakUp.length > 0">
+                                                {{i.LstTaxBreakUp[0].ProjectedAmount}}
+                                            </ng-container>
+                                        </p>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font">
+                                         <br/>
+                                         <br/>
+                                        <p class=" p-line-space thin-font" *ngFor="let i of LstAnnualSalary">
+                                            <ng-container
+                                                *ngIf="doCheckHasProp(i,'LstTaxBreakUp') && i.LstTaxBreakUp && i.LstTaxBreakUp.length > 0">
+                                                {{i.LstTaxBreakUp[0].Amount}}
+                                            </ng-container>
+                                        </p>
+
+                                    </h6>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6 class="thin-font"> Annual Gross Salary
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font">
+                                        <p class="p-line-space"
+                                            *ngIf="doCheckHasProp(EmployeeTaxSlipRecords,'GrossSalaryWithOutPerquisites')">
+                                            {{EmployeeTaxSlipRecords.GrossSalaryWithOutPerquisites}} </p>
+                                        <p class="p-line-space"
+                                            *ngIf="!doCheckHasProp(EmployeeTaxSlipRecords,'GrossSalaryWithOutPerquisites')">
+                                            0 </p>
+                                    </h6>
+
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="getAmount('PREVIOUSGROSSSALARY') > 0">
+                                <div class="col-4">
+                                    <h6 class="h6-font thin-font"> Previous Employer Income
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font">
+                                        <p class="p-line-space">{{ getAmount('PREVIOUSGROSSSALARY') }} </p>
+                                    </h6>
+
+                                </div>
+                            </div>
+                            <ng-container>
+                                <h6 class="h6-font" style="padding-bottom:10px"> <b> Perquisites </b></h6>
+                                <div class="row" *ngFor="let item of LstPerquisites">
+                                    <div class="col-4">
+                                        <h6 class="thin-font"> {{getProductName(item.ProductId)}}
+                                        </h6>
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                    <div class="col-2 text-right">
+                                        <h6 class="h6-font">
+                                            <p class="p-line-space">{{ item.Amount}} </p>
+                                        </h6>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6 class="h6-font" style="padding-bottom:10px"> <b> Total Perquisites </b></h6>
+
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                    <div class="col-2 text-right">
+                                        <h6 class="h6-font">
+                                            <p class="p-line-space"  *ngIf="doCheckHasProp(EmployeeTaxSlipRecords,'Perquisites')">{{EmployeeTaxSlipRecords.Perquisites}} </p>
+                                            <p class="p-line-space"  *ngIf="!doCheckHasProp(EmployeeTaxSlipRecords,'Perquisites')">0 </p>
+
+                                        </h6>
+
+
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <div class="row" style="border-bottom: 1px solid #d3d3d3;margin-left: -10px;
+                            margin-right: -10px;padding-bottom: 10px;">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b> Total Annual Gross Salary </b>
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class=" col-2 text-right">
+                                    <h6 class="h6-font">
+                                        <!-- <p class="p-line-space bold-font"> {{getTotalAmount('PREVIOUSGROSSSALARY')}} -->
+                                        <p class="p-line-space bold-font" *ngIf="doCheckHasProp(EmployeeTaxSlipRecords,'GrossSalary')">
+                                            {{EmployeeTaxSlipRecords.GrossSalary}}
+                                            <i (click)="yearlyTaxDetails()" class="fa fa-info-circle pl-2"
+                                                style="font-size: 16px;color:#1890ff; cursor: pointer;"
+                                                title="yearly salary details"></i>
+                                        </p>
+                                        <p class="p-line-space bold-font" *ngIf="!doCheckHasProp(EmployeeTaxSlipRecords,'GrossSalary')">
+                                            0
+                                        </p>
+                                    </h6>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b> (Less) Exemptions under Sec 10. </b>
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                            </div>
+                             <br/>
+                            <ng-container *ngIf="GrossHRAExemption && GrossHRAExemption.length > 0">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h6 class="thin-font"> HRA Exemption (least of below)
+                                            <div *ngFor="let hra of GrossHRAExemption">
+                                                <div style="padding-left: 30px;
+              padding-top: 10px;">
+                                                    <p class="p-line-space">1. Actual Annual HRA</p>
+                                                    <p class="p-line-space">2. 40% or 50% of Basic</p>
+                                                    <p class="p-line-space">3. Rent Paid - 10% of Basic</p>
+                                                </div>
+                                            </div>
+                                        </h6>
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                    <div class="col-2">
+                                    </div>
+                                    <div class="col-2">
+                                        <h6 class="h6-font">
+                                             <br/>
+                                            <div *ngFor="let hra of GrossHRAExemption" class="text-right">
+
+
+                                                <p class="p-line-space">{{hra.HRAReceived}} </p>
+                                                <p class="p-line-space">{{hra.HRACityBasedAmount}} </p>
+                                                <p class="p-line-space">{{hra.RentPaidLessBasic}} </p>
+                                            </div>
+                                        </h6>
+                                    </div>
+                                    <div class="col-2 text-right" *ngFor="let hra of GrossHRAExemption">
+                                        <h6 class="h6-font"> {{hra.Amount}}
+
+                                        </h6>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="OtherExemption && OtherExemption.length > 0 ">
+                                <div class="row" *ngFor="let hra of OtherExemption">
+
+                                    <div class="col-10">
+                                        <h6 class="h6-font thin-font"> {{hra.ProductCode}}
+
+                                        </h6>
+                                    </div>
+
+                                    <div class="col-2 text-right">
+                                        <h6 class="h6-font"> {{hra.Amount}}
+
+                                        </h6>
+                                    </div>
+
+                                </div>
+                            </ng-container>
+
+                        </div>
+                    </div>
+
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row" style="border-bottom: 1px solid #d3d3d3;margin-left: -10px;
+                            margin-right: -10px;padding-bottom: 10px;">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b> Total Exemptions </b>
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font" *ngIf="doCheckHasProp(EmployeeTaxSlipRecords,'Exemptions')"> {{EmployeeTaxSlipRecords.Exemptions}}
+
+                                    </h6>
+                                    <h6 class="h6-font" *ngIf="!doCheckHasProp(EmployeeTaxSlipRecords,'Exemptions')"> 0
+
+                                    </h6>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b> (Less) Deductions under Sec 16. </b>
+                                         <br/>  <br/>
+                                        <p class="p-line-space thin-font"> Standard Deduction</p>
+                                        <p class="p-line-space thin-font"> Professional Tax</p>
+                                        <p class=" p-line-space thin-font"> Professional Tax deducted by previous
+                                            employer</p>
+                                    </h6>
+                                </div>
+                                <div class="col-2 text-right">
+                                     <br/>
+                                    <!-- <p style="color: white;"> . </p>
+                                    <p *ngFor="let j of LstDeductions"> {{j.Amount}}</p>
+                                    <p> {{getAmount('PREVIOUSDEDUCTION')}}</p> -->
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font">
+                                         <br/> <br/>
+                                        <p class="p-line-space"> {{getAmount('STANDARDDEDUCTION')}} </p>
+                                        <p class="p-line-space">
+                                            {{getTotalAmount('PT')-getTotalAmount('PREVIOUSDEDUCTION')}} </p>
+                                        <p class="p-line-space"> {{getTotalAmount('PREVIOUSDEDUCTION')}} </p>
+                                    </h6>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row" style="border-bottom: 1px solid #d3d3d3;margin-left: -10px;
+                            margin-right: -10px;padding-bottom: 10px;">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b> Total Deductions </b>
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+
+                                    <h6 class="h6-font bold-font" > {{EmployeeTaxSlipRecords.Deductions}}
+
+                                    </h6>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b>Annual Net Income Chargeable </b>
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font bold-font"> {{EmployeeTaxSlipRecords.IncomeChargeable}}
+
+                                    </h6>
+                                </div>
+                            </div>
+                             <br/>
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6 class="h6-font bold-font"> (Add/Less) Income from Other Sources
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font bold-font">
+                                        {{EmployeeTaxSlipRecords.OtherIncome}}
+                                    </h6>
+                                </div>
+                            </div> <br/>
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6 class="h6-font thin-font"> Income/Loss from House Property
+                                        <div style="padding-left: 30px; padding-top: 10px;">
+
+                                            <div *ngFor="let l of LstIncomeFromHouseProperty">
+                                                <!-- <div *ngFor="let k of l.LstTaxBreakUp">
+                                                    <p class="p-line-space" *ngIf="k.LetOut==true" style="font-weight: bold;">
+                                                        Rented
+                                                    </p>
+                                                    <p class="p-line-space" *ngIf="k.LetOut==false" style="font-weight: bold;">
+                                                        Self-occupied
+                                                    </p>
+                                                    <table>
+                                                        <tr style="line-height: 0px !important;">
+                                                            <td>
+                                                                <p class=" p-line-space thin-font"> Additional Interest Amount</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="line-height: 0px !important;">
+                                                            <td>
+                                                                <p class=" p-line-space thin-font"> Total Interest Paid</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                            <td>
+                                                                <p class=" p-line-space thin-font"> Annual Rental Value</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                            <td>
+                                                                <p class=" p-line-space thin-font"> House Repair/Depreciation</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                            <td>
+                                                                <p class=" p-line-space thin-font"> Annual Taxes Paid</p>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                </div> -->
+                                            </div>
+                                            <!-- <table>
+                                                <tr style="line-height: 0px !important;" *ngFor="let l of LstIncomeFromHouseProperty">
+                                                    <td>
+                                                        <p class="thin-font"> Total Interest Paid </p>
+                                                    </td>
+                                                </tr>
+                                                <tr style="line-height: 0px !important;" *ngFor="let l of LstIncomeFromHouseProperty">
+                                                    <td>
+                                                        <p class="thin-font"> Annual Rental Value </p>
+                                                    </td>
+                                                </tr>
+                                                <tr style="line-height: 0px !important;" *ngFor="let l of LstIncomeFromHouseProperty">
+                                                    <td>
+                                                        <p class="thin-font"> House Repair/Depreciation </p>
+                                                    </td>
+                                                </tr>
+                                                <tr style="line-height: 0px !important;" *ngFor="let l of LstIncomeFromHouseProperty">
+                                                    <td>
+                                                        <p class="thin-font"> Annual Taxes Paid </p>
+                                                    </td>
+                                                </tr>
+                                            </table> -->
+
+
+                                            <!-- <ol *ngFor="let l of LstIncomeFromHouseProperty">
+                                                <li>
+                                                    <p class="thin-font"> Total Interest Paid </p>
+                                                </li>
+                                                <li>
+                                                    <p class="thin-font"> Annual Rental Value </p>
+                                                </li>
+                                                <li>
+                                                    <p class="thin-font"> House Repair/Depreciation </p>
+                                                </li>
+                                                <li>
+                                                    <p class="thin-font"> Annual Taxes Paid </p>
+                                                </li>
+                                            </ol> -->
+                                        </div>
+
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font"> {{EmployeeTaxSlipRecords.IncomeFromHouseProperty}}
+                                        <div *ngFor="let l of LstIncomeFromHouseProperty">
+                                            <!-- <div *ngFor="let k of l.LstTaxBreakUp">
+                                                <p class="p-line-space" *ngIf="k.LetOut==true">
+                                                    &nbsp;
+                                                </p>
+                                                <p class="p-line-space" *ngIf="k.LetOut==false">
+                                                    &nbsp;
+                                                </p>
+                                                <table>
+                                                    <tr style="line-height: 0px !important;">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> {{k.Amount}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="line-height: 0px !important;">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> {{k.InterestAmount}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> {{k.GrossAnnualRent}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> {{k.HouseMaintenanceAmount}}</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="line-height: 0px !important;" *ngIf="k.LetOut==true">
+                                                        <td>
+                                                            <p class=" p-line-space thin-font"> {{k.MunicipalTaxAmount}}</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                              
+                                            </div> -->
+                                            <!-- <p> {{k.InterestAmount}}</p>
+                                                <p> {{k.GrossAnnualRent}}</p>
+                                                <p> {{k.HouseMaintenanceAmount}}</p>
+                                                <p> {{k.MunicipalTaxAmount}}</p> -->
+                                        </div>
+                                    </h6>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row" style="border-bottom: 1px solid #d3d3d3;margin-left: -10px;
+                            margin-right: -10px;padding-bottom: 10px;">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b> Total Other Income </b>
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font bold-font"> {{EmployeeTaxSlipRecords.OtherIncome}}
+
+                                    </h6>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b> Gross Total Income </b>
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font"> {{EmployeeTaxSlipRecords.GrossTotalIncome}}
+                                    </h6>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row">
+                                <div class="col-8">
+                                    <h6 class="h6-font"> <b> (Less) Deductions under Chapter VI A </b>
+                                         <br/> <br/>
+                                        <div *ngIf="LstSavingsWithGroupBy.length > 0">
+                                            <table class="table table-borderless">
+                                                <tr style="line-height: 0px !important;"
+                                                    *ngFor="let p of LstSavingsWithGroupBy">
+                                                    <td>
+                                                        <p class=" p-line-space thin-font">
+                                                            {{getTaxCodeName(p.TaxCodeId)}} -
+                                                            {{getTaxCodeSec(p.TaxCodeId)}} </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!-- <p class="thin-font" *ngFor="let p of LstSavingsWithGroupBy"> {{getTaxCodeName(p.TaxCodeId)}} - {{getTaxCodeSec(p.TaxCodeId)}} </p> -->
+                                            <!-- <p class="thin-font">  Additional NPS investment u/s 80CCD(1B)</p>
+              <p class="thin-font">  Medical Insurance for Self/Dependents - sec 80D</p>
+              <p class="thin-font">  Medical Expenditure - Handicapped Dependent - sec 80DD</p>
+              <p class="thin-font">  Medical Expenditure - Self or Dependents - sec 80DDB</p>
+              <p class="thin-font">  Education Loan Interest Repayment - sec 80E</p>
+              <p class="thin-font">  Self Physical Disability - sec 80U</p> -->
+                                        </div>
+
+                                    </h6>
+                                </div>
+
+                                <div class="col-1">
+                                </div>
+                                <div class="col-1">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font">
+                                         <br/> <br/>
+
+                                        <div *ngIf="LstSavingsWithGroupBy.length > 0">
+                                            <table class="table table-borderless text-right">
+                                                <tr style="line-height: 0px !important;"
+                                                    *ngFor="let p of LstSavingsWithGroupBy">
+                                                    <td>
+                                                        <p class=" p-line-space thin-font">{{p.TaxAmount}}</p>
+                                                    </td>
+                                                    <!-- <p *ngFor="let p of LstSavingsWithGroupBy"> {{p.TaxAmount}} </p> -->
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </h6>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row padding-5">
+                        <div class="col-lg-12 col-xs-12 col-sm-12 row-border">
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b> Total Deductions under VI A </b>
+                                         <br/> <br/> <br/>
+                                        <p class=" p-line-space"> <b> Total Taxable Income </b></p>
+                                        <br/>
+                                        <p class=" p-line-space thin-font"> Tax on Total Income</p>
+                                        <p class="p-line-space thin-font"> Surcharge</p>
+                                        <p class="p-line-space thin-font"> Health and Education Cess @4%</p>
+                                        <p class="p-line-space thin-font"> Tax Rebate under sec 89</p>
+                                        <p class="p-line-spact"><b> Total Tax Payable</b></p>
+                                        <br/>
+                                        <p class="p-line-space thin-font"> Tax Deducted Till Date</p>
+                                        <p class="p-line-space thin-font"> Tax Deducted by previous employer</p>
+                                        <p class="p-line-space"> <b>Net Tax Payable </b></p>
+                                        <br/>
+                                        <p class="p-line-space thin-font"> Current Month TDS </p>
+                                        <p class="p-line-space thin-font"> Number of remaining months</p>
+                                        <p class="p-line-space "> <b> Tax Per Month </b></p>
+
+                                    </h6>
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2">
+                                </div>
+                                <div class="col-2 text-right">
+                                    <h6 class="h6-font bold-font"> {{EmployeeTaxSlipRecords.Savings}}
+                                         <br/> <br/> <br/>
+                                        <p class="p-line-space bold-font"> {{EmployeeTaxSlipRecords.TaxableIncome }}
+                                        </p>
+                                        <br/>
+                                        <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.TaxOnIncome}} </p>
+                                        <p class="p-line-space thin-font">{{EmployeeTaxSlipRecords.Surcharge}}</p>
+                                        <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.EducationCess}}</p>
+                                        <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.TaxRebate}}</p>
+                                        <p class="p-line-space bold-font"> {{EmployeeTaxSlipRecords.TotalIncomeTax}}</p>
+                                        <br/>
+                                        <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.TaxPaid -
+                                            EmployeeTaxSlipRecords.PreviousTDS}}</p>
+                                        <!-- <p class="p-line-space thin-font"> {{getAmount('TAXDEDUCTED')}} </p> -->
+                                        <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.PreviousTDS}} </p>
+                                        <p class="p-line-space bold-font"> {{EmployeeTaxSlipRecords.TaxBalance}}</p>
+                                        <br/>
+                                        <p class="p-line-space thin-font"> {{EmployeeTaxSlipRecords.TDS}}</p>
+                                        <p class="p-line-space thin-font"> {{diffDuration}}</p>
+                                        <p class="p-line-space bold-font"> {{EmployeeTaxSlipRecords.TaxPerMonth}} </p>
+                                    </h6>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+             <br/>
+             <br/>
+             <br/>
+            <div #content class="card" style="padding:10px" id="contentToConvert" *ngIf="EmployeeTaxSlipRecords ">
+                 <br/>
+                 <br/>
+                <h6 class="h6-font"> HRA Exemption</h6>
+                <div style="border: 1px solid #d3d3d3;
+padding: 10px;
+border-radius: 5px;">
+                    <div class="row padding-10">
+                        <div class="col-lg-12 col-xs-12 col-sm-12" style="padding: 20px;">
+                            <div class="row row-border">
+                                <div class="col-2">
+                                    <h6 class="h6-font" style="font-size: 13px !important;"> <b> Month & Year </b>
+                                         <br/>
+                                    </h6>
+                                </div>
+                                <div class="col-1">
+                                    <h6 class="h6-font" style="font-size: 13px !important;"> <b> Metro (Yes/No) </b>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-1">
+                                    <h6 class="h6-font" style="font-size: 13px !important;"><b>Rent Paid </b>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-1">
+                                    <h6 class="h6-font " style="font-size: 13px !important;"><b>HRA Received </b>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-1">
+                                    <h6 class="h6-font " style="font-size: 13px !important;"><b>Basic </b>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-2">
+                                    <h6 class="h6-font " style="font-size: 13px !important;"><b>40% / 50% of Basic </b>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-2">
+                                    <h6 class="h6-font" style="font-size: 13px !important;"><b>Rent Paid - 10% of Basic
+                                        </b>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-2">
+                                    <h6 class="h6-fontt" style="font-size: 13px !important;"> <b>HRA Exemption </b>
+
+                                    </h6>
+
+                                </div>
+                            </div>
+                            <ng-container *ngIf="HRAExemption != null && HRAExemption.length > 0">
+                                <div class="row row-border" *ngFor="let item of HRAExemption[0]">
+                                    <div class="col-2">
+                                        <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                                            {{item.RentMonthYear}}
+                                             <br/>
+                                        </h6>
+                                    </div>
+                                    <div class="col-1">
+                                        <h6 class="h6-font bold-font" style="font-size: 13px !important;"
+                                            *ngIf="item.IsMetro">Yes
+
+                                        </h6>
+                                        <h6 class="h6-font bold-font" style="font-size: 13px !important;"
+                                            *ngIf="!item.IsMetro">No
+
+                                        </h6>
+
+                                    </div>
+                                    <div class="col-1 ">
+                                        <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                                            {{item.RentPaid}}
+
+                                        </h6>
+
+                                    </div>
+                                    <div class="col-1 ">
+                                        <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                                            {{item.HRAReceived}}
+
+                                        </h6>
+
+                                    </div>
+                                    <div class="col-1 ">
+                                        <h6 class="h6-font bold-font" style="font-size: 13px !important;">{{item.Basic}}
+
+                                        </h6>
+
+                                    </div>
+                                    <div class="col-2 ">
+                                        <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                                            {{item.HRACityBasedAmount}}
+
+                                        </h6>
+
+                                    </div>
+                                    <div class="col-2 ">
+                                        <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                                            {{item.RentPaidLessBasic}}
+
+                                        </h6>
+
+                                    </div>
+                                    <div class="col-2 ">
+                                        <h6 class="h6-font bold-font" style="font-size: 13px !important;">
+                                            {{item.Amount}}
+
+                                        </h6>
+
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+                 <br/>
+                 <br/>
+                <h6 class="h6-font"> Deductions under Chapter VI A</h6>
+
+                <div style="border: 1px solid #d3d3d3;
+padding: 10px;
+border-radius: 5px;">
+                    <div class="row padding-10">
+                        <div class="col-lg-12 col-xs-12 col-sm-12" style="padding: 20px;">
+                            <div class="row row-border">
+                                <div class="col-2">
+                                    <h6 class="h6-font"> <b> Section Code </b>
+                                         <br/>
+                                    </h6>
+                                </div>
+                                <div class="col-4">
+                                    <h6 class="h6-font"> <b>Section Description </b>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-3">
+                                    <h6 class="h6-font"><b>Contribution Amount </b>
+
+                                    </h6>
+
+                                </div>
+                                <div class="col-3">
+                                    <h6 class="h6-font"><b>Deductible Amount </b>
+
+                                    </h6>
+
+                                </div>
+
+                            </div>
+                            <ng-container>
+                                <ng-container *ngFor="let item1 of LstSavings">
+                                    <div class="row row-border" style="padding-top: 12px;">
+                                        <div class="col-2">
+                                            <h6 class="h6-font bold-font1">{{ getTaxCodeSec(item1.TaxCodeId)}}
+                                                 <br/>
+                                            </h6>
+                                        </div>
+                                        <div class="col-4">
+                                            <h6 class="h6-font bold-font1">{{getTaxCodeName(item1.TaxCodeId)}}
+
+                                            </h6>
+
+                                        </div>
+                                        <div class="col-3 ">
+                                            <h6 class="h6-font bold-font1">{{item1.ProposedAmount}}
+
+                                            </h6>
+
+                                        </div>
+                                        <div class="col-3 ">
+                                            <h6 class="h6-font bold-font1">{{item1.Amount}}
+
+                                            </h6>
+
+                                        </div>
+
+
+
+
+                                        <div style="width: 100%;padding: 13px;"
+                                            *ngIf="item1.LstTaxBreakUp.length > 0 && doCheckValidProductId(item1)">
+                                            <table class="table table-bordered table-container">
+                                                <thead>
+                                                    <tr class="document_table_tr" style="line-height: 10px !important;
+                    min-height: 10px !important;">
+                                                        <th class="text-left">
+                                                            Product Name
+                                                        </th>
+                                                        <th class="text-left">
+                                                            Amount
+                                                        </th>
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container *ngFor="let i of item1.LstTaxBreakUp">
+                                                        <tr *ngIf="i.Amount != 0"
+                                                            style="font-weight: 400!important; font-size: 13px;">
+                                                            <td *ngIf="i.PayTransactionHead== 'PrevSavings'">
+                                                                Previous PF
+                                                            </td>
+                                                            <td *ngIf="i.PayTransactionHead!= 'PrevSavings'">
+                                                                {{getProductName(i.ProductId)}}
+                                                            </td>
+
+                                                            <td>
+                                                                {{i.Amount}}
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

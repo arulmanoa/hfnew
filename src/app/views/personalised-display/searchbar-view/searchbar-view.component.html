@@ -1,0 +1,1941 @@
+<div class="row-reverse" *ngIf="searchConfiguration.ButtonIds && searchConfiguration.ButtonIds.length > 0">
+
+
+
+  <div *ngIf="buttonList[1] === 1" class="col-12 col-md-4 col-lg-4 col-sm-4 text-right">
+    <button class="btn btn-primary" (click)=onAddProductButtonClicked()>
+      <i class="mdi mdi-file-plus m-r-xs"></i>Add Product</button>
+  </div>
+
+
+  <div *ngIf="buttonList[2] === 1" class="col-12 col-md-4 col-lg-4 col-sm-4 text-right">
+    <button class="btn btn-primary" style="margin-right: 10px;" (click)=onAddScaleButtonClicked()>
+      <i class="mdi mdi-file-plus m-r-xs"></i>Add Scale</button>
+
+    <button class="btn btn-default" style="margin-left: 10px;" (click)=onScaleRefresh()>
+      <i class="mdi mdi-refresh  m-r-xs"></i></button>
+  </div>
+
+  <div *ngIf="buttonList[3] === 1" class="col-12 col-md-4 col-lg-4 col-sm-4 text-right">
+    <button class="btn btn-primary" (click)=onAddPaygroupButtonClicked()>
+      <i class="mdi mdi-file-plus m-r-xs"></i>Add Paygroup</button>
+  </div>
+
+  <div *ngIf="buttonList[4] === 1" class="col-12 col-md-4 col-lg-4 col-sm-4 text-right">
+    <button class="btn btn-primary" (click)=onAddTaxCodeButtonClicked()>
+      <i class="mdi mdi-file-plus m-r-xs"></i>Add Tax Code</button>
+  </div>
+
+  <br>
+  <br>
+
+</div>
+
+<!-- <div class="content report-content" *ngIf="searchElementList.length > 0" style="margin-top: -10px; margin-bottom: -10px;">
+  <div class="row">
+    <div class="form-group-vertical col-xs-12 col-sm-3"
+      *ngFor="let searchElement of searchElementList ; let ind = index">
+
+      <div *ngIf="isInputTypeTextBox(searchElement)">
+        <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+        <div class="form-group m-t-m5">
+
+<div class="content m-b report-content" style="margin-top: 15px;" *ngIf="searchElementList.length > 0">
+  <div class = "row m-b">
+    <div class="col-12 col-md-4 col-lg col-sm-4 m-b" *ngFor="let searchElement of searchElementList ; let ind = index">        
+        <ul class="list-inline" *ngIf = "searchElement.IsIncludedInDefaultSearch">
+          <div class="showGirdActionButtons">
+            <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+              <div class="massOperationsPanel d-i-b">                          
+                <div class="col-lg-12 col-xs-12">
+                  <div class="form-group">
+                    
+                    <div *ngIf ="isInputTypeTextBox(searchElement)" class="row">
+                        <label class="form-label"> {{searchElement.DisplayName}} </label><br>
+                        <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false" [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)" [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired" [(ngModel)]="searchElement.RelationalOperatorValue">
+                        </ng-select> 
+                        <input  class=" form-control list-inline-item col" class="form-control" style="background: white" type="text" id="input" [(ngModel)]="searchElement.Value" placeholder="{{searchElement.DisplayName}}" [disabled]="searchElement.ReadOnly">
+                    </div>
+  
+                    <div *ngIf ="isInputTypeDropDown(searchElement)">
+                      <label class="form-label"> {{searchElement.DisplayName}} </label>
+                      <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired" (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly" [(ngModel)]="searchElement.RelationalOperatorValue">
+                      </ng-select> 
+                      <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList" (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly" [searchable]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset" 
+                      [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value" placeholder="--{{searchElement.DisplayName}}--">
+              
+                      </ng-select>
+                    </div>
+  
+                    <div *ngIf ="isInputTypeMultiSelectDropDown(searchElement)">
+                      <label class="form-label"> {{searchElement.DisplayName}} </label>
+                      <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired" (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly" [(ngModel)]="searchElement.RelationalOperatorValue">
+                        <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                      </ng-select> 
+                      <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList" (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="true" [closeOnSelect]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset" [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.multipleValues" placeholder="--{{searchElement.DisplayName}}--">
+                        <ng-template ng-header-tmp>
+                          <input placeholder="Search" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select.filter($event.target.value)" />
+                        </ng-template>
+                      </ng-select>
+                    </div>
+  
+                    <div *ngIf ="isInputTypeAutoFillTextBox(searchElement)">
+                      <label class="form-label"> {{searchElement.DisplayName}} </label>
+                      <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired" (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly" [(ngModel)]="searchElement.RelationalOperatorValue">
+                        <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                      </ng-select> 
+                      <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList" [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)" [searchable]="true" [bindValue]="searchElement.ForeignKeyColumnNameInDataset" [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value" placeholder="--{{searchElement.DisplayName}}--">
+                        <ng-template ng-header-tmp>
+                          <input placeholder="Search" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select.filter($event.target.value)" />
+                        </ng-template>
+                      </ng-select>               
+                    </div>
+  
+                    <div *ngIf ="searchElement.InputType === 'CheckBox'">
+  
+                    </div>
+  
+  <div class="row" style="text-align: right;"  *ngIf="searchElementList.length > 0">
+    <div class="col-12 col-md-12 col-sm-12">
+      <ul class="list-inline">
+        <li class="list-inline-item" *ngIf="searchConfiguration.SearchButtonRequired">
+
+          <button class="btn btn-primary btn-sm" (click)=onSearchButtonClicked() style="margin-top: -5px;">
+            <i class="mdi mdi-file-find"></i> Search
+          </button>
+        </li>
+        <li class="list-inline-item" *ngIf="searchConfiguration.ClearButtonRequired">
+
+          <button class="btn btn-default btn-bold" prevent-double-submit tooltip="Clear" style="margin-top: -5px;"
+          (click)=onClearButtonClicked() tooltip-placement="bottom" data-original-title="" title="">
+            <i class="mdi mdi-close font-size-md"></i> Clear
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+</div> -->
+
+<!-- PayTransaction -->
+<div class="content report-content animated fadeInDown"
+  *ngIf="Content ==='PayTransaction' && searchElementList.length > 0"
+  style="margin-top: 20px; margin-bottom: 20px; padding: 15px;">
+  <div class="row" style="margin-bottom: 3rem;margin-top: -1rem;">
+    <div class="col-lg-12">
+      <div class="modal-close" matTooltip="Close" (click)="onClose()" style="margin-top: 5px;"><span
+          class="mdi mdi-close pull-left" style="font-size: 20px;"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8 padding-custom" style="z-index: 1000 !important">
+      <ng-container *ngFor="let searchElement of searchElementList ; let ind = index">
+
+        <div *ngIf="searchElement.IsIncludedInDefaultSearch"
+          class="form-group-vertical col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          <div *ngIf="isInputTypeTextBox(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                  [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                  [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                </ng-select>
+                <input class="form-control" [(ngModel)]="searchElement.Value"
+                  style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                  placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeMultiSelectDropDown(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                  <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="true"
+                  [closeOnSelect]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.multipleValues"
+                  placeholder="--{{searchElement.DisplayName}}--"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                  </ng-template>
+                  <ng-template ng-loadingspinner-tmp>
+                    <div class="lds-ellipsis">
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeAutoFillTextBox(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                  <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                  (change)="onSearchElementValueChange(searchElement)" [searchable]="true"
+                  [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                  placeholder="{{searchElement.DisplayName}}"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeDropDown(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                  [searchable]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                  placeholder="{{searchElement.DisplayName}}"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important"
+                  [disabled]="searchElement.ReadOnly">
+
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </ng-container>
+
+      <div class="form-group-vertical col-xs-12 col-sm-12">
+        <div class="form-group m-t-m5" style="    margin-top: 0px;margin-bottom: 1rem;float: right;">
+
+          <div class="input-group">
+            <ul class="list-inline">
+              <li class="list-inline-item" *ngIf="searchConfiguration.SearchButtonRequired">
+
+                <!-- <button type="button" class="btn btn-primary" (click)="newSearch()">
+                Search
+              </button> -->
+                <button class="btn btn-primary btn-sm" (click)="onSearchButtonClicked()"
+                  [disabled]="disableSearchButton" style="margin-top: -5px;">
+                  <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+                </button>
+                <!-- 
+
+              <div class="" (click)=onSearchButtonClicked() tooltip="Go"  [options]="myOptions" style="margin-top: 5px;margin-top: 5px;
+              color: #858fa6;margin-right: 15px;
+              position: absolute;
+              right: 50px;
+              /* top: 15px !important; */
+              cursor: pointer;
+              border-radius: 3px;
+              padding: 5px;
+              padding-bottom: 0px;
+              padding-top: 2px;
+              /* float: right; */
+              /* text-align: right; */
+              /* display: block; */
+              /* margin: 0 auto; */
+              font-weight: 600;"><span >SEARCH</span>
+              </div> -->
+
+              </li>
+              <li class="list-inline-item" *ngIf="searchConfiguration.ClearButtonRequired">
+                <!-- <button type="button" class="btn btn-primary" (click)="newSearch()">
+                Clear
+              </button> -->
+
+
+                <button class="btn btn-default btn-bold" style="margin-top: -5px;" (click)=onClearButtonClicked()
+                  data-original-title="" title="">
+                  <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+                </button>
+                <!-- <div class="modal-close" (click)=onClearButtonClicked() tooltip="Clear" [options]="myOptions" style="margin-top: 6px;background: #858fa6;
+              color: #fff; 
+              border-radius: 25%;"><span class="mdi mdi-close pull-left"></span>
+              </div> -->
+
+
+
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4" c>
+      <img src="http://99webpage.com/theme-review/landingpage/smooth/assets/images/business-looking@2x.png"
+        class="img-fluid" alt="Business Looking" width="735" height="641">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="Error full-screen">
+        <h4>No transaction to display
+        </h4>
+        <p> Don't wait for it to happen. Go make it happen. Tab the search button to start transaction now.</p>
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- COMMON SEARCH PANEL VIEW - UNUSED CODE (OLD CONTENT) -->
+<!-- <div class="content report-content animated fadeInDown"
+  *ngIf="Content !='SME' && Content !='OutSource' && Content != 'PayTransaction' && Content != 'General' 
+  && searchElementList.length > 0"
+  style="margin-top: 20px; margin-bottom: 20px; padding: 15px;z-index: 1000;">
+  <div class="row">
+    <div style="z-index: 1000 !important" *ngFor="let searchElement of searchElementList ; let ind = index"
+      class="form-group-vertical col-xs-12 col-sm-2 col-md-2">
+
+      <div *ngIf="searchElement.IsIncludedInDefaultSearch">
+        <div *ngIf="isInputTypeTextBox(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+              </ng-select>
+              <input class="form-control" [(ngModel)]="searchElement.Value"
+                style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeMultiSelectDropDown(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+                <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="true" [closeOnSelect]="false"
+                [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.multipleValues"
+                placeholder="--{{searchElement.DisplayName}}--">
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                </ng-template>
+                <ng-template ng-loadingspinner-tmp>
+                  <div class="lds-ellipsis">
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeAutoFillTextBox(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+                <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                (change)="onSearchElementValueChange(searchElement)" [searchable]="true"
+                [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeDropDown(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                [searchable]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important"
+                [disabled]="searchElement.ReadOnly">
+
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <div class="form-group-vertical col-xs-12 col-sm-12">
+      <div class="form-group m-t-m5" style="margin-top: 0px;margin-bottom: 1rem;float: right;">
+
+        <div class="input-group">
+          <ul class="list-inline">
+            <li class="list-inline-item" *ngIf="searchConfiguration.SearchButtonRequired">
+
+              <button class="btn btn-primary btn-sm" (click)="onSearchButtonClicked()" style="margin-top: -5px;">
+                <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+              </button>
+
+            </li>
+            <li class="list-inline-item" *ngIf="searchConfiguration.ClearButtonRequired">
+            
+
+              <button class="btn btn-default btn-bold" style="margin-top: -5px;" (click)=onClearButtonClicked()
+                data-original-title="" title="">
+                <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+              </button>
+             
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- COMMON SEARCH PANEL VIEW - ALL IN ONE CONTENT-->
+<!-- COMMON SEARCH PANEL VIEW - ALL IN ONE CONTENT-->
+<div class="content m-b report-content animated fadeInDown int-header-content-panel" style="z-index: 1000;"
+  *ngIf="Content !='SME' && Content !='OutSource' && Content != 'PayTransaction' && Content != 'General' 
+  && Content !== 'General-small' && Content !== 'Accordian'  && searchElementList.length > 0 && searchConfiguration != null && searchConfiguration.SearchButtonRequired">
+
+  <div class="row" style="margin-bottom: 3rem; margin-top: -1rem;">
+
+    <div class="col-lg-6">
+      <div style="margin-top: 5px;color: #858fa6;
+      position: absolute;
+      /* right: 20px; */
+      top: 13px !important;
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 5px;
+      padding-bottom: 0px;
+      padding-top: 2px;" *ngIf="isCollapsed">
+        <p> <i class="mdi mdi-file-search-outline"></i> Click the expand button to modify or review your search criteria.</p>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="modal-close" [matTooltip]="isCollapsed ? 'Expand' : 'Collapse'" (click)="onClose()"
+        style="margin-top: 5px;">
+      <!-- -- Collapse -->
+        <span *ngIf="!isCollapsed" class="expand-icon" [attr.aria-expanded]="!isCollapsed"
+          (click)="isCollapsed = !isCollapsed">
+          <i class="mdi mdi-chevron-up"></i><span> </span>
+        </span>
+        <!-- Expand -->
+        <span *ngIf="isCollapsed" class="expand-icon" [attr.aria-expanded]="!isCollapsed"
+          (click)="isCollapsed = !isCollapsed">
+          <i class="mdi mdi-chevron-down" style="font-size: 18px;"></i><span> </span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="row" [ngbCollapse]="isCollapsed">
+    <ng-container *ngFor="let searchElement of searchElementList ; let ind = index">
+
+      <div *ngIf="searchElement.IsIncludedInDefaultSearch && searchElement.DisplayName"
+        class="form-group-vertical col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+        <div *ngIf="isInputTypeTextBox(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}
+            <span class="required" *ngIf="searchElement.IsFieldMandatory"> * </span>
+          </label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+              </ng-select>
+              <input class="form-control" [(ngModel)]="searchElement.Value"
+                style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeMultiSelectDropDown(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}
+            <span class="required" *ngIf="searchElement.IsFieldMandatory"> * </span>
+          </label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+                <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                (change)="onSearchElementValueChange(searchElement)" [searchable]="true" [multiple]="true"
+                [closeOnSelect]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.DisplayValue"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  <div title="{{item[searchElement.DisplayFieldInDataset]}}">
+                    {{item[searchElement.DisplayFieldInDataset]}}</div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeAutoFillTextBox(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}
+            <span class="required" *ngIf="searchElement.IsFieldMandatory"> * </span>
+          </label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+                <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                (change)="onSearchElementValueChange(searchElement)" [searchable]="true"
+                [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeDropDown(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}
+            <span class="required" *ngIf="searchElement.IsFieldMandatory"> * </span>
+          </label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired" [searchable]="true"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                [searchable]="true" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important"
+                [disabled]="searchElement.ReadOnly">
+
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comma Separated Numbers -->
+        <div *ngIf="searchElement.InputControlType === 5">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}} &nbsp;
+            <span class="cursor-pointer fa fa-info-circle" placement="bottom"
+              ngbTooltip="Please separate multiple {{searchElement.DisplayName}}  with a comma."></span>
+            <span class="required" *ngIf="searchElement.IsFieldMandatory"> * </span>
+          </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <input class="form-control" [(ngModel)]="searchElement.DisplayValue"
+                style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                (keypress)="onkeyPressed($event , searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+            </div>
+          </div>
+        </div>
+        <!-- Comma Separated Strings -->
+        <div *ngIf="searchElement.InputControlType === 6">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}} &nbsp;
+            <span class="cursor-pointer fa fa-info-circle" placement="bottom"
+              ngbTooltip="Please separate multiple {{searchElement.DisplayName}}  with a comma."></span>
+            <span class="required" *ngIf="searchElement.IsFieldMandatory"> * </span>
+          </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <input class="form-control" [(ngModel)]="searchElement.DisplayValue"
+                style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                (keypress)="onkeyPressed($event , searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+            </div>
+          </div>
+        </div>
+        <!-- Date Picker -->
+        <div id="DatePicker1-Div-{{ind}}" *ngIf="searchElement.InputControlType === 7">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}
+            <span class="required" *ngIf="searchElement.IsFieldMandatory"> * </span>
+          </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+
+              <!-- <div class="datepicker-container"> -->
+              <input type="text" #dp="bsDatepicker" class="form-control" bsDatepicker placement="bottom"
+                [(ngModel)]="searchElement.DisplayValue"
+                [bsConfig]="{ isAnimated: true, dateInputFormat:'YYYY-MM-DD', showClearButton: true , containerClass:'theme-dark-blue' }"
+                [disabled]="searchElement.ReadOnly" [minDate]="searchElement.minDate" [maxDate]="searchElement.maxDate"
+                (bsValueChange)="onSearchElementValueChange(searchElement , $event)"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="off">
+              <div class="custom-content" *ngIf="dp.isOpen">
+                <button class="btn btn-primary" (click)="clearDatePicker(searchElement)">Clear</button>
+              </div>
+              <!-- </div> -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+  </div>
+  <div class="row" [ngbCollapse]="isCollapsed" *ngIf="!IsPunchInReport && !showDownloadExcelBtn">
+    <div class="form-group-vertical col-12" style="text-align: right;">
+      <button *ngIf="searchConfiguration.SearchButtonRequired && !isMonthlyATReportPage" class="btn btn-primary btn-sm"
+        [disabled]="isBtnDisabledRequired" (click)="onSearchButtonClicked()"
+        style="margin-top: -5px;margin-right: 10px;">
+        <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+      </button>
+      <button class="btn btn-primary btn-sm" *ngIf="searchConfiguration.SearchButtonRequired && isMonthlyATReportPage"
+        (click)="onSearchButtonClicked()" [disabled]="disableSearchButton" style="margin-top: -5px;">
+        <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Generate Report
+      </button>
+      <button *ngIf="searchConfiguration.ClearButtonRequired" class="btn btn-default btn-bold" style="margin-top: -5px;"
+        (click)=onClearButtonClicked() data-original-title="" title="">
+        <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+      </button>
+    </div>
+  </div>
+  <!-- BUTTONS FOR PUNCHIN PUNCHOUT REPORT -->
+  <div class="row" [ngbCollapse]="isCollapsed" *ngIf="IsPunchInReport">
+    <div class="form-group-vertical col-12" style="text-align: right;">
+      <button *ngIf="searchConfiguration.SearchButtonRequired" class="btn btn-primary btn-sm"
+        [disabled]="SearchElementList.length > 1" (click)="downloadPunchInPunchOutReport('excel')"
+        style="margin-top: -5px;margin-right: 10px;">
+        <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Download As Excel
+      </button>
+      <button class="btn btn-primary btn-sm" *ngIf="searchConfiguration.SearchButtonRequired"
+        (click)="downloadPunchInPunchOutReport('pdf')" [disabled]="SearchElementList.length > 1"
+        style="margin-top: -5px;margin-right: 10px;">
+        <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Download As PDF
+      </button>
+      <button *ngIf="searchConfiguration.ClearButtonRequired" class="btn btn-default btn-bold" style="margin-top: -5px;"
+        (click)=onClearButtonClicked() data-original-title="" title="">
+        <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+      </button>
+    </div>
+  </div>
+  <!-- BUTTONS FOR PUNCHIN PUNCHOUT REPORT FOR ITC-->
+  <div class="row" [ngbCollapse]="isCollapsed" *ngIf="showDownloadExcelBtn">
+    <div class="form-group-vertical col-12" style="text-align: right;">
+      <button *ngIf="searchConfiguration.SearchButtonRequired" class="btn btn-primary btn-sm"
+        (click)="do_DownloadExcel()" style="margin-top: -5px;margin-right: 10px;">
+        <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Download As Excel
+      </button>
+      <button *ngIf="searchConfiguration.ClearButtonRequired" class="btn btn-default btn-bold" style="margin-top: -5px;"
+        (click)=onClearButtonClicked() data-original-title="" title="">
+        <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="content m-b report-content animated fadeInDown int-header-content-panel" style="z-index: 1000;" *ngIf="Content !='SME' && Content !='OutSource' && Content != 'PayTransaction' && Content !== 'General' 
+    && Content !== 'General-small' && Content !== 'Accordian'  && searchElementList.length > 0 && false ">
+  <div class="row">
+    <ng-container *ngFor="let searchElement of searchElementList ; let ind = index">
+      <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-6 col-md-4 col-lg-3 "
+        *ngIf="searchElement.DisplayName">
+
+        <div *ngIf="searchElement.IsIncludedInDefaultSearch">
+          <div *ngIf="isInputTypeTextBox(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                  [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                  [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                </ng-select>
+                <input class="form-control" [(ngModel)]="searchElement.Value"
+                  style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                  placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Comma Separated Numbers -->
+          <div *ngIf="searchElement.InputControlType === 5">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+              <div class="input-group">
+                <input class="form-control" [(ngModel)]="searchElement.DisplayValue"
+                  style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                  (keypress)="onkeyPressed($event , searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                  placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+              </div>
+            </div>
+          </div>
+          <!-- Comma Separated Strings -->
+          <div *ngIf="searchElement.InputControlType === 6">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+              <div class="input-group">
+                <input class="form-control" [(ngModel)]="searchElement.DisplayValue"
+                  style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                  (keypress)="onkeyPressed($event , searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                  placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+              </div>
+            </div>
+          </div>
+          <!-- Date Picker -->
+          <div id="DatePicker2-Div-{{ind}}" *ngIf="searchElement.InputControlType === 7">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+              <div class="input-group">
+
+                <!-- <div class="datepicker-container"> -->
+                <input type="text" #dp="bsDatepicker" class="form-control" bsDatepicker placement="bottom"
+                  [(ngModel)]="searchElement.DisplayValue"
+                  [bsConfig]="{ isAnimated: true, dateInputFormat:'YYYY-MM-DD', showClearButton: true , containerClass:'theme-dark-blue' }"
+                  [disabled]="searchElement.ReadOnly"
+                  (bsValueChange)="onSearchElementValueChange(searchElement , $event)"
+                  placeholder="{{searchElement.DisplayName}}" autocomplete="off">
+                <div class="custom-content" *ngIf="dp.isOpen">
+                  <button class="btn btn-primary" (click)="clearDatePicker(searchElement)">Clear</button>
+                </div>
+                <!-- </div> -->
+              </div>
+            </div>
+
+          </div>
+
+
+          <div *ngIf="isInputTypeMultiSelectDropDown(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                  <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="true"
+                  [closeOnSelect]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.multipleValues"
+                  placeholder="--{{searchElement.DisplayName}}--">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                  </ng-template>
+                  <ng-template ng-loadingspinner-tmp>
+                    <div class="lds-ellipsis">
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeAutoFillTextBox(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                  <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                  (change)="onSearchElementValueChange(searchElement)" [searchable]="true"
+                  [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                  placeholder="{{searchElement.DisplayName}}"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div *ngIf="searchElement.IsIncludedInDefaultSearch && searchElement.DisplayName" 
+         class="form-group-vertical col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
+          <div *ngIf="isInputTypeTextBox(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+  
+              <div class="input-group">
+                <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                  [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                  [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                </ng-select>
+                <input class="form-control" [(ngModel)]="searchElement.Value"
+                  style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                  placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+  
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeMultiSelectDropDown(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+  
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                  <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="true" [closeOnSelect]="false"
+                  [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.multipleValues"
+                  placeholder="--{{searchElement.DisplayName}}--"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                  </ng-template>
+                  <ng-template ng-loadingspinner-tmp>
+                    <div class="lds-ellipsis">
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeAutoFillTextBox(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+  
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                  <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                  (change)="onSearchElementValueChange(searchElement)" [searchable]="true"
+                  [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                  placeholder="{{searchElement.DisplayName}}"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeDropDown(searchElement)">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+  
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                  [searchable]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                  placeholder="{{searchElement.DisplayName}}"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important"
+                  [disabled]="searchElement.ReadOnly">
+  
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="row">
+    <div class="form-group-vertical col-12" style="text-align: right;">
+      <button *ngIf="searchConfiguration.SearchButtonRequired" class="btn btn-primary btn-sm"
+        [disabled]="isBtnDisabledRequired" (click)="onSearchButtonClicked()"
+        style="margin-top: -5px;margin-right: 10px;">
+        <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+      </button>
+      <button *ngIf="searchConfiguration.ClearButtonRequired" class="btn btn-default btn-bold" style="margin-top: -5px;"
+        (click)=onClearButtonClicked() data-original-title="" title="">
+        <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SME or OutSource -->
+<div class="content m-b report-content animated fadeInDown int-header-content-panel" style="z-index: 1;"
+  *ngIf="(Content =='SME' || Content =='OutSource')  && BusinessType != '3'">
+  <div class="row">
+    <ng-container *ngFor="let searchElement of searchElementList ; let ind = index">
+      <div style="z-index: 1000 !important" class="form-group-vertical col-xs-12 col-sm-2 col-md-2 "
+        *ngIf="searchElement.DisplayName">
+
+        <div *ngIf="searchElement.IsIncludedInDefaultSearch">
+          <div *ngIf="isInputTypeTextBox(searchElement) && !searchElement.ReadOnly">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                  [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                  [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                </ng-select>
+                <input class="form-control" [(ngModel)]="searchElement.Value"
+                  style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                  placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeMultiSelectDropDown(searchElement) && !searchElement.ReadOnly">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                  <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="true"
+                  [closeOnSelect]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.multipleValues"
+                  placeholder="--{{searchElement.DisplayName}}--">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                  </ng-template>
+                  <ng-template ng-loadingspinner-tmp>
+                    <div class="lds-ellipsis">
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeAutoFillTextBox(searchElement) && searchElement.DisplayName">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                  <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                  [searchable]="true" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                  placeholder="{{searchElement.DisplayName}}"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isInputTypeDropDown(searchElement) && !searchElement.ReadOnly">
+            <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+            <div class="form-group m-t-m5">
+
+              <div class="input-group">
+                <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  [(ngModel)]="searchElement.RelationalOperatorValue">
+                </ng-select>
+                <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                  [searchable]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                  placeholder="{{searchElement.DisplayName}}"
+                  style="border-radius: 3px 0px 0px 3px !important;width: 100% !important"
+                  [disabled]="searchElement.ReadOnly">
+
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </ng-container>
+
+
+
+  </div>
+  <div style="float: right;  margin-top: -3rem;">
+    <button class="btn btn-primary btn-sm" (click)="onSearchButtonClicked()" [disabled]="isBtnDisabledRequired"
+      style="margin-top: -5px;margin-right: 10px;">
+      <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+    </button>
+
+    <button class="btn btn-default btn-bold" style="margin-top: -5px;" (click)=onClearButtonClicked()
+      data-original-title="" title="">
+      <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+    </button>
+  </div>
+
+</div>
+
+<!-- General -->
+<div *ngIf="Content === 'General' && Content !== 'General-small'  && searchElementList.length > 0">
+  <!-- style="margin-top: 20px; margin-bottom: 20px; position: relative; padding: 15px;z-index: 1000;"> -->
+  <div class="row">
+    <ng-container *ngFor="let searchElement of searchElementList ; let ind = index">
+
+      <div *ngIf="searchElement.IsIncludedInDefaultSearch"
+        class="form-group-vertical col-xs-12 col-sm-6 col-md-4 col-lg-3">
+
+        <div *ngIf="isInputTypeTextBox(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+              </ng-select>
+              <input class="form-control" [(ngModel)]="searchElement.Value"
+                style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeMultiSelectDropDown(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+                <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+              </ng-select>
+              <!-- <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                  (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                  (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="false" [closeOnSelect]="false"
+                  [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                  [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.DisplayValue"
+                  placeholder="--{{searchElement.DisplayName}}--">
+                  <ng-template ng-header-tmp>
+                    <input placeholder="Search" type="text" class="form-control"
+                      style="border: none;border-radius: 0px !important;background: white"
+                      (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                  </ng-template>
+                  <ng-template ng-loadingspinner-tmp>
+                    <div class="lds-ellipsis">
+                    </div>
+                  </ng-template>
+                </ng-select> -->
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                (change)="onSearchElementValueChange(searchElement)" [searchable]="true" [multiple]="true"
+                [closeOnSelect]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.DisplayValue"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  <div title="{{item[searchElement.DisplayFieldInDataset]}}">
+                    {{item[searchElement.DisplayFieldInDataset]}}</div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeAutoFillTextBox(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+                <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                (change)="onSearchElementValueChange(searchElement)" [searchable]="true"
+                [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  <div title="{{item[searchElement.DisplayFieldInDataset]}}">
+                    {{item[searchElement.DisplayFieldInDataset]}}</div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeDropDown(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                [searchable]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important"
+                [disabled]="searchElement.ReadOnly">
+                <ng-template ng-option-tmp let-item="item">
+                  <div title="{{item[searchElement.DisplayFieldInDataset]}}">
+                    {{item[searchElement.DisplayFieldInDataset]}}</div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <!-- Comma Separated Numbers -->
+        <div *ngIf="searchElement.InputControlType === 5">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <input class="form-control" [(ngModel)]="searchElement.DisplayValue"
+                style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                (keypress)="onkeyPressed($event , searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+            </div>
+          </div>
+        </div>
+        <!-- Comma Separated Strings -->
+        <div *ngIf="searchElement.InputControlType === 6">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <input class="form-control" [(ngModel)]="searchElement.DisplayValue"
+                style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                (keypress)="onkeyPressed($event , searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+            </div>
+          </div>
+        </div>
+        <!-- Date Picker -->
+        <div id="DatePicker3-Div-{{ind}}" *ngIf="searchElement.InputControlType === 7">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+
+              <!-- <div class="datepicker-container"> -->
+              <input type="text" #dp="bsDatepicker" class="form-control" bsDatepicker placement="bottom"
+                [(ngModel)]="searchElement.DisplayValue"
+                [bsConfig]="{ isAnimated: true, dateInputFormat:'YYYY-MM-DD', showClearButton: true , containerClass:'theme-dark-blue' }"
+                [disabled]="searchElement.ReadOnly" (bsValueChange)="onSearchElementValueChange(searchElement , $event)"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="off">
+              <div class="custom-content" *ngIf="dp.isOpen">
+                <button class="btn btn-primary" (click)="clearDatePicker(searchElement)">Clear</button>
+              </div>
+              <!-- </div> -->
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+
+    </ng-container>
+
+    <div class="form-group-vertical col-xs-12 col-sm-12">
+      <div class="form-group m-t-m5" style="margin-top: 0px;margin-bottom: 1rem;float: right;">
+
+        <div class="input-group">
+          <ul class="list-inline">
+            <li class="list-inline-item" *ngIf="searchConfiguration.SearchButtonRequired">
+
+              <!-- <button type="button" class="btn btn-primary" (click)="newSearch()">
+                Search
+              </button> -->
+              <button class="btn btn-primary btn-sm" (click)="onSearchButtonClicked()"
+                [disabled]="isBtnDisabledRequired" style="margin-top: -5px;">
+                <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+              </button>
+
+              <!-- 
+
+              <div class="" (click)=onSearchButtonClicked() tooltip="Go"  [options]="myOptions" style="margin-top: 5px;margin-top: 5px;
+              color: #858fa6;margin-right: 15px;
+              position: absolute;
+              right: 50px;
+              /* top: 15px !important; */
+              cursor: pointer;
+              border-radius: 3px;
+              padding: 5px;
+              padding-bottom: 0px;
+              padding-top: 2px;
+              /* float: right; */
+              /* text-align: right; */
+              /* display: block; */
+              /* margin: 0 auto; */
+              font-weight: 600;"><span >SEARCH</span>
+              </div> -->
+
+            </li>
+            <li class="list-inline-item" *ngIf="searchConfiguration.ClearButtonRequired">
+              <!-- <button type="button" class="btn btn-primary" (click)="newSearch()">
+                Clear
+              </button> -->
+
+
+              <button class="btn btn-default btn-bold" style="margin-top: -5px;" (click)=onClearButtonClicked()
+                data-original-title="" title="">
+                <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+              </button>
+              <!-- <div class="modal-close" (click)=onClearButtonClicked() tooltip="Clear" [options]="myOptions" style="margin-top: 6px;background: #858fa6;
+              color: #fff; 
+              border-radius: 25%;"><span class="mdi mdi-close pull-left"></span>
+              </div> -->
+
+
+
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- General-small -->
+<div class="animated fadeInDown" *ngIf="Content === 'General-small'  && searchElementList.length > 0"
+  style="margin-top: 20px; margin-bottom: 20px; position: relative; padding: 15px;z-index: 100000;">
+  <div class="row">
+    <div style="z-index: 100000 !important" *ngFor="let searchElement of searchElementList ; let ind = index"
+      class="form-group-vertical col-xs-12 col-sm-12 col-md-6 col-lg-4">
+
+      <div *ngIf="searchElement.IsIncludedInDefaultSearch">
+        <div *ngIf="isInputTypeTextBox(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+              </ng-select>
+              <input class="form-control" [(ngModel)]="searchElement.Value"
+                style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeMultiSelectDropDown(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+                <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="true" [closeOnSelect]="false"
+                [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.multipleValues"
+                placeholder="--{{searchElement.DisplayName}}--">
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                </ng-template>
+                <ng-template ng-loadingspinner-tmp>
+                  <div class="lds-ellipsis">
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeAutoFillTextBox(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+                <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                (change)="onSearchElementValueChange(searchElement)" [searchable]="true"
+                [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isInputTypeDropDown(searchElement)">
+          <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+          <div class="form-group m-t-m5">
+
+            <div class="input-group">
+              <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                [(ngModel)]="searchElement.RelationalOperatorValue">
+              </ng-select>
+              <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                [searchable]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                placeholder="{{searchElement.DisplayName}}"
+                style="border-radius: 3px 0px 0px 3px !important;width: 100% !important"
+                [disabled]="searchElement.ReadOnly">
+
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <div class="form-group-vertical col-xs-12 col-sm-12">
+      <div class="form-group m-t-m5" style="margin-top: 0px;margin-bottom: 1rem;float: right;">
+
+        <div class="input-group">
+          <ul class="list-inline">
+            <li class="list-inline-item" *ngIf="searchConfiguration.SearchButtonRequired">
+
+              <!-- <button type="button" class="btn btn-primary" (click)="newSearch()">
+                Search
+              </button> -->
+              <button class="btn btn-primary btn-sm" (click)="onSearchButtonClicked()"
+                [disabled]="isBtnDisabledRequired" style="margin-top: -5px;">
+                <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+              </button>
+
+              <!-- 
+
+              <div class="" (click)=onSearchButtonClicked() tooltip="Go"  [options]="myOptions" style="margin-top: 5px;margin-top: 5px;
+              color: #858fa6;margin-right: 15px;
+              position: absolute;
+              right: 50px;
+              /* top: 15px !important; */
+              cursor: pointer;
+              border-radius: 3px;
+              padding: 5px;
+              padding-bottom: 0px;
+              padding-top: 2px;
+              /* float: right; */
+              /* text-align: right; */
+              /* display: block; */
+              /* margin: 0 auto; */
+              font-weight: 600;"><span >SEARCH</span>
+              </div> -->
+
+            </li>
+            <li class="list-inline-item" *ngIf="searchConfiguration.ClearButtonRequired">
+              <!-- <button type="button" class="btn btn-primary" (click)="newSearch()">
+                Clear
+              </button> -->
+
+
+              <button class="btn btn-default btn-bold" style="margin-top: -5px;" (click)=onClearButtonClicked()
+                data-original-title="" title="">
+                <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+              </button>
+              <!-- <div class="modal-close" (click)=onClearButtonClicked() tooltip="Clear" [options]="myOptions" style="margin-top: 6px;background: #858fa6;
+              color: #fff; 
+              border-radius: 25%;"><span class="mdi mdi-close pull-left"></span>
+              </div> -->
+
+
+
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Accordian -->
+<div class="content  report-content" style="padding: 0px;"
+  *ngIf="Content === 'Accordian' && searchElementList.length > 0">
+  <!-- style="margin-top: 20px; margin-bottom: 20px; position: relative; padding: 15px;z-index: 1000;"> -->
+  <div class="accordion" id="accordionSearch" style="margin-top: 10px;">
+    <div class="card-header" id="headingTwo">
+      <h5 class="my-0" style="height:1.5rem;">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapsableAccordian"
+          aria-expanded="false" aria-controls="clientCollapse" style="padding-top: 0px;text-decoration: none;">
+          <p class="card-header-title"> <i class="fa fa-search p-r-10 search-icon" aria-hidden="true"></i>
+            {{accordianText}}</p>
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapsableAccordian" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionSearch">
+      <div class="card-body" style="padding-top: 10px; padding-bottom: 15px;">
+        <div class="row">
+          <ng-container *ngFor="let searchElement of searchElementList ; let ind = index">
+
+            <div *ngIf="searchElement.IsIncludedInDefaultSearch"
+              class="form-group-vertical col-xs-12 col-sm-6 col-md-4 col-lg-3">
+
+              <div *ngIf="isInputTypeTextBox(searchElement)">
+                <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+                <div class="form-group m-t-m5">
+
+                  <div class="input-group">
+                    <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                      [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                      [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                      [(ngModel)]="searchElement.RelationalOperatorValue">
+                    </ng-select>
+                    <input class="form-control" [(ngModel)]="searchElement.Value"
+                      style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                      placeholder="{{searchElement.DisplayName}}" autocomplete="none|false|no">
+
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="isInputTypeMultiSelectDropDown(searchElement)">
+                <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+                <div class="form-group m-t-m5">
+
+                  <div class="input-group">
+                    <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                      (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                      [(ngModel)]="searchElement.RelationalOperatorValue">
+                      <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                    </ng-select>
+                    <!-- <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                        (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                        (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="false" [closeOnSelect]="false"
+                        [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                        [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.DisplayValue"
+                        placeholder="--{{searchElement.DisplayName}}--">
+                        <ng-template ng-header-tmp>
+                          <input placeholder="Search" type="text" class="form-control"
+                            style="border: none;border-radius: 0px !important;background: white"
+                            (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                        </ng-template>
+                        <ng-template ng-loadingspinner-tmp>
+                          <div class="lds-ellipsis">
+                          </div>
+                        </ng-template>
+                      </ng-select> -->
+                    <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                      [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                      (change)="onSearchElementValueChange(searchElement)" [searchable]="true" [multiple]="true"
+                      [closeOnSelect]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                      [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.DisplayValue"
+                      placeholder="{{searchElement.DisplayName}}"
+                      style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                      <ng-template ng-header-tmp>
+                        <input placeholder="Search" type="text" class="form-control"
+                          style="border: none;border-radius: 0px !important;background: white"
+                          (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                      </ng-template>
+                      <ng-template ng-option-tmp let-item="item">
+                        <div title="{{item[searchElement.DisplayFieldInDataset]}}">
+                          {{item[searchElement.DisplayFieldInDataset]}}</div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="isInputTypeAutoFillTextBox(searchElement)">
+                <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+                <div class="form-group m-t-m5">
+
+                  <div class="input-group">
+                    <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                      (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                      [(ngModel)]="searchElement.RelationalOperatorValue">
+                      <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                    </ng-select>
+                    <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                      [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                      (change)="onSearchElementValueChange(searchElement)" [searchable]="true"
+                      [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                      [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                      placeholder="{{searchElement.DisplayName}}"
+                      style="border-radius: 3px 0px 0px 3px !important;width: 100% !important">
+                      <ng-template ng-header-tmp>
+                        <input placeholder="Search" type="text" class="form-control"
+                          style="border: none;border-radius: 0px !important;background: white"
+                          (input)="select.filter($event.target.value)" [disabled]="searchElement.ReadOnly" />
+                      </ng-template>
+                      <ng-template ng-option-tmp let-item="item">
+                        <div title="{{item[searchElement.DisplayFieldInDataset]}}">
+                          {{item[searchElement.DisplayFieldInDataset]}}</div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="isInputTypeDropDown(searchElement)">
+                <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+                <div class="form-group m-t-m5">
+
+                  <div class="input-group">
+                    <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                      (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                      [(ngModel)]="searchElement.RelationalOperatorValue">
+                    </ng-select>
+                    <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                      (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                      [searchable]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset"
+                      [bindLabel]="searchElement.DisplayFieldInDataset" [(ngModel)]="searchElement.Value"
+                      placeholder="{{searchElement.DisplayName}}"
+                      style="border-radius: 3px 0px 0px 3px !important;width: 100% !important"
+                      [disabled]="searchElement.ReadOnly">
+                      <ng-template ng-option-tmp let-item="item">
+                        <div title="{{item[searchElement.DisplayFieldInDataset]}}">
+                          {{item[searchElement.DisplayFieldInDataset]}}</div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <!-- Comma Separated Numbers -->
+              <div *ngIf="searchElement.InputControlType === 5">
+                <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+                <div class="form-group m-t-m5">
+                  <div class="input-group">
+                    <input class="form-control" [(ngModel)]="searchElement.DisplayValue"
+                      style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                      (keypress)="onkeyPressed($event , searchElement)"
+                      (change)="onSearchElementValueChange(searchElement)" placeholder="{{searchElement.DisplayName}}"
+                      autocomplete="none|false|no">
+
+                  </div>
+                </div>
+              </div>
+              <!-- Comma Separated Strings -->
+              <div *ngIf="searchElement.InputControlType === 6">
+                <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+                <div class="form-group m-t-m5">
+                  <div class="input-group">
+                    <input class="form-control" [(ngModel)]="searchElement.DisplayValue"
+                      style="border-radius: 3px 0px 0px 3px !important;" [disabled]="searchElement.ReadOnly"
+                      (keypress)="onkeyPressed($event , searchElement)"
+                      (change)="onSearchElementValueChange(searchElement)" placeholder="{{searchElement.DisplayName}}"
+                      autocomplete="none|false|no">
+
+                  </div>
+                </div>
+              </div>
+              <!-- Date Picker -->
+              <div id="DatePicker4-Div-{{ind}}" *ngIf="searchElement.InputControlType === 7">
+                <label class="form-label searchbar-label">{{searchElement.DisplayName}}</label>
+                <div class="form-group m-t-m5">
+                  <div class="input-group">
+
+                    <!-- <div class="datepicker-container"> -->
+                    <input type="text" #dp="bsDatepicker" class="form-control" bsDatepicker placement="bottom"
+                      [(ngModel)]="searchElement.DisplayValue"
+                      [bsConfig]="{ isAnimated: true, dateInputFormat:'YYYY-MM-DD', showClearButton: true , containerClass:'theme-dark-blue' }"
+                      [disabled]="searchElement.ReadOnly"
+                      (bsValueChange)="onSearchElementValueChange(searchElement , $event)"
+                      placeholder="{{searchElement.DisplayName}}" autocomplete="off">
+                    <div class="custom-content" *ngIf="dp.isOpen">
+                      <button class="btn btn-primary" (click)="clearDatePicker(searchElement)">Clear</button>
+                    </div>
+                    <!-- </div> -->
+                  </div>
+                </div>
+
+              </div>
+
+
+            </div>
+
+
+
+          </ng-container>
+
+          <div class="form-group-vertical col-xs-12 col-sm-12">
+            <div class="form-group m-t-m5" style="margin-top: 0px;margin-bottom: 1rem;float: right;">
+
+              <div class="input-group">
+                <ul class="list-inline">
+                  <li class="list-inline-item" *ngIf="searchConfiguration.SearchButtonRequired">
+
+                    <!-- <button type="button" class="btn btn-primary" (click)="newSearch()">
+                      Search
+                    </button> -->
+                    <button class="btn btn-primary btn-sm" (click)="onSearchButtonClicked()"
+                      [disabled]="isBtnDisabledRequired" style="margin-top: -5px;">
+                      <i class="mdi mdi-filter-outline font-size-md" style="margin-right: 5px;"></i> Search Now
+                    </button>
+
+                    <!-- 
+      
+                    <div class="" (click)=onSearchButtonClicked() tooltip="Go"  [options]="myOptions" style="margin-top: 5px;margin-top: 5px;
+                    color: #858fa6;margin-right: 15px;
+                    position: absolute;
+                    right: 50px;
+                    /* top: 15px !important; */
+                    cursor: pointer;
+                    border-radius: 3px;
+                    padding: 5px;
+                    padding-bottom: 0px;
+                    padding-top: 2px;
+                    /* float: right; */
+                    /* text-align: right; */
+                    /* display: block; */
+                    /* margin: 0 auto; */
+                    font-weight: 600;"><span >SEARCH</span>
+                    </div> -->
+
+                  </li>
+                  <li class="list-inline-item" *ngIf="searchConfiguration.ClearButtonRequired">
+                    <!-- <button type="button" class="btn btn-primary" (click)="newSearch()">
+                      Clear
+                    </button> -->
+
+
+                    <button class="btn btn-default btn-bold" style="margin-top: -5px;" (click)=onClearButtonClicked()
+                      data-original-title="" title="">
+                      <i class="mdi mdi-filter-remove-outline font-size-md" style="margin-right: 5px;"></i> Clear
+                    </button>
+                    <!-- <div class="modal-close" (click)=onClearButtonClicked() tooltip="Clear" [options]="myOptions" style="margin-top: 6px;background: #858fa6;
+                    color: #fff; 
+                    border-radius: 25%;"><span class="mdi mdi-close pull-left"></span>
+                    </div> -->
+
+
+
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+<!-- // harvindar code begin -->
+<!-- <div class="content m-b report-content" style="margin-top: 15px;" *ngIf="searchElementList.length > 0">
+  <div class="row m-b">
+    <div class="col-12 col-md-4 col-lg col-sm-4 m-b" *ngFor="let searchElement of searchElementList ; let ind = index">
+      <ul class="list-inline" *ngIf="searchElement.IsIncludedInDefaultSearch">
+        <div class="showGirdActionButtons">
+          <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+            <div class="massOperationsPanel d-i-b">
+              <div class="col-lg-12 col-xs-12">
+                <div class="form-group">
+
+                  <div *ngIf="isInputTypeTextBox(searchElement)" class="row">
+                    <label class="form-label"> {{searchElement.DisplayName}} </label><br>
+                    <ng-select class="equality-symbol list-inline-item col-2.5" [clearable]="false"
+                      [disabled]="searchElement.ReadOnly" (change)="onSearchElementValueChange(searchElement)"
+                      [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                      [(ngModel)]="searchElement.RelationalOperatorValue">
+                    </ng-select>
+                    <input class=" form-control list-inline-item col" class="form-control" style="background: white"
+                      type="text" id="input" [(ngModel)]="searchElement.Value"
+                      [disabled]="searchElement.ReadOnly"
+                      placeholder="{{searchElement.DisplayName}}">
+                  </div>
+
+                  <div *ngIf="isInputTypeDropDown(searchElement)">
+                    <label class="form-label"> {{searchElement.DisplayName}} </label>
+                    <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                      (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                      [(ngModel)]="searchElement.RelationalOperatorValue">
+                    </ng-select>
+                    <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                      (open)="onOpeningDropDown(searchElement)" (change)="onSearchElementValueChange(searchElement)"
+                      [searchable]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset" bindLabel="Name"
+                      [(ngModel)]="searchElement.Value" [disabled]="searchElement.ReadOnly" placeholder="--{{searchElement.DisplayName}}--">
+                      
+                    </ng-select>
+                  </div>
+
+                  <div *ngIf="isInputTypeMultiSelectDropDown(searchElement)">
+                    <label class="form-label"> {{searchElement.DisplayName}} </label>
+                    <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                      (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                      [(ngModel)]="searchElement.RelationalOperatorValue">
+                      <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                    </ng-select>
+                    <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                      (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                      (open)="onOpeningDropDown(searchElement)" [searchable]="false" [multiple]="true"
+                      [closeOnSelect]="false" [bindValue]="searchElement.ForeignKeyColumnNameInDataset" bindLabel="Name"
+                      [(ngModel)]="searchElement.multipleValues" placeholder="--{{searchElement.DisplayName}}--">
+                      <ng-template ng-header-tmp>
+                        <input placeholder="Search" type="text" class="form-control"
+                          style="border: none;border-radius: 0px !important;background: white"
+                          (input)="select.filter($event.target.value)" />
+                      </ng-template>
+                      <ng-template ng-loadingspinner-tmp>
+                        <div class="lds-ellipsis">
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+
+                  <div *ngIf="isInputTypeAutoFillTextBox(searchElement)">
+                    <label class="form-label"> {{searchElement.DisplayName}} </label>
+                    <ng-select [items]="acceptedSymbols" *ngIf="searchElement.RelationalOperatorsRequired"
+                      (change)="onSearchElementValueChange(searchElement)" [disabled]="searchElement.ReadOnly"
+                      [(ngModel)]="searchElement.RelationalOperatorValue">
+                      <option *ngFor="let symbol of acceptedSymbols">{{symbol}}</option>
+                    </ng-select>
+                    <ng-select #select [items]="searchElement.DropDownList" [loading]="!searchElement.DropDownList"
+                      [disabled]="searchElement.ReadOnly" (open)="onOpeningDropDown(searchElement)"
+                      (change)="onSearchElementValueChange(searchElement)" [searchable]="true"
+                      [bindValue]="searchElement.ForeignKeyColumnNameInDataset" bindLabel="Name"
+                      [(ngModel)]="searchElement.Value" placeholder="--{{searchElement.DisplayName}}--">
+                      <ng-template ng-header-tmp>
+                        <input placeholder="Search" type="text" class="form-control"
+                          style="border: none;border-radius: 0px !important;background: white"
+                          (input)="select.filter($event.target.value)" />
+                      </ng-template>
+                    </ng-select>
+                  </div>
+
+                  <div *ngIf="searchElement.InputType === 'CheckBox'">
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ul>
+    </div>
+  </div>
+
+  <br>
+  <br>
+
+  <div class="row-reverse" *ngIf="searchElementList.length > 0">
+
+    <div *ngIf="searchConfiguration.SearchButtonRequired">
+      <div class="col-12 col-md-4 col-lg-1 col-sm-4 text-right">
+        <button class="btn btn-primary" (click)=onSearchButtonClicked()>Search</button>
+      </div>
+    </div>
+
+    <div *ngIf="searchConfiguration.ClearButtonRequired">
+      <div class="col-12 col-md-4 col-lg-1 col-sm-4 text-right">
+        <button class="btn btn-primary" (click)=onClearButtonClicked()>Clear</button>
+      </div>
+    </div>
+
+  </div>
+
+  <br>
+</div> -->
+
+<!-- // harvindar code end  -->
+
+<!-- <div class="row">
+      <div class="col-12 col-md-4 col-lg-4 col-sm-4">         
+        <ul class="list-inline">
+          <div class="showGirdActionButtons">
+            <div class="box-shadow-b wrapper-mm gap-eb clearfix">
+              <div class="massOperationsPanel d-i-b">                          
+                <div class="col-lg-12 col-xs-12">
+
+                  <div class="form-group">
+                     <label>Country</label>
+                     <ng-select #select [items]="country" (change)="onCountryChange($event)" [searchable]="true" bindValue="Id" bindLabel="Name" [(ngModel)]="countryId" placeholder="-- Choose Country --">
+                      <ng-template ng-header-tmp> 
+                        <input placeholder="Search" type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select.filter($event.target.value)" />
+                       </ng-template>
+                    </ng-select>               
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ul>
+      </div>
+      end col-->
+
+
+<!--end col-->
+
+<!-- <div class="col-12 col-md-4 col-lg-4 col-sm-4 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            
+            
+            <input type="text" class="form-control">
+
+          </ul>
+        </div>
+      </div> -->
+<!--end col-->
+
+<!-- </div> -->

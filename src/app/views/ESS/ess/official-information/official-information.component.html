@@ -1,0 +1,1108 @@
+<div class="page-wrapper ff" *ngIf="isESSLogin == true">
+  <div class="page-content">
+
+      <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;">
+          <!-- <ngx-spinner></ngx-spinner> -->
+          <app-loading-screen></app-loading-screen>
+          <div class="text-center ma-5" *ngIf="spinner">
+              <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                  Please wait...
+              </button>
+          </div>
+          <div class="row" *ngIf="!spinner">
+              <div class="col-lg-6 col-xs-12 col-sm-12">
+                  <div class="headerbar">
+                      <div>
+                          <h2 class="header_title">Current Employment</h2>
+                          <p class="subheader_title" *ngIf="employeedetails != null">Name : {{employeedetails.FirstName}} ~ Code : {{employeedetails.Code}}
+                          </p>
+                      </div>
+
+                  </div>
+              </div>
+          </div>
+          <!-- <div *ngIf="!spinner"> -->
+          <ng-container *ngTemplateOutlet="mydocumentTemplate">
+          </ng-container>
+          <!-- </div> -->
+      </div>
+  </div>
+</div>
+
+<div *ngIf="isESSLogin == false">
+  <ng-container *ngTemplateOutlet="mydocumentTemplate">
+  </ng-container>
+</div>
+<ng-template #mydocumentTemplate>
+  <br />
+  <br />
+
+
+
+
+  <div class="row" *ngIf="BusinessType == 3 && employeedetails && employeedetails.Id > 0 && TeamList.length > 0">
+
+
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Employee Name </label>
+          <p>{{employeedetails.FirstName}}</p>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Employee Code </label>
+          <p>{{employeedetails.Code}}</p>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Location </label>
+          <p>{{getWorkLocation(employeedetails.EmploymentContracts[0].WorkLocation)}}</p>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Date of Joining </label>
+          <p>{{employeedetails.EmploymentContracts[0].StartDate | date}}</p>
+      </div>
+
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Designation </label>
+          <p>{{employeedetails.EmploymentContracts[0].Designation}}</p>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Team </label>
+          <p>{{getTeam(employeedetails.EmploymentContracts[0])}}</p>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Notice Period</label>
+          <p>{{NoticePeriodDaysName}}</p>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Leave Group</label>
+          <p>{{LeaveGroupIdName}}</p>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Reporting Manager</label>
+          <p>{{ManagerIdName}}</p>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Department</label>
+          <p
+              *ngIf="employeedetails.EmploymentContracts[0].Department != null && employeedetails.EmploymentContracts[0].Department != ''">
+              {{employeedetails.EmploymentContracts[0].Department}}</p>
+          <p
+              *ngIf="employeedetails.EmploymentContracts[0].Department == null || employeedetails.EmploymentContracts[0].Department == ''">
+              ---</p>
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label">Last Working Day(LWD) </label>
+          <p
+              *ngIf="employeedetails.EmploymentContracts[0].LWD != null && employeedetails.EmploymentContracts[0].LWD != ''">
+              {{employeedetails.EmploymentContracts[0].LWD}}</p>
+          <p
+              *ngIf="employeedetails.EmploymentContracts[0].LWD == null || employeedetails.EmploymentContracts[0].LWD == ''">
+              ---</p>
+
+      </div>
+      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-4">
+          <label class="form-label"> Employment Type </label>
+          <p>{{getEmploymentType(employeedetails.EmploymentContracts[0].EmploymentType)}}</p>
+      </div>
+
+  </div>
+
+
+  <div>
+      <form [formGroup]="employeeForm" *ngIf="BusinessType != 3 && employeedetails">
+
+          <div class="col-12 col-md-12 col-sm-12">
+              <div class="clearfix">
+                  <div class="row" style="margin-top: 15px;">
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="employeeForm.controls.employername && employeedetails && employeedetails.FirstName">
+                          <label class="form-label">Employee Name <span class="required"> *
+                              </span></label>
+
+                          <input type="text" disabled class="form-control" placeholder="Employee Name"
+                              formControlName="employername"
+                              [ngClass]="{ 'is-invalid': submitted && g.employername.invalid }" autocomplte="off">
+
+                          <div *ngIf="submitted && g.employername.invalid" class="help-block">
+                              <div *ngIf="g.employername.errors.required">Employee Name is required
+                              </div>
+                          </div>
+                      </div> -->
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.employeecode && employeedetails && employeedetails.Id == 0">
+                          <label class="form-label">Employee Code <span class="required"> *
+                              </span></label>
+
+                          <input type="test" [disabled]="IsEditMode" class="form-control" placeholder="Employee Code"
+                              formControlName="employeecode"
+                              [ngClass]="{ 'is-invalid': submitted && g.employeecode.invalid }" autocomplte="off">
+
+                          <div *ngIf="submitted && g.employeecode.invalid" class="help-block">
+                              <div *ngIf="g.employeecode.errors.required">Employee Code is required
+                              </div>
+                          </div>
+                      </div> -->
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.employeecode && employeedetails && employeedetails.Id > 0">
+                          <label class="form-label">Employee Code <span class="required"> *
+                              </span></label>
+
+                          <input type="test" disabled class="form-control" placeholder="Employee Code"
+                              formControlName="employeecode"
+                              [ngClass]="{ 'is-invalid': submitted && g.employeecode.invalid }" autocomplte="off">
+
+                          <div *ngIf="submitted && g.employeecode.invalid" class="help-block">
+                              <div *ngIf="g.employeecode.errors.required">Employee Code is required
+                              </div>
+                          </div>
+                      </div> -->
+
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.clientname  && BusinessType == '3'">
+                          <label class="form-label">Client Name <span class="required"> *
+                              </span></label>
+                          <ng-select [items]="ClientList" [searchable]="true"
+                              [loading]="ClientList.length == 0 && ngselectLoader" placeholder="-- select a client --"
+                              bindValue="Id" bindLabel="Name" formControlName="clientname"
+                              [ngClass]="{'ng-touched': submitted && g.clientname.errors }"
+                              (change)="onChangeClient($event)">
+
+                              <!-- <ng-template ng-header-tmp>  (open)="getClientMasterDropdown('Client')"
+                                  <input placeholder="Search" type="text" class="form-control"
+                                      style="border: none;border-radius: 0px !important;background: white"
+                                      (input)="select.filter($event.target.value)" />
+                              </ng-template> -->
+
+                          </ng-select>
+                          <div *ngIf="submitted && g.clientname.invalid" class="help-block">
+                              <div *ngIf="g.clientname.errors.required">Client Name is required
+                              </div>
+                          </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.contractname  && BusinessType == '3'">
+                          <label class="form-label">Contract Name <span class="required"> *
+                              </span></label>
+                          <ng-select [items]="ClientContractList" [searchable]="true"
+                              placeholder="-- select a client contract --" bindValue="Id" bindLabel="Name"
+                              formControlName="contractname"
+                              [ngClass]="{'ng-touched': submitted && g.contractname.errors }"
+                              (change)="onChangeClientContract($event)">
+                              <!-- <ng-template ng-header-tmp>
+                                  <input placeholder="Search" type="text" class="form-control"
+                                      style="border: none;border-radius: 0px !important;background: white"
+                                      (input)="select1.filter($event.target.value)" />
+                              </ng-template> -->
+
+                          </ng-select>
+                          <div *ngIf="submitted && g.contractname.invalid" class="help-block">
+                              <div *ngIf="g.contractname.errors.required">Contract Name is required
+                              </div>
+                          </div>
+                      </div>
+
+
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                      *ngIf="this.employeeForm.controls.CityId">
+                      <label class="form-label">Joining Location (Center / City) <span class="required"> *
+                          </span>
+                          <span class="form__length">
+                            {{worklocationStateName}} </span>
+                        </label>
+                      <ng-select [items]="ClientCityList" placeholder="Joining Location (Center / City)"
+                          formControlName="CityId" [ngClass]="{'ng-touched':submitted &&  g.CityId.errors }"
+                          bindLabel="Code" bindValue="Id"
+                          (change)="onChangeJoiningLocation($event, 'secondtime')" [clearable]="false">
+                      </ng-select>
+
+                      <div *ngIf="submitted && g.CityId.invalid" class="help-block">
+                          <div *ngIf="g.CityId.errors.required">Joining Location (Center / City) is required</div>
+                      </div>
+                  </div>
+                  
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.Location">
+                          <label class="form-label">Reporting Location (Campus) <span class="required"> *
+                              </span>
+                              <span class="form__length">
+                                {{worklocationCityName}}, {{worklocationStateName}} </span>
+                            </label>
+                          <ng-select [items]="GetClientLocationList()" placeholder="-- select location --"
+                              formControlName="Location" [ngClass]="{'ng-touched':submitted &&  g.Location.errors }"
+                              bindLabel="LocationName" bindValue="Id"
+                              (change)="onChangeOfferLocation($event, 'secondtime')" [clearable]="false">
+                          </ng-select>
+
+                          <div *ngIf="submitted && g.Location.invalid" class="help-block">
+                              <div *ngIf="g.Location.errors.required">Reporting Location (Campus) is required</div>
+                          </div>
+                      </div>
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                      *ngIf="this.employeeForm.controls.ReportingLocation">
+                      <label class="form-label">Reporting Location <span class="required"> *
+                          </span>
+                          <span class="form__length">
+                            {{reportingCityName}}, {{reportingStateName}} </span>
+                        </label>
+                      <ng-select [items]="ClientReportingLocationList" placeholder="-- select location --"
+                          formControlName="ReportingLocation" [ngClass]="{'ng-touched':submitted &&  g.ReportingLocation.errors }"
+                          bindLabel="LocationName" bindValue="Id"
+                          (change)="onChangeWorkLocation($event, 'secondtime')">
+                      </ng-select>
+
+                      <div *ngIf="submitted && g.ReportingLocation.invalid" class="help-block">
+                          <div *ngIf="g.ReportingLocation.errors.required">Reporting Location is required</div>
+                      </div>
+                  </div> -->
+
+
+
+
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.employementstartdate">
+                          <label class="form-label">Employment Start Date <span class="required">
+                                  *
+                              </span> <span class="help-text m-l-5">(                               DD-MM-YYYY)</span> </label>
+                          <input type="text" class="form-control" bsDatepicker placement="bottom" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+containerClass:'theme-default' ,showClearButton: true, clearPosition: 'right'}" name="EmployementStartDate"
+                              formControlName="employementstartdate" (ngModelChange)="onChangeDOJ($event)"  appAutocompleteOff 
+                              [ngClass]="{ 'is-invalid': submitted && g.employementstartdate.invalid }"
+                              placeholder="Employement Start Date" autocomplte="off" [minDate]="isAllenDigital ? AttendanceStartDate : ActualDOJminDate" [maxDate]="ActualDOJmaxDate">
+                          <div *ngIf="submitted && g.employementstartdate.invalid" class="help-block">
+                              <div *ngIf="g.employementstartdate.errors.required">Employment Start Date is required
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4"  style="padding-top: 5px; padding-bottom: 5px;" *ngIf="isAllenDigital">
+                        <label class="form-label" for="Category">Category/Type <span class="required">*</span></label>                                          
+                    
+                        <ng-select [items]="onboardingAdditionalInfo.LstEmployeeCategory" placeholder="Select Category"
+                          formControlName="Category" [ngClass]="{'ng-touched': submitted && g.Category.errors }" bindLabel="Name"
+                          bindValue="Id" (change)="onChangeOfficialFields($event, 'Category')" [clearable]="false">
+                        </ng-select> 
+                    
+                    
+                        <div *ngIf="submitted && g.Category.invalid" class="help-block">
+                          <div *ngIf="g.Category.errors.required"> Category is required
+                          </div>
+                        </div>
+                    
+                    
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4"  style="padding-top: 5px; padding-bottom: 5px;" *ngIf="isAllenDigital">
+                        <label class="form-label" for="Department">Department <span class="required">*</span></label>                                          
+                    
+                        <ng-select [items]="onboardingAdditionalInfo.LstEmployeeDepartment" placeholder="Select Department"
+                          formControlName="DepartmentId" [ngClass]="{'ng-touched': submitted && g.DepartmentId.errors }" bindLabel="Name"
+                          bindValue="Id" [clearable]="false">
+                        </ng-select> 
+                    
+                    
+                        <div *ngIf="submitted && g.DepartmentId.invalid" class="help-block">
+                          <div *ngIf="g.DepartmentId.errors.required"> Department is required
+                          </div>
+                        </div>
+                    
+                    
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-sm-4"  style="padding-top: 5px; padding-bottom: 5px;" *ngIf="isAllenDigital">
+                        <label class="form-label" for="Division">Division <span class="required">*</span></label>                                          
+                    
+                        <ng-select [items]="onboardingAdditionalInfo.LstEmployeeDivision" placeholder="Select Division"
+                          formControlName="Division" [ngClass]="{'ng-touched': submitted && g.Division.errors }" bindLabel="Name"
+                          bindValue="Id" [clearable]="false">
+                        </ng-select> 
+                                        
+                        <div *ngIf="submitted && g.Division.invalid" class="help-block">
+                          <div *ngIf="g.Division.errors.required"> Division is required
+                          </div>
+                        </div>
+                    
+                    
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.employementenddate  && BusinessType == '3' && employeedetails.Id > 0">
+                          <label class="form-label">Employment End Date  <span class="help-text m-l-5"></span> </label>
+
+                          <input type="text" class="form-control" bsDatepicker placement="top" [bsConfig]="{ isAnimated: true, dateInputFormat:'DD-MM-YYYY',
+containerClass:'theme-default' }" name="EmployementEndDate" formControlName="employementenddate"
+                              [ngClass]="{ 'is-invalid': submitted && g.employementenddate.invalid }"
+                              placeholder="Employement End Date" autocomplte="off" disabled  >
+                          <div *ngIf="submitted && g.employementenddate.invalid" class="help-block">
+                              <div *ngIf="g.employementenddate.errors.required">Employment End Date is required</div>
+                          </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.Designation">
+                          <label class="form-label">Designation<span class="required"> *
+                              </span>
+                              <span class="form__length">
+                                {{GetDesignationLevelDisplayName(employeedetails.EmploymentContracts[0].Level)}}</span>
+                            </label>
+                       
+                          <ng-select [items]="GetDesignationList()" placeholder="-- select the option --"
+                              formControlName="Designation"
+                              [ngClass]="{'ng-touched': submitted && g.Designation.errors }" bindLabel="Name"
+                              bindValue="Id" (change)="onChangeOfficialFields($event, 'Designation')" [clearable]="false">
+
+                          </ng-select>
+
+                          <div *ngIf="submitted && g.Designation.invalid" class="help-block">
+                              <div *ngIf="g.Designation.errors.required">Designation is required
+                              </div>
+                          </div>
+                      </div>
+
+
+                     
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-sm-4"  
+                          [ngClass]="{'form-group form-group-vertical col-12 col-xs-12 col-lg-3 col-md-2 col-sm-3':  this.minimumWagesApplicableProducts && this.minimumWagesApplicableProducts.length > 0}"
+                          *ngIf="this.employeeForm.controls.isMinimumwages && BusinessType != '3'">
+                          <label class="form-label" id='forMonthlyValue'>Do you want to do minimum wages? </label>
+
+                          <div class="p-t-10">
+                              <label class="el-switch el-switch-green">
+                                  <input type="checkbox" value="yes" formControlName="isMinimumwages" />
+                                  <span class="el-switch-style"></span>
+                              </label>
+                          </div>
+
+                      </div> -->
+
+                      <!-- Salary Type -->
+                      <div class="form-group col-12 col-md-4" *ngIf="employeedetails && employeedetails.Id == 0">
+                          <div class="form-group form-group-vertical col-xs-12"
+                              *ngIf="this.employeeForm.controls.salaryType">
+                              <label class="form-label">Salary Type <span class="required"> * </span></label>
+
+                              <ng-select [items]="GetSalaryBreakupType('')" formControlName="salaryType"
+                                  placeholder="Salary Type"
+                                  [ngClass]="{ 'ng-touched': submitted && g.salaryType.invalid }" bindLabel="name"
+                                  bindValue="id" (change)="onChangeSalaryType($event)" [clearable]="false">
+                              </ng-select>
+                              <div *ngIf="submitted && g.salaryType.invalid" class="help-block">
+                                  <div *ngIf="g.salaryType.errors.required">Salary Type is required</div>
+                              </div>
+
+                          </div>
+
+                      </div>
+
+
+                      <!-- Pay Group -->
+                      <div class="form-group col-12 col-md-4" *ngIf="employeedetails && employeedetails.Id == 0">
+                          <div class="form-group form-group-vertical col-xs-12">
+                              <label class="form-label">Pay Group <span class="required"> * </span></label>
+
+                              <ng-select [items]="GetPayGroupList()" placeholder="Pay Group" formControlName="payGroup"
+                                  [ngClass]="{ 'ng-touched': submitted && g.payGroup.invalid }" bindLabel="Name"
+                                  bindValue="PayGroupId" (change)="onPayGroupChange($event)" [clearable]="false">
+                              </ng-select>
+                              <div *ngIf="submitted && g.payGroup.invalid" class="help-block">
+                                  <div *ngIf="g.payGroup.errors.required">PayGroup is required</div>
+                              </div>
+
+                          </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                      *ngIf="employeedetails && employeedetails.Id == 0">
+                      <label class="form-label" id='forMonthlyValue'>Do you want to specify
+                        Monthly Salary? </label>
+                      <div class="p-t-10">
+                        <label class="el-switch el-switch-green">
+                          <input type="checkbox" value="yes" formControlName="forMonthlyValue" />
+                          <span class="el-switch-style"></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                    *ngIf="employeedetails && employeedetails.Id == 0 && this.employeeForm.controls.MonthlySalary && employeeForm.controls.forMonthlyValue.value == true">
+                    <label class="form-label">Monthly Salary <span
+                        class="required">*</span>
+                    </label>
+                    <input class="form-control" type="text" maxlength="10"
+                      onkeypress="return /^[0-9]+$/i.test(event.key)" name="MonthlySalary"
+                      formControlName="MonthlySalary" [ngClass]="{'is-invalid': submitted && g.MonthlySalary.errors }"
+                      placeholder="50000" (keyup)="onChangeMonthlySalary($event.target.value)"
+                      autocomplete="none|false|no">
+                    <!-- <span class="form__length">
+                                                {{salaryInwords}}</span> -->
+                    <div *ngIf="submitted && g.MonthlySalary.errors" class="invalid-feedback">
+                      <div *ngIf="g.MonthlySalary.errors.required">Monthly Salary is required
+                      </div>
+                    </div>
+                    <div *ngIf="employeeForm.controls.MonthlySalary.value == 0" class="help-block">
+                      <div> Monthly Salary should be greater than zero
+                      </div>
+                    </div>
+                  </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                      *ngIf="employeedetails && employeedetails.Id == 0">
+                      <label class="form-label">Annual Salary <span class="required">*</span>
+                      </label>
+                      <input class="form-control" maxlength="10"
+                          onkeypress="return /^[0-9]+$/i.test(event.key)" name="annualSalary"
+                          formControlName="annualSalary"
+                          [ngClass]="{'is-invalid': submitted && g.annualSalary.errors }"
+                          (keyup)="onChangeAnnaulSalary($event.target.value)" placeholder="500000"
+                          autocomplete="none|false|no"
+                          [attr.disabled]="employeeForm.controls.forMonthlyValue.value ? true : null">
+                      <!-- <span class="form__length">
+                        {{salaryInwords}}</span> -->
+                      <div *ngIf="submitted && g.annualSalary.errors" class="invalid-feedback">
+                          <div *ngIf="g.annualSalary.errors.required">Annual Salary is required
+                          </div>
+                      </div>
+                      <div *ngIf="SalaryFormat == 0" class="help-block">
+                          <div> Annual Salary should be greater than zero
+                          </div>
+                      </div>
+                  </div>
+                      <!-- Industry -->
+                      <div class="form-group col-12 col-md-4" *ngIf="employeedetails && employeedetails.Id == 0 && !isAllenDigital">
+                          <div class="form-group form-group-vertical col-xs-12"
+                              *ngIf="this.employeeForm.controls.industryType">
+                              <label class="form-label">Industry <span class="required"> * </span></label>
+
+                              <ng-select [items]="IndustryList" placeholder="Industry" formControlName="industryType"
+                                  (change)="onChangeIndustryType($event)"
+                                  [ngClass]="{ 'ng-touched': submitted && g.industryType.invalid }" bindLabel="Name"
+                                  bindValue="Id">
+                              </ng-select>
+                              <div *ngIf="submitted && g.industryType.invalid" class="help-block">
+                                  <div *ngIf="g.industryType.errors.required">Industry is required</div>
+                              </div>
+
+                          </div>
+                      </div>
+
+                      <div class="form-group col-12 col-md-4" *ngIf="employeedetails && employeedetails.Id == 0">
+                          <div class="form-group form-group-vertical col-xs-12"
+                              *ngIf="this.employeeForm.controls.skillCategory">
+                              <label class="form-label">Skill Category <span class="required"> * </span></label>
+
+                              <ng-select [items]="SkillCategoryList" placeholder="Skill Category"
+                                  formControlName="skillCategory"
+                                  [ngClass]="{ 'ng-touched': submitted && g.skillCategory.invalid }" bindLabel="Name"
+                                  bindValue="Id" (change)="onFocus_OfferAccordion()" [clearable]="false">
+                              </ng-select>
+                              <div *ngIf="submitted && g.skillCategory.invalid" class="help-block">
+                                  <div *ngIf="g.skillCategory.errors.required">Skill Category is required</div>
+                              </div>
+
+                          </div>
+                      </div>
+
+
+                      <div class="form-group col-12 col-md-4" *ngIf="employeedetails && employeedetails.Id == 0 && !isAllenDigital">
+                          <div class="form-group form-group-vertical col-xs-12"
+                              *ngIf="this.employeeForm.controls.zone">
+                              <label class="form-label">Zone <span class="required"> * </span> <span
+                                class="help-text m-l-5">(Zone as per minimum wages act)</span> </label>
+
+                              <ng-select [items]="ZoneList" placeholder="Zone" formControlName="zone"
+                                  [ngClass]="{ 'ng-touched': submitted && g.zone.invalid }" bindLabel="Name"
+                                  bindValue="Id"
+                                  (change)="onFocus_OfferAccordion(this.employeeForm.controls.zone.value, 'zone')">
+                              </ng-select>
+                              <div *ngIf="submitted && g.zone.invalid" class="help-block">
+                                  <div *ngIf="g.zone.errors.required">Zone is required</div>
+                              </div>
+
+                          </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.teamname">
+                          <label class="form-label">Team Name <span class="required"> *
+                              </span></label>
+                          <ng-select [items]="TeamList" placeholder="-- select the option --"
+                              (change)="onChangeTeam($event ,'DOM')" formControlName="teamname"
+                              [ngClass]="{'ng-touched': submitted && g.teamname.errors }" bindLabel="code"
+                              bindValue="Id" [clearable]="false">
+                          </ng-select>
+                          <div *ngIf="submitted && g.teamname.invalid" class="help-block">
+                              <div *ngIf="g.teamname.errors.required">Team Name is required</div>
+                          </div>
+                      </div>
+
+
+                      <div class="form-group col-12 col-md-4" *ngIf="employeedetails && employeedetails.Id == 0 && shouldShowEPP(isAllenDigital)">
+                          <div class="form-group form-group-vertical col-xs-12">
+                              <label class="form-label">Effective Pay Period <span class="required"> * </span></label>
+
+                              <ng-select [items]="EffectivePayPeriodList" placeholder="-- select the option --"
+                                  formControlName="effectivePeriod"
+                                  [ngClass]="{'ng-touched': submitted && g.effectivePeriod.errors }"
+                                  bindLabel="PayCyclePeriodName" bindValue="Id" (change)="onChangePayPeriod($event)">
+                              </ng-select>
+
+                              <div *ngIf="submitted && g.effectivePeriod.invalid" class="help-block">
+                                  <div *ngIf="g.effectivePeriod.errors.required">Effective Pay Period is required
+                                  </div>
+                              </div>
+
+                          </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4">
+                          <label class="form-label">Notice Period
+                          </label>
+                          <ng-select [items]="NoticePeriodDaysList" placeholder="-- select the option --"
+                              formControlName="noticePeriodDays"
+                              [ngClass]="{'ng-touched': submitted && g.noticePeriodDays.errors }" bindLabel="Name"
+                              bindValue="Description">
+                          </ng-select>
+                          <div *ngIf="submitted && g.noticePeriodDays.errors" class="invalid-feedback">
+                              <div *ngIf="submitted && g.noticePeriodDays.invalid" class="help-block">
+                                  <div *ngIf="g.noticePeriodDays.errors.required">Notice Period is required
+                                  </div>
+                              </div>
+                          </div>
+
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4" *ngIf="!isAllenDigital">
+                          <label class="form-label">Leave Group
+                          </label>
+                          <ng-select [items]="LeaveGroupList" placeholder="-- select the option --"
+                              formControlName="leaveGroup"
+                              [ngClass]="{'ng-touched': submitted && g.leaveGroup.errors }" bindLabel="Name"
+                              bindValue="Id">
+                          </ng-select>
+                          <div *ngIf="submitted && g.leaveGroup.errors" class="invalid-feedback">
+                              <div *ngIf="submitted && g.leaveGroup.invalid" class="help-block">
+                                  <div *ngIf="g.leaveGroup.errors.required">Notice Period is required
+                                  </div>
+                              </div>
+                          </div>
+
+                      </div>
+
+
+
+                      <div class="form-group form-group-vertical col-xs-12  col-sm-4"
+                          *ngIf="this.employeeForm.controls.reportingmanager">
+                          <label class="form-label ">Reporting Manager <span *ngIf="IsReporingManagerRequired" class="required"> * </span> </label>
+                          <ng-select [items]="ManagerList" placeholder="-- select the option --"
+                              formControlName="reportingmanager"
+                              [ngClass]="{'ng-touched': submitted && g.reportingmanager.errors }"
+                              bindLabel="ManagerName" bindValue="ManagerId" [clearable]="false">
+                          </ng-select>
+
+                          <div *ngIf="submitted && g.reportingmanager.invalid" class="help-block">
+                              <div *ngIf="g.reportingmanager.errors.required">Reporting Manager is required
+                              </div>
+                          </div>
+                      </div>
+
+
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.Department">
+                          <label class="form-label">Department </label>
+                          <input type="text" class="form-control" placeholder="Department"
+                              formControlName="Department"
+                              [ngClass]="{ 'is-invalid': submitted && g.Department.invalid }" autocomplte="off">
+
+                          <div *ngIf="submitted && g.Department.invalid" class="help-block">
+                              <div *ngIf="g.Department.errors.required">Department is required
+                              </div>
+                          </div>
+                      </div> -->
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.Grade">
+                          <label class="form-label">Grade </label>
+                          <input type="text" class="form-control" placeholder="Grade" formControlName="Grade"
+                              [ngClass]="{ 'is-invalid': submitted && g.Grade.invalid }" autocomplte="off">
+
+                          <div *ngIf="submitted && g.Grade.invalid" class="help-block">
+                              <div *ngIf="g.Grade.errors.required">Grade is required
+                              </div>
+                          </div>
+                      </div> -->
+
+                      <!-- <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+        *ngIf="this.employeeForm.controls.Grade">
+        <label class="form-label">Grade </label>
+        <input type="text" class="form-control" placeholder="Grade"
+            formControlName="Grade"
+            [ngClass]="{ 'is-invalid': submitted && g.Grade.invalid }"
+            autocomplte="off">
+
+        <div *ngIf="submitted && g.Grade.invalid" class="help-block">
+            <div *ngIf="g.Grade.errors.required">Grade is required</div>
+        </div>
+    </div> -->
+
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.Country && employeedetails && employeedetails.Id > 0">
+                          <label class="form-label">Country<span class="required"> *
+                              </span></label>
+                          <ng-select [items]="CountryList" (change)="onchangecountry($event,'DOM')"
+                              placeholder="-- select the option --" formControlName="Country"
+                              [ngClass]="{'ng-touched': submitted && g.Country.errors }" bindLabel="Name"
+                              bindValue="Id" [clearable]="false">
+                          </ng-select>
+                          <div *ngIf="submitted && g.Country.invalid" class="help-block">
+                              <div *ngIf="g.Country.errors.required">Country is required</div>
+                          </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.statename && employeedetails && employeedetails.Id > 0">
+                          <label class="form-label">State Name<span class="required"> *
+                              </span></label>
+                          <ng-select [items]="StateList2" placeholder="-- select the option --"
+                              formControlName="statename" [ngClass]="{'ng-touched': submitted && g.statename.errors }"
+                              bindLabel="Name" bindValue="Id" [clearable]="false">
+                          </ng-select>
+                          <div *ngIf="submitted && g.statename.invalid" class="help-block">
+                              <div *ngIf="g.statename.errors.required">State Name is required
+                              </div>
+                          </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="this.employeeForm.controls.costcode  && BusinessType == '3'">
+                          <label class="form-label">Cost Code </label>
+                          <ng-select [items]="CostCodeList" placeholder="-- select the option --"
+                              formControlName="costcode" [ngClass]="{'ng-touched': submitted && g.costcode.errors }"
+                              bindLabel="CostCodeName" bindValue="Id">
+                          </ng-select>
+                          <div *ngIf="submitted && g.costcode.invalid" class="help-block">
+                              <div *ngIf="g.costcode.errors.required">Cost Code is required</div>
+                          </div>
+                      </div>
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                          *ngIf="employeedetails && employeedetails.Id > 0">
+                          <label class="form-label">Last Working Day(LWD)</label>
+                          <input type="text" class="form-control" placeholder="LWD" formControlName="LWD"
+                              [ngClass]="{ 'is-invalid': submitted && g.LWD.invalid }" autocomplte="off" disabled>
+
+                          <div *ngIf="submitted && g.LWD.invalid" class="help-block">
+                              <div *ngIf="g.LWD.errors.required">LWD is required</div>
+                          </div>
+                      </div>
+
+                      <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12">
+                          <label class="form-label ">Employment Type <span class="required" *ngIf="isAllenDigital"> *
+                          </span></label>
+                          
+                          <ng-select [items]="EmploymentTypeList" placeholder="-- select the option --"
+                              formControlName="employmentType"
+                              [ngClass]="{'ng-touched': submitted && g.employmentType.errors }" bindLabel="Name"
+                              bindValue="Id" (change)="onChangeOfficialFields($event, 'employmentType')" [clearable]="false">
+                          </ng-select>
+
+                          <div *ngIf="submitted && g.employmentType.invalid" class="help-block">
+                              <div *ngIf="g.employmentType.errors.required">Employment Type is required
+                              </div>
+                          </div>
+                      </div>
+                      <!-- <ng-container *ngIf="businessType != 3">
+                          <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                              *ngIf="employeedetails && employeedetails.Id > 0">
+                              <label class="form-label">Custom Data 1 </label>
+                              <input type="text" class="form-control" formControlName="CustomData1" autocomplte="off">
+                          </div>
+                          <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                              *ngIf="employeedetails && employeedetails.Id > 0">
+                              <label class="form-label">Custom Data 2 </label>
+                              <input type="text" class="form-control" formControlName="CustomData2" autocomplte="off">
+                          </div>
+                          <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                              *ngIf="employeedetails && employeedetails.Id > 0">
+                              <label class="form-label">Custom Data 3 </label>
+                              <input type="text" class="form-control" formControlName="CustomData3" autocomplte="off">
+                          </div>
+                          <div class="form-group form-group-vertical col-xs-12 col-md-4 col-lg-4 col-sm-12"
+                              *ngIf="employeedetails && employeedetails.Id > 0">
+                              <label class="form-label">Custom Data 4 </label>
+                              <input type="text" class="form-control" formControlName="CustomData4" autocomplte="off">
+                          </div>
+                      </ng-container> -->
+
+
+                  </div>
+
+                  <div class="row" *ngIf="employeedetails && employeedetails.Id == 0">
+                      <div class="col-lg-12 text-right">
+                          <button class="btn btn-default btn-sm" (click)="doSalaryBreakup()">
+                              <i class="mdi mdi-file-check m-r-xs"></i>
+                              View Salary Breakup
+                          </button>
+                      </div>
+                    
+
+                      
+                  </div>
+                  <div class="row">
+                    <button #myButton  style="display: none;" (click)="buttonClicked()">Click me</button>
+                  </div>
+
+               
+
+              </div>
+          </div>
+      </form>
+  </div>
+
+  <br>
+  <!-- <div class="form-group form-group-vertical col-12 col-xs-12 col-lg-12 col-md-12 col-sm-12"
+    *ngIf="!spinner  && RoleCode == 'Employee'">
+    <div class="text-center">
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <button class="btn btn-default" type="button" (click)="currentCTC()"> <i
+                        class="mdi mdi-credit-card-scan" aria-hidden="true"></i> &nbsp;
+                    View
+                    Current CTC </button>
+            </li>
+        </ul>
+    </div>
+
+</div> -->
+</ng-template>
+
+
+
+<div id="popup_new_salary_breakup" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="popup_new_salary_breakup" aria-hidden="true">
+  <div style="display: block;" class="modal fade show">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-header" style="padding: 15px !important;">
+                  <div class="col-xs-11">
+                      <h6 class="modal-title pull-left" id="popup_new_salary_breakup"> Salary Breakup </h6>
+                      <div class="modal-close" (click)="modal_dismiss_New_SalaryBreakup()"> <span
+                              class="mdi mdi-close pull-left"></span></div>
+                  </div>
+              </div>
+              <div class="modal-body">
+                  <div class="row m-1" style="padding-top: 0 !important;padding-bottom: 0.5em !important;">
+                      <div class="col-12 custom-control custom-checkbox" *ngIf="!IsZeroBasedCalculationRequired && baseDaysForAddlApplicableProduct > 0">
+                          <input type="checkbox" class="custom-control-input" id="isDailyWages"
+                              [(ngModel)]="isDailyOrHourlyWages" (change)="onWageTypeChangeFn($event)">
+                          <input type="checkbox" class="custom-control-input" id="isDailyWages"
+                              [(ngModel)]="isDailyOrHourlyWages" (change)="onWageTypeChangeFn($event)">
+                          <label class="custom-control-label" for="isDailyWages">Is Daily wage applicable ?</label>
+                          <p class="ml-3 text-warning" *ngIf="isDailyOrHourlyWages">
+                              ( working days is {{baseDaysForAddlApplicableProduct}} days )
+                          </p>
+                      </div>
+                  </div>
+                  <div class="row m-1" style="padding-top: 0 !important;padding-bottom: 0.5em !important;">
+                      <div class="col-12 custom-control custom-checkbox" *ngIf="!IsZeroBasedCalculationRequired && isDailyOrHourlyWages">
+                          <input type="checkbox" class="custom-control-input" id="isOverrideMonthly"
+                              [(ngModel)]="isOverrideMonthlyValue">
+                          <label class="custom-control-label" for="isOverrideMonthly">Would you like to override
+                              monthly value ?</label>
+                      </div>
+                  </div>
+                  <!-- <span class="error_span"
+                      *ngIf="!IsZeroBasedCalculationRequired && NewELCTransaction && NewELCTransaction.IsMinimumwageAdhere == false || NewELCTransaction && NewELCTransaction.IsRateSetValid == false"><a
+                          *ngIf="NewELCTransaction && NewELCTransaction.IsMinimumwageAdhere == false || NewELCTransaction && NewELCTransaction.IsRateSetValid == false"
+                          class="mdi mdi-information-outline"></a> &nbsp;
+                      {{NewELCTransaction.CalculationRemarks}}</span>
+
+                  <br> -->
+
+                  <div class="row">
+                      <div class="col-12">
+                          <div class="table-responsive-sm table-responsive-xs table-responsive-xxs">
+
+                            <table class="table salary-breakup-table-header-fixed table-bordered table-container"
+                            *ngIf="IsZeroBasedCalculationRequired">
+                            <thead class="tbl-freezhead">
+                                <tr class="document_table_tr">
+                                    <th scope="col" style="width: 45%">Product Code</th>
+                                    <th scope="col" style="width: 15%;text-align: center">Is Overidable</th>
+                                    <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+                                    <th scope="col" style="width: 20%;text-align: center">Annually</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbl-scrollbody">
+                              <tr *ngFor="let item of NewRt"
+                                  [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                                  <ng-container *ngIf="(item.ProductCode.toUpperCase() != 'PFWAGES' && item.ProductCode.toUpperCase() != 'NETPAY')">
+                                  <td class="table-td-center">
+                                      <div class="row">
+                                          <div class="col-lg-12">
+                                              {{item.DisplayName}}</div>
+                                          
+                                      </div>
+                                  </td>
+                                  <td class="table-td-center text-center">
+                                      <div class="custom-control custom-checkbox">
+                                          <input type="checkbox" class="custom-control-input"
+                                              id="isoveridable{{i}}" [(ngModel)]="item.IsOveridable"
+                                              [disabled]="true">
+                                          <label class="custom-control-label" for="isoveridable{{i}}"></label>
+                                      </div>
+                                  </td>
+                                  <td class="txt-align document_table_validFrom table-td-center">
+                                      <!-- <label class="text-right">
+                {{item.Value.toFixed(2)}}
+              </label> -->
+              <ng-container *ngIf="(item.ProductCode.toUpperCase() != 'CTC')">
+              <input  style="text-align:right" maxlength="12"
+              onkeypress="return /^[0-9]+$/i.test(event.key)" *ngIf="!doCheckEditableAnnualPayComponent(item)"
+              [disabled]="doCheckEditableAnnualPayComponent(item) || DisabledProductsComponentsList.includes(item.ProductCode)"
+              (keyup)="onChangeAmount($event.target.value, item)" [(ngModel)]="item.Value"
+              class="form-control">
+
+              <input  style="text-align:right" maxlength="12"
+              onkeypress="return /^[0-9]+$/i.test(event.key)"
+              *ngIf="doCheckEditableAnnualPayComponent(item)"
+              [disabled]="doCheckEditableAnnualPayComponent(item)  || DisabledProductsComponentsList.includes(item.ProductCode)"
+              (keyup)="onChangeAmount($event.target.value, item)" 
+              class="form-control" value="0">
+              </ng-container>
+                                  </td>
+
+                                  <td class="txt-align document_table_validFrom table-td-center">
+                                     
+                                    <div *ngIf="(item.ProductCode.toUpperCase() != 'CTC')">
+                                      <input type="text" style="text-align:right" maxlength="12"
+                                        *ngIf="!doCheckEditableAnnualPayComponent(item)"
+                                        onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{ item.Value * 12}}"
+                                        class="form-control">
+            
+                                      <input type="text" style="text-align:right" maxlength="12"
+                                        *ngIf="doCheckEditableAnnualPayComponent(item)"
+                                        onkeypress="return /^[0-9]+$/i.test(event.key)"
+                                        (keyup)="onChangeAnnualAmount($event.target.value, item)" [(ngModel)]="item.Value"
+                                        class="form-control">
+                                    </div>
+            
+                                    <div *ngIf="(item.ProductCode.toUpperCase() == 'CTC')">
+                                      <input type="text" style="text-align:right" maxlength="12"
+                                        *ngIf="!doCheckEditableAnnualPayComponent(item)"
+                                        onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{ TotalCTC}}"
+                                        class="form-control">
+                                    </div>
+
+                                          <!-- <input type="text" style="text-align:right" maxlength="12"
+                                          *ngIf="!doCheckEditableAnnualPayComponent(item)"
+                                          onkeypress="return /^[0-9]+$/i.test(event.key)" disabled value="{{item.Value * 12}}"
+                                          class="form-control">
+                
+                                        <input type="text" style="text-align:right" maxlength="12"
+                                          *ngIf="doCheckEditableAnnualPayComponent(item)"
+                                          onkeypress="return /^[0-9]+$/i.test(event.key)"   (keyup)="onChangeAnnualAmount($event.target.value, item)" [(ngModel)]="item.Value" 
+                                          class="form-control"> -->
+
+                                  </td>
+                                  </ng-container>
+                              </tr>
+                          </tbody>
+                      </table>
+
+
+
+                              <table class="table salary-breakup-table-header-fixed table-bordered table-container"
+                                  *ngIf="!IsZeroBasedCalculationRequired && !isDailyOrHourlyWages">
+                                  <thead class="tbl-freezhead">
+                                      <tr class="document_table_tr">
+                                          <th scope="col" style="width: 45%">Product Code</th>
+                                          <th scope="col" style="width: 15%;text-align: center">Is Overidable</th>
+                                          <th scope="col" style="width: 20%;text-align: center">Monthly</th>
+                                          <th scope="col" style="width: 20%;text-align: center">Annually</th>
+                                      </tr>
+                                  </thead>
+
+
+                                  <tbody class="tbl-scrollbody">
+                                      <tr *ngFor="let item of NewRt"
+                                          [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                                          <ng-container *ngIf="(item.ProductCode.toUpperCase() != 'PFWAGES'&& item.ProductCode.toUpperCase() != 'NETPAY')">
+                                          <td class="table-td-center">
+                                              <div class="row">
+                                                  <div class="col-lg-12" *ngIf="!item.IsOverridableProductGroup">
+                                                      {{item.DisplayName}}</div>
+                                                  <div class="col-lg-6" *ngIf="item.IsOverridableProductGroup"
+                                                      style="padding-top: 10px;">{{item.DisplayName}}</div>
+
+
+                                                  <div class="col-lg-6" *ngIf="item.IsOverridableProductGroup">
+                                                      <ng-select [items]="item.lstOfProducts"
+                                                          [(ngModel)]="item.defaultValue"
+                                                          [disabled]="BusinessType == 3"
+                                                          placeholder="select the option" bindLabel="Description"
+                                                          bindValue="Id" (change)="onChangePayGroup($event, item)">
+                                                      </ng-select>
+                                                  </div>
+                                              </div>
+                                          </td>
+                                          <td class="table-td-center text-center">
+                                              <div class="custom-control custom-checkbox">
+                                                  <input type="checkbox" class="custom-control-input"
+                                                      id="isoveridable{{i}}" [(ngModel)]="item.IsOveridable"
+                                                      [disabled]="true">
+                                                  <label class="custom-control-label" for="isoveridable{{i}}"></label>
+                                              </div>
+                                          </td>
+                                          <td class="txt-align document_table_validFrom table-td-center">
+                                              <!-- <label class="text-right">
+                        {{item.Value.toFixed(2)}}
+                      </label> -->
+                                              <input type="number" max="" style="text-align:right" maxlength="12"
+                                                  onkeypress="return /^[0-9]+$/i.test(event.key)"
+                                                  [disabled]="!item.IsOveridable"
+                                                  (change)="onChangeAmount($event.target.value, item)"
+                                                  [(ngModel)]="item.Value" class="form-control">
+                                          </td>
+
+                                          <td class="txt-align document_table_validFrom table-td-center">
+                                              <!-- <label class="text-right">
+                        {{item.Value * 12 | number : '1.2-2'}}
+                      </label> -->
+                                              <input type="text" style="text-align:right" maxlength="12"
+                                                  onkeypress="return /^[0-9]+$/i.test(event.key)" disabled
+                                                  value="{{item.Value * 12}}" class="form-control">
+                                          </td>
+                                          </ng-container>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                              <table class="table salary-breakup-table-header-fixed table-bordered table-container"
+                                  *ngIf="!IsZeroBasedCalculationRequired && isDailyOrHourlyWages">
+                                  <thead>
+                                      <tr class="document_table_tr">
+                                          <th rowspan=2 scope="col" style="width: 30%">
+                                              <div class="row">
+                                                  <div class="col-lg-12">
+                                                      Product Code
+
+                                                  </div>
+                                                  <!-- <div class="col-lg-6">
+                                    Is Product Overidable
+                                </div> -->
+                                              </div>
+                                          </th>
+                                          <th rowspan=2 scope="col" style="width: 12%;text-align: center">Is
+                                              Overidable</th>
+                                          <th rowspan=2 scope="col" style="width: 12%;text-align: center">Monthly</th>
+                                          <th rowspan=2 scope="col" style="width: 12%;text-align: center">Annually
+                                          </th>
+                                          <th colspan=3 scope="col" style="width: 20%;text-align: center">{{wageType}}
+                                          </th>
+                                      </tr>
+                                      <tr class="document_table_tr text-end">
+                                          <th valign="top" style="width: 20%;">Pay Rate</th>
+                                          <th valign="top" style="width: 20%;" *ngIf="BusinessType == 3">Bill Rate
+                                          </th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr *ngFor="let item of NewRt"
+                                          [ngStyle]="{'font-weight': item.ProductTypeCode =='Earning' || item.ProductTypeCode =='Deductions' || item.ProductTypeCode =='Total' ? '600' : '400' }">
+                                          <ng-container *ngIf="(item.ProductCode.toUpperCase() != 'PFWAGES'&& item.ProductCode.toUpperCase() != 'NETPAY')">
+                                          <td class="table-td-center">
+                                              <div class="row">
+                                                  <div class="col-lg-12" *ngIf="!item.IsOverridableProductGroup">
+                                                      {{item.DisplayName}}</div>
+                                                  <div class="col-lg-4" *ngIf="item.IsOverridableProductGroup"
+                                                      style="padding-top: 10px;">{{item.DisplayName}}</div>
+
+
+                                                  <div class="col-lg-8" *ngIf="item.IsOverridableProductGroup">
+                                                      <ng-select [items]="item.lstOfProducts"
+                                                          [(ngModel)]="item.ProductCTCPayrollRuleMappingId"
+                                                          placeholder="select the option" bindLabel="Description"
+                                                          bindValue="Id" (change)="onChangePayGroup($event, item)">
+                                                      </ng-select>
+                                                  </div>
+                                              </div>
+                                          </td>
+                                          <td class="table-td-center text-center"
+                                              style="text-align: center !important;">
+                                              <div class="custom-control custom-checkbox">
+                                                  <input type="checkbox" class="custom-control-input"
+                                                      id="isoveridable{{i}}" [(ngModel)]="item.IsOveridable"
+                                                      [disabled]="true">
+                                                  <label class="custom-control-label" for="isoveridable{{i}}"></label>
+                                              </div>
+                                          </td>
+                                          <td class="txt-align document_table_validFrom table-td-center">
+                                              <input type="number" max="33333" style="text-align:right" maxlength="12"
+                                                  (change)="onChangeAmount($event.target.value, item)"
+                                                  onkeypress="return /^[0-9]+$/i.test(event.key)"
+                                                  [disabled]="!item.IsOveridable || !isOverrideMonthlyValue"
+                                                  value="{{item.Value}}" class="form-control">
+                                          </td>
+
+                                          <td class="txt-align document_table_validFrom table-td-center">
+                                              <input type="text" style="text-align:right" maxlength="12"
+                                                  onkeypress="return /^[0-9]+$/i.test(event.key)" disabled
+                                                  value="{{item.Value * 12}}" class="form-control">
+                                          </td>
+                                          <td class="txt-align document_table_validFrom table-td-center">
+                                              <input type="text" style="text-align:right" maxlength="10"
+                                                  [(ngModel)]="item.PayableRate" value="{{item.PayableRate}}"
+                                                  (input)="onChangePayRateAmount($event.target.value, item)"
+                                                  disabled="{{!item.IsOveridable}}"
+                                                  onkeypress="return /^[0-9 .]+$/i.test(event.key)"
+                                                  class="form-control">
+                                          </td>
+                                          <td class="txt-align document_table_validFrom table-td-center"
+                                              *ngIf="BusinessType == 3">
+                                              <input type="text" style="text-align:right" maxlength="10"
+                                                  [(ngModel)]="item.BillableRate" value="{{item.BillableRate}}"
+                                                  (input)="onChangeBillRateAmount($event.target.value, item)"
+                                                  onkeypress="return /^[0-9 .]+$/i.test(event.key)"
+                                                  class="form-control" [disabled]="!item.IsOveridable">
+                                          </td>
+                                        </ng-container>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div>
+                  <div class="modal-footer">
+                      <div class="pull-left left-margin-btn">
+                          <button class="btn  btn-primary " type="Submit" name="btnSubmit" id="btnSubmit"
+                              (click)="reviewLater()">
+                              <div class="pos-rlt sm-btn-component"> <span> <i class="mdi mdi-av-timer"></i> Cancel, I
+                                      will review later </span></div>
+                          </button>
+                      </div>
+                      <div class="pull-right m-r-sm">
+                          <div>
+                              <div>
+                                  <button class="btn  btn-primary m-r-sm" type="Submit" name="btnSubmit"
+                                      id="btnSubmit" (click)="recalculateCTC()" *ngIf="showRecalculateButton()">
+                                      <div class="pos-rlt sm-btn-component"> <span> <i
+                                                  class="mdi mdi-file-restore"></i> Re-Calculate
+                                          </span></div>
+                                  </button>
+                                  <button class="btn upgrade-btn pull-right" type="button"
+                                      (click)="modal_dismiss_New_SalaryBreakup()"> <i
+                                          class="mdi mdi-checkbox-multiple-marked-circle-outline"></i> &nbsp;
+                                      Confirm</button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  </div>
+</div>

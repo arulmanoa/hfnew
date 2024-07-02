@@ -1,0 +1,6 @@
+<input class="form-control" [(ngModel)]="filterValue"
+ appendTo="body"
+(keypress)="onkeyPressed($event)" (input)="onFilterValueChange()"
+[placeholder]="placeholder">
+
+<!-- style="border-radius: 3px 0px 0px 3px !important;"  -->

@@ -1,0 +1,100 @@
+.mat-progress-bar-fill::after {
+    background-color: #0a609eeb;
+}
+
+.mat-progress-bar-buffer {
+    background: #80bdff;
+}
+
+.blue-snackbar {
+    background: #0a609eeb;
+}
+
+.mat-snack-bar-container {
+    color: #324061 !important;
+    background: #fff;
+    text-transform: capitalize !important;
+    /* box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12); */
+    box-shadow: none;
+    box-shadow: 0 2px 10px rgba(8, 38, 76, .1);
+}
+
+.mat-snack-bar-container {
+    border-radius: 2px !important;
+    /* box-sizing: border-box; */
+    /* display: block; */
+    margin: 24px;
+    max-width: 37vw;
+    min-width: 508px !important;
+    padding: 14px 16px;
+    min-height: 48px;
+    transform-origin: center;
+    border: 1px solid #d5dee5;
+}
+
+.mat-snack-bar-container:after {
+    background: #ec8787;
+    border-radius: 50%;
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 1em;
+    margin: auto;
+    height: 1em;
+    position: fixed;
+}
+
+.mat-progress-bar {
+    display: block;
+    height: 4px;
+    overflow: hidden;
+    position: relative;
+    transition: opacity 250ms linear;
+    width: 100%;
+    position: absolute !important;
+}
+
+
+/* #region  session out modal popup */
+
+.center-icon {
+    display: block;
+    margin: 0 auto;
+}
+
+button:focus {
+    outline: none !important;
+}
+
+
+/* #endregion */
+
+
+
+
+.mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent {
+    background-color: #0288d1;
+}
+.mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent {
+    color: #fff;
+}
+[mat-fab].mat-fab-position-bottom-right, .mat-fab.mat-fab-position-bottom-right, [mat-fab].mat-fab-bottom-right, .mat-fab.mat-fab-bottom-right {
+    top: auto;
+    right: 20px;
+    left: auto;
+    bottom: 20px;
+    /* position: absolute; */
+    position: fixed !important;
+    right: 15px;
+    z-index: 1000;
+}
+.mat-fab {
+    min-width: 0;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    flex-shrink: 0;
+}

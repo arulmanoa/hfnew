@@ -1,0 +1,156 @@
+<div class="page-wrapper">
+  <div class="page-content">
+    <app-loading-screen></app-loading-screen>
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;margin-top: -15px;" *ngIf="!spinner">
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-left">
+        <div class="text-left" style="margin-top: 5px;">
+          <h6 class="h6_c"> {{pageTitle}} </h6>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-xs-12 col-xxs-12 col-12 text-right">
+        <div class="text-right">
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <button type="button" class="btn upgrade-btn" id="btn_qc_approve"
+                [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(true)"> <i
+                  class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Approve
+              </button>
+            </li>
+            <li class="list-inline-item">
+              <button type="button" class="btn btn-danger" id="btn_qc_reject"
+                [disabled]="inEmployeesInitiateSelectedItems.length == 0" (click)="bulk_approve_reject(false)"> <i
+                  class="mdi mdi-close-circle  m-r-xs"></i> Reject
+              </button>
+            </li>
+            <li class="list-inline-item"><button type="button" class="btn btn-default" (click)="doRefresh()">
+                <i class="mdi mdi-refresh  m-r-xs"></i>Refresh
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="content m-b report-content" style="margin-top: -5px;" *ngIf="!spinner">
+      <div class="row" style="width: 100%;">
+        <div class="form-group-vertical col-xs-12 col-sm-3 col-md-3" *ngIf="clientList.length > 1">
+
+          <label class="form-label searchbar-label">Client Name </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <ng-select [items]="clientList" [clearable]="false" (change)="OnChangeClientDropdown($event)"
+                [(ngModel)]="clientId" placeholder="Choose..." bindLabel="Name" bindValue="Id"
+                class="w-100">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group-vertical col-xs-12 col-sm-3 col-md-3" *ngIf="managerList.length > 0">
+
+          <label class="form-label searchbar-label">Manager Name </label>
+          <div class="form-group m-t-m5">
+            <div class="input-group">
+              <ng-select [items]="managerList" [clearable]="false" (change)="OnChangeManagerDropdown($event)"
+                [(ngModel)]="managerId" placeholder="Choose..." bindLabel="Name" bindValue="Id" class="w-100">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="width: 100%;" *ngIf="!spinner">
+        <div class="col-lg-12">
+          <angular-slickgrid gridId="regularizeApprovalGrid1" [columnDefinitions]="inEmployeesInitiateColumnDefinitions"
+            [gridOptions]="inEmployeesInitiateGridOptions" [dataset]="inEmployeesInitiateList"
+            (onAngularGridCreated)="inEmployeesInitiateGridReady($event)" gridWidth="100%"
+            (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+            (sgOnSelectedRowsChanged)="onSelectedEmployeeChange($event.detail.eventData, $event.detail.args)">
+          </angular-slickgrid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="popup_viewEntitlement" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_viewEntitlement" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 20px !important;">
+          <div class="col-xs-11" style="margin-top: -5px; margin-bottom: -5px;">
+            <small class="header-pretitle" style="color: #3a3a3a;font-weight: 600;">Entitlement Balance</small>
+          </div>
+
+          <div class="modal-close" (click)="close_entitlementbalance()" style="margin-top: 5px;top: 7px !important;">
+            <span class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="row" style="margin-bottom: -16px;">
+            <div class="col-lg-8">
+              <div class="row">
+                <div class="col-xs-12  col-sm-12  p-r-50">
+
+                  <div class="card"
+                    style="border-width: 2px!important;border-style: solid!important; border-color: #c6f5d7;"
+                    *ngFor="let item of _entitlementList">
+                    <div class="card-header" style="background-color: white;border: none;padding: 10px;">
+                      <span class="badge badge-soft-success" style="display: inline;">{{item.DisplayName}} </span>
+
+                    </div>
+                    <div class="card-body" style="background-color: #f3f8ff;padding: 10px;">
+                      <div class="row align-items-center">
+                        <div class="col">
+                          <span style="font-size: 13px;font-weight: 600;"> Balance </span> <br />
+                          <span style="font-size: 11px;">Eligible : {{item.EligibleUnits}} - Available :
+                            {{item.AvailableUnits}} </span>
+
+
+                        </div>
+
+                      </div>
+                    </div>
+                    <!-- <div class="card-footer" style="background-color: white;border: none;padding: 10px;">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <span style="font-size: 13px; color: #1890ff; font-weight: 600;" >{{item.AppliedUnits}} day(s)</span> <br/>
+                        <span style="font-size: 11px;"> Comments : {{item.ApplierRemarks}} </span>
+                      </div>
+                      
+                    </div>
+                  
+                  </div> -->
+                  </div>
+
+
+                  <!-- <div class="carbox" style="border-left: 4px solid #59D09E;" *ngFor="let i of _entitlementList">
+                  <div class="carbox-content" style="padding-left: 10px; margin-top: 10px;">
+                    <h6 class="carbox-title">
+                      {{i.DisplayName}}
+                      <div class="muted" style="font-size: 10px;">
+                        Available : {{i.AvailableUnits}}
+                        &nbsp;·&nbsp; Eligible : {{i.EligibleUnits}}
+                      </div>
+                    </h6>
+                  </div>
+                </div> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4" style="margin-top: -16px;background-color: #eff9fe;border-bottom-right-radius: 22px;">
+              <img src="assets/Images/entitlement.svg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

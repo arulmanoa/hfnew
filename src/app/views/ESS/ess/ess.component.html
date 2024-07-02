@@ -1,0 +1,1109 @@
+<div class="page-wrapper ff">
+  <div class="page-content">
+
+    <div class="text-center ma-5" *ngIf="spinner">
+      <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+        <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status" aria-hidden="true"></span>
+        Please wait...
+      </button>
+    </div>
+
+
+
+
+
+
+
+
+
+    <div class="content m-b report-content" style="margin-top: -10px;padding: 16px !important;" *ngIf="!spinner">
+      <!-- <ngx-spinner bdOpacity=0.9 bdColor="rgba(0,147,255,0.09)" size="medium" color="#0a609eeb" type="square-spin" [fullScreen]="true">
+                <p style="color: #0a609eeb"> Loading... </p>
+            </ngx-spinner> -->
+
+      <app-loading-screen></app-loading-screen>
+      <!-- <div class="row">
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="line2" [style.height]="height" [style.width]="width"></div>
+                    <br>
+                    <label class="qcsummarylabel form-text text-muted" style="margin-top: 0px;">
+                      <div class="line" [style.height]="height" [style.width]="width"></div>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="line2" [style.height]="height" [style.width]="width"></div>
+                    <br>
+                    <label class="qcsummarylabel form-text text-muted" style="margin-top: 0px;">
+                      <div class="line" [style.height]="height" [style.width]="width"></div>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <div class="line2" [style.height]="height" [style.width]="width"></div>
+                    <br>
+                    <label class="qcsummarylabel form-text text-muted" style="margin-top: 0px;">
+                      <div class="line" [style.height]="height" [style.width]="width"></div>
+                    </label>
+                  </div>
+                </div>
+              </div> -->
+      <div class="row" *ngIf="isInvalidCandidateInformation">
+
+      </div>
+
+      <div class="row" *ngIf="!spinner">
+
+        <div class="col-lg-12 text-center" *ngIf="newEmployeeTransactionStatus == 4"
+          style="font-size: 12px;padding-left: 20%; padding-right: 20%;">
+          <div class="alert alert-danger" role="alert" style="height: 64px;">
+            <h6 class="alert-heading">Employee Verification Rejection</h6>
+            <p>{{newEmployeeRejectionReason}}</p>
+
+          </div>
+        </div>
+
+
+
+
+        <div class="col-lg-12 text-right">
+          <div class="text-right">
+            <ul class="list-inline">
+              <!-- <li class="list-inline-item" *ngIf="ispendingInvestmentExist != null && ispendingInvestmentExist && !isInvestmentUnderQC ">
+                                <button type="button" class="btn btn-default" (click)="preview12BBForm('child')">
+                                  <i class="mdi mdi-eye m-r-xs" title="Preview" style="cursor:pointer"></i>
+                                  Preview Form 12BB
+                                </button>
+                            </li> -->
+              <li class="list-inline-item"
+                *ngIf="employeedetails && employeedetails.Id == 0 && newEmployeeTransactionStatus == 2">
+                <button class="btn upgrade-btn" type="button" (click)="doApproveReject(true)"
+                  style="font-weight: 600 !important;">
+                  <i class="mdi mdi-account-check"></i> &nbsp; Approve </button>
+              </li>
+              <li class="list-inline-item"
+                *ngIf="employeedetails && employeedetails.Id == 0 && newEmployeeTransactionStatus == 2">
+                <button class="btn btn-danger" type="Submit" name="btnSubmit" id="btnSubmit"
+                  (click)="doApproveReject(false)" style="font-weight: 600 !important;"> <i
+                    class="mdi mdi-account-remove"></i> &nbsp; Reject
+                </button>
+              </li>
+
+              <li class="list-inline-item"
+                *ngIf="allowedToSave && employeedetails && employeedetails.Id == 0  && IsMakerCheckerRequired && (newEmployeeTransactionStatus== 0 || newEmployeeTransactionStatus == 1 || newEmployeeTransactionStatus == 4)">
+                <button type="button" class="btn upgrade-btn" (click)="doSaveOrSubmit(true)">
+                  <i class="mdi mdi-checkbox-marked-circle  m-r-xs"></i> Submit
+                </button>
+              </li>
+              <li class="list-inline-item" *ngIf="allowedToSave">
+                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(false)">
+                  <i class="mdi mdi-content-save  m-r-xs"></i> Save
+                </button>
+              </li>
+
+              <!-- <li class="list-inline-item" *ngIf="ispendingInvestmentExist != null &&  ispendingInvestmentExist && !isInvestmentUnderQC && _isTaxDeclartion != 1">
+                                <button type="button" class="btn btn-primary" (click)="doSaveOrSubmit(true)">
+                                    <i class="mdi mdi-checkbox-multiple-marked-circle  m-r-xs"></i>  Submit Investment
+                                </button>
+                            </li> -->
+
+              <li class="list-inline-item" *ngIf="!isESSLogin">
+                <button class="btn btn-sm btn-default" tooltip="Close" (click)="confirmExit()"
+                  tooltip-placement="bottom" data-original-title="" title="">
+                  <i class="mdi mdi-close font-size-md"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+      <div>
+        <!-- BASIC CARD BEGIN-->
+        <div class="row" *ngIf="employeedetails && employeedetails.Id > 0">
+
+          <div class="col-12 col-xs-12 col-lg-9 col-md-9 col-sm-12">
+            <div class="row">
+              <div class="col-12 col-lg-12 mobile-text">
+                <p *ngIf="_EmployeeName!=null"> {{_EmployeeName}} </p>
+                <p> <i class="fa fa-envelope" aria-hidden="true" *ngIf="_Email!=''"></i> {{_Email}} &nbsp; &nbsp; &nbsp;
+                  <i class="fa fa-phone-square" aria-hidden="true" *ngIf="_MobileNo!=null"> +91 </i> {{_MobileNo}}
+                </p>
+              </div>
+
+            
+
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-12 col-lg-12">
+                <div class="row">
+                  <div class="col-12 col-lg-3 media1">
+                    <label> EMPLOYEE CODE </label>
+                    <P *ngIf="_EmployeeCode!=null"> {{_EmployeeCode}} </P>
+                  </div>
+                  <div class="col-12 col-lg-3 media1">
+                    <label> DESIGNATION </label>
+                    <p *ngIf="_Designation == null || _Designation == 'NULL'"> --- </p>
+                    <p *ngIf="_Designation != null && _Designation != 'NULL'">{{_Designation}}</p>
+                  </div>
+                  <div class="col-12 col-lg-3 media1">
+                    <label> DOJ </label>
+                    <P *ngIf="_DOJ != null"> {{_DOJ | date : 'dd-MM-yyyy'}} </P>
+                  </div>
+                  <div class="col-12 col-lg-3 media1">
+                    <p class="small mb-0" style="font-size: 16px;float:right;margin-top: 20px;"
+                      *ngIf="employeeContractStatus == 0">
+                      <span class="text-danger" style="font-size: 16px;">●</span> <b
+                        style="font-weight: 400 !important;">
+                        In-Active</b>
+                    </p>
+                    <p class="small mb-0" style="font-size: 16px;float:right;margin-top: 20px;"
+                    *ngIf="employeeContractStatus == 3">
+                    <span class="text-danger" style="font-size: 16px;">●</span> <b
+                      style="font-weight: 400 !important;">
+                      In-Active</b>
+                  </p>
+                  <p class="small mb-0" style="font-size: 16px;float:right;margin-top: 20px;"
+                    *ngIf="employeeContractStatus == 2">
+                    <span class="text-yellow" style="font-size: 16px;color:#f3c74d !important">●</span> <b
+                      style="font-weight: 400 !important;">
+                     {{displayNameForEmployeeStatus}}</b>
+                  </p>
+                    <p class="small mb-0" style="font-size: 16px;float:right;margin-top: 20px;"
+                      *ngIf="employeeContractStatus == 1">
+                      <span class="text-success" style="font-size: 16px;">●</span> <b
+                        style="font-weight: 400 !important;">
+                        Active</b>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr *ngIf="employeedetails && employeedetails.Id > 0">
+        <br />
+        <!-- BASIC CARD END-->
+        <div *ngIf="employeedetails != null">
+          <ngb-tabset (tabChange)="loadData($event)" [(activeId)]="activeTabName">
+            <ngb-tab id="General" [disabled]="isTabDisabled" *ngIf="isTabShown.General">
+              <ng-template ngbTabTitle><i class="fa fa-get-pocket" aria-hidden="true"></i>&nbsp;&nbsp; General
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div *ngIf="employeedetails == undefined || employeedetails == null">
+                  <div class="text-center ma-5" *ngIf="commonSpinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                        aria-hidden="true"></span>
+                      Please wait...
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="!commonSpinner && employeedetails != null">
+                  <app-profile [employeedetails]="employeedetails" #profile [NotAccessibleFields]="NotAccessibleFields" [AccessibleButtons]="AccessibleButtons"
+                    (profileChangeHandler)="profileChangeHandler($event)"></app-profile>
+                </div>
+              </ng-template>
+            </ngb-tab>
+
+            <ngb-tab id="isCommunicationdetails" [disabled]="isTabDisabled" *ngIf="isTabShown.IsCommunicationdetails">
+              <ng-template ngbTabTitle><i class="fa fa-address-book-o" aria-hidden="true"></i>&nbsp;&nbsp; Communication
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div *ngIf="CommunicationListGrp == undefined || CommunicationListGrp == null">
+                  <div class="text-center ma-5" *ngIf="commonSpinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                        aria-hidden="true"></span>
+                      Please wait...
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="!commonSpinner && CommunicationListGrp != null">
+                  <app-mycommunications [employeedetails]="employeedetails"  [NotAccessibleFields]="NotAccessibleFields"
+                    [CommunicationListGrp]="CommunicationListGrp" #communication 
+                    (communicationChangeHandler)="communicationChangeHandler($event)">
+                  </app-mycommunications>
+                </div>
+              </ng-template>
+            </ngb-tab>
+
+
+            <ngb-tab id="EmployementDetails" [disabled]="isTabDisabled" *ngIf="isTabShown.EmployementDetails">
+              <ng-template ngbTabTitle><i class="fa fa-briefcase" aria-hidden="true"></i>&nbsp;&nbsp; Official
+                Information
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div *ngIf="!commonSpinner && employeedetails.EmploymentContracts != null">
+                  <app-official-information [employeedetails]="employeedetails" #official
+                    [OfferInfoListGrp]="OfferInfoListGrp" [NotAccessibleFields]="NotAccessibleFields"
+                    [OfficialTabMaster_MigrationInfoGrp]="OfficialTabMaster_MigrationInfoGrp"
+                    [OfficialTabMaster_OfferSkillZoneInfo]="OfficialTabMaster_OfferSkillZoneInfo"
+                    (officialChangeHandler)="officialChangeHandler($event)"
+                    [onboardingAdditionalInfo]="onboardingAdditionalInfo"
+                    [DefaultPFLogicProductCode]="DefaultPFLogicProductCode"
+                    [DefaultRuleIdForPFWages]="DefaultRuleIdForPFWages"
+                    >
+                  </app-official-information>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="OtherDetails" [disabled]="isTabDisabled" *ngIf="isTabShown.OtherDetails && isAdditionalInfo">
+              <ng-template ngbTabTitle><i class="fa fa-briefcase" aria-hidden="true"></i>&nbsp;&nbsp; Extended Official
+                Data
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div *ngIf="!commonSpinner && apiCallMade && employeedetails.EmploymentContracts != null">
+                  <app-onboardingadditionalinfo [IsCandidate]="IsCandidate" [currentRoleCode]="currentRoleCode"
+                    [requiredAdditionalColumnSettingValue]="requiredAdditionalColumnSettingValue"
+                    [onboardingAdditionalInfo]="onboardingAdditionalInfo" [additionalColumns]="additionalColumns"  [NotAccessibleFields]="NotAccessibleFields"
+                    #onboardingAdditionalViewChild
+                    (onboardingAdditionalInfoChangeHandler)="onboardingAdditionalInfoChangeHandler($event)" [employeedetails]="employeedetails">
+                  </app-onboardingadditionalinfo>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="AdditionalDetails" [disabled]="isTabDisabled"
+              *ngIf="isTabShown.AdditionalDetails && ShouldShownDynamic">
+              <ng-template ngbTabTitle><i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;&nbsp; Additional
+                Details
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div *ngIf="!commonSpinner && employeedetails.EmploymentContracts != null">
+                  <app-additionaldetails [employeedetails]="employeedetails" #additional
+                    [OfficialTabMaster_Dynamicfieldvalue]="OfficialTabMaster_Dynamicfieldvalue"
+                    [OfficialTabMaster_DynamicFieldDetails]="OfficialTabMaster_DynamicFieldDetails"
+                    (additionalDetailsChangeHandler)="additionalDetailsChangeHandler($event)">
+                  </app-additionaldetails>
+                </div>
+              </ng-template>
+            </ngb-tab>
+
+            <ngb-tab id="isBankInfo" [disabled]="isTabDisabled"
+              *ngIf="isTabShown.IsBankInfo && employeedetails && employeedetails.Id > 0">
+              <ng-template ngbTabTitle><i class="fa fa-university" aria-hidden="true"></i>&nbsp;&nbsp;Bank Info
+              </ng-template>
+              <ng-template ngbTabContent>
+                <!-- <div *ngIf="BankInfoListGrp == undefined || BankInfoListGrp == null"> -->
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <!-- </div> -->
+                <div *ngIf="!commonSpinner">
+                  <app-mybank [employeedetails]="employeedetails" [BankInfoListGrp]="BankInfoListGrp" #mybank
+                    (bankChangeHandler)="bankChangeHandler($event)"></app-mybank>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="SalaryDeatils" [disabled]="isTabDisabled"
+              *ngIf="isTabShown.SalaryDetails && employeedetails && employeedetails.Id > 0">
+              <ng-template ngbTabTitle><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;Salary Details
+
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div>
+                  <div *ngIf="!commonSpinner">
+                    <app-salary-details [empID]="EmployeeId" [salaryDetails]="salaryDetails" #salarydetails
+                      (salaryDetailsChangeHandler)="salaryDetailsChangeHandler($event)">
+                    </app-salary-details>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="isFamilydetails" [disabled]="isTabDisabled"
+              *ngIf="isTabShown.IsFamilydetails && employeedetails && employeedetails.Id > 0">
+              <ng-template ngbTabTitle><i class="fa fa-users" aria-hidden="true"></i>&nbsp;&nbsp; Nominee
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div *ngIf="FamilyInofListGrp == undefined || FamilyInofListGrp == null">
+                  <div class="text-center ma-5" *ngIf="commonSpinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                        aria-hidden="true"></span>
+                      Please wait...
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="!commonSpinner && FamilyInofListGrp != null">
+                  <app-nominee-information [employeedetails]="employeedetails" [FamilyInofListGrp]="FamilyInofListGrp"
+                    #nominee (familyChangeHandler)="familyChangeHandler($event)"></app-nominee-information>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="isAcademicInfo" [disabled]="isTabDisabled"
+              *ngIf="isTabShown.IsAcademicInfo && employeedetails && employeedetails.Id > 0">
+              <ng-template ngbTabTitle><i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;&nbsp; Academic
+                Details
+
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div *ngIf="!commonSpinner">
+                  <app-myeducation [employeedetails]="employeedetails" [FamilyInofListGrp]="FamilyInofListGrp"
+                    #myeducation (educationChangeHandler)="educationChangeHandler($event)"></app-myeducation>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="isEmploymentInfo" [disabled]="isTabDisabled"
+              *ngIf="isTabShown.IsEmploymentInfo && employeedetails && employeedetails.Id > 0">
+              <ng-template ngbTabTitle><i class="fa fa-building" aria-hidden="true"></i>&nbsp;&nbsp;Work Experience
+
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div>
+                  <div *ngIf="!commonSpinner">
+                    <app-myexperience [employeedetails]="employeedetails" #myexperience
+                      (experienceChangeHandler)="experienceChangeHandler($event)">
+                    </app-myexperience>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <!-- <ngb-tab id="isInvestmentInfo" [disabled]="isTabDisabled">
+                            <ng-template ngbTabTitle><i class="fa fa-credit-card-alt" aria-hidden="true"></i>&nbsp;&nbsp; Tax Investments
+                            </ng-template>
+                            <ng-template ngbTabContent>
+                                <div class="text-center ma-5" *ngIf="commonSpinner">
+                                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                        <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                                            role="status" aria-hidden="true"></span>
+                                        Please wait...
+                                    </button>
+                                </div>
+                                <div *ngIf="lstlookUpDetails == undefined || lstlookUpDetails == null || InvestmetnListGrp == null">
+                                    <div class="text-center ma-5" *ngIf="commonSpinner">
+                                        <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                                            <span class="spinner-border spinner-border-sm m-r-10 primary-color"
+                                                role="status" aria-hidden="true"></span>
+                                            Please wait...
+                                        </button>
+                                    </div>
+                                </div>
+                                <div *ngIf="!commonSpinner && lstlookUpDetails != null && InvestmetnListGrp != null">
+                                    <app-myinvestment [employeedetails]="employeedetails" #myinvestment [InvestmetnListGrp]="InvestmetnListGrp" [lstlookUpDetails]="lstlookUpDetails" (investmentChangeHandler)="investmentChangeHandler($event)" (IspendingInvestmentExistHandler)="IspendingInvestmentExistHandler($event)"></app-myinvestment>
+                                </div>
+                            </ng-template>
+                        </ngb-tab> -->
+
+            <!-- -- this previous employment moved to my investment screen - jan 2024--  -->
+            <!-- <ngb-tab id="isPreviousEmployment" [disabled]="isTabDisabled"
+              *ngIf="isTabShown.IsPreviousEmployment     &&  employeedetails && employeedetails.Id > 0">
+              <ng-template ngbTabTitle><i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;&nbsp; Previous
+                Employment
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div *ngIf="lstlookUpDetails == undefined || lstlookUpDetails == null">
+                  <div class="text-center ma-5" *ngIf="commonSpinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                        aria-hidden="true"></span>
+                      Please wait...
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="!commonSpinner && lstlookUpDetails != null">
+                  <app-previous-employment [employeedetails]="employeedetails" [InvestmetnListGrp]="InvestmetnListGrp"
+                    [lstlookUpDetails]="lstlookUpDetails" #previousemp
+                    (employmentChangeHandler)="employmentChangeHandler($event)">
+                  </app-previous-employment>
+                </div>
+              </ng-template>
+            </ngb-tab> -->
+            <ngb-tab id="isDocumentInfo" [disabled]="isTabDisabled" *ngIf="isTabShown.IsDocumentInfo">
+              <ng-template ngbTabTitle><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp; Documents
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div *ngIf="lstlookUpDetails == undefined || lstlookUpDetails == null">
+                  <div class="text-center ma-5" *ngIf="commonSpinner">
+                    <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                      <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                        aria-hidden="true"></span>
+                      Please wait...
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="!commonSpinner && lstlookUpDetails!= null">
+                  <app-mydocuments [employeedetails]="employeedetails" [DocumentInfoListGrp]="DocumentInfoListGrp"
+                    #mydocs [lstlookUpDetails]="lstlookUpDetails"
+                    (mydocumentsChangeHandler)="mydocumentsChangeHandler($event)"></app-mydocuments>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="isPaymentHistory" [disabled]="isTabDisabled"
+              *ngIf="isTabShown.IsPaymentHistory && employeedetails && employeedetails.Id > 0">
+              <ng-template ngbTabTitle><i class="fa fa-tag" aria-hidden="true"></i>&nbsp;&nbsp; Payment History
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+
+                <div *ngIf="!commonSpinner">
+                  <app-mypayments [employeedetails]="employeedetails" [DocumentInfoListGrp]="DocumentInfoListGrp"
+                    (mydocumentsChangeHandler)="mydocumentsChangeHandler($event)"></app-mypayments>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="deductions" [disabled]="isTabDisabled"
+              *ngIf="isTabShown.deductions && employeedetails && employeedetails.Id > 0">
+              <ng-template ngbTabTitle><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;Deductions
+
+              </ng-template>
+              <ng-template ngbTabContent>
+                <div class="text-center ma-5" *ngIf="commonSpinner">
+                  <button class="btn btn-default p-l-30 p-r-30" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm m-r-10 primary-color" role="status"
+                      aria-hidden="true"></span>
+                    Please wait...
+                  </button>
+                </div>
+                <div>
+                  <div *ngIf="!commonSpinner">
+                    <app-employee-deductions [Id]="EmployeeId" #deductions
+                      (DeductionDetailsChangeHandler)="DeductionDetailsChangeHandler($event)">
+                    </app-employee-deductions>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-tab>
+
+          </ngb-tabset>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</div>
+
+
+
+<div id="popup_Form12BBUpload1" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_Form12BBUpload1" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          Investment Confirmation
+          <div class="modal-close" (click)="uploadFormPoppopClose1()" style="margin-top: 0px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div class="modal-body">
+
+          <div class="mb-2">
+            <label>Step 1: &nbsp;</label>
+            <button type="button" class="btn btn-primary col-3 btn-sm mr-2 " style="    font-size: 14px;
+              padding: 5px;" (click)="preview12BBForm('parent')">
+              <i class="mdi mdi-eye m-r-xs" title="Preview" style="cursor:pointer"></i>
+              Preview</button>
+            <label class="form-label searchbar-label">(Please proceed to upload the signed Form 12BB, if you have
+              already downloaded) </label>
+            <!-- <button type="button" class="btn btn-primary col-2 btn-sm" (click)=Formupload(true)>Upload</button> -->
+
+          </div>
+          <br>
+          <div class="clearfix">
+            <label style="float: left;">Step 2: &nbsp;</label>
+            <label class="upload control" style="float: left;">
+              <div class="upload-draggable is-primary mr-2" style="float:left;">
+                <section class="section">
+                  <div class="has-text-centered">
+                    <span class="icon is-large">
+                      <span style="padding-left: 10px;">
+                        <i class="fa fa fa-cloud-upload" style="color: #9ba7ca;"></i>
+                        &nbsp; Choose File </span>
+                    </span>
+                  </div>
+                </section>
+
+              </div>
+              <div style="float:left;">
+                <label class="form-label searchbar-label">Upload Form 12BB<span class="required">*</span> <br> <span
+                    class="help-text m-l-5"> <i style="font-size: 10px;"> (Max file
+                      size
+                      5MB)</i> </span> </label>
+
+                <input type="file" accept="application/msword,  application/pdf, image/*"
+                  (change)="onFileUpload($event,true)" (click)="$event.target.value=null"
+                  id="sTest-uploadFile-candidateAddResume">
+                <!-- <div *ngIf="submitted && g.DocumentId.invalid" class="help-block">
+                  <div *ngIf="g.DocumentId.errors.required">Receipt is required
+                  </div>
+                </div> -->
+
+              </div>
+            </label>
+          </div>
+          <div>
+            <p class="control ml-5" *ngIf="FileName">
+              <span class="file-name">
+                <button class="btn btn-danger c-btn" (click)="doDeleteFile1()"><a ngbTooltip="Delete file"
+                    id="sTest-deleteFile-candidateAddResume" style="padding-left: 10px;font-size: 15px;cursor: pointer;
+                                               display: block   ;margin-top: -5px;"><i class="fa fa-trash-o"></i></a>
+                </button>
+                <a target="blank" class="ahref" style="padding: 2px;">
+                  {{FileName}}
+                </a>
+              </span>
+            </p>
+          </div>
+          <br>
+          <div class="text-right">
+            <button type="button" class="btn btn-primary  btn-sm mr-3" [disabled]="!FileName"
+              (click)=fileUploadConfirmation1(FileUrl,FileName,_SlotClosureDate,_isSubmit,_isProofMode,_ispendingInvestmentExist)>
+              <i class="mdi mdi-content-save  m-r-xs"></i>
+              Upload & Submit</button>
+            <!-- <button type="button" class="btn btn-primary  btn-sm mr-3" 
+              (click)=preview12BBForm()>Preview</button> -->
+            <button type="button" class="btn btn-primary  btn-sm  " (click)=uploadFormPoppopClose1()>
+              <i class="mdi mdi-close  m-r-xs"></i>
+              Cancel</button>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup_Form12BBUpload2" class="modal fade" tabindex="1" role="dialog" data-backdrop="static"
+  data-keyboard="false" aria-labelledby="popup_Form12BBUpload2" aria-hidden="true">
+  <div style="display: block;" class="modal fade show animated fadeInDownBig">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="padding: 15px !important;">
+          Form 12BB
+          <div class="modal-close" (click)="preview12BBClose1()" style="margin-top: -10px;"><span
+              class="mdi mdi-close pull-left"></span>
+          </div>
+        </div>
+        <div #content class="modal-body " id="contentToConvert">
+          <div class="print" id="printid1" style="font-size:12px !important;margin: 30px !important;
+            ">
+
+            <div class="text-center">
+              <h3 class="tbl-main-title">FORM NO.12BB</h3>
+              <p class="tbl-sub-title">[<i>See</i> rule 26C]</p>
+            </div>
+            <div>
+              <h3 class="tbl-page-title"> Statement showing particulars of claims by an employee for deduction of tax
+                under section 192
+              </h3>
+
+              <ol class="tbl-ol-list" type="1" style="list-style-type: auto;">
+                <li>
+                  Name and address of the employee:<strong *ngIf="employeedetails != null">
+                    {{employeedetails.FirstName}},{{_empAddress}}</strong>
+                </li>
+
+                <li>
+                  [Permanent Account Number or Aadhaar Number] of the employee:<strong
+                    *ngIf="employeedetails != null">{{employeedetails.PAN}}</strong>
+                </li>
+                <li>
+                  Financial year:<strong *ngIf="employeedetails != null"> {{_financialYear}}</strong>
+                </li>
+              </ol>
+            </div>
+            <div>
+              <div class="table-responsive" style="width: 96%;">
+                <h6 class="tbl-caption"> DETAILS OF CLAIMS AND EVIDENCE THEREOF</h6>
+                <table class=" table table-bordered" style="font-size: 12px !important;">
+
+
+
+                  <tr>
+                    <th class="text-center" style="width :40px;">
+                      Sl.No
+                    </th>
+                    <th class="text-center" style="width :auto;">Nature of claim </th>
+                    <th class="text-center" style="width :160px;">Amount (Rs.) </th>
+                    <th class="text-center" style="width :100px;">Evidence/particulars</th>
+                  </tr>
+                  <tr>
+                    <th class="text-center" style="width :40px;">(1) </th>
+                    <th class="text-center" style="width :auto;">(2) </th>
+                    <th class="text-center" style="width :160px;">(3) </th>
+                    <th class="text-center" style="width :100px;">(4) </th>
+                  </tr>
+
+                  <tbody>
+                    <tr>
+                      <td rowspan="5" style="vertical-align: top;">1.</td>
+
+                      <td>
+                        House Rent Allowance:
+
+                      </td>
+                      <td>
+                        &nbsp;
+
+                      </td>
+                      <td>
+                        &nbsp;
+
+                      </td>
+                    </tr>
+                    <tr>
+
+                      <td>(i) Rent paid to the landlord</td>
+                      <td> {{_totalHraRent}}</td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td>(ii) Name of the landlord</td>
+                      <td> <span
+                          *ngIf="_hraDetails && _hraDetails.AdditionalList && _hraDetails.AdditionalList.length>0  ">{{_hraDetails.AdditionalList[0].NameofLandlord}}
+                        </span></td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td>(iii) Address of the landlord</td>
+                      <td> <span
+                          *ngIf="_hraDetails && _hraDetails.AdditionalList && _hraDetails.AdditionalList.length>0">{{_hraDetails.AdditionalList[0].RentalHouseAddress}}
+                        </span>
+                      </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td>(iv) [Permanent Account Number or AadhaarNumber] of the landlord
+                        <br> Note : [Permanent Account Number or Aadhaar Number] shall be furnished if the aggregate
+                        rent paid during the previous year exceeds one lakh rupees
+                      </td>
+                      <td> <span
+                          *ngIf="_hraDetails  &&_hraDetails.AdditionalList && _hraDetails.AdditionalList.length>0">{{_hraDetails.AdditionalList[0].PANofLandlord}}
+                        </span></td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td [attr.rowspan]=ltaRowspan style="vertical-align: top;">2.</td>
+                      <td>
+                        {{sec10NameForForm12BB}}
+                      </td>
+                      <td></td>
+                      <td>
+                        &nbsp;
+                      </td>
+                    </tr>
+                    <!-- <tr *ngIf="exceptionList &&exceptionList.length>0">
+                                            <td>
+                                                <ul style="margin-left: 20px;" type="none">
+                                                    <li *ngFor="let expList of exceptionList" style='list-style-type: disc;'>{{expList.Name}}
+                                                    </li>
+                                                </ul>
+
+                                            </td>
+                                            <td>
+                                                <ul>
+                                                    <li *ngFor="let expList of exceptionList" style='list-style-type: none;'>
+                                                        {{expList.amount}} </li>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                        </tr> -->
+                    <ng-container *ngIf="exceptionList &&exceptionList.length>0">
+                      <tr *ngFor="let expList of exceptionList">
+
+                        <td>
+                          <ul style="margin-left: 20px;" type="a">
+                            <li style='list-style-type: disc;'>{{expList.Name}}
+                            </li>
+
+                          </ul>
+                        </td>
+                        <td>
+                          <ul>
+                            <li style='list-style-type: none;'>
+                              {{expList.amount}}
+                            </li>
+                          </ul>
+                        </td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </ng-container>
+                    <tr>
+                      <td rowspan="8" style="vertical-align: top;">
+                        3.
+                      </td>
+                      <td>
+                        Deduction of interest on borrowing:
+
+                      </td>
+                      <td>
+
+                      </td>
+                      <td>
+                        &nbsp;
+
+                      </td>
+                    </tr>
+                    <tr>
+
+                      <td>(i) Interest payable/paid to the lender</td>
+                      <td><span *ngIf="_hpDetails">
+                          {{_hpDetails.InterestPaid}}</span> </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td>(ii) Name of the lender</td>
+                      <td><span *ngIf="_hpDetails ">
+                          {{_hpDetails.NameOfLender}}</span> </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td>(iii) Address of the lender</td>
+                      <td><span *ngIf="_hpDetails">
+                          {{ _hpDetails.addressOfLender}}</span> </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td>(iv) [Permanent Account Number or Aadhaar Number] of the lender</td>
+                      <td><span *ngIf="_hpDetails ">
+                          {{_hpDetails.PANofLender}}</span> </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td>(a) Financial Institutions (if available)</td>
+                      <td>&nbsp; </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td> (b) Employer (if available)</td>
+                      <td>&nbsp; </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td> (c) Others</td>
+                      <td>&nbsp; </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td [attr.rowspan]=_rowSpan style="vertical-align: top;">4.</td>
+                      <td>
+                        Deduction under Chapter VI-A
+
+
+                      </td>
+                      <td>
+                        &nbsp;
+
+                      </td>
+                      <td>
+                        &nbsp;
+
+                      </td>
+                    </tr>
+                    <tr>
+
+                      <td> (A) Sections 80C, 80CCC and 80CCD</td>
+                      <td>&nbsp; </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td> (i) Section 80C</td>
+                      <td>&nbsp; </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <!-- <tr *ngIf="dynamicPFInvestments &&dynamicPFInvestments.length>0">
+
+                                            <td>
+                                                <ul style="margin-left: 20px;" type="none">
+                                                    <li *ngFor="let pfObj of dynamicPFInvestments" style='list-style-type: disc;'>{{pfObj.Name}}
+                                                    </li>
+                                                </ul>
+                                                <ul style="margin-left: 20px;" type="none" *ngIf=" _section80C && _section80C.length>0">
+                                                    <li *ngFor="let invObj of _section80C" style='list-style-type: disc;'>{{invObj.Name}} </li>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <ul>
+                                                    <li *ngFor="let pfObj of dynamicPFInvestments" style='list-style-type: none;'>
+                                                        {{pfObj.AmtInvested}} </li>
+                                                </ul>
+                                                <ul *ngIf=" _section80C && _section80C.length>0">
+                                                    <li *ngFor="let invObj of _section80C" style='list-style-type: none;'>{{invObj.AmtInvested}}
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                            <td>&nbsp;</td>
+                                        </tr> -->
+
+                    <ng-container *ngIf="_section80C &&_section80C.length>0">
+                      <tr *ngFor="let invObj of _section80C">
+
+                        <td>
+                          <ul style="margin-left: 20px;" type="a">
+                            <li style='list-style-type: disc;'>{{invObj.Name}}
+                            </li>
+
+                          </ul>
+                        </td>
+                        <td>
+                          <ul>
+                            <li style='list-style-type: none;'>
+                              {{invObj.AmtInvested}}
+                            </li>
+                          </ul>
+                        </td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </ng-container>
+                    <tr>
+
+                      <td> (ii) Section 80CCC</td>
+                      <td>&nbsp; </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr *ngIf=" _section80Ccc && _section80Ccc.length>0">
+
+                      <td>
+                        <ul style="margin-left: 20px;" type="none">
+                          <li *ngFor="let invObj of _section80Ccc" style='list-style-type: disc;'>{{invObj.Name}}
+                          </li>
+
+                        </ul>
+                      </td>
+                      <td>
+                        <ul>
+                          <li *ngFor="let invObj of _section80Ccc" style='list-style-type: none;'>
+                            {{invObj.AmtInvested}}
+                          </li>
+                        </ul>
+                      </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+
+                      <td> (iii) Section 80CCD</td>
+                      <td>&nbsp; </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <!-- <tr *ngIf=" _section80CcD && _section80CcD.length>0">
+
+                                            <td>
+                                                <ul style="margin-left: 20px;" type="none">
+                                                    <li *ngFor="let invObj of _section80CcD" style='list-style-type: disc;'>{{invObj.Name}}
+                                                    </li>
+
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <ul>
+                                                    <li *ngFor="let invObj of _section80CcD" style='list-style-type: none;'>
+                                                        {{invObj.AmtInvested}}
+                                                    </li>
+
+                                                </ul>
+                                            </td>
+                                            <td>&nbsp;</td>
+                                        </tr> -->
+                    <ng-container *ngIf=" _section80CcD && _section80CcD.length>0">
+                      <tr *ngFor="let invObj of _section80CcD">
+
+                        <td>
+                          <ul style="margin-left: 20px;" type="a">
+                            <li style='list-style-type: disc;'>{{invObj.Name}}
+                            </li>
+
+                          </ul>
+                        </td>
+                        <td>
+                          <ul>
+                            <li style='list-style-type: none;'>
+                              {{invObj.AmtInvested}}
+                            </li>
+                          </ul>
+                        </td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </ng-container>
+                    <tr>
+
+                      <td> (B) Other sections (e.g. 80E, 80G, 80TTA, etc.) under Chapter VI-A</td>
+                      <td>&nbsp; </td>
+                      <td>&nbsp;</td>
+                    </tr>
+
+                    <!-- <tr *ngIf=" _otherSecDetails && _otherSecDetails.length>0">
+
+                                            <td>
+                                                <ul style="margin-left: 20px;" type="a">
+                                                    <li *ngFor="let otherObj of _otherSecDetails" style='list-style-type: disc;'>{{otherObj.Name}}
+                                                    </li>
+
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <ul>
+                                                    <li *ngFor="let otherObj of _otherSecDetails" style='list-style-type: none;'>
+                                                        {{otherObj.AmtInvested}}
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                            <td>&nbsp;</td>
+                                        </tr> -->
+
+                    <ng-container *ngIf=" _otherSecDetails && _otherSecDetails.length>0">
+                      <tr *ngFor="let otherObj of _otherSecDetails">
+
+                        <td>
+                          <ul style="margin-left: 20px;" type="a">
+                            <li style='list-style-type: disc;'>{{otherObj.Name}}
+                            </li>
+
+                          </ul>
+                        </td>
+                        <td>
+                          <ul>
+                            <li style='list-style-type: none;'>
+                              {{otherObj.AmtInvested}}
+                            </li>
+                          </ul>
+                        </td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
+
+            <div class="tbl-footer">
+              <h5 class="text-center tbl-verfiy">Verification</h5>
+              <p class="tbl-param">I,
+                <span> <strong *ngIf="employeedetails != null">{{employeedetails.FirstName}}</strong></span>
+                son/daughter of <span> <strong *ngIf="employeedetails != null">{{employeedetails.FatherName}}</strong>
+                </span> do hereby certify
+                that the information given above is complete and correct
+              </p>
+            </div>
+            <div class="tbl-footer2">
+              <div class=" tbl-place-sign-conainer">
+                <div class="tbl-place">Place :</div>
+                <div class="tbl-sign"> </div>
+              </div>
+              <div class="tbl-Date-sign-conainer">
+                <div class="tbl-Date flex">Date :
+                  <p style="margin-bottom: auto;" *ngIf="employeedetails != null">{{_form12BBDate}}</p>
+                </div>
+                <div class="tbl-sign-label">(Signature of the employee)</div>
+              </div>
+              <div class="tbl-desig-name-conainer">
+                <div class="tbl-desig flex">Designation :
+                  <p style="margin-bottom: auto;"
+                    *ngIf="employeedetails != null && employeedetails.EmploymentContracts && employeedetails.EmploymentContracts.length>0">
+                    {{employeedetails && employeedetails.EmploymentContracts &&
+                    employeedetails.EmploymentContracts[0].Designation}}
+                  </p>
+                </div>
+                <div class="tbl-name flex">Full Name:
+                  <p style="margin-bottom: auto;" *ngIf="employeedetails != null">{{employeedetails.FirstName}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left ">
+            <button class="btn mdi mdi-download"
+              style=" color :honeydew !important;background-color:  #0f3653 !important;" (click)="form12BBDownload()">
+              download</button>
+          </div>
+          <!-- <div class="pull-left right-margin-btn">
+              <button class="btn mdi mdi-download">upload</button>
+            </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

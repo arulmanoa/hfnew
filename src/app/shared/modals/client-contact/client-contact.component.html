@@ -1,0 +1,223 @@
+<!-- <div class="wrapper-lg cell">
+
+      <div class="content m-b report-content"> -->
+<!-- <div class="modal-dialog modal-lg "> -->
+<div style="display: block;" class="modal fade show">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col-xs-11">
+          <h4 class="modal-title"> Client Contact</h4>
+        </div>
+        <div class="d-flex align-items-center justify-between" *ngIf="spinner">
+          <strong class="text-center"> Please wait... &nbsp;&nbsp;&nbsp;</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+        <div class="col-xs-1">
+          <button type="button" class="close" data-dismiss="modal" (click)="closeModal()" aria-label="Close"><span
+              aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+
+
+
+
+
+
+      <form [formGroup]="clientContactForm">
+
+        <div class="modal-body">
+          <div class="row">
+            <div *ngIf="BusinessType == 3" class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label>Client <span class="required">*</span> </label>
+
+              <ng-select #select2 [items]="listOfclient" [searchable]="true" placeholder="----Select----" bindValue="Id"
+                bindLabel="Name" formControlName="client" (change)="Clientdropdown($event)"
+                [ngClass]="{ 'is-invalid': submitted && f.client.errors }">
+                <!-- [disabled]="clientContactForm.controls.Id.value ? true: null"  -->
+
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search Client" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select2.filter($event.target.value)" />
+                </ng-template>
+              </ng-select>
+              <div *ngIf="submitted && f.client.invalid" class="help-block">
+                <div *ngIf="f.client.errors.required">Client is required</div>
+              </div>
+            </div>
+            <!-- <div *ngIf="submitted && f.client.errors" class="invalid-feedback">
+                    <div *ngIf="f.client.errors.required">Client is required</div>
+                  </div>
+                </div> -->
+
+
+            <div class="form-group form-group-vertical col-xs-12  col-sm-6">
+              <label class="form-label">Client Location<span class="required">*</span></label>
+
+              <ng-select #select1 [closeOnSelect]="false" [searchable]="false" [items]="ClientLocationNameList"
+                placeholder="----Select----" formControlName="clientlocation"
+                [ngClass]="{ 'is-invalid': submitted && f.clientlocation.errors }" bindLabel="LocationName"
+                bindValue="Id">
+                <ng-template ng-header-tmp>
+                  <input placeholder="Search Client Location" type="text" class="form-control"
+                    style="border: none;border-radius: 0px !important;background: white"
+                    (input)="select1.filter($event.target.value)" />
+                </ng-template>
+                <!-- <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.LocationName}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value" *ngIf="items.length > 2">
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                  </div>
+                </ng-template> -->
+              </ng-select>
+              <div *ngIf="submitted && f.clientlocation.invalid" class="help-block">
+                <div *ngIf="f.clientlocation.errors.required">Client Location is required
+                </div>
+              </div>
+
+
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label>Salutation<span class="required"></span> </label>
+              <select id="salutation" class="form-control" formControlName="salutation"
+                [ngClass]="{ 'is-invalid': submitted && f.salutation.errors }">
+                <option value="">----Select----</option>
+                <option *ngFor="let salutation of listOfsalutation" [value]="salutation.ValueMember">
+                  {{salutation.DisplayMember}}
+                </option>
+              </select>
+              <div *ngIf="submitted && f.salutation.invalid" class="help-block">
+                <div *ngIf="f.salutation.errors.required">LocationType is required</div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label>Client Contact Name <span class="required">*</span> </label>
+              <input type="text" placeholder="Name" class="form-control" formControlName="name"
+                [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+              <div *ngIf="submitted && f.name.invalid" class="help-block">
+                <div *ngIf="f.name.errors.required">Client Name is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label>Designation <span class="required">*</span> </label>
+              <input type="text" placeholder="Designation" class="form-control" formControlName="designation"
+                [ngClass]="{ 'is-invalid': submitted && f.designation.errors }">
+              <div *ngIf="submitted && f.designation.errors" class="invalid-feedback">
+                <div *ngIf="f.designation.errors.required">Designation is required</div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label class="form-label">Email <span class="required">*</span></label>
+              <input class="form-control" type="email" formControlName="email"
+                pattern="^\S+@(([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})$"
+                [ngClass]="{ 'is-invalid': submitted && f.email.errors }" placeholder="example@domain.com"
+                autocomplete="off">
+              <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">E-Mail is required
+                </div>
+                <span *ngIf="submitted && f.email.errors.pattern"> Please enter
+                  valid email (pattern mismatch)
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+
+
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label class="form-label">Mobile No. <span class="required">*</span></label>
+              <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+
+                  <select id="ccode" class="form-control" formControlName="ccode"
+                    [ngClass]="{ 'is-invalid': submitted && f.ccode.errors }"
+                    style="color: #fff; width: 100px;background-color: #6c757d;border-color: #6c757d;">
+                    <option *ngFor="let ccode of listOfcountry" [value]="ccode.PhoneCode">
+                      + {{ccode.PhoneCode}}
+                    </option>
+                  </select>
+                  <!-- <ng-select #select3  [items]="listOfcountry1" [searchable]="true" 
+                    bindValue="PhoneCode" bindLabel= "PhoneCode" 
+                    formControlName="ccode" 
+                    style="color: #fff; width: 100px;background-color: #6c757d;border-color: #6c757d;"
+                    [ngClass]="{ 'is-invalid': submitted && f.ccode.errors }">
+  
+                        <ng-template >
+                            <input  type="text" class="form-control" style="border: none;border-radius: 0px !important;background: white" (input)="select3.filter($event.target.value)" />
+                        </ng-template>
+                    </ng-select>                   -->
+                </div>
+                <input class="form-control"
+                  style="border-top-left-radius: 0 !important;border-bottom-left-radius: 0 !important;" type="text"
+                  minlength="10" maxlength="10" onkeypress="return /^[0-9]+$/i.test(event.key)" name="mobile"
+                  formControlName="mobile" [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }"
+                  placeholder="9876543210" autocomplete="off">
+                <div *ngIf="submitted && f.mobile.errors" class="invalid-feedback">
+                  <div *ngIf="f.mobile.errors.required">Mobile no is required
+                  </div>
+                </div>
+                <div *ngIf="submitted && f.ccode.errors" class="invalid-feedback">
+                  <div *ngIf="f.ccode.errors.required">code is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+                      <label class="form-label">Is Single Point Of Contact</label>
+                      <div class="pretty p-switch p-fill padding-top-10">
+                        <input type="checkbox" formControlName="isSinglePointOfContact" checked enabled />
+                        <div class="state p-success">
+                          <label></label>
+                        </div>
+                      </div>
+                    </div> -->
+
+            <div class="form-group form-group-vertical col-xs-6 col-sm-6">
+              <label class="form-label">Is Single Point Of Contact</label>
+              <div class="p-t-10">
+
+                <label class="el-switch el-switch-green">
+                  <input type="checkbox" formControlName="isSinglePointOfContact" checked enabled />
+                  <span class="el-switch-style"></span>
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="pull-right">
+            <!-- <button class="btn btn-primary" data-dismiss="modal">Cancel</button> &nbsp; -->
+            <button class="btn btn-primary" type="submit" prevent-double-submit id="btnSubmit"
+              (click)="saveClientContactbutton()">
+              <div class="pos-rlt sm-btn-component"> <span> <i class="fa fa-hdd-o" aria-hidden="true"></i> &nbsp; Save
+                </span></div>
+            </button>&nbsp;
+            <button class="btn btn-default pull-right" type="button" (click)="closeModal()"><i class="fa fa-ban"
+                aria-hidden="true"></i> &nbsp;Cancel</button>
+            <!-- [disabled]="GenericForm.invalid" -->
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
