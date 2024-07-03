@@ -1,16 +1,11 @@
 import {
-  Component, OnInit, OnDestroy, ElementRef, ViewChild,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy
+  Component, OnInit, ViewChild,
+  ChangeDetectorRef
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ForgotPassword } from '../../_services/model/index'
-import { interval } from 'rxjs';
-import { map } from 'rxjs/operators'
-
 import { MustMatch, passwordStrengthValidator } from '../../shared/directives/_helper';
-
 import { AuthenticationService } from '../../_services/service/authentication.service'; // login and security services 
 import { AlertService } from '../../_services/service/alert.service'; // alert service
 import { ReCaptcha2Component } from 'ngx-captcha';
@@ -135,7 +130,6 @@ export class ChangepasswordComponent implements OnInit {
     })
     this._configService.changePassword(requestURL_json).subscribe((data: any) => {
       console.log(data);
-      let response = data.Result;
       if (data.Result && data.Status) {
         this.SpinnerShouldhide = false;
 

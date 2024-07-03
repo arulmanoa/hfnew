@@ -120,10 +120,10 @@ export class NapsOnboardingComponent implements OnInit, OnDestroy {
 
   index: number = 1;
   DOBmaxDate: Date;
-  
+
   minDate: Date;
   maxDate: Date;
-  
+
   CountryList: CountryList[] = [];
   StateList: StateList[] = [];
   StateList1: StateList[] = [];
@@ -292,7 +292,7 @@ export class NapsOnboardingComponent implements OnInit, OnDestroy {
       StartDate: [null, [Validators.required]],
       EndDate: [null, [Validators.required]],
       PayPeriod: [null, [Validators.required]],
-      CostCodeId : [null, [Validators.required]],
+      CostCodeId: [null, [Validators.required]],
       PayGroup: [null, [Validators.required]],
       Gmc: [150000],
       Gpa: [300000],
@@ -323,8 +323,8 @@ export class NapsOnboardingComponent implements OnInit, OnDestroy {
     this.modalOption.backdrop = 'static';
     this.modalOption.keyboard = false;
     this.DOBmaxDate = new Date();
-    this.minDate  = new Date();
-    this.maxDate  = new Date();
+    this.minDate = new Date();
+    this.maxDate = new Date();
     this.minDate.setFullYear(this.minDate.getFullYear() - 35);
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 17);
 
@@ -1019,7 +1019,7 @@ export class NapsOnboardingComponent implements OnInit, OnDestroy {
             this.lstDocumentDetails.splice(index, 1);
           }
         }
-      }); 
+      });
 
       // let OldDocumentDetails = this._OldCandidateDetails != null && this._OldCandidateDetails.LstCandidateDocuments != null && this._OldCandidateDetails.LstCandidateDocuments.length > 0 ? this._OldCandidateDetails.LstCandidateDocuments : null;
       // if (OldDocumentDetails != null) {
@@ -1779,7 +1779,7 @@ export class NapsOnboardingComponent implements OnInit, OnDestroy {
 
 
       console.log('REJECTED ITEMS');
-      
+
 
       if (index == "Submit") {
         let isdocsFiles = false;
@@ -1876,8 +1876,8 @@ export class NapsOnboardingComponent implements OnInit, OnDestroy {
       }
 
       var isAadhaarExists = this.lstDocumentDetails != null && this.lstDocumentDetails.length > 0 && this.lstDocumentDetails.find(a => a.DocumentTypeId == environment.environment.AadhaarDocumentTypeId && a.DocumentCategoryId != 0)
-      console.log('isAadhaarExists',isAadhaarExists);
-      
+      console.log('isAadhaarExists', isAadhaarExists);
+
       if (isAadhaarExists != undefined && isAadhaarExists.Status != 2 && this.napsForm.get('AadhaarNumber').value != null &&
         this.napsForm.get('AadhaarNumber').value != isAadhaarExists.DocumentNumber) {
         this.alertService.showWarning("The candidate's aadhaar number is mismatched with the candidate document details document number. Please correct it and try again.")
@@ -2568,7 +2568,19 @@ export class NapsOnboardingComponent implements OnInit, OnDestroy {
       this.spinner = false;
       console.log('apiResult', apiResult);
       if (apiResult.Status) {
-        var offerDetails: CandidateOfferDetails = apiResult.Result as any;
+        let offerDetails: CandidateOfferDetails;
+
+        if (typeof apiResult.Result === 'string') {
+          try {
+            offerDetails = JSON.parse(apiResult.Result) as CandidateOfferDetails;
+          } catch (error) {
+            console.error('Failed to parse apiResult.Result as JSON:', error);
+            offerDetails = new CandidateOfferDetails();
+          }
+        } else {
+          offerDetails = apiResult.Result as CandidateOfferDetails;
+        }
+
         this.candidateOfferBreakupDetails = new CandidateOfferDetails();
         this.candidateOfferBreakupDetails.LstPayGroupProductOverrRides = [];
         this.candidateOfferBreakupDetails.LstPayGroupProductOverrRides = offerDetails.LstPayGroupProductOverrRides;
@@ -3185,7 +3197,7 @@ export class NapsOnboardingComponent implements OnInit, OnDestroy {
                 StartDate: null,
                 EndDate: null,
                 PayPeriod: null,
-                CostCodeid : null,
+                CostCodeid: null,
                 PayGroup: null,
                 Gmc: 0,
                 Gpa: 0,

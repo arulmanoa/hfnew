@@ -1,6 +1,6 @@
 
 
-import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 /** Error when invalid control is dirty, touched, or submitted. **/
 import { ActivatedRoute, Router } from '@angular/router';
 import { CandidateService } from '../../_services/service/candidate.service'; // login and security services 
@@ -9,8 +9,6 @@ import { apiResult } from 'src/app/_services/model/apiResult';
 import { AuthenticationService } from 'src/app/_services/service/authentication.service';
 import { SessionKeys } from '../../_services/configs/app.config'; // app config 
 import { SessionStorage } from '../../_services/service/session-storage.service'; // session storage 
-
-import {CandidateUIOffer} from '../../_services/model/CandidateUI/CandidateUIOffer';
 import { LoginResponses } from 'src/app/_services/model';
 
 @Component({
@@ -21,8 +19,8 @@ import { LoginResponses } from 'src/app/_services/model';
 export class CandidateOTPComponent implements OnInit {
 
   public SpinnerShouldhide: boolean = false;
-  OTP: any;
-  VerficationKey: any;
+  OTP: string;
+  VerficationKey: string;
   isAuthorized: boolean = false;
 
   constructor(
@@ -44,7 +42,7 @@ export class CandidateOTPComponent implements OnInit {
 
         var encodedIdx = (params["Idx"]);
 
-        let encryptedKey = "caG6tPVUJeJPocYDSbJHDUwHGtl6Yp3ZhD4TnaenuQI=";
+       // let encryptedKey = "caG6tPVUJeJPocYDSbJHDUwHGtl6Yp3ZhD4TnaenuQI=";
         this.fetchEncryption(encodedIdx).then(() => {
        
           this.isAuthorized = true;
@@ -69,6 +67,8 @@ export class CandidateOTPComponent implements OnInit {
         }
         else { this.router.navigate(['/unauthorized']); }
       }), ((error) => {
+        console.error(error);
+        
       });
     })
 
@@ -98,7 +98,7 @@ export class CandidateOTPComponent implements OnInit {
         this.router.navigate(['/unauthorized']);
 
       } else {  
-        let response = data.Result;
+      
         if (data.Status && data.Result) {
 
           let result: LoginResponses = data.Result;

@@ -334,17 +334,20 @@ export class NoDueCertificateComponent implements OnInit {
     // }
   }
 
-  onChangeStatus(index) {
+  onChangeStatus(index: number): string | undefined {
     let b = document.getElementsByClassName('ng-select')[index];
+    let elementNode: HTMLElement | null = null;
+  
     if (b.childNodes[0].nodeType === 1) {
-      var elementNode = b.childNodes[0] as HTMLElement;
+      elementNode = b.childNodes[0] as HTMLElement;
       if (this.noDueCertificateForm.controls['ndcFields'].value[index].NDCStatus == 1) {
         elementNode.style.color = 'green';
       } else {
         elementNode.style.color = 'black';
       }
     }
-    return elementNode.style.color;
+  
+    return elementNode ? elementNode.style.color : undefined;
   }
 
   onStatusChange(index) {
