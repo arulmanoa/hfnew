@@ -207,7 +207,7 @@ export class GridAddItemComponent implements OnInit {
         cssClasses: ''
       };
       if (typeof previousItemMetadata === 'object') {
-        meta = previousItemMetadata(rowNumber);
+        meta = this.previousItemMetadata(rowNumber);
       }
 
       if (meta && item && item.duration) {
